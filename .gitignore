@@ -71,3 +71,4 @@ hs_err_pid*
 
 # generated target folder
 target/
+/.idea/
