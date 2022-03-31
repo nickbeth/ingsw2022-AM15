@@ -1,2 +1,5 @@
-package it.polimi.ingsw.eriantys.model.entities.enums;public enum GameMode {
+package it.polimi.ingsw.eriantys.model.entities.enums;
+
+public enum GameMode {
+  NORMAL, EXPERT
 }
