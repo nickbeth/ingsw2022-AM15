@@ -8,6 +8,7 @@ public class RuleBook {
   public final int studentPerColor = 26;
   public final int initialCoins = 1;
   public final int totalCoins = 20;
+  public final int islandCount = 12;
   public final int cloudCount;
   public final int playableStudentCount;
   public final int dashboardTowerCount;
