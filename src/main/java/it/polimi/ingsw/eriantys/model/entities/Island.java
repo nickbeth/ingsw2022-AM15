@@ -32,12 +32,12 @@ public class Island {
     }
   }
 
-  public void setTower(TowerColor towerColor) {
+  public void setTowerColor(TowerColor towerColor) {
     towers.color = towerColor;
   }
 
-  public void addTower() {
-    towers.count++;
+  public void setTowerCount(int count) {
+    towers.count = count;
   }
 
   public void setLocked(boolean lock) {
