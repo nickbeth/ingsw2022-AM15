@@ -6,14 +6,15 @@ import java.util.EnumMap;
 
 public class Island {
   private EnumMap<HouseColor, Integer> students = new EnumMap<>(HouseColor.class);
-  private int towerCount = 0;
-  private TowerColor towerColor;
+  private Towers towers;
   private boolean isLocked = false;
 
   public Island(HouseColor studentColor) {
     for (HouseColor color : HouseColor.values()) {
       students.put(color, 0);
     }
+    towers.count = 0;
+    towers.color = null;
     students.put(studentColor, 1);
   }
 
@@ -21,21 +22,26 @@ public class Island {
     for (HouseColor color : HouseColor.values()) {
       students.put(color, 0);
     }
+    towers.count = 0;
+    towers.color = null;
   }
 
   public void addStudents(EnumMap<HouseColor, Integer> s) {
     for (HouseColor color : HouseColor.values()) {
-      students.put(color, Math.max(students.get(color) + s.get(color),0));
+      students.put(color, Math.max(students.get(color) + s.get(color), 0));
     }
   }
 
   public void setTower(TowerColor towerColor) {
-    this.towerColor = towerColor;
-    towerCount++;
+    towers.color = towerColor;
   }
 
-  public void setLocked(boolean lock){
-    this.isLocked = lock;
+  public void addTower() {
+    towers.count++;
+  }
+
+  public void setLocked(boolean lock) {
+    isLocked = lock;
   }
 
   public EnumMap<HouseColor, Integer> getStudents() {
@@ -43,11 +49,11 @@ public class Island {
   }
 
   public int getTowerCount() {
-    return towerCount;
+    return towers.count;
   }
 
   public TowerColor getTowerColor() {
-    return towerColor;
+    return towers.color;
   }
 
   public boolean isLocked() {
