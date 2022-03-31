@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.entities.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.entities.enums.TowerColor;
+import org.tinylog.Logger;
 
 import java.util.EnumMap;
 
@@ -30,12 +31,12 @@ public class Dashboard {
     return entrance;
   }
 
-  public boolean removeFromEntrance(HouseColor color) {
+  public void removeFromEntrance(HouseColor color) {
     if (entrance.get(color) == 0) {
-      return false;
+      Logger.warn("No student to remove");
+    } else {
+      entrance.put(color, entrance.get(color) - 1);
     }
-    entrance.put(color, entrance.get(color) - 1);
-    return true;
   }
 
   public EnumMap<HouseColor, Integer> getDiningHall() {
@@ -54,12 +55,12 @@ public class Dashboard {
     towers.count++;
   }
 
-  public boolean removeTower() {
+  public void removeTower() {
     if (towers.count == 0) {
-      return false;
+      Logger.warn("No tower to remove");
+    } else {
+      towers.count--;
     }
-    towers.count--;
-    return true;
   }
 }
 
