@@ -28,12 +28,12 @@ public class PlayingField {
         islands = new ArrayList<Island>();
         studentBag = new EnumMap<HouseColor, Integer>(HouseColor.class);
         initStudentMap(studentBag, 2);
-        for (int i = 0; i < ruleBook.islandCount; i++) {
+        for (int i = 0; i < ruleBook.ISLAND_COUNT; i++) {
             if (i < 8 && i != 5) islands.add(new Island(takeStudentFromBag()));
             else islands.add(new Island());
         }
         //definitive initialization of StudentBag
-        initStudentMap(studentBag, ruleBook.studentPerColor - 2);
+        initStudentMap(studentBag, ruleBook.STUDENT_PER_COLOR - 2);
         //initializing Clouds
         clouds = new ArrayList<Cloud>();
         for (int i = 0; i < ruleBook.cloudCount; i++) {
@@ -46,7 +46,7 @@ public class PlayingField {
             clouds.add(new Cloud(students));
         }
         // the cloud count is the same as the number of players
-        if (ruleBook.gameMode == GameMode.EXPERT) coins = ruleBook.totalCoins - ruleBook.cloudCount;
+        if (ruleBook.gameMode == GameMode.EXPERT) coins = ruleBook.TOTAL_COINS - ruleBook.cloudCount;
         else coins = 0;
         motherNaturePosition = 0;
     }

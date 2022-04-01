@@ -21,7 +21,7 @@ public class Player {
 
   public Player(RuleBook ruleBook, String nickname, TowerColor color, EnumMap<HouseColor, Integer> entranceStudents) {
     this.nickname = nickname;
-    coins = ruleBook.initialCoins;
+    coins = ruleBook.INITIAL_COINS;
     // TODO gestire il caso di 4 players che condividono lo stesso numero di tower.
     dashboard = new Dashboard(entranceStudents, ruleBook.dashboardTowerCount, color);
     ArrayList<AssistantCard> cards = getFullDeck();
