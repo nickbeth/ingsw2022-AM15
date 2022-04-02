@@ -4,6 +4,7 @@ import it.polimi.ingsw.eriantys.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.entities.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.entities.enums.TowerColor;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,8 +60,7 @@ public class PlayingField {
     motherNaturePosition = 0;
   }
 
-  //TODO manage lock island
-  //TODO mergeIslands Needs Testing
+  //TODO manage lock island in merge Island
   /**
    * merges Islands[islandIndex] with adjacent islands with the same TowerColor
    * @param islandIndex
@@ -69,6 +69,7 @@ public class PlayingField {
     Island nextIsland = islands.get(islandIndex + 1 % RuleBook.ISLAND_COUNT);
     Island prevIsland = (islandIndex == 0) ? islands.get(RuleBook.ISLAND_COUNT - 1) : islands.get(islandIndex - 1);
     Island currIsland = islands.get(islandIndex);
+    Logger.debug("prev island:" + islands.indexOf(prevIsland) +"current island:" + islands.indexOf(currIsland) +  "next island:" + islands.indexOf(nextIsland));
 
     if (nextIsland.getTowerColor() == currIsland.getTowerColor()) {
       currIsland.addStudents(nextIsland.getStudents());
@@ -99,6 +100,9 @@ public class PlayingField {
 
   public Island getIsland(int islandIndex) {
     return islands.get(islandIndex);
+  }
+  public int getIslandsAmount(){
+    return islands.size();
   }
 
   /**
