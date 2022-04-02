@@ -18,7 +18,7 @@ class StudentsTest {
   Students s;
 
   @Test
-  void addStudents() {
+  public void addStudents() {
     when(s.getValue(any())).thenReturn(1);
     Students students = new Students();
     students.addStudents(s);
@@ -27,10 +27,16 @@ class StudentsTest {
   }
 
   @Test
-  void tryRemoveStudent() {
-    when(s.getValue(any())).thenReturn(1);
-    HouseColor color = HouseColor.PINK;
-    assertFalse(new Students().tryRemoveStudent(color));
-    assertTrue(new Students(s).tryRemoveStudent(color));
+  public void tryRemoveStudent() {
+    when(s.getValue(any())).thenReturn(2);
+    Students students = new Students(s);
+    students.tryRemoveStudent(HouseColor.PINK);
+    students.tryRemoveStudent(HouseColor.PINK);
+    students.tryRemoveStudent(HouseColor.PINK);
+    assertEquals(0,students.getValue(HouseColor.PINK));
+  }
+
+  @Test
+  void testTryRemoveStudent() {
   }
 }

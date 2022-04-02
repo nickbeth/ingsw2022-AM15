@@ -36,6 +36,7 @@ public class Students {
     students.forEach(((color, value)
             -> students.put(color, value + s.getValue(color))));
   }
+
   /**
    * Adds a single student with the given color
    *
@@ -53,7 +54,7 @@ public class Students {
    */
   public boolean tryRemoveStudent(HouseColor color) {
     if (students.get(color) == 0) {
-      Logger.warn("No students to remove");
+      Logger.warn("No students to remove. {} {}", color, students.get(color));
       return false;
     } else {
       students.put(color, students.get(color) - 1);
@@ -62,8 +63,20 @@ public class Students {
   }
 
   public void setStudents(Students s) {
-    students.forEach(((color, value) ->
+    students.forEach(((color, amount) ->
             students.put(color, s.getValue(color))));
+  }
+
+  /**
+   * Checks if there's no students left
+   *
+   * @return True if Students is empty, false otherwise
+   */
+  public boolean isEmpty() {
+    for (HouseColor c : HouseColor.values()) {
+      if (students.get(c) != 0) return false;
+    }
+    return true;
   }
 
   /**
@@ -75,6 +88,7 @@ public class Students {
   public Integer getValue(HouseColor color) {
     return students.get(color);
   }
+
 
   @Override
   public String toString() {

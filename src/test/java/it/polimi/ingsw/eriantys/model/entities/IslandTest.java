@@ -8,9 +8,10 @@ import java.util.EnumMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Todo island test
 class IslandTest {
 
   @Test
-  void addStudents() {
+  public void addStudents() {
   }
 }

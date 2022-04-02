@@ -14,6 +14,7 @@ public class RuleBook {
   public static final int INITIAL_COINS = 1;
   public static final int TOTAL_COINS = 20;
   public static final int ISLAND_COUNT = 12;
+  public static final int STUDENT_PER_COLOR_SETUP = 2;
   // Constants based on the type of game
   public static final int PLAYABLE_STUDENTS_2_4 = 3;
   public static final int PLAYABLE_STUDENTS_3 = 3;
