@@ -19,6 +19,7 @@ public class Students {
 
   /**
    * Initialize to specific amount of students
+   *
    * @param s Initial students
    */
   public Students(Students s) {
@@ -28,6 +29,7 @@ public class Students {
 
   /**
    * Adds the given amount of students
+   *
    * @param s Amount of students to add
    */
   public void addStudents(Students s) {
@@ -37,14 +39,16 @@ public class Students {
 
   /**
    * Adds a single student with the given color
+   *
    * @param color
    */
   public void addStudent(HouseColor color) {
-    students.put(color,students.get(color) + 1);
+    students.put(color, students.get(color) + 1);
   }
 
   /**
    * Removes one student with the given color
+   *
    * @param color tells which student to remove
    * @return boolean
    */
@@ -59,16 +63,24 @@ public class Students {
   }
 
   public void setStudents(Students s) {
-    students.forEach(((color,value) ->
+    students.forEach(((color, value) ->
             students.put(color, s.getValue(color))));
   }
 
   /**
    * Returns the number of students with the given color
+   *
    * @param color
    * @return number of students with that color
    */
   public Integer getValue(HouseColor color) {
     return students.get(color);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder s = new StringBuilder();
+    students.forEach((c, v) -> s.append(c + " - " + v + "" + "\n"));
+    return s.toString();
   }
 }
