@@ -59,8 +59,28 @@ public class PlayingField {
     motherNaturePosition = 0;
   }
 
-  //TODO merge Islands
-  private void mergeIslands(int islandIndex) {
+  //TODO manage lock island
+  //TODO mergeIslands Needs Testing
+  /**
+   * merges Islands[islandIndex] with adjacent islands with the same TowerColor
+   * @param islandIndex
+   */
+  public void mergeIslands(int islandIndex) {
+    Island nextIsland = islands.get(islandIndex + 1 % RuleBook.ISLAND_COUNT);
+    Island prevIsland = (islandIndex == 0) ? islands.get(RuleBook.ISLAND_COUNT - 1) : islands.get(islandIndex - 1);
+    Island currIsland = islands.get(islandIndex);
+
+    if (nextIsland.getTowerColor() == currIsland.getTowerColor()) {
+      currIsland.addStudents(nextIsland.getStudents());
+      currIsland.setTowerCount(currIsland.getTowerCount() + nextIsland.getTowerCount());
+      islands.remove(nextIsland);
+    }
+    if (prevIsland.getTowerColor() == currIsland.getTowerColor()) {
+      currIsland.addStudents(prevIsland.getStudents());
+      currIsland.setTowerCount(currIsland.getTowerCount() + nextIsland.getTowerCount());
+      islands.remove(prevIsland);
+      if(islandIndex != 0) motherNaturePosition--;
+    }
   }
 
   /**
