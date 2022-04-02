@@ -9,7 +9,7 @@ public class RuleBook {
   public final int playableStudentCount;
   public final int dashboardTowerCount;
   public final int entranceSize;
-  // Constants equals in any type of game
+  // Same constants in any type of game
   public static final int STUDENT_PER_COLOR = 26;
   public static final int INITIAL_COINS = 1;
   public static final int TOTAL_COINS = 20;

@@ -4,54 +4,38 @@ import it.polimi.ingsw.eriantys.model.entities.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.entities.enums.TowerColor;
 import org.tinylog.Logger;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-
-
 public class Dashboard {
-  private EnumMap<HouseColor, Integer> entrance = new EnumMap<>(HouseColor.class);
-  private EnumMap<HouseColor, Integer> diningHall = new EnumMap<>(HouseColor.class);
-  private Towers towers;
+  private Students entrance;
+  private Students diningHall;
+  private Towers towers = new Towers();
 
-  public Dashboard(EnumMap<HouseColor, Integer> entrance, int towerCount, TowerColor towerColor) {
+  public Dashboard(Students entrance, int towerCount, TowerColor towerColor) {
     towers.color = towerColor;
     towers.count = towerCount;
-    Arrays.stream(HouseColor.values()).forEach(color -> {
-              this.entrance.put(color, entrance.get(color));
-              diningHall.put(color, 0);
-            }
-    );
+    diningHall = new Students();
+    this.entrance = new Students(entrance);
   }
 
-  public void addToEntrance(EnumMap<HouseColor, Integer> s) {
-    entrance.forEach((color, value) -> {
-      if (entrance.get(color) == 0) Logger.warn("In addToEntrance() No students");
-      else entrance.put(color, value + s.get(color));
-    });
+  public void addToEntrance(Students s) {
+    entrance.addStudents(s);
   }
 
-  public EnumMap<HouseColor, Integer> getEntrance() {
+  public Students getEntrance() {
     return entrance;
   }
 
   public void removeFromEntrance(HouseColor color) {
-    if (entrance.get(color) == 0) {
-      Logger.warn("No students to remove from Entrance");
-    } else {
-      entrance.put(color, entrance.get(color) - 1);
-    }
+    if(!entrance.removeStudent(color))
+      Logger.warn("Impossible to remove student from entrance. No students available");
   }
 
-  public EnumMap<HouseColor, Integer> getDiningHall() {
+  public Students getDiningHall() {
     return diningHall;
   }
 
   public void removeFromDining(HouseColor color) {
-    if (diningHall.get(color) == 0) {
-      Logger.warn("No students to remove from Dining");
-    } else {
-      diningHall.put(color, diningHall.get(color) - 1);
-    }
+    if (!diningHall.removeStudent(color))
+      Logger.warn("Impossible to remove student from diningHall. No students available");
   }
 
   public void addTower() {
