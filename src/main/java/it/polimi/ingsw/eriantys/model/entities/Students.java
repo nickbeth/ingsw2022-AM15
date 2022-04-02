@@ -34,7 +34,6 @@ public class Students {
     students.forEach(((color, value)
             -> students.put(color, value + s.getValue(color))));
   }
-
   /**
    * Adds a single student with the given color
    * @param color
@@ -48,7 +47,7 @@ public class Students {
    * @param color tells which student to remove
    * @return boolean
    */
-  public boolean removeStudent(HouseColor color) {
+  public boolean tryRemoveStudent(HouseColor color) {
     if (students.get(color) == 0) {
       Logger.warn("No students to remove");
       return false;

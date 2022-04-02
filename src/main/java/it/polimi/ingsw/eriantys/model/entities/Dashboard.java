@@ -25,7 +25,7 @@ public class Dashboard {
   }
 
   public void removeFromEntrance(HouseColor color) {
-    if(!entrance.removeStudent(color))
+    if(!entrance.tryRemoveStudent(color))
       Logger.warn("Impossible to remove student from entrance. No students available");
   }
 
@@ -34,7 +34,7 @@ public class Dashboard {
   }
 
   public void removeFromDining(HouseColor color) {
-    if (!diningHall.removeStudent(color))
+    if (!diningHall.tryRemoveStudent(color))
       Logger.warn("Impossible to remove student from diningHall. No students available");
   }
 
