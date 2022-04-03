@@ -69,8 +69,8 @@ public class PlayingField {
    * @param islandIndex
    */
   public void mergeIslands(int islandIndex) {
-    Island nextIsland = islands.get(islandIndex + 1 % RuleBook.ISLAND_COUNT);
-    Island prevIsland = (islandIndex == 0) ? islands.get(RuleBook.ISLAND_COUNT - 1) : islands.get(islandIndex - 1);
+    Island nextIsland = islands.get(islandIndex + 1 % islands.size());
+    Island prevIsland = (islandIndex == 0) ? islands.get(islands.size() - 1) : islands.get(islandIndex - 1);
     Island currIsland = islands.get(islandIndex);
     Logger.debug("prev island:" + islands.indexOf(prevIsland));
     Logger.debug("current island:" + islands.indexOf(currIsland));
@@ -82,7 +82,7 @@ public class PlayingField {
     }
     if (prevIsland.getTowerColor() == currIsland.getTowerColor()) {
       currIsland.addStudents(prevIsland.getStudents());
-      currIsland.setTowerCount(currIsland.getTowerCount() + nextIsland.getTowerCount());
+      currIsland.setTowerCount(currIsland.getTowerCount() + prevIsland.getTowerCount());
       islands.remove(prevIsland);
       if (islandIndex != 0) motherNaturePosition--;
     }

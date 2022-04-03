@@ -44,8 +44,10 @@ class PlayingFieldTest {
   public void setProfessorHolder() {
   }
 
+
   @Test
   void mergeIslands() {
+    //1
     p.getIsland(11).setTowerColor(TowerColor.BLACK);
     p.getIsland(0).setTowerColor(TowerColor.BLACK);
     p.getIsland(1).setTowerColor(TowerColor.BLACK);
@@ -60,7 +62,8 @@ class PlayingFieldTest {
     assertSame(oldIslands.get(10), p.getIsland(9));
     assertSame(oldIslands.get(0), p.getIsland(0));
     assertSame(oldIslands.get(3), p.getIsland(2));
-
+    assertEquals(3, p.getIsland(0).getTowerCount());
+    //2
     setUp();
     p.getIsland(2).setTowerColor(TowerColor.BLACK);
     p.getIsland(1).setTowerColor(TowerColor.BLACK);
@@ -77,7 +80,20 @@ class PlayingFieldTest {
     assertSame(oldIslands.get(1), p.getIsland(0));
     assertSame(oldIslands.get(3), p.getIsland(1));
     assertEquals(0, p.getMotherNaturePosition());
+    assertEquals(3, p.getIsland(0).getTowerCount());
 
+    //new test on shorter islands List
+    p.moveMotherNature(1);
+    p.getIsland(1).setTowerColor(TowerColor.BLACK);
+    p.getIsland(1).setTowerCount(1);
+    oldIslands.clear();
+    for (int i = 0; i < p.getIslandsAmount(); i++)
+      oldIslands.add(p.getIsland(i));
+    p.mergeIslands(1);
+    assertSame(oldIslands.get(1), p.getIsland(0));
+    assertEquals(0, p.getMotherNaturePosition());
+    assertEquals(4, p.getIsland(0).getTowerCount());
+    //3
     setUp();
     p.getIsland(2).setTowerColor(TowerColor.BLACK);
     p.getIsland(1).setTowerColor(TowerColor.WHITE);
