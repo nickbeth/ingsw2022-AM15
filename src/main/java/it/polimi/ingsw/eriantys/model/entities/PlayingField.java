@@ -27,6 +27,7 @@ public class PlayingField {
 
   /**
    * Initializes playing field and all of its components
+   *
    * @param ruleBook
    */
   public PlayingField(RuleBook ruleBook) {
@@ -61,16 +62,19 @@ public class PlayingField {
   }
 
   //TODO manage lock island in merge Island
+
   /**
    * merges Islands[islandIndex] with adjacent islands with the same TowerColor
+   *
    * @param islandIndex
    */
   public void mergeIslands(int islandIndex) {
     Island nextIsland = islands.get(islandIndex + 1 % RuleBook.ISLAND_COUNT);
     Island prevIsland = (islandIndex == 0) ? islands.get(RuleBook.ISLAND_COUNT - 1) : islands.get(islandIndex - 1);
     Island currIsland = islands.get(islandIndex);
-    Logger.debug("prev island:" + islands.indexOf(prevIsland) +"current island:" + islands.indexOf(currIsland) +  "next island:" + islands.indexOf(nextIsland));
-
+    Logger.debug("prev island:" + islands.indexOf(prevIsland));
+    Logger.debug("current island:" + islands.indexOf(currIsland));
+    Logger.debug("next island:" + islands.indexOf(nextIsland));
     if (nextIsland.getTowerColor() == currIsland.getTowerColor()) {
       currIsland.addStudents(nextIsland.getStudents());
       currIsland.setTowerCount(currIsland.getTowerCount() + nextIsland.getTowerCount());
@@ -80,7 +84,7 @@ public class PlayingField {
       currIsland.addStudents(prevIsland.getStudents());
       currIsland.setTowerCount(currIsland.getTowerCount() + nextIsland.getTowerCount());
       islands.remove(prevIsland);
-      if(islandIndex != 0) motherNaturePosition--;
+      if (islandIndex != 0) motherNaturePosition--;
     }
   }
 
@@ -93,6 +97,9 @@ public class PlayingField {
     return studentBag.takeRandomStudent();
   }
 
+  public void addStudentToBag(HouseColor color) {
+    studentBag.addStudent(color);
+  }
 
   public Cloud getCloud(int cloudIndex) {
     return clouds.get(cloudIndex);
@@ -101,7 +108,8 @@ public class PlayingField {
   public Island getIsland(int islandIndex) {
     return islands.get(islandIndex);
   }
-  public int getIslandsAmount(){
+
+  public int getIslandsAmount() {
     return islands.size();
   }
 
@@ -135,6 +143,7 @@ public class PlayingField {
 
   /**
    * Returns true if a certain team has a certain professor
+   *
    * @param professor
    * @param team
    * @return boolean
@@ -156,14 +165,46 @@ public class PlayingField {
     coins--;
   }
 
-  // getCharcterCards(),getPlayedCharacterCard()
+  // getCharacterCards(),getPlayedCharacterCard()
 
     /* maybe deprecated?
     public void setTower(player: String){
 
     }*/
 
-  //TODO influence count
-  //public TowerColor getMostInfluential(int islandIndex) {
-  //}
+  //TODO influence count with CharacterCards
+
+  /**
+   * returns the most influential player on the island, if there is none it returns an empty Optional.
+   *
+   * @param islandIndex
+   * @return Optional<TowerColor>
+   */
+  public Optional<TowerColor> getMostInfluential(int islandIndex) {
+    Island island = islands.get(islandIndex);
+    Students students = island.getStudents();
+    EnumMap<TowerColor, Integer> influenceTracer = new EnumMap<>(TowerColor.class);
+    List<HouseColor> possesedProfessors = new ArrayList<>();
+    Optional<TowerColor> mostInfluential;
+
+    for (TowerColor team : TowerColor.values()) {
+      influenceTracer.put(team, 0);
+      possesedProfessors = professorHolder.entrySet().stream().filter(entry -> team.equals(entry.getValue()))
+              .map(Map.Entry::getKey).collect(Collectors.toList());
+      if (team == island.getTowerColor()) {
+        influenceTracer.put(team, influenceTracer.get(team) + island.getTowerCount());
+      }
+      for (HouseColor professor : possesedProfessors)
+        influenceTracer.put(team, influenceTracer.get(team) + students.getValue(professor));
+    }
+    Logger.debug(influenceTracer.toString());
+    //checks if all influences are the same
+    if (new HashSet<>(influenceTracer.values()).size() == 1)
+      return Optional.empty();
+    else
+      return mostInfluential = influenceTracer.entrySet().stream()
+              .sorted((x, y) -> y.getValue() - x.getValue()).map(Map.Entry::getKey).findFirst();
+  }
 }
+
+

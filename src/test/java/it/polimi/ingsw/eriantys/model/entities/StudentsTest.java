@@ -36,7 +36,4 @@ class StudentsTest {
     assertEquals(0,students.getValue(HouseColor.PINK));
   }
 
-  @Test
-  void testTryRemoveStudent() {
-  }
 }

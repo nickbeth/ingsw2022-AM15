@@ -25,6 +25,7 @@ public class StudentBag {
     }
   }
 
+  //qui solo per il testing?
   public Students getStudents() {
     return students;
   }
@@ -44,8 +45,10 @@ public class StudentBag {
 
     do {
       student = HouseColor.values()[rand.nextInt(HouseColor.values().length)];
-      if (students.tryRemoveStudent(student)) {
-        return student;
+      if (students.getValue(student) != 0) {
+        if (students.tryRemoveStudent(student)) {
+          return student;
+        }
       }
     } while (!students.isEmpty());
     Logger.error("Missing students from bag. Game should've ended.");
