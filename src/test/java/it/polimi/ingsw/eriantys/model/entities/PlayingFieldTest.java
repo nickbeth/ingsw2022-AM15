@@ -92,8 +92,7 @@ class PlayingFieldTest {
     for (int i = 0; i < p.getIslandsAmount(); i++)
       assertSame(oldIslands.get(i), p.getIsland(i));
   }
-
-  //TODO more tests on getMostInfluential
+  
   @Test
   void getMostInfluential() {
     p.getIsland(2).setTowerColor(TowerColor.BLACK);
@@ -108,6 +107,15 @@ class PlayingFieldTest {
     p.getIsland(2).getStudents().addStudent(HouseColor.RED);
     result = p.getMostInfluential(2);
     assertFalse(result.isPresent());
+
+    setUp();
+    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
+    p.setProfessorHolder(TowerColor.BLACK, HouseColor.RED);
+    result = p.getMostInfluential(2);
+    assertTrue(result.isPresent());
+    assertEquals(TowerColor.BLACK, result.get());
 
   }
 }
