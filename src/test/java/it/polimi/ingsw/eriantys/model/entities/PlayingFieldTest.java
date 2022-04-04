@@ -19,6 +19,9 @@ class PlayingFieldTest {
   @BeforeEach
   public void setUp() {
     p = new PlayingField(RuleBook.makeRules(GameMode.NORMAL, 2));
+    p.addTeam(TowerColor.BLACK);
+    p.addTeam(TowerColor.WHITE);
+    p.addTeam(TowerColor.GRAY);
   }
 
 

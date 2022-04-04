@@ -15,7 +15,7 @@ public class PlayingField {
   private ArrayList<Cloud> clouds;
   private StudentBag studentBag;
   private EnumMap<HouseColor, TowerColor> professorHolder;
-  private List<TowerColor> teams; // Active tower colors in this game
+  private List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
   private int coins;
   private int motherNaturePosition;
     /* TODO character card features still need implementation
@@ -190,10 +190,10 @@ public class PlayingField {
     Island island = islands.get(islandIndex);
     EnumMap<TowerColor, Integer> teamsInfluence = new EnumMap<>(TowerColor.class);
 
-    for (TowerColor team : teams) {
+    for (var team : teams) {
       int influence = 0;
 
-      for (HouseColor color : HouseColor.values()) {
+      for (var color : HouseColor.values()) {
         if (hasProfessor(color, team)) {
           influence = island.getStudents().getCount(color);
         }
@@ -207,7 +207,15 @@ public class PlayingField {
 
     Logger.debug(teamsInfluence.toString());
 
-    return Optional.ofNullable(Collections.max(teamsInfluence.entrySet(), Map.Entry.comparingByValue()).getKey());
+    // Get the most influential team
+    var maxEntry = Collections.max(teamsInfluence.entrySet(), Map.Entry.comparingByValue());
+    // Check if 2 teams have the same influence value and return an empty Optional if so
+    for (var team : teams) {
+      if (maxEntry.getValue().equals(teamsInfluence.get(team)) && maxEntry.getKey() != team)
+        return Optional.empty();
+    }
+
+    return Optional.of(maxEntry.getKey());
   }
 }
 
