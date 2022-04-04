@@ -17,13 +17,13 @@ public class Island {
     towers.count = 0;
     towers.color = null;
     students.addStudent(studentColor);
-    Logger.debug("Island created");
+//    Logger.debug("Island created");
   }
 
   public Island() {
     towers.count = 0;
     towers.color = null;
-    Logger.debug("Island created");
+//    Logger.debug("Island created");
   }
 
   public void addStudents(Students s) {

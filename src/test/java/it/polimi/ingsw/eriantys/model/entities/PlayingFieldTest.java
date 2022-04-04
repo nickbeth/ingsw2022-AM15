@@ -45,7 +45,7 @@ class PlayingFieldTest {
   }
 
   @Test
-  void mergeIslands() {
+  public void mergeIslands() {
     p.getIsland(11).setTowerColor(TowerColor.BLACK);
     p.getIsland(0).setTowerColor(TowerColor.BLACK);
     p.getIsland(1).setTowerColor(TowerColor.BLACK);
@@ -92,30 +92,61 @@ class PlayingFieldTest {
     for (int i = 0; i < p.getIslandsAmount(); i++)
       assertSame(oldIslands.get(i), p.getIsland(i));
   }
-  
-  @Test
-  void getMostInfluential() {
-    p.getIsland(2).setTowerColor(TowerColor.BLACK);
-    p.getIsland(2).setTowerCount(1);
-    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
-    p.setProfessorHolder(TowerColor.BLACK, HouseColor.RED);
-    Optional<TowerColor> result = p.getMostInfluential(2);
-    assertTrue(result.isPresent());
-    assertEquals(TowerColor.BLACK, result.get());
 
-    setUp();
-    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
-    result = p.getMostInfluential(2);
+  @Test
+  public void sameInfluence() {
+    // with towers
+    int islandIndex = 6;
+    p.getIsland(islandIndex).setTowerCount(1);
+    p.getIsland(islandIndex).setTowerColor(TowerColor.BLACK);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.BLUE);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.BLUE);
+    p.setProfessorHolder(TowerColor.BLACK, HouseColor.RED);
+    p.setProfessorHolder(TowerColor.WHITE, HouseColor.BLUE);
+    System.out.println(p.getIsland(islandIndex).getStudents());
+    Optional<TowerColor> result = p.getMostInfluential(islandIndex);
     assertFalse(result.isPresent());
 
-    setUp();
-    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
-    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
-    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
+    // with no towers
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(islandIndex).setTowerCount(0);
+    System.out.println(p.getIsland(islandIndex).getStudents());
+    result = p.getMostInfluential(islandIndex);
+    assertFalse(result.isPresent());
+  }
+
+  @Test
+  public void greaterInfluence() {
+    int islandIndex = 6;
+    // with towers
+    p.getIsland(islandIndex).setTowerCount(1);
+    p.getIsland(islandIndex).setTowerColor(TowerColor.BLACK);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.BLUE);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.BLUE);
     p.setProfessorHolder(TowerColor.BLACK, HouseColor.RED);
-    result = p.getMostInfluential(2);
+    p.setProfessorHolder(TowerColor.WHITE, HouseColor.BLUE);
+    System.out.println(p.getIsland(islandIndex).getStudents());
+    Optional<TowerColor> result = p.getMostInfluential(islandIndex);
     assertTrue(result.isPresent());
     assertEquals(TowerColor.BLACK, result.get());
 
+    // with no tower
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(islandIndex).setTowerCount(0);
+    System.out.println(p.getIsland(islandIndex).getStudents());
+    result = p.getMostInfluential(islandIndex);
+    assertTrue(result.isPresent());
+    assertEquals(TowerColor.BLACK, result.get());
+  }
+
+  @Test
+  public void noInfluence() {
+    setUp();
+    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
+    Optional<TowerColor> result = p.getMostInfluential(2);
+    assertFalse(result.isPresent());
   }
 }

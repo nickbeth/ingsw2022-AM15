@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.eriantys.RuleBook.STUDENT_PER_COLOR_SETUP;
 
-// TODO
 public class PlayingField {
   private ArrayList<Island> islands;
   private ArrayList<Cloud> clouds;
@@ -184,7 +183,7 @@ public class PlayingField {
     Island island = islands.get(islandIndex);
     Students students = island.getStudents();
     EnumMap<TowerColor, Integer> influenceTracer = new EnumMap<>(TowerColor.class);
-    List<HouseColor> possesedProfessors = new ArrayList<>();
+    List<HouseColor> possesedProfessors;
     Optional<TowerColor> mostInfluential;
 
     for (TowerColor team : TowerColor.values()) {
@@ -198,12 +197,17 @@ public class PlayingField {
         influenceTracer.put(team, influenceTracer.get(team) + students.getValue(professor));
     }
     Logger.debug(influenceTracer.toString());
-    //checks if all influences are the same
-    if (new HashSet<>(influenceTracer.values()).size() == 1)
-      return Optional.empty();
-    else
-      return mostInfluential = influenceTracer.entrySet().stream()
-              .sorted((x, y) -> y.getValue() - x.getValue()).map(Map.Entry::getKey).findFirst();
+    // Get the most influential entry from influenceTracer
+    Optional<Map.Entry<TowerColor, Integer>> maxEntry = influenceTracer.entrySet().stream()
+            .sorted((entry1, entry2) -> entry2.getValue() - entry1.getValue()).findFirst();
+    // Checks if 2 teams share the same influence
+    for (TowerColor c : TowerColor.values()) {
+      if(maxEntry.isPresent()){
+        if(maxEntry.get().getValue().equals(influenceTracer.get(c)) && maxEntry.get().getKey() != c)
+          return Optional.empty();
+      }
+    }
+    return Optional.of(maxEntry.get().getKey());
   }
 }
 
