@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.model.entities.enums;
+package it.polimi.ingsw.eriantys.model.enums;
 
 public enum HouseColor {
   RED,

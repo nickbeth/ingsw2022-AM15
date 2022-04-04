@@ -2,16 +2,16 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import java.util.ArrayList;
 
-import it.polimi.ingsw.eriantys.RuleBook;
-import it.polimi.ingsw.eriantys.model.entities.enums.AssistantCard;
-import it.polimi.ingsw.eriantys.model.entities.enums.TowerColor;
+import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
+import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.tinylog.Logger;
 
-import static it.polimi.ingsw.eriantys.model.entities.enums.AssistantCard.getFullDeck;
+import static it.polimi.ingsw.eriantys.model.enums.AssistantCard.getFullDeck;
 
 public class Player {
   private final String nickname;
-  private ArrayList<AssistantCard> cards;
+  private final ArrayList<AssistantCard> cards;
   private final Dashboard dashboard;
   private int maxMovement;
   private int turnPriority;
@@ -22,7 +22,7 @@ public class Player {
     coins = RuleBook.INITIAL_COINS;
     // TODO gestire il caso di 4 players che condividono lo stesso numero di tower.
     dashboard = new Dashboard(entranceStudents, ruleBook.dashboardTowerCount, color);
-    ArrayList<AssistantCard> cards = getFullDeck();
+    cards = getFullDeck();
   }
 
   public String getNickname() {
@@ -57,5 +57,8 @@ public class Player {
     return dashboard;
   }
 
-  // TODO public void setPlayedCard()
+  public void setPlayedCard(int assistantCardIndex) {
+    turnPriority = cards.get(assistantCardIndex).movement;
+    cards.remove(assistantCardIndex);
+  }
 }

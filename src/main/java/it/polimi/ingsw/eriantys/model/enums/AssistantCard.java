@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.model.entities.enums;
+package it.polimi.ingsw.eriantys.model.enums;
 
 import java.util.ArrayList;
 
@@ -12,8 +12,7 @@ public enum AssistantCard {
   SEVEN(7, 4),
   EIGHT(8, 4),
   NINE(9, 5),
-  TEN(10, 5),
-  ;
+  TEN(10, 5);
 
   public final int value;
   public final int movement;

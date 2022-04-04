@@ -1,6 +1,6 @@
-package it.polimi.ingsw.eriantys;
+package it.polimi.ingsw.eriantys.model;
 
-import it.polimi.ingsw.eriantys.model.entities.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import org.tinylog.Logger;
 
 public class RuleBook {

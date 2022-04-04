@@ -1,9 +1,9 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
-import it.polimi.ingsw.eriantys.RuleBook;
-import it.polimi.ingsw.eriantys.model.entities.enums.GameMode;
-import it.polimi.ingsw.eriantys.model.entities.enums.HouseColor;
-import it.polimi.ingsw.eriantys.model.entities.enums.TowerColor;
+import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
+import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

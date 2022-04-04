@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
-import it.polimi.ingsw.eriantys.model.entities.enums.HouseColor;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

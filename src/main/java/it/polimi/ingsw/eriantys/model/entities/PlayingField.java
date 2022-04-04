@@ -1,15 +1,15 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
-import it.polimi.ingsw.eriantys.RuleBook;
-import it.polimi.ingsw.eriantys.model.entities.enums.GameMode;
-import it.polimi.ingsw.eriantys.model.entities.enums.HouseColor;
-import it.polimi.ingsw.eriantys.model.entities.enums.TowerColor;
+import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
+import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.eriantys.RuleBook.STUDENT_PER_COLOR_SETUP;
+import static it.polimi.ingsw.eriantys.model.RuleBook.STUDENT_PER_COLOR_SETUP;
 
 public class PlayingField {
   private ArrayList<Island> islands;

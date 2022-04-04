@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
-import it.polimi.ingsw.eriantys.model.entities.enums.HouseColor;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import org.tinylog.Logger;
 
 import java.util.*;
