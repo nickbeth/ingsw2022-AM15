@@ -24,7 +24,7 @@ public class Students {
    */
   public Students(Students s) {
     Arrays.stream((HouseColor.values()))
-            .forEach(color -> students.put(color, s.getValue(color)));
+            .forEach(color -> students.put(color, s.getCount(color)));
   }
 
   /**
@@ -34,7 +34,7 @@ public class Students {
    */
   public void addStudents(Students s) {
     students.forEach(((color, value)
-            -> students.put(color, value + s.getValue(color))));
+            -> students.put(color, value + s.getCount(color))));
   }
 
   /**
@@ -64,7 +64,7 @@ public class Students {
 
   public void setStudents(Students s) {
     students.forEach(((color, amount) ->
-            students.put(color, s.getValue(color))));
+            students.put(color, s.getCount(color))));
   }
 
   /**
@@ -80,12 +80,12 @@ public class Students {
   }
 
   /**
-   * Returns the number of students with the given color
+   * Returns the number of students of the given color
    *
    * @param color
-   * @return number of students with that color
+   * @return number of students of that color
    */
-  public Integer getValue(HouseColor color) {
+  public Integer getCount(HouseColor color) {
     return students.get(color);
   }
 

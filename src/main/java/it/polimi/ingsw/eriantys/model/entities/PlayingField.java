@@ -7,7 +7,6 @@ import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.tinylog.Logger;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.eriantys.model.RuleBook.STUDENT_PER_COLOR_SETUP;
 
@@ -15,8 +14,8 @@ public class PlayingField {
   private ArrayList<Island> islands;
   private ArrayList<Cloud> clouds;
   private StudentBag studentBag;
-  //    private EnumMap<TowerColor, Integer> influenceTracer;
   private EnumMap<HouseColor, TowerColor> professorHolder;
+  private List<TowerColor> teams; // Active tower colors in this game
   private int coins;
   private int motherNaturePosition;
     /* TODO character card features still need implementation
@@ -156,6 +155,14 @@ public class PlayingField {
     professorHolder.put(professor, team);
   }
 
+  /**
+   * Adds a team to the active teams list in this game
+   * @param team
+   */
+  public void addTeam(TowerColor team) {
+    teams.add(team);
+  }
+
   public void addCoin() {
     coins++;
   }
@@ -181,33 +188,26 @@ public class PlayingField {
    */
   public Optional<TowerColor> getMostInfluential(int islandIndex) {
     Island island = islands.get(islandIndex);
-    Students students = island.getStudents();
-    EnumMap<TowerColor, Integer> influenceTracer = new EnumMap<>(TowerColor.class);
-    List<HouseColor> possesedProfessors;
-    Optional<TowerColor> mostInfluential;
+    EnumMap<TowerColor, Integer> teamsInfluence = new EnumMap<>(TowerColor.class);
 
-    for (TowerColor team : TowerColor.values()) {
-      influenceTracer.put(team, 0);
-      possesedProfessors = professorHolder.entrySet().stream().filter(entry -> team.equals(entry.getValue()))
-              .map(Map.Entry::getKey).collect(Collectors.toList());
-      if (team == island.getTowerColor()) {
-        influenceTracer.put(team, influenceTracer.get(team) + island.getTowerCount());
+    for (TowerColor team : teams) {
+      int influence = 0;
+
+      for (HouseColor color : HouseColor.values()) {
+        if (hasProfessor(color, team)) {
+          influence = island.getStudents().getCount(color);
+        }
       }
-      for (HouseColor professor : possesedProfessors)
-        influenceTracer.put(team, influenceTracer.get(team) + students.getValue(professor));
+
+      if (team == island.getTowerColor())
+        influence += island.getTowerCount();
+
+      teamsInfluence.put(team, influence);
     }
-    Logger.debug(influenceTracer.toString());
-    // Get the most influential entry from influenceTracer
-    Optional<Map.Entry<TowerColor, Integer>> maxEntry = influenceTracer.entrySet().stream()
-            .sorted((entry1, entry2) -> entry2.getValue() - entry1.getValue()).findFirst();
-    // Checks if 2 teams share the same influence
-    for (TowerColor c : TowerColor.values()) {
-      if(maxEntry.isPresent()){
-        if(maxEntry.get().getValue().equals(influenceTracer.get(c)) && maxEntry.get().getKey() != c)
-          return Optional.empty();
-      }
-    }
-    return Optional.of(maxEntry.get().getKey());
+
+    Logger.debug(teamsInfluence.toString());
+
+    return Optional.ofNullable(Collections.max(teamsInfluence.entrySet(), Map.Entry.comparingByValue()).getKey());
   }
 }
 

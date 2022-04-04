@@ -18,8 +18,6 @@ public class GameState {
   private int currentPlayer; // Nickname of the current player
   private GamePhase phase; // Current phase of the game
   private TurnPhase turnPhase; // Current turn phase
-  private List<TowerColor> teams; // Active tower colors in this game
-
   private final RuleBook ruleBook; // Set of rules used in this game
   private PlayingField playingField; // Playing field of this game
 
@@ -29,6 +27,7 @@ public class GameState {
 
   public void addPlayer(String playerName, TowerColor towerColor, Students entrance) {
     players.add(new Player(ruleBook, playerName, towerColor, entrance));
+    playingField.addTeam(towerColor);
   }
 
   public void advancePlayer() {
@@ -47,13 +46,6 @@ public class GameState {
    */
   public PlayingField getPlayingField() {
     return playingField;
-  }
-
-  /**
-   * @return the active tower colors in the game
-   */
-  public List<TowerColor> getTeams() {
-    return teams;
   }
 
   /**

@@ -45,7 +45,7 @@ public class StudentBag {
 
     do {
       student = HouseColor.values()[rand.nextInt(HouseColor.values().length)];
-      if (students.getValue(student) != 0) {
+      if (students.getCount(student) != 0) {
         if (students.tryRemoveStudent(student)) {
           return student;
         }
