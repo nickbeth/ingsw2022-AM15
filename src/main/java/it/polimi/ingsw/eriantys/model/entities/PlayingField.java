@@ -201,7 +201,11 @@ public class PlayingField {
 
       if (team == island.getTowerColor())
         influence += island.getTowerCount();
-
+      /*
+       * todo possible implementation of modifierInfluenceCard
+       * teamsInfluence.put(team, playedCC.modifier(influence));
+       *    with a noEffectCC(int value) returns value;
+       */
       teamsInfluence.put(team, influence);
     }
 

@@ -1,2 +1,8 @@
-package it.polimi.ingsw.eriantys.model.enums;public class StudentSlot {
+package it.polimi.ingsw.eriantys.model.enums;
+
+public enum StudentSlot {
+  ISLAND,
+  DINIGN,
+  ENTRANCE,
+  CARD
 }
