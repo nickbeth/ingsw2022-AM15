@@ -33,7 +33,7 @@ public class GameState {
    */
   public void addPlayer(String playerName, TowerColor towerColor) {
     Students entrance = new Students();
-    for(int i; i <= ruleBook.entranceSize; i++)
+    for(int i = 0; i <= ruleBook.entranceSize; i++)
       entrance.addStudent(playingField.takeStudentFromBag());
     players.add(new Player(ruleBook, playerName, towerColor, entrance));
     playingField.addTeam(towerColor);
@@ -60,7 +60,7 @@ public class GameState {
   /**
    * @return the current phase of the game
    */
-  public GamePhase getPhase() {
+  public GamePhase getGamePhase() {
     return phase;
   }
 
@@ -77,6 +77,8 @@ public class GameState {
   public void checkWinCondition() {
     // TODO
   }
+
+
 
   public RuleBook getRuleBook() {
     return ruleBook;
