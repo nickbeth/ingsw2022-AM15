@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 
 import java.util.List;
 
@@ -41,11 +42,13 @@ public class PlaceStudents extends PlayerAction {
   @Override
   public boolean isValid(GameState gameState) {
     if (!gameState.getCurrentPlayer().getNickname().equals(playerNickname)) return false;
+    if (!(gameState.getPhase() == GamePhase.ACTION)) return false;
     for (StudentMovement move : entries) {
       switch (move.src) {
         case ENTRANCE -> {
-          if (gameState.getCurrentPlayer().getDashboard().getEntrance().getCount(move.studentColor) == 0)
+          if (gameState.getCurrentPlayer().getDashboard().getEntrance().getCount(move.studentColor) == 0){
             return false;
+          }
         }
         case DINIGN -> {
           if (gameState.getCurrentPlayer().getDashboard().getDiningHall().getCount(move.studentColor) == 0)
