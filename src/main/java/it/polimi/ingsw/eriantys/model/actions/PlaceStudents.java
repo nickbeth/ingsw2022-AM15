@@ -10,8 +10,11 @@ import it.polimi.ingsw.eriantys.model.enums.StudentSlot;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+
+import static it.polimi.ingsw.eriantys.model.enums.StudentSlot.ENTRANCE;
 
 public class PlaceStudents extends PlayerAction {
   private final List<StudentMovement> entries;
@@ -32,23 +35,23 @@ public class PlaceStudents extends PlayerAction {
     // For each moves
     for (StudentMovement move : entries) {
       // Remove the student from the source
-      switch (move.src) {
+      switch (move.src()) {
         case ENTRANCE -> gameState.
-                getCurrentPlayer().getDashboard().getEntrance().tryRemoveStudent(move.studentColor);
+                getCurrentPlayer().getDashboard().getEntrance().tryRemoveStudent(move.studentColor());
         case DINIGN -> gameState.
-                getCurrentPlayer().getDashboard().getDiningHall().tryRemoveStudent(move.studentColor);
-        default -> throw new IllegalStateException("Unexpected value: " + move.src);
+                getCurrentPlayer().getDashboard().getDiningHall().tryRemoveStudent(move.studentColor());
+        default -> throw new IllegalStateException("Unexpected value: " + move.src());
       }
 
       // Add the student from the source
-      switch (move.dest) {
+      switch (move.dest()) {
         case ENTRANCE -> gameState.
-                getCurrentPlayer().getDashboard().getEntrance().addStudent(move.studentColor);
+                getCurrentPlayer().getDashboard().getEntrance().addStudent(move.studentColor());
         case DINIGN -> gameState.
-                getCurrentPlayer().getDashboard().getDiningHall().addStudent(move.studentColor);
+                getCurrentPlayer().getDashboard().getDiningHall().addStudent(move.studentColor());
         case ISLAND -> gameState.
-                getPlayingField().getIsland(move.islandIndex).getStudents().addStudent(move.studentColor);
-        default -> throw new IllegalStateException("Unexpected value: " + move.src);
+                getPlayingField().getIsland(move.islandIndex()).getStudents().addStudent(move.studentColor());
+        default -> throw new IllegalStateException("Unexpected value: " + move.src());
       }
     }
   }
@@ -73,16 +76,16 @@ public class PlaceStudents extends PlayerAction {
     EnumMap<StudentSlot, Students> wantedStudents = new EnumMap<>(StudentSlot.class);
     for (var slot : StudentSlot.values())
       wantedStudents.put(slot, new Students());
-    entries.stream().forEach((move) -> wantedStudents.get(move.src).addStudent(move.studentColor));
+    entries.stream().forEach((move) -> wantedStudents.get(move.src()).addStudent(move.studentColor()));
 
     // Checks if there are enough students to be moved
     Dashboard gameDashboard = gameState.getCurrentPlayer().getDashboard();
     for (HouseColor color : HouseColor.values()) {
       Logger.debug("Entrance Color: {} Count: {} Wanted: {}"
-              , color, gameDashboard.getEntrance().getCount(color), wantedStudents.get(StudentSlot.ENTRANCE).getCount(color));
+              , color, gameDashboard.getEntrance().getCount(color), wantedStudents.get(ENTRANCE).getCount(color));
       Logger.debug("Dining Color: {} Count: {} Wanted: {}"
               , color, gameDashboard.getDiningHall().getCount(color), wantedStudents.get(StudentSlot.DINIGN).getCount(color));
-      if (gameDashboard.getEntrance().getCount(color) < wantedStudents.get(StudentSlot.ENTRANCE).getCount(color)) {
+      if (gameDashboard.getEntrance().getCount(color) < wantedStudents.get(ENTRANCE).getCount(color)) {
         return false;
       }
       if (gameDashboard.getDiningHall().getCount(color) < wantedStudents.get(StudentSlot.DINIGN).getCount(color)) {

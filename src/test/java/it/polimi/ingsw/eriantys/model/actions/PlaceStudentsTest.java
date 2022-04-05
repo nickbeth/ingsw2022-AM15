@@ -59,7 +59,7 @@ class PlaceStudentsTest {
     moves.add(new StudentMovement(HouseColor.RED, StudentSlot.DINIGN, StudentSlot.ISLAND, 0));
 
 
-    moves.forEach((m) -> Logger.debug("{} - {}", m.studentColor, m.src));
+    moves.forEach((m) -> Logger.debug("{} - {}", m.studentColor(), m.src()));
 
     placeStudents = new PlaceStudents("nick", moves);
   }
