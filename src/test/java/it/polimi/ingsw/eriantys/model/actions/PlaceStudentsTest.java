@@ -36,8 +36,6 @@ class PlaceStudentsTest {
   Students entrance;
   @Mock
   Students dining;
-  @Mock
-  StudentMovement move;
   PlaceStudents placeStudents;
   List<StudentMovement> moves;
 
@@ -45,7 +43,6 @@ class PlaceStudentsTest {
   public void applyTest() {
   }
 
-  @BeforeEach
   public void isValidSetup() {
     moves = new ArrayList<>();
 
@@ -69,6 +66,7 @@ class PlaceStudentsTest {
    */
   @Test
   public void notEnoughStudents() {
+    isValidSetup();
     // Stubs simple checks: phase and nickname
     when(game.getCurrentPlayer()).thenReturn(p);
     when(game.getTurnPhase()).thenReturn(TurnPhase.PLACING);
