@@ -23,9 +23,18 @@ public class GameState {
 
   public GameState(int playerCount, GameMode mode) {
     ruleBook = RuleBook.makeRules(mode, playerCount);
+    playingField = new PlayingField(ruleBook);
   }
 
-  public void addPlayer(String playerName, TowerColor towerColor, Students entrance) {
+  /**
+   * Adds a player to the gameg
+   * @param playerName
+   * @param towerColor
+   */
+  public void addPlayer(String playerName, TowerColor towerColor) {
+    Students entrance = new Students();
+    for(int i; i <= ruleBook.entranceSize; i++)
+      entrance.addStudent(playingField.takeStudentFromBag());
     players.add(new Player(ruleBook, playerName, towerColor, entrance));
     playingField.addTeam(towerColor);
   }
