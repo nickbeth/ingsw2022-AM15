@@ -18,4 +18,8 @@ public class Cloud {
     students.setStudents(students);
     Logger.debug("Students cloud set");
   }
+
+  public boolean isEmpty(){
+    return students.isEmpty();
+  }
 }

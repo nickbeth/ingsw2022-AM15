@@ -4,5 +4,5 @@ public enum TurnPhase {
   PLACING,
   EFFECT,
   MOVING,
-  PICKING
+  PICKING,
 }

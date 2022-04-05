@@ -45,9 +45,9 @@ public class moveMotherNature extends PlayerAction {
     //checks if the current player is the last in turn order and subsequently changes phases
     Player lastPlayer = gameState.getTurnOrder().get(gameState.getTurnOrder().size() - 1);
     if(gameState.getCurrentPlayer().equals(lastPlayer)){
-      gameState.advanceTurnPhase();
       gameState.advanceGamePhase();
     }
+    gameState.advanceTurnPhase();
     gameState.advancePlayer();
   }
 
