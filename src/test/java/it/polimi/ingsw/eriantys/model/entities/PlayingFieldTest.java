@@ -6,6 +6,7 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -45,10 +46,28 @@ class PlayingFieldTest {
   public void setProfessorHolder() {
   }
 
-
   @Test
-  public void mergeIslands() {
-    // 1
+  public void doubleMerge() {
+    //merges leftIsland and RightIsland with currentIsland, index = 1
+    ArrayList<Island> oldIslands = new ArrayList<>();
+    p.getIsland(2).setTowerColor(TowerColor.BLACK);
+    p.getIsland(1).setTowerColor(TowerColor.BLACK);
+    p.getIsland(0).setTowerColor(TowerColor.BLACK);
+    p.getIsland(2).setTowerCount(1);
+    p.getIsland(1).setTowerCount(1);
+    p.getIsland(0).setTowerCount(1);
+    p.moveMotherNature(1);
+    for (int i = 0; i < p.getIslandsAmount(); i++)
+      oldIslands.add(p.getIsland(i));
+    p.mergeIslands(1);
+    assertSame(oldIslands.get(1), p.getIsland(0));
+    assertSame(oldIslands.get(3), p.getIsland(1));
+    assertEquals(0, p.getMotherNaturePosition());
+    assertEquals(3, p.getIsland(0).getTowerCount());
+  }
+  @Test
+  public void doubleMergeOnFirst() {
+    //merges leftIsland and RightIsland with currentIsland, index = 0
     p.getIsland(11).setTowerColor(TowerColor.BLACK);
     p.getIsland(0).setTowerColor(TowerColor.BLACK);
     p.getIsland(1).setTowerColor(TowerColor.BLACK);
@@ -64,8 +83,26 @@ class PlayingFieldTest {
     assertSame(oldIslands.get(0), p.getIsland(0));
     assertSame(oldIslands.get(3), p.getIsland(2));
     assertEquals(3, p.getIsland(0).getTowerCount());
-    //2
-    setUp();
+  }
+
+  @Test
+  public void noMerge(){
+    ArrayList<Island> oldIslands = new ArrayList<>();
+    p.getIsland(2).setTowerColor(TowerColor.BLACK);
+    p.getIsland(1).setTowerColor(TowerColor.WHITE);
+    p.getIsland(0).setTowerColor(TowerColor.BLACK);
+    p.getIsland(2).setTowerCount(1);
+    p.getIsland(1).setTowerCount(1);
+    p.getIsland(0).setTowerCount(1);
+    for (int i = 0; i < p.getIslandsAmount(); i++)
+      oldIslands.add(p.getIsland(i));
+    p.mergeIslands(1);
+    for (int i = 0; i < p.getIslandsAmount(); i++)
+      assertSame(oldIslands.get(i), p.getIsland(i));
+  }
+  @Test
+  public void consecutiveMergeIslands(){
+    ArrayList<Island> oldIslands = new ArrayList<>();
     p.getIsland(2).setTowerColor(TowerColor.BLACK);
     p.getIsland(1).setTowerColor(TowerColor.BLACK);
     p.getIsland(0).setTowerColor(TowerColor.BLACK);
@@ -73,11 +110,9 @@ class PlayingFieldTest {
     p.getIsland(1).setTowerCount(1);
     p.getIsland(0).setTowerCount(1);
     p.moveMotherNature(1);
-    oldIslands.clear();
     for (int i = 0; i < p.getIslandsAmount(); i++)
       oldIslands.add(p.getIsland(i));
     p.mergeIslands(1);
-
     assertSame(oldIslands.get(1), p.getIsland(0));
     assertSame(oldIslands.get(3), p.getIsland(1));
     assertEquals(0, p.getMotherNaturePosition());
@@ -94,20 +129,6 @@ class PlayingFieldTest {
     assertSame(oldIslands.get(1), p.getIsland(0));
     assertEquals(0, p.getMotherNaturePosition());
     assertEquals(4, p.getIsland(0).getTowerCount());
-    //3
-    setUp();
-    p.getIsland(2).setTowerColor(TowerColor.BLACK);
-    p.getIsland(1).setTowerColor(TowerColor.WHITE);
-    p.getIsland(0).setTowerColor(TowerColor.BLACK);
-    p.getIsland(2).setTowerCount(1);
-    p.getIsland(1).setTowerCount(1);
-    p.getIsland(0).setTowerCount(1);
-    oldIslands.clear();
-    for (int i = 0; i < p.getIslandsAmount(); i++)
-      oldIslands.add(p.getIsland(i));
-    p.mergeIslands(1);
-    for (int i = 0; i < p.getIslandsAmount(); i++)
-      assertSame(oldIslands.get(i), p.getIsland(i));
   }
 
   @Test
@@ -165,5 +186,26 @@ class PlayingFieldTest {
     p.getIsland(2).getStudents().addStudent(HouseColor.RED);
     Optional<TowerColor> result = p.getMostInfluential(2);
     assertFalse(result.isPresent());
+  }
+
+  @Test
+  public void multipleProfessorInfluence() {
+    int islandIndex = 6;
+    setUp();
+    p.getIsland(2).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(islandIndex).setTowerCount(1);
+    p.getIsland(islandIndex).setTowerColor(TowerColor.WHITE);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.RED);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.BLUE);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.BLUE);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.GREEN);
+    p.getIsland(islandIndex).getStudents().addStudent(HouseColor.GREEN);
+    p.setProfessorHolder(TowerColor.BLACK, HouseColor.RED);
+    p.setProfessorHolder(TowerColor.BLACK, HouseColor.BLUE);
+    p.setProfessorHolder(TowerColor.WHITE, HouseColor.GREEN);
+    Optional<TowerColor> result = p.getMostInfluential(islandIndex);
+    assertTrue(result.isPresent());
+    assertEquals(TowerColor.BLACK, result.get());
   }
 }
