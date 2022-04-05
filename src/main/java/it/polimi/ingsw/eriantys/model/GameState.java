@@ -69,6 +69,10 @@ public class GameState {
     // TODO
   }
 
+  public RuleBook getRuleBook() {
+    return ruleBook;
+  }
+
   /**
    * Sorts players by their selected assistant card movement value
    */
