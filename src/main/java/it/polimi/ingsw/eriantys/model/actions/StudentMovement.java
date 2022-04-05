@@ -11,4 +11,11 @@ public class StudentMovement {
   public StudentSlot src;
   public StudentSlot dest;
   public int islandIndex;
+
+  public StudentMovement(HouseColor studentColor, StudentSlot src, StudentSlot dest, int islandIndex) {
+    this.studentColor = studentColor;
+    this.src = src;
+    this.dest = dest;
+    this.islandIndex = islandIndex;
+  }
 }
