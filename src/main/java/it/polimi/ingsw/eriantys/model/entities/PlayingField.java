@@ -211,7 +211,7 @@ public class PlayingField {
    * returns the most influential player on the island, if there is none it returns an empty Optional.
    *
    * @param islandIndex
-   * @return Optional<TowerColor>
+   * @return Optional &#60TowerColor&#62
    */
   public Optional<TowerColor> getMostInfluential(int islandIndex) {
     Island island = islands.get(islandIndex);
