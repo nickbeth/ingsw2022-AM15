@@ -73,8 +73,8 @@ public class PlayingField {
   //TODO manage lock island in merge Island
 
   /**
-   * merges Islands[islandIndex] with adjacent islands with the same TowerColor
-   *
+   * Merges islands[islandIndex] with adjacent islands if they have the same TowerColor<br/>
+   * If the Merge gets applied also motherNaturePosition gets adjusted
    * @param islandIndex
    */
   public void mergeIslands(int islandIndex) {

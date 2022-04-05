@@ -42,7 +42,7 @@ public class PlaceStudents extends PlayerAction {
   @Override
   public boolean isValid(GameState gameState) {
     if (!gameState.getCurrentPlayer().getNickname().equals(playerNickname)) return false;
-    if (!(gameState.getPhase() == GamePhase.ACTION)) return false;
+    if (!(gameState.getGamePhase() == GamePhase.ACTION)) return false;
     for (StudentMovement move : entries) {
       switch (move.src) {
         case ENTRANCE -> {

@@ -64,11 +64,19 @@ public class GameState {
     return phase;
   }
 
+  //TODO advanceGamePhase
+  public void advanceGamePhase() {
+  }
+
   /**
    * @return the current turn phase
    */
   public TurnPhase getTurnPhase() {
     return turnPhase;
+  }
+
+  //TODO advanceTurnPhase
+  public void advanceTurnPhase() {
   }
 
   /**
@@ -84,6 +92,9 @@ public class GameState {
     return ruleBook;
   }
 
+  public List<Player> getTurnOrder(){
+    return turnOrder;
+  }
   /**
    * Sorts players by their selected assistant card movement value
    */
