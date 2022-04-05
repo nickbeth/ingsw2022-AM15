@@ -195,10 +195,9 @@ public class PlayingField {
 
       for (var color : HouseColor.values()) {
         if (hasProfessor(color, team)) {
-          influence = island.getStudents().getCount(color);
+          influence += island.getStudents().getCount(color);
         }
       }
-
       if (team == island.getTowerColor())
         influence += island.getTowerCount();
       /*
