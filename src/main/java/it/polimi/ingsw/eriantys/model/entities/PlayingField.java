@@ -11,6 +11,12 @@ import java.util.*;
 import static it.polimi.ingsw.eriantys.model.RuleBook.STUDENT_PER_COLOR_SETUP;
 
 public class PlayingField {
+  class InfluenceModifier {
+    private HouseColor ignoredColor;
+    private boolean ignoreTower;
+    private TowerColor addonTowerColor;
+  }
+
   private ArrayList<Island> islands;
   private ArrayList<Cloud> clouds;
   private StudentBag studentBag;
@@ -18,10 +24,10 @@ public class PlayingField {
   private List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
   private int coins;
   private int motherNaturePosition;
-    /* TODO character card features still need implementation
-    private ArrayList<CharacterCard> characterCards;
-    private CharacterCard playedCaracterCard;
-    */
+  private InfluenceModifier influenceModifier = new InfluenceModifier();
+  // TODO character card features still need implementation
+  // private ArrayList<CharacterCard> characterCards;
+  // private CharacterCard playedCaracterCard;
 
   /**
    * Initializes playing field and all of its components
@@ -29,21 +35,23 @@ public class PlayingField {
    * @param ruleBook
    */
   public PlayingField(RuleBook ruleBook) {
-//        influenceTracer = new EnumMap<>(TowerColor.class);
     professorHolder = new EnumMap<>(HouseColor.class);
-    //initializing islands and student bag
+    //initialize islands and student bag
     islands = new ArrayList<>();
     studentBag = new StudentBag();
     studentBag.initStudents(STUDENT_PER_COLOR_SETUP);
+
     for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
       if (i == 0 || (i == RuleBook.ISLAND_COUNT / 2))
         islands.add(new Island());
       else
         islands.add(new Island(takeStudentFromBag()));
     }
-    //definitive initialization of StudentBag
+
+    // definitive initialization of StudentBag
     studentBag.initStudents(RuleBook.STUDENT_PER_COLOR - STUDENT_PER_COLOR_SETUP);
-    //initializing Clouds
+
+    // initializing Clouds
     clouds = new ArrayList<>();
     for (int i = 0; i < ruleBook.cloudCount; i++) {
       Students tempStudents = new Students();
@@ -53,9 +61,12 @@ public class PlayingField {
       }
       clouds.add(new Cloud(tempStudents));
     }
+
     // the cloud count is the same as the number of players
-    if (ruleBook.gameMode == GameMode.EXPERT) coins = RuleBook.TOTAL_COINS - ruleBook.cloudCount;
-    else coins = 0;
+    if (ruleBook.gameMode == GameMode.EXPERT)
+      coins = RuleBook.TOTAL_COINS - ruleBook.cloudCount;
+    else
+      coins = 0;
     motherNaturePosition = 0;
   }
 
@@ -70,14 +81,17 @@ public class PlayingField {
     Island nextIsland = islands.get(islandIndex + 1 % islands.size());
     Island prevIsland = (islandIndex == 0) ? islands.get(islands.size() - 1) : islands.get(islandIndex - 1);
     Island currIsland = islands.get(islandIndex);
+
     Logger.debug("prev island:" + islands.indexOf(prevIsland));
     Logger.debug("current island:" + islands.indexOf(currIsland));
     Logger.debug("next island:" + islands.indexOf(nextIsland));
+
     if (nextIsland.getTowerColor() == currIsland.getTowerColor()) {
       currIsland.addStudents(nextIsland.getStudents());
       currIsland.setTowerCount(currIsland.getTowerCount() + nextIsland.getTowerCount());
       islands.remove(nextIsland);
     }
+
     if (prevIsland.getTowerColor() == currIsland.getTowerColor()) {
       currIsland.addStudents(prevIsland.getStudents());
       currIsland.setTowerCount(currIsland.getTowerCount() + prevIsland.getTowerCount());
@@ -109,6 +123,18 @@ public class PlayingField {
 
   public int getIslandsAmount() {
     return islands.size();
+  }
+
+  public void setIgnoredColor(HouseColor ignoredColor) {
+    influenceModifier.ignoredColor = ignoredColor;
+  }
+
+  public void setIgnoreTower(boolean ignoreTower) {
+    influenceModifier.ignoreTower = ignoreTower;
+  }
+
+  public void setAddonTowerColor(TowerColor addonTowerColor) {
+    influenceModifier.addonTowerColor = addonTowerColor;
   }
 
   /**
@@ -157,6 +183,7 @@ public class PlayingField {
 
   /**
    * Adds a team to the active teams list in this game
+   *
    * @param team
    */
   public void addTeam(TowerColor team) {
@@ -194,17 +221,17 @@ public class PlayingField {
       int influence = 0;
 
       for (var color : HouseColor.values()) {
-        if (hasProfessor(color, team)) {
+        if (hasProfessor(color, team) && color != influenceModifier.ignoredColor) {
           influence += island.getStudents().getCount(color);
         }
       }
-      if (team == island.getTowerColor())
+
+      if (team == island.getTowerColor() && !influenceModifier.ignoreTower)
         influence += island.getTowerCount();
-      /*
-       * todo possible implementation of modifierInfluenceCard
-       * teamsInfluence.put(team, playedCC.modifier(influence));
-       *    with a noEffectCC(int value) returns value;
-       */
+
+      if (team == influenceModifier.addonTowerColor)
+        influence += 2;
+
       teamsInfluence.put(team, influence);
     }
 
