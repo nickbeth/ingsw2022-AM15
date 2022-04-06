@@ -38,15 +38,26 @@ public class Dashboard {
       Logger.warn("Impossible to remove student from diningHall. No students available");
   }
 
-  public void addTower() {
-    towers.count++;
+  /**
+   * Adds the given amount of tower
+   * @param amount
+   */
+  public void addTowers(int amount) {
+    towers.count += amount;
   }
 
-  public void removeTower() {
-    if (towers.count == 0) {
-      Logger.warn("No tower to remove from dashboard");
+  /**
+   * Removes the given amount of tower. If the amount is greater than towers count then it goes to 0.
+   * @param amount
+   */
+  public void removeTowers(int amount) {
+    // Could be simplified with:
+    // towers.count = Max(0,towers.count - amount);
+    if (towers.count < amount) {
+      towers.count = 0;
+      Logger.warn("Cannot remove any more tower");
     } else {
-      towers.count--;
+      towers.count -= amount;
     }
   }
 }

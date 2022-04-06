@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
+import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
@@ -10,19 +11,21 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.util.Optional;
 
-public class moveMotherNature extends PlayerAction {
+public class MoveMotherNature extends PlayerAction {
   int amount;
 
-  public moveMotherNature(String nickname, int amount) {
+  public MoveMotherNature(String nickname, int amount) {
     this.playerNickname = nickname;
     this.amount = amount;
   }
 
   /**
    * Moves motherNature
-   * if the destination island is not Locked it sets the tower color to the most influential Team
+   * If the destination island is not Locked it sets the tower color to the most influential Team
    * and tries to merge adjacent islands.
-   * if necessary it will advance gamePhase and turnPhase
+   * Modifies players' tower count if necessary. <br/>
+   * If necessary it will advance gamePhase and turnPhase.
+   *
    * @param gameState
    */
   @Override
@@ -35,16 +38,36 @@ public class moveMotherNature extends PlayerAction {
       playingField.getIsland(motherNaturePos).setLocked(false);
       //TODO lock returns to the characterCard
     } else {
-      Optional<TowerColor> mostInfluential = playingField.getMostInfluential(motherNaturePos);
-      if(mostInfluential.isPresent()){
-        playingField.getIsland(motherNaturePos).setTowerColor(mostInfluential.get());
+      Optional<TowerColor> mostInfluentialTeam = playingField.getMostInfluential(motherNaturePos);
+      Island currIsland = playingField.getIsland(motherNaturePos);
+
+      if (mostInfluentialTeam.isPresent()) {
+        // Set tower color
+        TowerColor oldColor = currIsland.getTowerColor();
+        currIsland.setTowerColor(mostInfluentialTeam.get());
+
+        // If old color != new color => manage player towers
+        if (!oldColor.equals(mostInfluentialTeam.get())) {
+          for (Player p : gameState.getPlayers()) {
+
+            // Remove towers from conquerors' dashboard
+            if (p.getColorTeam() == mostInfluentialTeam.get()) {
+              p.getDashboard().removeTowers(currIsland.getTowerCount());
+            }
+
+            // Add towers to conquered dashboard
+            if (p.getColorTeam() == oldColor) {
+              p.getDashboard().addTowers(currIsland.getTowerCount());
+            }
+          }
+        }
         playingField.mergeIslands(motherNaturePos);
       }
     }
 
     //checks if the current player is the last in turn order and subsequently changes phases
     Player lastPlayer = gameState.getTurnOrder().get(gameState.getTurnOrder().size() - 1);
-    if(gameState.getCurrentPlayer().equals(lastPlayer)){
+    if (gameState.getCurrentPlayer().equals(lastPlayer)) {
       gameState.advanceGamePhase();
     }
     gameState.advanceTurnPhase();
@@ -57,6 +80,7 @@ public class moveMotherNature extends PlayerAction {
    * If the gamePhase is ACTION</br>
    * If the turnPhase is MOVING</br>
    * If the amount of movements is allowed</br>
+   *
    * @param gameState
    * @return boolean
    */

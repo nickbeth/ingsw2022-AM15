@@ -13,12 +13,13 @@ public class Player {
   private final String nickname;
   private final ArrayList<AssistantCard> cards;
   private final Dashboard dashboard;
+  private final TowerColor team;
   private int maxMovement;
   private int turnPriority;
   private int coins;
-
   public Player(RuleBook ruleBook, String nickname, TowerColor color, Students entranceStudents) {
     this.nickname = nickname;
+    team = color;
     coins = RuleBook.INITIAL_COINS;
     // TODO gestire il caso di 4 players che condividono lo stesso numero di tower.
     dashboard = new Dashboard(entranceStudents, ruleBook.dashboardTowerCount, color);
@@ -35,6 +36,10 @@ public class Player {
 
   public void addToMaxMovement(int moves) {
     maxMovement += moves;
+  }
+
+  public TowerColor getColorTeam() {
+    return team;
   }
 
   public int getTurnPriority() {

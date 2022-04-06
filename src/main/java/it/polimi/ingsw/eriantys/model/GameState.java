@@ -26,6 +26,10 @@ public class GameState {
     playingField = new PlayingField(ruleBook);
   }
 
+  public List<Player> getPlayers() {
+    return players;
+  }
+
   /**
    * Adds a player to the gameg
    * @param playerName
