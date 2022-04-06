@@ -31,7 +31,7 @@ public class GameState {
   }
 
   /**
-   * Adds a player to the gameg
+   * Adds a player to the game
    * @param playerName
    * @param towerColor
    */

@@ -28,6 +28,7 @@ public class PlaceStudents extends PlayerAction {
    * Executes the movements: <br/>
    * - removes given students from src <br/>
    * - adds given students to dest
+   *
    * @param gameState GameState
    */
   @Override
@@ -74,13 +75,23 @@ public class PlaceStudents extends PlayerAction {
 
     // Counts how many students are wanted to be moved
     EnumMap<StudentSlot, Students> wantedStudents = new EnumMap<>(StudentSlot.class);
-    for (var slot : StudentSlot.values())
+    for (var slot : StudentSlot.values()) {
       wantedStudents.put(slot, new Students());
-    entries.stream().forEach((move) -> wantedStudents.get(move.src()).addStudent(move.studentColor()));
+    }
+    entries.stream().forEach((move) -> {
+      wantedStudents.get(move.src()).addStudent(move.studentColor());
+    });
+
+    // Checks if islandIndex is a valid number
+    for (var move : entries) {
+      if (move.islandIndex() < 0 || move.islandIndex() > gameState.getPlayingField().getIslandsAmount())
+        return false;
+    }
 
     // Checks if there are enough students to be moved
     Dashboard gameDashboard = gameState.getCurrentPlayer().getDashboard();
-    for (HouseColor color : HouseColor.values()) {
+    for (
+            HouseColor color : HouseColor.values()) {
       Logger.debug("Entrance Color: {} Count: {} Wanted: {}"
               , color, gameDashboard.getEntrance().getCount(color), wantedStudents.get(ENTRANCE).getCount(color));
       Logger.debug("Dining Color: {} Count: {} Wanted: {}"

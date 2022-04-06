@@ -20,7 +20,7 @@ public class MoveMotherNature extends PlayerAction {
   }
 
   /**
-   * Moves motherNature
+   * Moves motherNature.
    * If the destination island is not Locked it sets the tower color to the most influential Team
    * and tries to merge adjacent islands.
    * Modifies players' tower count if necessary. <br/>
@@ -75,11 +75,11 @@ public class MoveMotherNature extends PlayerAction {
   }
 
   /**
-   * checks:</br>
-   * If current player is the player who did the action</br>
-   * If the gamePhase is ACTION</br>
-   * If the turnPhase is MOVING</br>
-   * If the amount of movements is allowed</br>
+   * checks:<br/>
+   * - If current player is the player who did the action<br/>
+   * - If the gamePhase is ACTION<br/>
+   * - If the turnPhase is MOVING<br/>
+   * - If the amount of movements is allowed<br/>
    *
    * @param gameState
    * @return boolean
