@@ -86,10 +86,10 @@ public class MoveMotherNature extends PlayerAction {
    */
   @Override
   public boolean isValid(GameState gameState) {
-    if (!gameState.getCurrentPlayer().getNickname().equals(playerNickname)) return false;
-    if (!(gameState.getGamePhase() == GamePhase.ACTION)) return false;
-    if (!(gameState.getTurnPhase() == TurnPhase.MOVING)) return false;
-    if (gameState.getCurrentPlayer().getTurnPriority() < amount) return false;
-    return true;
+    return gameState.getCurrentPlayer().getNickname().equals(playerNickname) &&
+            gameState.getGamePhase() == GamePhase.ACTION &&
+            gameState.getTurnPhase() == TurnPhase.MOVING &&
+            amount > 0 &&
+            gameState.getCurrentPlayer().getTurnPriority() >= amount;
   }
 }

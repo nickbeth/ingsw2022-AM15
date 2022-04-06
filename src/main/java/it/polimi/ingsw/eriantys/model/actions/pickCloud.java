@@ -44,16 +44,18 @@ public class pickCloud extends PlayerAction {
    * If currentPlayer is the player who did the action</br>
    * If the gamePhase is ACTION</br>
    * If the turnPhase is PICKING</br>
+   * If the cloud index is allowed
    * If the picked cloud is empty</br>
    * @param gameState
    * @return boolean
    */
   @Override
   public boolean isValid(GameState gameState) {
-    if (!gameState.getCurrentPlayer().getNickname().equals(playerNickname)) return false;
-    if (!(gameState.getGamePhase() == GamePhase.ACTION)) return false;
-    if (!(gameState.getTurnPhase() == TurnPhase.PICKING)) return false;
-    if (gameState.getPlayingField().getCloud(cloudIndex).isEmpty()) return false;
-    return false;
+    return gameState.getCurrentPlayer().getNickname().equals(playerNickname) &&
+            gameState.getGamePhase() == GamePhase.ACTION &&
+            gameState.getTurnPhase() == TurnPhase.PICKING &&
+            cloudIndex >= 0 &&
+            cloudIndex < gameState.getRuleBook().cloudCount &&
+            !gameState.getPlayingField().getCloud(cloudIndex).isEmpty();
   }
 }
