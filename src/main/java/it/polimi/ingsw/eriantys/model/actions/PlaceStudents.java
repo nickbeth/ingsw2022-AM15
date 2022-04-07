@@ -73,20 +73,21 @@ public class PlaceStudents extends PlayerAction {
     if (!(gameState.getTurnPhase() == TurnPhase.PLACING)) return false;
     if (!(gameState.getGamePhase() == GamePhase.ACTION)) return false;
 
+    // Checks if islandIndex is a valid number
+    for (var move : entries) {
+      if (move.islandIndex() < 0 || move.islandIndex() > gameState.getPlayingField().getIslandsAmount()) {
+        return false;
+      }
+    }
+
     // Counts how many students are wanted to be moved
     EnumMap<StudentSlot, Students> wantedStudents = new EnumMap<>(StudentSlot.class);
     for (var slot : StudentSlot.values()) {
       wantedStudents.put(slot, new Students());
     }
-    entries.stream().forEach((move) -> {
-      wantedStudents.get(move.src()).addStudent(move.studentColor());
-    });
+    entries.stream().forEach((move) ->
+            wantedStudents.get(move.src()).addStudent(move.studentColor()));
 
-    // Checks if islandIndex is a valid number
-    for (var move : entries) {
-      if (move.islandIndex() < 0 || move.islandIndex() > gameState.getPlayingField().getIslandsAmount())
-        return false;
-    }
 
     // Checks if there are enough students to be moved
     Dashboard gameDashboard = gameState.getCurrentPlayer().getDashboard();

@@ -17,6 +17,7 @@ public class Player {
   private int maxMovement;
   private int turnPriority;
   private int coins;
+
   public Player(RuleBook ruleBook, String nickname, TowerColor color, Students entranceStudents) {
     this.nickname = nickname;
     team = color;
@@ -63,7 +64,12 @@ public class Player {
   }
 
   public void setPlayedCard(int assistantCardIndex) {
-    turnPriority = cards.get(assistantCardIndex).movement;
+    turnPriority = cards.get(assistantCardIndex).value;
+    maxMovement = cards.get(assistantCardIndex).movement;
     cards.remove(assistantCardIndex);
+  }
+
+  public ArrayList<AssistantCard> getCards() {
+    return cards;
   }
 }
