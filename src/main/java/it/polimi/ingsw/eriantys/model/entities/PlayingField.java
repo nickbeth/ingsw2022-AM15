@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
@@ -14,10 +15,11 @@ public class Player {
   private final ArrayList<AssistantCard> cards;
   private final Dashboard dashboard;
   private final TowerColor team;
-  private int maxMovement;
-  private int turnPriority;
-  private int coins;
 
+  private Optional<AssistantCard> chosenCard;
+
+  private int maxMovement;
+  private int coins;
   public Player(RuleBook ruleBook, String nickname, TowerColor color, Students entranceStudents) {
     this.nickname = nickname;
     team = color;
@@ -31,8 +33,12 @@ public class Player {
     return nickname;
   }
 
+  public Optional<AssistantCard> getChosenCard() {
+    return chosenCard;
+  }
+
   public int getMaxMovement() {
-    return maxMovement;
+    return chosenCard.get().movement;
   }
 
   public void addToMaxMovement(int moves) {
@@ -44,7 +50,7 @@ public class Player {
   }
 
   public int getTurnPriority() {
-    return turnPriority;
+    return chosenCard.get().value;
   }
 
   public void addCoin() {
@@ -64,7 +70,6 @@ public class Player {
   }
 
   public void setPlayedCard(int assistantCardIndex) {
-    turnPriority = cards.get(assistantCardIndex).value;
     maxMovement = cards.get(assistantCardIndex).movement;
     cards.remove(assistantCardIndex);
   }

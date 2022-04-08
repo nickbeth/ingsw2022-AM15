@@ -2,14 +2,10 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
-import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Cloud;
 import it.polimi.ingsw.eriantys.model.entities.Player;
-import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
-import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 public class pickCloud extends PlayerAction {
@@ -32,7 +28,7 @@ public class pickCloud extends PlayerAction {
     cloud.setStudents(new Students());
 
     gameState.advanceTurnPhase();
-    Player lastPlayer = gameState.getTurnOrder().get(gameState.getTurnOrder().size() - 1);
+    Player lastPlayer = gameState.getTurnOrderPlayers().get(gameState.getTurnOrderPlayers().size() - 1);
     if(gameState.getCurrentPlayer().equals(lastPlayer)){
       gameState.advanceGamePhase();
     }

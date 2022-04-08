@@ -50,7 +50,7 @@ public class MoveMotherNature extends PlayerAction {
 
         // If old color != new color => manage player towers
         if (!oldColor.equals(mostInfluentialTeam.get())) {
-          for (Player p : gameState.getPlayers()) {
+          for (Player p : gameState.getTurnOrderPlayers()) {
 
             // Remove towers from conquerors' dashboard
             if (p.getColorTeam() == mostInfluentialTeam.get()) {
@@ -68,7 +68,7 @@ public class MoveMotherNature extends PlayerAction {
     }
 
     //checks if the current player is the last in turn order and subsequently changes phases
-    Player lastPlayer = gameState.getTurnOrder().get(gameState.getTurnOrder().size() - 1);
+    Player lastPlayer = gameState.getTurnOrderPlayers().get(gameState.getTurnOrderPlayers().size() - 1);
     if (gameState.getCurrentPlayer().equals(lastPlayer)) {
       gameState.advanceGamePhase();
     }
