@@ -22,12 +22,12 @@ public class lockIsland extends PlayerAction{
     gameState.advanceTurnPhase();
   }
   /**
-   * checks:</br>
-   * If current player is the player who did the action</br>
-   * If the gamePhase is ACTION</br>
-   * If the turnPhase is EFFECT</br>
+   * checks:<br>
+   * If current player is the player who did the action<br>
+   * If the gamePhase is ACTION<br>
+   * If the turnPhase is EFFECT<br>
    * If the chosen index is allowed
-   * If the chosen island is already locked</br>
+   * If the chosen island is already locked<br>
    * @param gameState
    * @return boolean
    */

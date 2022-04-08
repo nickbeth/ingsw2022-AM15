@@ -21,8 +21,8 @@ public class pickCloud extends PlayerAction {
 
 
   /**
-   * Gets students from pickedCloud and puts them onto the players entrance,then advances player , turnPhase
-   * and if its the last player it advances GamePhase
+   * Gets students from pickedCloud and puts them onto the players entrance,then advances turnPhase
+   * ,if its the last player it advances GamePhase , and then andvances player.
    * @param gameState
    */
   @Override
@@ -41,11 +41,11 @@ public class pickCloud extends PlayerAction {
 
   /**
    * checks:
-   * If currentPlayer is the player who did the action</br>
-   * If the gamePhase is ACTION</br>
-   * If the turnPhase is PICKING</br>
+   * If currentPlayer is the player who did the action<br>
+   * If the gamePhase is ACTION<br>
+   * If the turnPhase is PICKING<br>
    * If the cloud index is allowed
-   * If the picked cloud is empty</br>
+   * If the picked cloud is empty<br>
    * @param gameState
    * @return boolean
    */
