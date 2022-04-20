@@ -75,7 +75,7 @@ public class PlaceStudents extends PlayerAction {
 
     // Checks if islandIndex is a valid number
     for (var move : entries) {
-      if (move.islandIndex() < 0 || move.islandIndex() > gameState.getPlayingField().getIslandsAmount()) {
+      if (move.islandIndex() < 0 || move.islandIndex() >= gameState.getPlayingField().getIslandsAmount()) {
         return false;
       }
     }
