@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Students;
@@ -10,7 +11,6 @@ import it.polimi.ingsw.eriantys.model.enums.StudentSlot;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
@@ -29,32 +29,36 @@ public class PlaceStudents extends PlayerAction {
    * - removes given students from src <br/>
    * - adds given students to dest
    *
-   * @param gameState GameState
+   * @param gameState   GameState
+   * @param gameService
    */
   @Override
-  public void apply(GameState gameState) {
-    // For each moves
-    for (StudentMovement move : entries) {
-      // Remove the student from the source
-      switch (move.src()) {
-        case ENTRANCE -> gameState.
-                getCurrentPlayer().getDashboard().getEntrance().tryRemoveStudent(move.studentColor());
-        case DINIGN -> gameState.
-                getCurrentPlayer().getDashboard().getDiningHall().tryRemoveStudent(move.studentColor());
-        default -> throw new IllegalStateException("Unexpected value: " + move.src());
-      }
+  public void apply(GameState gameState, IGameService gameService) {
+    Dashboard currDashboard = gameState.getCurrentPlayer().getDashboard();
+    gameService.placeStudents(entries, currDashboard, gameState.getPlayingField());
 
-      // Add the student from the source
-      switch (move.dest()) {
-        case ENTRANCE -> gameState.
-                getCurrentPlayer().getDashboard().getEntrance().addStudent(move.studentColor());
-        case DINIGN -> gameState.
-                getCurrentPlayer().getDashboard().getDiningHall().addStudent(move.studentColor());
-        case ISLAND -> gameState.
-                getPlayingField().getIsland(move.islandIndex()).getStudents().addStudent(move.studentColor());
-        default -> throw new IllegalStateException("Unexpected value: " + move.src());
-      }
-    }
+//    // For each move
+//    for (StudentMovement move : entries) {
+//      // Remove the student from the source
+//      switch (move.src()) {
+//        case ENTRANCE -> gameState.
+//                getCurrentPlayer().getDashboard().getEntrance().tryRemoveStudent(move.studentColor());
+//        case DINIGN -> gameState.
+//                getCurrentPlayer().getDashboard().getDiningHall().tryRemoveStudent(move.studentColor());
+//        default -> throw new IllegalStateException("Unexpected value: " + move.src());
+//      }
+//
+//      // Add the student to the destination
+//      switch (move.dest()) {
+//        case ENTRANCE -> gameState.
+//                getCurrentPlayer().getDashboard().getEntrance().addStudent(move.studentColor());
+//        case DINIGN -> gameState.
+//                getCurrentPlayer().getDashboard().getDiningHall().addStudent(move.studentColor());
+//        case ISLAND -> gameState.
+//                getPlayingField().getIsland(move.islandIndex()).getStudents().addStudent(move.studentColor());
+//        default -> throw new IllegalStateException("Unexpected value: " + move.src());
+//      }
+//    }
   }
 
   /**
@@ -96,11 +100,11 @@ public class PlaceStudents extends PlayerAction {
       Logger.debug("Entrance Color: {} Count: {} Wanted: {}"
               , color, gameDashboard.getEntrance().getCount(color), wantedStudents.get(ENTRANCE).getCount(color));
       Logger.debug("Dining Color: {} Count: {} Wanted: {}"
-              , color, gameDashboard.getDiningHall().getCount(color), wantedStudents.get(StudentSlot.DINIGN).getCount(color));
+              , color, gameDashboard.getDiningHall().getCount(color), wantedStudents.get(StudentSlot.DINING).getCount(color));
       if (gameDashboard.getEntrance().getCount(color) < wantedStudents.get(ENTRANCE).getCount(color)) {
         return false;
       }
-      if (gameDashboard.getDiningHall().getCount(color) < wantedStudents.get(StudentSlot.DINIGN).getCount(color)) {
+      if (gameDashboard.getDiningHall().getCount(color) < wantedStudents.get(StudentSlot.DINING).getCount(color)) {
         return false;
       }
     }

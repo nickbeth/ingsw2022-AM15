@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -17,10 +18,12 @@ public class IgnoreColorInfluence extends PlayerAction {
   /**
    * Ignores selected HouseColor in the next influence count
    * @param gameState
+   * @param gameService
    */
   @Override
-  public void apply(GameState gameState) {
-    gameState.getPlayingField().setIgnoredColor(ignoredColor);
+  public void apply(GameState gameState, IGameService gameService) {
+    gameService.ignoreColorInfluence(ignoredColor, gameState.getPlayingField());
+//    gameState.getPlayingField().setIgnoredColor(ignoredColor);
     gameState.advanceTurnPhase();
   }
 

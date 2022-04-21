@@ -1,6 +1,8 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
@@ -26,16 +28,17 @@ public class DropStudents extends PlayerAction {
    * @param gameState
    */
   @Override
-  public void apply(GameState gameState) {
+  public void apply(GameState gameState, IGameService gameService) {
     final int DROP_STUDENTS_AMOUNT = 3;
 
-    for (Player p : gameState.getPlayers()) {
-      Students entranceStudents = p.getDashboard().getEntrance();
-      for (int i = 0 ; i < DROP_STUDENTS_AMOUNT ; i++){
-        if(entranceStudents.getCount(studentColor) != 0)
-          entranceStudents.tryRemoveStudent(studentColor);
-      }
-    }
+    gameService.dropStudents(gameState.getPlayers(), studentColor, DROP_STUDENTS_AMOUNT);
+//    for (Player p : gameState.getPlayers()) {
+//      Students entranceStudents = p.getDashboard().getEntrance();
+//      for (int i = 0 ; i < DROP_STUDENTS_AMOUNT ; i++){
+//        if(entranceStudents.getCount(studentColor) != 0)
+//          entranceStudents.tryRemoveStudent(studentColor);
+//      }
+//    }
     gameState.advanceTurnPhase();
   }
 

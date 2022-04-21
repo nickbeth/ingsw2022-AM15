@@ -1,13 +1,14 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-public class lockIsland extends PlayerAction{
+public class LockIsland extends PlayerAction{
   int index;
-  public lockIsland(String nickname, int index) {
+  public LockIsland(String nickname, int index) {
     this.playerNickname = nickname;
     this.index = index;
   }
@@ -15,19 +16,20 @@ public class lockIsland extends PlayerAction{
   /**
    * Locks an island and advances TurnPhase
    * @param gameState
+   * @param gameService
    */
   @Override
-  public void apply(GameState gameState) {
-    gameState.getPlayingField().getIsland(index).setLocked(true);
+  public void apply(GameState gameState, IGameService gameService) {
+    gameService.lockIsland(gameState.getPlayingField().getIsland(index));
     gameState.advanceTurnPhase();
   }
   /**
-   * checks:<br>
-   * If current player is the player who did the action<br>
-   * If the gamePhase is ACTION<br>
-   * If the turnPhase is EFFECT<br>
-   * If the chosen index is allowed
-   * If the chosen island is already locked<br>
+   * Checks:<br>
+   * - if current player is the player who did the action<br>
+   * - if the gamePhase is ACTION<br>
+   * - if the turnPhase is EFFECT<br>
+   * - if the chosen index is allowed<br>
+   * - if the chosen island is already locked<br>
    * @param gameState
    * @return boolean
    */

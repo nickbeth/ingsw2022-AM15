@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.Player;
@@ -9,6 +10,7 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
+import java.util.List;
 import java.util.Optional;
 
 public class MoveMotherNature extends PlayerAction {
@@ -26,53 +28,48 @@ public class MoveMotherNature extends PlayerAction {
    * If there isn't a new most influential player nothing changes <br/>
    * Modifies players' tower count if necessary. <br/>
    * It advances turnPhase.
-   * If necessary it will advance gamePhase.
    *
    * @param gameState
+   * @param gameService
    */
   @Override
-  public void apply(GameState gameState) {
+  public void apply(GameState gameState, IGameService gameService) {
     PlayingField playingField = gameState.getPlayingField();
     playingField.moveMotherNature(amount);
     int motherNaturePos = playingField.getMotherNaturePosition();
+    List<Player> players = gameState.getPlayers();
+    gameService.applyMotherNatureEffect(motherNaturePos, playingField, players);
 
-    if (playingField.getIsland(motherNaturePos).isLocked()) {
-      playingField.getIsland(motherNaturePos).setLocked(false);
-      //TODO lock returns to the characterCard
-    } else {
-      Optional<TowerColor> mostInfluentialTeam = playingField.getMostInfluential(motherNaturePos);
-      Island currIsland = playingField.getIsland(motherNaturePos);
-
-      if (mostInfluentialTeam.isPresent()) {
-        // Set tower color
-        TowerColor oldColor = currIsland.getTowerColor();
-        currIsland.setTowerColor(mostInfluentialTeam.get());
-
-        // If old color != new color => manage player towers
-        if (!oldColor.equals(mostInfluentialTeam.get())) {
-          for (Player p : gameState.getTurnOrderPlayers()) {
-
-            // Remove towers from conquerors' dashboard
-            if (p.getColorTeam() == mostInfluentialTeam.get()) {
-              p.getDashboard().removeTowers(currIsland.getTowerCount());
-            }
-
-            // Add towers to conquered dashboard
-            if (p.getColorTeam() == oldColor) {
-              p.getDashboard().addTowers(currIsland.getTowerCount());
-            }
-          }
-        }
-        playingField.mergeIslands(motherNaturePos);
-      }
-    }
-
-    //checks if the current player is the last in turn order and subsequently changes phases
-    Player lastPlayer = gameState.getTurnOrderPlayers().get(gameState.getTurnOrderPlayers().size() - 1);
-    if (gameState.getCurrentPlayer().equals(lastPlayer)) {
-      gameState.advanceGamePhase();
-    }
-    gameState.advanceTurnPhase();
+//    if (playingField.getIsland(motherNaturePos).isLocked()) {
+//      playingField.getIsland(motherNaturePos).setLocked(false);
+//      //TODO lock returns to the characterCard
+//    } else {
+//      Optional<TowerColor> mostInfluentialTeam = playingField.getMostInfluential(motherNaturePos);
+//      Island currIsland = playingField.getIsland(motherNaturePos);
+//
+//      if (mostInfluentialTeam.isPresent()) {
+//        // Set tower color
+//        TowerColor oldColor = currIsland.getTowerColor();
+//        currIsland.setTowerColor(mostInfluentialTeam.get());
+//
+//        // If old color != new color => manage player towers
+//        if (!oldColor.equals(mostInfluentialTeam.get())) {
+//          for (Player p : gameState.getTurnOrderPlayers()) {
+//
+//            // Remove towers from conquerors' dashboard
+//            if (p.getColorTeam() == mostInfluentialTeam.get()) {
+//              p.getDashboard().removeTowers(currIsland.getTowerCount());
+//            }
+//
+//            // Add towers to conquered dashboard
+//            if (p.getColorTeam() == oldColor) {
+//              p.getDashboard().addTowers(currIsland.getTowerCount());
+//            }
+//          }
+//        }
+//        playingField.mergeIslands(motherNaturePos);
+//      }
+//    }
   }
 
   /**

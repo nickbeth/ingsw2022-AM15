@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
@@ -23,8 +24,9 @@ public class PickAssistantCard extends PlayerAction {
 
   // todo javadoc e testing
   @Override
-  public void apply(GameState gameState) {
-    gameState.getCurrentPlayer().setPlayedCard(cardIndex);
+  public void apply(GameState gameState, IGameService gameService) {
+    gameService.pickAssistantCard(gameState.getCurrentPlayer(), cardIndex);
+//    gameState.getCurrentPlayer().setPlayedCard(cardIndex);
     gameState.advancePlayer();
 
     // If all players have set the card the game continues

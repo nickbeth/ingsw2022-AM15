@@ -9,10 +9,8 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.StudentSlot;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.fields.ColumnMapping;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.tinylog.Logger;
@@ -55,8 +53,8 @@ class PlaceStudentsTest {
     moves.add(new StudentMovement(HouseColor.PINK, StudentSlot.ENTRANCE, StudentSlot.ISLAND, 0));
 
     // Set 2 moves: 2xRED student from: DINING
-    moves.add(new StudentMovement(HouseColor.RED, StudentSlot.DINIGN, StudentSlot.ISLAND, 10));
-    moves.add(new StudentMovement(HouseColor.RED, StudentSlot.DINIGN, StudentSlot.ISLAND, 0));
+    moves.add(new StudentMovement(HouseColor.RED, StudentSlot.DINING, StudentSlot.ISLAND, 10));
+    moves.add(new StudentMovement(HouseColor.RED, StudentSlot.DINING, StudentSlot.ISLAND, 0));
 
 
     moves.forEach((m) -> Logger.debug("{} - {}", m.studentColor(), m.src()));
