@@ -135,6 +135,10 @@ public class PlayingField {
     influenceModifier.ignoredColor = ignoredColor;
   }
 
+  public HouseColor getIgnoredColor() {
+    return influenceModifier.ignoredColor;
+  }
+
   public void setIgnoreTower(boolean ignoreTower) {
     influenceModifier.ignoreTower = ignoreTower;
   }

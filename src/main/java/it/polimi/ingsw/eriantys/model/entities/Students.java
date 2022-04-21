@@ -1,13 +1,14 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
+import it.polimi.ingsw.eriantys.model.actions.Slot;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
 import java.util.EnumMap;
 
-public class Students {
-  private EnumMap<HouseColor, Integer> students = new EnumMap<>(HouseColor.class);
+public class Students extends Slot {
+  protected EnumMap<HouseColor, Integer> students = new EnumMap<>(HouseColor.class);
 
   /**
    * Initialize to zero all kind of students
@@ -62,6 +63,10 @@ public class Students {
     }
   }
 
+  public boolean hasEnough(HouseColor color, int amount) {
+    return students.get(color) >= amount;
+  }
+
   public void setStudents(Students s) {
     students.forEach(((color, amount) ->
             students.put(color, s.getCount(color))));
@@ -95,5 +100,15 @@ public class Students {
     StringBuilder s = new StringBuilder();
     students.forEach((c, v) -> s.append(c + " - " + v + "" + "\n"));
     return s.toString();
+  }
+
+  @Override
+  public void removeStudentFromSlot(HouseColor color) {
+    tryRemoveStudent(color);
+  }
+
+  @Override
+  public void addStudentToSlot(HouseColor color) {
+    addStudent(color);
   }
 }

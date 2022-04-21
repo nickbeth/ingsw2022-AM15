@@ -14,7 +14,6 @@ import java.util.List;
 
 public class GameState {
   final private List<Player> players = new ArrayList<>(); // Players in the game
-
   final private List<Player> turnOrder = new ArrayList<>(); // List of players sorted by their turn order
   final private List<Player> planOrder = new ArrayList<>(); // List of players sorted by their turn order
   private int currentPlayer; // Nickname of the current player

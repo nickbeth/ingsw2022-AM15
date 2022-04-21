@@ -1,16 +1,18 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
+import it.polimi.ingsw.eriantys.model.actions.Slot;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.tinylog.Logger;
 
-public class Island {
-  private Students students = students = new Students();
+public class Island extends Slot {
+  private Students students = new Students();
   private Towers towers = new Towers();
   private boolean isLocked = false;
 
   /**
    * Initialize island with a student on
+   *
    * @param studentColor
    */
   public Island(HouseColor studentColor) {
@@ -58,5 +60,15 @@ public class Island {
 
   public boolean isLocked() {
     return isLocked;
+  }
+
+  @Override
+  public void removeStudentFromSlot(HouseColor color) {
+    this.students.removeStudentFromSlot(color);
+  }
+
+  @Override
+  public void addStudentToSlot(HouseColor color) {
+    this.students.addStudentToSlot(color);
   }
 }

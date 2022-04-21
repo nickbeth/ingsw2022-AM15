@@ -6,13 +6,13 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
 import java.util.List;
 
+// todo trasferire la javadoc dalle action alla interfaccia
 public interface IGameService {
-  // todo trasferire la javadoc dalle action alla interfaccia
-  void dropStudents(List<Player> playerList, HouseColor color, int amount);
+  void dropStudents(List<Students> entranceList, HouseColor color, int amount);
   void ignoreColorInfluence(HouseColor ignoredColor, PlayingField playingField);
   void lockIsland(Island island);
   void pickAssistantCard(Player player, int cardIndex);
-  void pickCloud(Cloud cloud, Player player);
-  void placeStudents(List<StudentMovement> entries, Dashboard dashboard, PlayingField playingField);
+  void pickCloud(Cloud cloud, Dashboard dashboard);
+  void placeStudents(List<StudentMovement> movements);
   void applyMotherNatureEffect(int islandIndex, PlayingField field, List<Player> players);
 }

@@ -3,25 +3,23 @@ package it.polimi.ingsw.eriantys.model.actions;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
-import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
-import it.polimi.ingsw.eriantys.model.enums.StudentSlot;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
-import org.tinylog.Logger;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import static it.polimi.ingsw.eriantys.model.enums.StudentSlot.ENTRANCE;
 
 public class PlaceStudents extends PlayerAction {
-  private final List<StudentMovement> entries;
+  private final List<StudentMovement> movements;
 
   public PlaceStudents(String nickname, List<StudentMovement> entries) {
     this.playerNickname = nickname;
-    this.entries = entries;
+    this.movements = entries;
   }
 
   /**
@@ -34,31 +32,7 @@ public class PlaceStudents extends PlayerAction {
    */
   @Override
   public void apply(GameState gameState, IGameService gameService) {
-    Dashboard currDashboard = gameState.getCurrentPlayer().getDashboard();
-    gameService.placeStudents(entries, currDashboard, gameState.getPlayingField());
-
-//    // For each move
-//    for (StudentMovement move : entries) {
-//      // Remove the student from the source
-//      switch (move.src()) {
-//        case ENTRANCE -> gameState.
-//                getCurrentPlayer().getDashboard().getEntrance().tryRemoveStudent(move.studentColor());
-//        case DINIGN -> gameState.
-//                getCurrentPlayer().getDashboard().getDiningHall().tryRemoveStudent(move.studentColor());
-//        default -> throw new IllegalStateException("Unexpected value: " + move.src());
-//      }
-//
-//      // Add the student to the destination
-//      switch (move.dest()) {
-//        case ENTRANCE -> gameState.
-//                getCurrentPlayer().getDashboard().getEntrance().addStudent(move.studentColor());
-//        case DINIGN -> gameState.
-//                getCurrentPlayer().getDashboard().getDiningHall().addStudent(move.studentColor());
-//        case ISLAND -> gameState.
-//                getPlayingField().getIsland(move.islandIndex()).getStudents().addStudent(move.studentColor());
-//        default -> throw new IllegalStateException("Unexpected value: " + move.src());
-//      }
-//    }
+    gameService.placeStudents(movements);
   }
 
   /**
@@ -72,43 +46,34 @@ public class PlaceStudents extends PlayerAction {
    * @return True if the action is doable. False otherwise
    */
   @Override
+  // todo Da rifare il test, l'implementazione è cambiata
   public boolean isValid(GameState gameState) {
     if (!gameState.getCurrentPlayer().getNickname().equals(playerNickname)) return false;
     if (!(gameState.getTurnPhase() == TurnPhase.PLACING)) return false;
     if (!(gameState.getGamePhase() == GamePhase.ACTION)) return false;
 
-    // Checks if islandIndex is a valid number
-    for (var move : entries) {
-      if (move.islandIndex() < 0 || move.islandIndex() >= gameState.getPlayingField().getIslandsAmount()) {
-        return false;
-      }
-    }
-
     // Counts how many students are wanted to be moved
-    EnumMap<StudentSlot, Students> wantedStudents = new EnumMap<>(StudentSlot.class);
-    for (var slot : StudentSlot.values()) {
-      wantedStudents.put(slot, new Students());
-    }
-    entries.stream().forEach((move) ->
-            wantedStudents.get(move.src()).addStudent(move.studentColor()));
+    Map<Slot, Students> slotStudentsMap = new HashMap<>();
+    movements.forEach((move) ->
+            slotStudentsMap.put(move.src(), new Students())
+    );
+    // Count how many students src slot requires
+    movements.forEach((move) -> {
+      slotStudentsMap.get(move.src()).addStudent(move.studentColor());
+    });
 
-
-    // Checks if there are enough students to be moved
-    Dashboard gameDashboard = gameState.getCurrentPlayer().getDashboard();
-    for (
-            HouseColor color : HouseColor.values()) {
-      Logger.debug("Entrance Color: {} Count: {} Wanted: {}"
-              , color, gameDashboard.getEntrance().getCount(color), wantedStudents.get(ENTRANCE).getCount(color));
-      Logger.debug("Dining Color: {} Count: {} Wanted: {}"
-              , color, gameDashboard.getDiningHall().getCount(color), wantedStudents.get(StudentSlot.DINING).getCount(color));
-      if (gameDashboard.getEntrance().getCount(color) < wantedStudents.get(ENTRANCE).getCount(color)) {
-        return false;
-      }
-      if (gameDashboard.getDiningHall().getCount(color) < wantedStudents.get(StudentSlot.DINING).getCount(color)) {
-        return false;
-      }
+    AtomicBoolean isValid = new AtomicBoolean(true);
+    // For each color
+    for (HouseColor color : HouseColor.values()) {
+      //  If there is at least one source slot which does not have enough students of
+      //  that color, then it's not a valid operation
+      slotStudentsMap.forEach((src,students) -> {
+        ((Students)src).hasEnough(color, students.getCount(color));
+        isValid.set(false);
+      });
     }
-    return true;
+
+    return isValid.get();
   }
 }
 

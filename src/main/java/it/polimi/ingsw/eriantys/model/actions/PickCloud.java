@@ -4,6 +4,7 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.entities.Cloud;
+import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
@@ -27,7 +28,9 @@ public class PickCloud extends PlayerAction {
   @Override
   public void apply(GameState gameState, IGameService gameService) {
     Cloud cloud = gameState.getPlayingField().getCloud(cloudIndex);
-    gameService.pickCloud(cloud, gameState.getCurrentPlayer());
+    Dashboard dashboard = gameState.getCurrentPlayer().getDashboard();
+    gameService.pickCloud(cloud, dashboard);
+
 //    gameState.getCurrentPlayer().getDashboard().addToEntrance(cloud.getStudents());
 //    cloud.setStudents(new Students());
 

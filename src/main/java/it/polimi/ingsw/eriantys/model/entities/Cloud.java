@@ -15,7 +15,7 @@ public class Cloud {
   }
 
   public void setStudents(Students s) {
-    students.setStudents(students);
+    students.setStudents(s);
     Logger.debug("Students cloud set");
   }
 

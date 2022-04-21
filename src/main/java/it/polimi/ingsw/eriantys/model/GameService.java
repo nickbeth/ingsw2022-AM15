@@ -25,12 +25,11 @@ public class GameService implements IGameService {
    * then advances to next TurnPhase;
    */
   @Override
-  public void dropStudents(List<Player> playerList, HouseColor color, int amount) {
-    for (Player p : playerList) {
-      Students entranceStudents = p.getDashboard().getEntrance();
+  public void dropStudents(List<Students> entranceList, HouseColor color, int amount) {
+    for (var entrance : entranceList) {
       for (int i = 0; i < amount; i++) {
-        if (entranceStudents.getCount(color) != 0)
-          entranceStudents.tryRemoveStudent(color);
+        if (entrance.getCount(color) != 0)
+          entrance.tryRemoveStudent(color);
       }
     }
   }
@@ -51,33 +50,42 @@ public class GameService implements IGameService {
   }
 
   @Override
-  public void pickCloud(Cloud cloud, Player player) {
-    player.getDashboard().addToEntrance(cloud.getStudents());
+  public void pickCloud(Cloud cloud, Dashboard dashboard) {
+    dashboard.addToEntrance(cloud.getStudents());
     cloud.setStudents(new Students());
   }
 
   @Override
-  public void placeStudents(List<StudentMovement> entries, Dashboard dashboard, PlayingField playingField) {
-    // For each moves
-    for (StudentMovement move : entries) {
-      // Remove the student from the source
-      switch (move.src()) {
-        case ENTRANCE -> dashboard.getEntrance().tryRemoveStudent(move.studentColor());
-        case DINING -> dashboard.getDiningHall().tryRemoveStudent(move.studentColor());
-        default -> throw new IllegalStateException("Unexpected value: " + move.src());
-      }
-
-      // Add the student to the destination
-      switch (move.dest()) {
-        case ENTRANCE -> dashboard.getEntrance().addStudent(move.studentColor());
-        case DINING -> dashboard.getDiningHall().addStudent(move.studentColor());
-        case ISLAND -> playingField.getIsland(move.islandIndex()).getStudents().addStudent(move.studentColor());
-        default -> throw new IllegalStateException("Unexpected value: " + move.src());
-      }
-    }
+  public void placeStudents(List<StudentMovement> movements) {
+    // OLD UGLY CODE
+//    for (StudentMovement move : entries) {
+//      // Remove the student from the source
+//      switch (move.src()) {
+//        case ENTRANCE -> gameState.
+//                getCurrentPlayer().getDashboard().getEntrance().tryRemoveStudent(move.studentColor());
+//        case DINIGN -> gameState.
+//                getCurrentPlayer().getDashboard().getDiningHall().tryRemoveStudent(move.studentColor());
+//        default -> throw new IllegalStateException("Unexpected value: " + move.src());
+//      }
+//
+//      // Add the student to the destination
+//      switch (move.dest()) {
+//        case ENTRANCE -> gameState.
+//                getCurrentPlayer().getDashboard().getEntrance().addStudent(move.studentColor());
+//        case DINIGN -> gameState.
+//                getCurrentPlayer().getDashboard().getDiningHall().addStudent(move.studentColor());
+//        case ISLAND -> gameState.
+//                getPlayingField().getIsland(move.islandIndex()).getStudents().addStudent(move.studentColor());
+//        default -> throw new IllegalStateException("Unexpected value: " + move.src());
+//      }
+    movements.forEach((move) -> {
+      move.src().removeStudentFromSlot(move.studentColor());
+      move.dest().addStudentToSlot(move.studentColor());
+    });
   }
 
   @Override
+  // todo testing
   public void applyMotherNatureEffect(int islandIndex, PlayingField field, List<Player> players) {
     if (field.getIsland(islandIndex).isLocked()) {
       field.getIsland(islandIndex).setLocked(false);
