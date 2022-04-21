@@ -11,6 +11,15 @@ import java.util.Optional;
 
 
 public class GameService implements IGameService {
+  private static IGameService gameService;
+
+  public static IGameService getGameService() {
+    if (gameService == null) {
+      gameService = new GameService();
+    }
+    return gameService;
+  }
+
   /**
    * removes 3 students of a certain HouseColor from the entrance of each player
    * then advances to next TurnPhase;
@@ -19,8 +28,8 @@ public class GameService implements IGameService {
   public void dropStudents(List<Player> playerList, HouseColor color, int amount) {
     for (Player p : playerList) {
       Students entranceStudents = p.getDashboard().getEntrance();
-      for (int i = 0 ; i < amount ; i++){
-        if(entranceStudents.getCount(color) != 0)
+      for (int i = 0; i < amount; i++) {
+        if (entranceStudents.getCount(color) != 0)
           entranceStudents.tryRemoveStudent(color);
       }
     }
