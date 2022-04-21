@@ -76,6 +76,7 @@ public class PlayingField {
   /**
    * Merges islands[islandIndex] with adjacent islands if they have the same TowerColor<br/>
    * If the Merge gets applied also motherNaturePosition gets adjusted
+   *
    * @param islandIndex
    */
   public void mergeIslands(int islandIndex) {
@@ -108,6 +109,10 @@ public class PlayingField {
    */
   public HouseColor takeStudentFromBag() {
     return studentBag.takeRandomStudent();
+  }
+
+  public StudentBag getStudentBag() {
+    return studentBag;
   }
 
   public void addStudentToBag(HouseColor color) {

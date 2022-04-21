@@ -18,17 +18,21 @@ public class GameState {
   final private List<Player> turnOrder = new ArrayList<>(); // List of players sorted by their turn order
   final private List<Player> planOrder = new ArrayList<>(); // List of players sorted by their turn order
   private int currentPlayer; // Nickname of the current player
-  private GamePhase phase; // Current phase of the game
+  private GamePhase gamePhase; // Current phase of the game
   private TurnPhase turnPhase; // Current turn phase
   private final RuleBook ruleBook; // Set of rules used in this game
   private PlayingField playingField; // Playing field of this game
+
   public GameState(int playerCount, GameMode mode) {
     ruleBook = RuleBook.makeRules(mode, playerCount);
     playingField = new PlayingField(ruleBook);
+    currentPlayer = 0;
+    gamePhase = GamePhase.PLANNING;
+    turnPhase = TurnPhase.PLACING;
   }
 
   /**
-   * Adds a player to the game
+   * Adds a player to the player List and planOrder List
    *
    * @param playerName
    * @param towerColor
@@ -37,10 +41,15 @@ public class GameState {
     Students entrance = new Students();
     for (int i = 0; i <= ruleBook.entranceSize; i++)
       entrance.addStudent(playingField.takeStudentFromBag());
-    players.add(new Player(ruleBook, playerName, towerColor, entrance));
+    Player newPlayer = new Player(ruleBook, playerName, towerColor, entrance);
+    players.add(newPlayer);
+    planOrder.add(newPlayer);
     playingField.addTeam(towerColor);
   }
 
+  /**
+   * Advances currentPlayer index
+   */
   public void advancePlayer() {
     currentPlayer = (currentPlayer + 1) % players.size();
   }
@@ -50,7 +59,8 @@ public class GameState {
   }
 
   /**
-   * @return the current player
+   * returns the current player of current gamePhase
+   * @return Player
    */
   public Player getCurrentPlayer() {
     if (getGamePhase() == GamePhase.PLANNING)
@@ -60,6 +70,11 @@ public class GameState {
     return null;
   }
 
+  /**
+   * returns order
+   *
+   * @return
+   */
   public List<Player> getPlanOrderPlayers() {
     return planOrder;
   }
@@ -75,11 +90,23 @@ public class GameState {
    * @return the current phase of the game
    */
   public GamePhase getGamePhase() {
-    return phase;
+    return gamePhase;
   }
 
-  //TODO advanceGamePhase
+  /**
+   * advances to next gamePhase
+   */
   public void advanceGamePhase() {
+    switch (gamePhase) {
+      case ACTION -> {
+        gamePhase = GamePhase.PLANNING;
+        prepareOrderForActionPhase();
+      }
+      case PLANNING -> {
+        gamePhase = GamePhase.ACTION;
+        prepareOrderForNextRound();
+      }
+    }
   }
 
   /**
@@ -89,15 +116,47 @@ public class GameState {
     return turnPhase;
   }
 
-  //TODO advanceTurnPhase
+  /**
+   * advances to next turnPhase (takes into account gameMode)
+   */
   public void advanceTurnPhase() {
+    if (ruleBook.gameMode == GameMode.NORMAL) {
+      switch (turnPhase) {
+        case PLACING -> turnPhase = TurnPhase.EFFECT;
+        case EFFECT -> turnPhase = TurnPhase.MOVING;
+        case MOVING -> turnPhase = TurnPhase.PICKING;
+        case PICKING -> turnPhase = TurnPhase.PLACING;
+      }
+    }
+    if(ruleBook.gameMode == GameMode.NORMAL) {
+      switch (turnPhase) {
+        case PLACING -> turnPhase = TurnPhase.MOVING;
+        case MOVING -> turnPhase = TurnPhase.PICKING;
+        case PICKING -> turnPhase = TurnPhase.PLACING;
+      }
+    }
   }
 
+  //TODO la win condition deve fare altre cose credo?
   /**
-   * Checks if one of the players has won the game
+   * Checks:
+   * - if there are still students in the student Bag<br>
+   * - if every player still has towers<br>
+   * - if every player still has assistant cards<br>
+   * - if the island amount is allowed<br>
+   * if one of these condition isn't true The Game ends
    */
   public void checkWinCondition() {
-    // TODO
+    if(playingField.getStudentBag().isEmpty()) gamePhase = GamePhase.WIN;
+
+    for (Player p: players) {
+      if(p.getDashboard().noMoreTowers()) gamePhase = GamePhase.WIN;
+
+      if(p.getCards().size() == 0) gamePhase = GamePhase.WIN;
+    }
+
+    if (playingField.getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT) gamePhase = GamePhase.WIN;
+
   }
 
 
@@ -112,13 +171,12 @@ public class GameState {
   /**
    * Sorts players by their selected assistant card movement value
    */
-  private void sortPlayersByTurnPriority() {
+  private void prepareOrderForActionPhase() {
     turnOrder.clear();
     turnOrder.addAll(players);
     turnOrder.sort(Comparator.comparingInt(Player::getTurnPriority));
   }
 
-  // todo test
   private void prepareOrderForNextRound() {
     planOrder.clear();
     planOrder.add(turnOrder.get(0));

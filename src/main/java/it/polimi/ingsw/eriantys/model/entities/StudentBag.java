@@ -55,4 +55,8 @@ public class StudentBag {
     return null;
   }
 
+  public boolean isEmpty() {
+    return students.isEmpty();
+  }
+
 }

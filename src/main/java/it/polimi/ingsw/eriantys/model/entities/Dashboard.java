@@ -60,5 +60,8 @@ public class Dashboard {
       towers.count -= amount;
     }
   }
+
+  public boolean noMoreTowers(){ return towers.count == 0; }
+
 }
 

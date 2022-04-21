@@ -22,6 +22,8 @@ public class RuleBook {
   public static final int DASHBOARD_TOWERS_3 = 6;
   public static final int ENTRANCE_SIZE_2_4 = 7;
   public static final int ENTRANCE_SIZE_3 = 9;
+  // Constants for win conditions
+  public static final int MIN_ISLAND_COUNT = 3;
 
   private RuleBook(GameMode gameMode, int cloudCount, int playableStudentCount, int dashboardTowerCount, int entranceSize) {
     this.gameMode = gameMode;
