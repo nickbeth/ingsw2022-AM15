@@ -29,11 +29,10 @@ public class PickCloud extends PlayerAction {
   public void apply(GameState gameState, IGameService gameService) {
     Cloud cloud = gameState.getPlayingField().getCloud(cloudIndex);
     Dashboard dashboard = gameState.getCurrentPlayer().getDashboard();
+
     gameService.pickCloud(cloud, dashboard);
 
-//    gameState.getCurrentPlayer().getDashboard().addToEntrance(cloud.getStudents());
-//    cloud.setStudents(new Students());
-
+    // Make the game advance its phases
     gameState.advanceTurnPhase();
     Player lastPlayer = gameState.getTurnOrderPlayers().get(gameState.getTurnOrderPlayers().size() - 1);
     if (gameState.getCurrentPlayer().equals(lastPlayer)) {

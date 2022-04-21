@@ -26,7 +26,6 @@ public class PickAssistantCard extends PlayerAction {
   @Override
   public void apply(GameState gameState, IGameService gameService) {
     gameService.pickAssistantCard(gameState.getCurrentPlayer(), cardIndex);
-//    gameState.getCurrentPlayer().setPlayedCard(cardIndex);
     gameState.advancePlayer();
 
     // If all players have set the card the game continues

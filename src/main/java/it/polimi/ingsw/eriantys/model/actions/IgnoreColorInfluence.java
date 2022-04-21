@@ -23,7 +23,6 @@ public class IgnoreColorInfluence extends PlayerAction {
   @Override
   public void apply(GameState gameState, IGameService gameService) {
     gameService.ignoreColorInfluence(ignoredColor, gameState.getPlayingField());
-//    gameState.getPlayingField().setIgnoredColor(ignoredColor);
     gameState.advanceTurnPhase();
   }
 
