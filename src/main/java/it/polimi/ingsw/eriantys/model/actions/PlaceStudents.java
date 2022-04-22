@@ -28,7 +28,7 @@ public class PlaceStudents extends PlayerAction {
    * - removes given students from src <br/>
    * - adds given students to dest
    *
-   * @param gameState   GameState
+   * @param gameState
    * @param gameService
    */
   @Override
@@ -47,7 +47,7 @@ public class PlaceStudents extends PlayerAction {
    * @return True if the action is doable. False otherwise
    */
   @Override
-  // todo Da rifare il test, l'implementazione è cambiata
+  // todo Test
   public boolean isValid(GameState gameState) {
     if (!gameState.getCurrentPlayer().getNickname().equals(playerNickname)) return false;
     if (!(gameState.getTurnPhase() == TurnPhase.PLACING)) return false;

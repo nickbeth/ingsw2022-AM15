@@ -12,7 +12,19 @@ public interface IGameService {
   void ignoreColorInfluence(HouseColor ignoredColor, PlayingField playingField);
   void lockIsland(Island island);
   void pickAssistantCard(Player player, int cardIndex);
+
+  /**
+   * Removes the students from the given cloud and moves them to the given entrance
+   * @param cloud
+   * @param dashboard
+   */
   void pickCloud(Cloud cloud, Dashboard dashboard);
+
+  /**
+   * Executes the movements: <br/>
+   * - removes given students from src <br/>
+   * - adds given students to dest
+   */
   void placeStudents(List<StudentMovement> movements);
   void applyMotherNatureEffect(int islandIndex, PlayingField field, List<Player> players);
 }

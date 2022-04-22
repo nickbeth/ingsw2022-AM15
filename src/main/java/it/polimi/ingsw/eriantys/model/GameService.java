@@ -59,27 +59,6 @@ public class GameService implements IGameService {
 
   @Override
   public void placeStudents(List<StudentMovement> movements) {
-    // OLD UGLY CODE
-//    for (StudentMovement move : entries) {
-//      // Remove the student from the source
-//      switch (move.src()) {
-//        case ENTRANCE -> gameState.
-//                getCurrentPlayer().getDashboard().getEntrance().tryRemoveStudent(move.studentColor());
-//        case DINIGN -> gameState.
-//                getCurrentPlayer().getDashboard().getDiningHall().tryRemoveStudent(move.studentColor());
-//        default -> throw new IllegalStateException("Unexpected value: " + move.src());
-//      }
-//
-//      // Add the student to the destination
-//      switch (move.dest()) {
-//        case ENTRANCE -> gameState.
-//                getCurrentPlayer().getDashboard().getEntrance().addStudent(move.studentColor());
-//        case DINING -> gameState.
-//                getCurrentPlayer().getDashboard().getDiningHall().addStudent(move.studentColor());
-//        case ISLAND -> gameState.
-//                getPlayingField().getIsland(move.islandIndex()).getStudents().addStudent(move.studentColor());
-//        default -> throw new IllegalStateException("Unexpected value: " + move.src());
-//      }
     movements.forEach((move) -> {
       move.src().removeStudentFromSlot(move.studentColor());
       move.dest().addStudentToSlot(move.studentColor());

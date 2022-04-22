@@ -164,7 +164,7 @@ public class PlayingField {
   }
 
   /**
-   * refills Clouds with students according to rules
+   * Refills Clouds with students according to rules
    *
    * @param ruleBook
    */
