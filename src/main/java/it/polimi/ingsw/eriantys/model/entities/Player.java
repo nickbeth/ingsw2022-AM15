@@ -12,8 +12,8 @@ import static it.polimi.ingsw.eriantys.model.enums.AssistantCard.getFullDeck;
 
 public class Player {
   private final String nickname;
-  private final ArrayList<AssistantCard> cards;
   private final Dashboard dashboard;
+  private final ArrayList<AssistantCard> cards;
   private final TowerColor team;
 
   private Optional<AssistantCard> chosenCard;

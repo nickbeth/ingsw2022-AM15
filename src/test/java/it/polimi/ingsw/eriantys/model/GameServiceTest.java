@@ -40,7 +40,7 @@ class GameServiceTest {
     // Player1 4 pinks
     entranceList.add(new Students(temp));
 
-    gameService.dropStudents(entranceList, HouseColor.PINK, 3);
+    gameService.dropStudents(entranceList, HouseColor.PINK, 3, bag);
 
     assertEquals(0, entranceList.get(0).getCount(HouseColor.PINK));
     assertEquals(0, entranceList.get(1).getCount(HouseColor.PINK));

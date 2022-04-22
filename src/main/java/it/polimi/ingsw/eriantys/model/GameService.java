@@ -25,11 +25,13 @@ public class GameService implements IGameService {
    * then advances to next TurnPhase;
    */
   @Override
-  public void dropStudents(List<Students> entranceList, HouseColor color, int amount) {
-    for (var entrance : entranceList) {
+  public void dropStudents(List<Students> diningList, HouseColor color, int amount, StudentBag bag) {
+    for (var entrance : diningList) {
       for (int i = 0; i < amount; i++) {
-        if (entrance.getCount(color) != 0)
+        if (entrance.getCount(color) != 0) {
           entrance.tryRemoveStudent(color);
+          bag.addStudent(color);
+        }
       }
     }
   }
@@ -72,7 +74,7 @@ public class GameService implements IGameService {
 //      switch (move.dest()) {
 //        case ENTRANCE -> gameState.
 //                getCurrentPlayer().getDashboard().getEntrance().addStudent(move.studentColor());
-//        case DINIGN -> gameState.
+//        case DINING -> gameState.
 //                getCurrentPlayer().getDashboard().getDiningHall().addStudent(move.studentColor());
 //        case ISLAND -> gameState.
 //                getPlayingField().getIsland(move.islandIndex()).getStudents().addStudent(move.studentColor());

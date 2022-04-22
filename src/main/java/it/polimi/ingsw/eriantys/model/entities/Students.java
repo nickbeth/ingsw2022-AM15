@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
-import it.polimi.ingsw.eriantys.model.actions.Slot;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import org.tinylog.Logger;
 

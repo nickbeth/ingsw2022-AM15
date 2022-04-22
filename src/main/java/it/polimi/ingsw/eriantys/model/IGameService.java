@@ -8,7 +8,7 @@ import java.util.List;
 
 // todo trasferire la javadoc dalle action alla interfaccia
 public interface IGameService {
-  void dropStudents(List<Students> entranceList, HouseColor color, int amount);
+  void dropStudents(List<Students> diningList, HouseColor color, int amount, StudentBag bag);
   void ignoreColorInfluence(HouseColor ignoredColor, PlayingField playingField);
   void lockIsland(Island island);
   void pickAssistantCard(Player player, int cardIndex);

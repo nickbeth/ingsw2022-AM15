@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.model.actions;
+package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 

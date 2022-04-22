@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.model.actions;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.PlayerAction;
+import it.polimi.ingsw.eriantys.model.entities.StudentBag;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -29,11 +30,12 @@ public class DropStudents extends PlayerAction {
   @Override
   public void apply(GameState gameState, IGameService gameService) {
     final int DROP_STUDENTS_AMOUNT = 3;
-    List<Students> entranceList = new ArrayList<>();
+    List<Students> diningHallList = new ArrayList<>();
     gameState.getPlayers().forEach((player) ->
-            entranceList.add(player.getDashboard().getEntrance())
+            diningHallList.add(player.getDashboard().getDiningHall())
     );
-    gameService.dropStudents(entranceList, studentColor, DROP_STUDENTS_AMOUNT);
+    StudentBag bag = gameState.getPlayingField().getStudentBag();
+    gameService.dropStudents(diningHallList, studentColor, DROP_STUDENTS_AMOUNT, bag);
 
     gameState.advanceTurnPhase();
   }
