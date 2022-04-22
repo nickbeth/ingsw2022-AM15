@@ -24,7 +24,7 @@ public class MoveMotherNature extends PlayerAction {
   /**
    * Moves motherNature. <br/>
    * If the destination island is not Locked it sets the tower color to the most influential Team
-   * and tries to merge adjacent islands.
+   * and tries to merge adjacent islands. <br/>
    * If there isn't a new most influential player nothing changes <br/>
    * Modifies players' tower count if necessary. <br/>
    * It advances turnPhase.

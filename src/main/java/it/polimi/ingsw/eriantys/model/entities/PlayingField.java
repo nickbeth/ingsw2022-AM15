@@ -88,17 +88,20 @@ public class PlayingField {
     Logger.debug("current island:" + islands.indexOf(currIsland));
     Logger.debug("next island:" + islands.indexOf(nextIsland));
 
+    //tries merging next island
     if (nextIsland.getTowerColor() == currIsland.getTowerColor()) {
       currIsland.addStudents(nextIsland.getStudents());
       currIsland.setTowerCount(currIsland.getTowerCount() + nextIsland.getTowerCount());
       islands.remove(nextIsland);
+      if (islands.indexOf(nextIsland) <= motherNaturePosition) motherNaturePosition--;
     }
 
+    //tries merging prev island
     if (prevIsland.getTowerColor() == currIsland.getTowerColor()) {
       currIsland.addStudents(prevIsland.getStudents());
       currIsland.setTowerCount(currIsland.getTowerCount() + prevIsland.getTowerCount());
       islands.remove(prevIsland);
-      if (islandIndex != 0) motherNaturePosition--;
+      if (islandIndex <= motherNaturePosition) motherNaturePosition--;
     }
   }
 

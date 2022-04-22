@@ -7,14 +7,19 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.model.GameService.getGameService;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GameServiceTest {
@@ -117,6 +122,82 @@ class GameServiceTest {
   }
 
   @Test
-  void applyMotherNatureEffect() {
+  void MotherNatureIslandLocked() {
+    RuleBook rules = RuleBook.makeRules(GameMode.NORMAL, 2);
+    PlayingField field = new PlayingField(rules);
+    List<Player> players = new ArrayList<>();
+    players.add(new Player(rules , "gino",TowerColor.BLACK,new Students()));
+    players.add(new Player(rules , "franco",TowerColor.WHITE,new Students()));
+
+    TowerColor oldIslandColor = field.getIsland(1).getTowerColor();
+    int oldIslandAmount = field.getIslandsAmount();
+    int blackPTowerCount = players.get(0).getDashboard().towerCount();
+    int whitePTowerCount = players.get(1).getDashboard().towerCount();
+    Logger.debug("\nold amount " + oldIslandAmount);
+    field.getIsland(1).setLocked(true);
+    gameService.applyMotherNatureEffect(1 , field, players);
+    Logger.debug("\nnew amount " + field.getIslandsAmount());
+
+    assertEquals(oldIslandAmount, field.getIslandsAmount());
+    assertEquals(oldIslandColor, field.getIsland(1).getTowerColor());
+    assertEquals(blackPTowerCount, players.get(0).getDashboard().towerCount());
+    assertEquals(whitePTowerCount, players.get(1).getDashboard().towerCount());
   }
+
+  @Test
+  void MotherNatureNoMostInfluential() {
+    RuleBook rules = RuleBook.makeRules(GameMode.NORMAL, 2);
+    PlayingField field1 = new PlayingField(rules);
+    PlayingField fieldMock = spy(field1);
+    doReturn(Optional.empty()).when(fieldMock).getMostInfluential(1);
+    List<Player> players = new ArrayList<>();
+    players.add(new Player(rules , "gino",TowerColor.BLACK,new Students()));
+    players.add(new Player(rules , "franco",TowerColor.WHITE,new Students()));
+    Logger.debug("most influential in : " + fieldMock);
+
+    int oldIslandAmount = fieldMock.getIslandsAmount();
+    TowerColor oldIslandColor = fieldMock.getIsland(1).getTowerColor();
+    int blackPTowerCount = players.get(0).getDashboard().towerCount();
+    int whitePTowerCount = players.get(1).getDashboard().towerCount();
+    Logger.debug("\nold amount " + oldIslandAmount);
+    gameService.applyMotherNatureEffect(1 , fieldMock, players);
+    Logger.debug("\nnew amount " + fieldMock.getIslandsAmount());
+
+    assertEquals(oldIslandAmount, fieldMock.getIslandsAmount());
+    assertEquals(oldIslandColor, fieldMock.getIsland(1).getTowerColor());
+    assertEquals(blackPTowerCount, players.get(0).getDashboard().towerCount());
+    assertEquals(whitePTowerCount, players.get(1).getDashboard().towerCount());
+  }
+
+  @Test
+  void MotherNatureEffect() {
+    RuleBook rules = RuleBook.makeRules(GameMode.NORMAL, 2);
+    PlayingField field = new PlayingField(rules);
+    PlayingField fieldMock = spy(field);
+    doReturn(Optional.of(TowerColor.WHITE)).when(fieldMock).getMostInfluential(1);
+    List<Player> players = new ArrayList<>();
+    players.add(new Player(rules , "gino",TowerColor.BLACK,new Students()));
+    players.add(new Player(rules , "franco",TowerColor.WHITE,new Students()));
+    fieldMock.getIsland(1).setTowerColor(TowerColor.BLACK);
+    fieldMock.getIsland(1).setTowerCount(1);
+    fieldMock.getIsland(2).setTowerColor(TowerColor.WHITE);
+    fieldMock.getIsland(2).setTowerCount(1);
+    fieldMock.getIsland(0).setTowerColor(TowerColor.WHITE);
+    fieldMock.getIsland(0).setTowerCount(1);
+
+    int oldIslandAmount = fieldMock.getIslandsAmount();
+    int blackPTowerCount = players.get(0).getDashboard().towerCount();
+    int whitePTowerCount = players.get(1).getDashboard().towerCount();
+    Logger.debug("\nold amount " + oldIslandAmount);
+    gameService.applyMotherNatureEffect(1 , fieldMock, players);
+    Logger.debug("\nnew amount " + fieldMock.getIslandsAmount());
+
+    assertEquals(oldIslandAmount - 2, fieldMock.getIslandsAmount());
+    assertEquals(TowerColor.WHITE, fieldMock.getIsland(0).getTowerColor());
+    assertEquals(blackPTowerCount + 1, players.get(0).getDashboard().towerCount());
+    assertEquals(whitePTowerCount - 1, players.get(1).getDashboard().towerCount());
+  }
+
+
+
 }

@@ -26,7 +26,7 @@ public class Dashboard {
   }
 
   public void removeFromEntrance(HouseColor color) {
-    if(!entrance.tryRemoveStudent(color))
+    if (!entrance.tryRemoveStudent(color))
       Logger.warn("Impossible to remove student from entrance. No students available");
   }
 
@@ -41,6 +41,7 @@ public class Dashboard {
 
   /**
    * Adds the given amount of tower
+   *
    * @param amount
    */
   public void addTowers(int amount) {
@@ -49,6 +50,7 @@ public class Dashboard {
 
   /**
    * Removes the given amount of tower. If the amount is greater than towers count then it goes to 0.
+   *
    * @param amount
    */
   public void removeTowers(int amount) {
@@ -62,7 +64,13 @@ public class Dashboard {
     }
   }
 
-  public boolean noMoreTowers(){ return towers.count == 0; }
+  public boolean noMoreTowers() {
+    return towers.count == 0;
+  }
+
+  public int towerCount() {
+    return towers.count;
+  }
 
 }
 
