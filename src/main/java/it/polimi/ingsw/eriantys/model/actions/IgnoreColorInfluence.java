@@ -1,14 +1,15 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
-import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-public class IgnoreColorInfluence extends PlayerAction {
-  HouseColor ignoredColor;
+public class IgnoreColorInfluence implements GameAction {
+  private HouseColor ignoredColor;
+  private String playerNickname;
 
   public IgnoreColorInfluence(String nickname, HouseColor ignoredColor) {
     this.playerNickname = nickname;

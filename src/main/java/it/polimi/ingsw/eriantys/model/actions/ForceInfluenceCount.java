@@ -1,19 +1,15 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
-import it.polimi.ingsw.eriantys.model.PlayerAction;
-import it.polimi.ingsw.eriantys.model.entities.Island;
-import it.polimi.ingsw.eriantys.model.entities.Player;
-import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-import java.util.Optional;
 
-public class ForceInfluenceCount extends PlayerAction {
-  int islandIndex;
+public class ForceInfluenceCount implements GameAction {
+  private int islandIndex;
+  private String playerNickname;
 
   public ForceInfluenceCount(String nickname, int islandIndex) {
     this.islandIndex = islandIndex;

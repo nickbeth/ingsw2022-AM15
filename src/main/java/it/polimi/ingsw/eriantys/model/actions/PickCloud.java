@@ -1,14 +1,15 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
-import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-public class PickCloud extends PlayerAction {
-  int cloudIndex;
+public class PickCloud implements GameAction {
+  private int cloudIndex;
+  private String playerNickname;
 
   public PickCloud(String nickname, int index) {
     this.cloudIndex = index;

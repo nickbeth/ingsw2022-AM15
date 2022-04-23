@@ -1,14 +1,15 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
-import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 
 import java.util.List;
 
-public class RefillClouds extends PlayerAction {
-  List<Students> studentsList;
+public class RefillClouds implements GameAction {
+  private List<Students> studentsList;
+  private String playerNickname;
 
   public RefillClouds(String nickname, List<Students> s) {
     this.playerNickname = nickname;

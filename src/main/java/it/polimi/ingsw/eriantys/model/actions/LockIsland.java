@@ -1,13 +1,15 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
-import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-public class LockIsland extends PlayerAction{
-  int index;
+public class LockIsland implements GameAction {
+  private int index;
+  private String playerNickname;
+
   public LockIsland(String nickname, int index) {
     this.playerNickname = nickname;
     this.index = index;

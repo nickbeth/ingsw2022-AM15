@@ -1,8 +1,8 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
-import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.entities.StudentBag;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
@@ -12,9 +12,9 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DropStudents extends PlayerAction {
-
-  HouseColor studentColor;
+public class DropStudents implements GameAction {
+  private HouseColor studentColor;
+  private String playerNickname;
 
   public DropStudents(String nickname, HouseColor color) {
     this.studentColor = color;

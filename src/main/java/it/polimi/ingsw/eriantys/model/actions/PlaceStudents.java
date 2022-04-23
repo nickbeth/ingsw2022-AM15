@@ -1,8 +1,8 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
-import it.polimi.ingsw.eriantys.model.PlayerAction;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
@@ -15,8 +15,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class PlaceStudents extends PlayerAction {
+public class PlaceStudents implements GameAction {
   private final List<StudentMovement> movements;
+  private String playerNickname;
 
   public PlaceStudents(String nickname, List<StudentMovement> entries) {
     this.playerNickname = nickname;

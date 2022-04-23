@@ -1,20 +1,18 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
-import it.polimi.ingsw.eriantys.model.PlayerAction;
-import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.util.List;
-import java.util.Optional;
 
-public class MoveMotherNature extends PlayerAction {
-  int amount;
+public class MoveMotherNature implements GameAction {
+  private int amount;
+  private String playerNickname;
 
   public MoveMotherNature(String nickname, int amount) {
     this.playerNickname = nickname;
