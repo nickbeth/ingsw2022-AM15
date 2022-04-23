@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.model;
 
-import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
@@ -30,8 +29,8 @@ public class GameState {
   /**
    * Adds a player to the player List and planOrder List
    *
-   * @param playerName
-   * @param towerColor
+   * @param playerName Player nickname
+   * @param towerColor Team color chosen
    */
   public void addPlayer(String playerName, TowerColor towerColor) {
     Player newPlayer = new Player(ruleBook, playerName, towerColor, new Students());
@@ -152,30 +151,33 @@ public class GameState {
   }
 
   public Optional<TowerColor> getWinner() {
-    Optional<TowerColor> winner = Optional.empty();
-    List<Player> players = new ArrayList<>(this.players);
-    players.stream().sorted(Comparator.comparingInt(p -> p.getDashboard().getTowers().count));
-
-    Player p1 = players.get(0);
-    Player p2 = players.get(1);
-    int towerCount1 = playingField.getHeldProfessorCount(p1.getColorTeam());
-    int towerCount2 = playingField.getHeldProfessorCount(p2.getColorTeam());
-
-    // Checks who have fewer towers in their dashboard
-    if (p1.getDashboard().getTowers().count < p2.getDashboard().getTowers().count) {
-      winner = Optional.of(p1.getColorTeam());
-    }
-    // If they have the same amount of tower
-    else if (players.get(0).getDashboard().getTowers().count == players.get(1).getDashboard().getTowers().count) {
-      // Checks who have more professor
-      if (towerCount1 > towerCount2) {
-        winner = Optional.of(p1.getColorTeam());
-      } else if (towerCount1 < towerCount2) {
-        winner = Optional.of(p2.getColorTeam());
-      } else {
-        winner = Optional.empty();
+    class Temp {
+      private static int getUnusedTowerCount(Player player) {
+        return player.getDashboard().getTowers().count;
+      }
+      private static int getHeldProfessorCount(Player player, PlayingField playingField) {
+        return playingField.getHeldProfessorCount(player.getColorTeam());
       }
     }
+    int towerCount = Integer.MAX_VALUE;
+    int heldProfessorCount = 0;
+    Optional<TowerColor> winner = Optional.empty();
+
+    for (Player p : players) {
+      // If the player has fewer towers in his dashboard he's the winner
+      if (Temp.getUnusedTowerCount(p) < towerCount) {
+        towerCount = Temp.getUnusedTowerCount(p);
+        winner = Optional.of(p.getColorTeam());
+      } else if (Temp.getUnusedTowerCount(p) == towerCount) {
+        // If equals number of tower checks z
+        if (Temp.getHeldProfessorCount(p, playingField) > heldProfessorCount) {
+          winner = Optional.of(p.getColorTeam());
+        } else {
+          winner = Optional.empty();
+        }
+      }
+    }
+
     return winner;
   }
 
@@ -199,23 +201,23 @@ public class GameState {
   private void prepareOrderForActionPhase() {
     turnOrder.clear();
     turnOrder.addAll(players);
-    Logger.debug("\nold turnOrder: " + turnOrder.toString());
+    Logger.debug("\nold turnOrder: " + turnOrder);
     turnOrder.sort(Comparator.comparingInt(Player::getTurnPriority).reversed());
-    Logger.debug("\nnew turnOrder: " + turnOrder.toString());
+    Logger.debug("\nnew turnOrder: " + turnOrder);
   }
 
   /**
    * Sorts planOrder players clockwise starting from the first of turnOrder
    */
   private void prepareOrderForNextRound() {
-    Logger.debug("\nold planOrder: " + planOrder.toString());
+    Logger.debug("\nold planOrder: " + planOrder);
     planOrder.clear();
     //planOrder.add(turnOrder.get(0));
     int offset = players.indexOf(turnOrder.get(0));
     for (int i = 0; i < players.size(); i++) {
       planOrder.add(players.get((i + offset) % players.size()));
     }
-    Logger.debug("\nnew planOrder: " + planOrder.toString());
+    Logger.debug("\nnew planOrder: " + planOrder);
   }
 
   public boolean isTurnOf(String nickname) {
