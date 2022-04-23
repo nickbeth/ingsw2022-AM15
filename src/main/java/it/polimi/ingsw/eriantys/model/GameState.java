@@ -7,6 +7,7 @@ import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -70,9 +71,8 @@ public class GameState {
   }
 
   /**
-   * returns order
-   *
-   * @return
+   * returns order for PLANNING phase
+   * @return List of players
    */
   public List<Player> getPlanOrderPlayers() {
     return planOrder;
@@ -93,17 +93,19 @@ public class GameState {
   }
 
   /**
-   * advances to next gamePhase
+   * advances to next gamePhase prepares the corresponding player order
    */
   public void advanceGamePhase() {
     switch (gamePhase) {
       case ACTION -> {
+        Logger.debug("\nACTION Phase advances to PLANNING");
         gamePhase = GamePhase.PLANNING;
-        prepareOrderForActionPhase();
+        prepareOrderForNextRound();
       }
       case PLANNING -> {
+        Logger.debug("\nPLANNING Phase advances to ACTION");
         gamePhase = GamePhase.ACTION;
-        prepareOrderForNextRound();
+        prepareOrderForActionPhase();
       }
     }
   }
@@ -119,7 +121,7 @@ public class GameState {
    * advances to next turnPhase (takes into account gameMode)
    */
   public void advanceTurnPhase() {
-    if (ruleBook.gameMode == GameMode.NORMAL) {
+    if (ruleBook.gameMode == GameMode.EXPERT) {
       switch (turnPhase) {
         case PLACING -> turnPhase = TurnPhase.EFFECT;
         case EFFECT -> turnPhase = TurnPhase.MOVING;
@@ -138,12 +140,12 @@ public class GameState {
 
   //TODO la win condition deve fare altre cose credo?
   /**
-   * Checks:
+   * Checks:<br>
    * - if there are still students in the student Bag<br>
    * - if every player still has towers<br>
    * - if every player still has assistant cards<br>
    * - if the island amount is allowed<br>
-   * if one of these condition isn't true The Game ends
+   * - if one of these condition isn't true The Game ends
    */
   public void checkWinCondition() {
     if(playingField.getStudentBag().isEmpty()) gamePhase = GamePhase.WIN;
@@ -162,28 +164,37 @@ public class GameState {
   public RuleBook getRuleBook() {
     return ruleBook;
   }
-
+  /**
+   * returns player order for ACTION phase
+   * @return List of players
+   */
   public List<Player> getTurnOrderPlayers() {
     return turnOrder;
   }
 
   /**
-   * Sorts players by their selected assistant card movement value
+   * Sorts turnOrder players by their turn priority (in descending order)
    */
   private void prepareOrderForActionPhase() {
     turnOrder.clear();
     turnOrder.addAll(players);
-    turnOrder.sort(Comparator.comparingInt(Player::getTurnPriority));
+    Logger.debug("\nold turnOrder: " + turnOrder.toString());
+    turnOrder.sort(Comparator.comparingInt(Player::getTurnPriority).reversed());
+    Logger.debug("\nnew turnOrder: " + turnOrder.toString());
   }
 
+  /**
+   * Sorts planOrder players clockwise starting from the first of turnOrder
+   */
   private void prepareOrderForNextRound() {
+    Logger.debug("\nold planOrder: " + planOrder.toString());
     planOrder.clear();
-    planOrder.add(turnOrder.get(0));
-
+    //planOrder.add(turnOrder.get(0));
     int offset = players.indexOf(turnOrder.get(0));
     for (int i = 0; i < players.size(); i++) {
       planOrder.add(players.get((i + offset) % players.size()));
     }
+    Logger.debug("\nnew planOrder: " + planOrder.toString());
   }
 
   public boolean isTurnOf(String nickname) {

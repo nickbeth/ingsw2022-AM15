@@ -20,6 +20,7 @@ public class Player {
 
   private int maxMovement;
   private int coins;
+
   public Player(RuleBook ruleBook, String nickname, TowerColor color, Students entranceStudents) {
     this.nickname = nickname;
     team = color;
@@ -69,8 +70,13 @@ public class Player {
     return dashboard;
   }
 
+  /**
+   * Sets the Players chosenCard and his maxMovement
+   * @param assistantCardIndex
+   */
   public void setPlayedCard(int assistantCardIndex) {
     maxMovement = cards.get(assistantCardIndex).movement;
+    chosenCard = Optional.ofNullable(cards.get(assistantCardIndex));
     cards.remove(assistantCardIndex);
   }
 
