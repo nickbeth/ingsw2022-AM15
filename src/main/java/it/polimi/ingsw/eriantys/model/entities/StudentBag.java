@@ -7,6 +7,7 @@ import java.util.*;
 
 public class StudentBag {
   private Students students;
+  Random rand = new Random();
 
   public StudentBag() {
     students = new Students();
@@ -40,7 +41,6 @@ public class StudentBag {
    * @return HouseColor
    */
   public HouseColor takeRandomStudent() {
-    Random rand = new Random();
     HouseColor student;
 
     do {
@@ -55,8 +55,16 @@ public class StudentBag {
     return null;
   }
 
+  public void removeStudents(Students s) {
+    for (HouseColor c : HouseColor.values()) {
+      do {
+        s.tryRemoveStudent(c);
+        students.addStudent(c);
+      } while (students.getCount(c) > 0);
+    }
+  }
+
   public boolean isEmpty() {
     return students.isEmpty();
   }
-
 }

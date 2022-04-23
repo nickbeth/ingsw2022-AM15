@@ -165,16 +165,11 @@ public class PlayingField {
 
   /**
    * Refills Clouds with students according to rules
-   *
-   * @param ruleBook
    */
-  public void refillClouds(RuleBook ruleBook) {
-    for (Cloud c : clouds) {
-      Students students = new Students();
-      for (int i = 0; i < ruleBook.playableStudentCount; i++) {
-        students.addStudent(takeStudentFromBag());
-      }
-      c.setStudents(students);
+  public void refillClouds(List<Students> studentsList) {
+    for (int i = 0; i < clouds.size(); i++) {
+      clouds.get(i).setStudents(studentsList.get(i));
+      studentBag.removeStudents(studentsList.get(i));
     }
   }
 

@@ -33,7 +33,6 @@ public class PickCloud extends PlayerAction {
     gameState.advanceTurnPhase();
     Player lastPlayer = gameState.getTurnOrderPlayers().get(gameState.getTurnOrderPlayers().size() - 1);
     if (gameState.getCurrentPlayer().equals(lastPlayer)) {
-      gameState.getPlayingField().refillClouds(gameState.getRuleBook());
       gameState.advanceGamePhase();
     }
     gameState.advancePlayer();

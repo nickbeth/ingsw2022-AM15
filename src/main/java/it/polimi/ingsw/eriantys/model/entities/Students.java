@@ -89,10 +89,20 @@ public class Students extends Slot {
    * @param color
    * @return number of students of that color
    */
-  public Integer getCount(HouseColor color) {
+  public int getCount(HouseColor color) {
     return students.get(color);
   }
 
+  /**
+   * @return The total number of students in this Students object
+   */
+  public int getCount() {
+    int count = 0;
+    for (HouseColor c : HouseColor.values()) {
+      count += students.get(c);
+    }
+    return count;
+  }
 
   @Override
   public String toString() {
