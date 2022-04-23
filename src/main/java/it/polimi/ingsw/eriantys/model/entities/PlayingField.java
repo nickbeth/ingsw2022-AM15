@@ -164,7 +164,7 @@ public class PlayingField {
   }
 
   /**
-   * Refills Clouds with students according to rules
+   * Refills Clouds with the given students and removes them from the bag
    */
   public void refillClouds(List<Students> studentsList) {
     for (int i = 0; i < clouds.size(); i++) {

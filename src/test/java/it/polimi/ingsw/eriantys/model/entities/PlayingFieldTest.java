@@ -9,9 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 
 class PlayingFieldTest {
@@ -19,7 +22,7 @@ class PlayingFieldTest {
 
   @BeforeEach
   public void setUp() {
-    p = new PlayingField(RuleBook.makeRules(GameMode.NORMAL, 2));
+    p = new PlayingField(RuleBook.makeRules(GameMode.NORMAL, 3));
     p.addTeam(TowerColor.BLACK);
     p.addTeam(TowerColor.WHITE);
     p.addTeam(TowerColor.GRAY);
@@ -36,6 +39,32 @@ class PlayingFieldTest {
 
   @Test
   public void refillClouds() {
+    List<Students> studentsList = new ArrayList<>();
+    Students s = new Students();
+    Students s1 = new Students();
+    s.addStudent(HouseColor.RED);
+    s.addStudent(HouseColor.RED);
+    s.addStudent(HouseColor.RED);
+    s.addStudent(HouseColor.RED);
+    s1.addStudent(HouseColor.BLUE);
+    s1.addStudent(HouseColor.BLUE);
+    s1.addStudent(HouseColor.BLUE);
+    s1.addStudent(HouseColor.BLUE);
+    studentsList.add(s);
+    studentsList.add(s1);
+    studentsList.add(s);
+
+    //PlayingField spyedField = spy(p);
+
+    p.getCloud(0).setStudents(new Students());
+    p.getCloud(1).setStudents(new Students());
+    p.getCloud(2).setStudents(new Students());
+
+    p.refillClouds(studentsList);
+    Logger.debug("new students in cloud:\n" + p.getCloud(0).getStudents().toString());
+    assertEquals(4, p.getCloud(0).getStudents().getCount(HouseColor.RED));
+    assertEquals(4, p.getCloud(1).getStudents().getCount(HouseColor.BLUE));
+    assertEquals(4, p.getCloud(2).getStudents().getCount(HouseColor.RED));
   }
 
   @Test
@@ -65,6 +94,7 @@ class PlayingFieldTest {
     assertEquals(0, p.getMotherNaturePosition());
     assertEquals(3, p.getIsland(0).getTowerCount());
   }
+
   @Test
   public void doubleMergeOnFirst() {
     //merges leftIsland and RightIsland with currentIsland, index = 0
@@ -86,7 +116,7 @@ class PlayingFieldTest {
   }
 
   @Test
-  public void noMerge(){
+  public void noMerge() {
     ArrayList<Island> oldIslands = new ArrayList<>();
     p.getIsland(2).setTowerColor(TowerColor.BLACK);
     p.getIsland(1).setTowerColor(TowerColor.WHITE);
@@ -100,8 +130,9 @@ class PlayingFieldTest {
     for (int i = 0; i < p.getIslandsAmount(); i++)
       assertSame(oldIslands.get(i), p.getIsland(i));
   }
+
   @Test
-  public void consecutiveMergeIslands(){
+  public void consecutiveMergeIslands() {
     ArrayList<Island> oldIslands = new ArrayList<>();
     p.getIsland(2).setTowerColor(TowerColor.BLACK);
     p.getIsland(1).setTowerColor(TowerColor.BLACK);

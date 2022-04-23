@@ -16,13 +16,20 @@ public class RefillClouds extends PlayerAction {
   }
 
   /**
-   * Refills every cloud
+   * Refills the clouds with the given students and removes them from the bag
    */
   @Override
   public void apply(GameState gameState, IGameService gameService) {
     gameState.getPlayingField().refillClouds(studentsList);
   }
 
+  /**
+   * Checks:
+   * - if the list of given students is the right size
+   * - if the given students are the right amount
+   * @param gameState
+   * @return
+   */
   @Override
   public boolean isValid(GameState gameState) {
     for (var s : studentsList)

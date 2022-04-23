@@ -55,12 +55,16 @@ public class StudentBag {
     return null;
   }
 
+  /**
+   * removes given students from bag
+   */
   public void removeStudents(Students s) {
     for (HouseColor c : HouseColor.values()) {
-      do {
-        s.tryRemoveStudent(c);
-        students.addStudent(c);
-      } while (students.getCount(c) > 0);
+      int count = s.getCount(c);
+      while(count > 0){
+        count--;
+        students.tryRemoveStudent(c);
+      }
     }
   }
 
