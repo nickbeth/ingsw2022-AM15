@@ -9,10 +9,8 @@ import java.util.List;
 
 public class RefillClouds implements GameAction {
   private List<Students> studentsList;
-  private String playerNickname;
 
-  public RefillClouds(String nickname, List<Students> s) {
-    this.playerNickname = nickname;
+  public RefillClouds(List<Students> s) {
     this.studentsList = s;
   }
 

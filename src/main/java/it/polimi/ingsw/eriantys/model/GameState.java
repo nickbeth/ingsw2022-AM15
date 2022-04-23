@@ -38,10 +38,7 @@ public class GameState {
    * @param towerColor
    */
   public void addPlayer(String playerName, TowerColor towerColor) {
-    Students entrance = new Students();
-    for (int i = 0; i <= ruleBook.entranceSize; i++)
-      entrance.addStudent(playingField.takeStudentFromBag());
-    Player newPlayer = new Player(ruleBook, playerName, towerColor, entrance);
+    Player newPlayer = new Player(ruleBook, playerName, towerColor, new Students());
     players.add(newPlayer);
     planOrder.add(newPlayer);
     playingField.addTeam(towerColor);

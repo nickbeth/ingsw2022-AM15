@@ -37,37 +37,6 @@ public class MoveMotherNature implements GameAction {
     int motherNaturePos = playingField.getMotherNaturePosition();
     List<Player> players = gameState.getPlayers();
     gameService.applyMotherNatureEffect(motherNaturePos, playingField, players);
-
-//    if (playingField.getIsland(motherNaturePos).isLocked()) {
-//      playingField.getIsland(motherNaturePos).setLocked(false);
-//      //TODO lock returns to the characterCard
-//    } else {
-//      Optional<TowerColor> mostInfluentialTeam = playingField.getMostInfluential(motherNaturePos);
-//      Island currIsland = playingField.getIsland(motherNaturePos);
-//
-//      if (mostInfluentialTeam.isPresent()) {
-//        // Set tower color
-//        TowerColor oldColor = currIsland.getTowerColor();
-//        currIsland.setTowerColor(mostInfluentialTeam.get());
-//
-//        // If old color != new color => manage player towers
-//        if (!oldColor.equals(mostInfluentialTeam.get())) {
-//          for (Player p : gameState.getTurnOrderPlayers()) {
-//
-//            // Remove towers from conquerors' dashboard
-//            if (p.getColorTeam() == mostInfluentialTeam.get()) {
-//              p.getDashboard().removeTowers(currIsland.getTowerCount());
-//            }
-//
-//            // Add towers to conquered dashboard
-//            if (p.getColorTeam() == oldColor) {
-//              p.getDashboard().addTowers(currIsland.getTowerCount());
-//            }
-//          }
-//        }
-//        playingField.mergeIslands(motherNaturePos);
-//      }
-//    }
   }
 
   /**
@@ -86,6 +55,6 @@ public class MoveMotherNature implements GameAction {
             gameState.getGamePhase() == GamePhase.ACTION &&
             gameState.getTurnPhase() == TurnPhase.MOVING &&
             amount > 0 &&
-            gameState.getCurrentPlayer().getTurnPriority() >= amount;
+            gameState.getCurrentPlayer().getMaxMovement() >= amount;
   }
 }

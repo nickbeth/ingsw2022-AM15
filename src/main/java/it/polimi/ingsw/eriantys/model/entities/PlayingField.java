@@ -40,27 +40,20 @@ public class PlayingField {
     //initialize islands and student bag
     islands = new ArrayList<>();
     studentBag = new StudentBag();
-    studentBag.initStudents(STUDENT_PER_COLOR_SETUP);
 
+    // Creates first islands set
     for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
-      if (i == 0 || (i == RuleBook.ISLAND_COUNT / 2))
-        islands.add(new Island());
-      else
-        islands.add(new Island(takeStudentFromBag()));
+      islands.add(new Island());
     }
 
+
     // definitive initialization of StudentBag
-    studentBag.initStudents(RuleBook.STUDENT_PER_COLOR - STUDENT_PER_COLOR_SETUP);
+    studentBag.initStudents(RuleBook.STUDENT_PER_COLOR);
 
     // initializing Clouds
     clouds = new ArrayList<>();
     for (int i = 0; i < ruleBook.cloudCount; i++) {
-      Students tempStudents = new Students();
-      for (int j = 0; j < ruleBook.playableStudentCount; j++) {
-        HouseColor student = takeStudentFromBag();
-        tempStudents.addStudent(student);
-      }
-      clouds.add(new Cloud(tempStudents));
+      clouds.add(new Cloud(new Students()));
     }
 
     // the cloud count is the same as the number of players

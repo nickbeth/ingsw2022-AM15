@@ -12,13 +12,13 @@ public class Island extends Slot {
   /**
    * Initialize island with a student on
    *
-   * @param studentColor
+   * @param students
    */
-  public Island(HouseColor studentColor) {
+  public Island(Students students) {
     // Initializing island with one student on
     towers.count = 0;
     towers.color = null;
-    students.addStudent(studentColor);
+    this.students.addStudents(students);
 //    Logger.debug("Island created");
   }
 
