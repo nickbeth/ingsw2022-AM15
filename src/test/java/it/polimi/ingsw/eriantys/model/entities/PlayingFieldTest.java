@@ -1,5 +1,7 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
+import it.polimi.ingsw.eriantys.model.GameService;
+import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -13,9 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
-
 
 class PlayingFieldTest {
   PlayingField p;
@@ -60,7 +59,9 @@ class PlayingFieldTest {
     p.getCloud(1).setStudents(new Students());
     p.getCloud(2).setStudents(new Students());
 
-    p.refillClouds(studentsList);
+    IGameService gameService = GameService.getGameService();
+    gameService.refillClouds(p.getStudentBag(),p.getClouds(),studentsList);
+
     Logger.debug("new students in cloud:\n" + p.getCloud(0).getStudents().toString());
     assertEquals(4, p.getCloud(0).getStudents().getCount(HouseColor.RED));
     assertEquals(4, p.getCloud(1).getStudents().getCount(HouseColor.BLUE));

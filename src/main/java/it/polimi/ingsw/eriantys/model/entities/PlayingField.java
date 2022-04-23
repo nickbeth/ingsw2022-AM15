@@ -64,6 +64,9 @@ public class PlayingField {
     motherNaturePosition = 0;
   }
 
+  public ArrayList<Island> getIslands() {
+    return islands;
+  }
   //TODO manage lock island in merge Island
 
   /**
@@ -119,6 +122,10 @@ public class PlayingField {
     return clouds.get(cloudIndex);
   }
 
+  public List<Cloud> getClouds() {
+    return clouds;
+  }
+
   public Island getIsland(int islandIndex) {
     return islands.get(islandIndex);
   }
@@ -157,16 +164,6 @@ public class PlayingField {
   }
 
   /**
-   * Refills Clouds with the given students and removes them from the bag
-   */
-  public void refillClouds(List<Students> studentsList) {
-    for (int i = 0; i < clouds.size(); i++) {
-      clouds.get(i).setStudents(studentsList.get(i));
-      studentBag.removeStudents(studentsList.get(i));
-    }
-  }
-
-  /**
    * Returns true if a certain team has a certain professor
    *
    * @param professor
@@ -177,6 +174,9 @@ public class PlayingField {
     return professorHolder.get(professor) == team;
   }
 
+  public int getHeldProfessorCount(TowerColor team) {
+    return (int) Arrays.stream(HouseColor.values()).filter(color -> hasProfessor(color, team)).count();
+  }
 
   public void setProfessorHolder(TowerColor team, HouseColor professor) {
     professorHolder.put(professor, team);

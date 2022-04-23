@@ -3,15 +3,16 @@ package it.polimi.ingsw.eriantys.model.actions;
 import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
+import it.polimi.ingsw.eriantys.model.entities.StudentBag;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 
 import java.util.List;
 
 public class RefillClouds implements GameAction {
-  private List<Students> studentsList;
+  private List<Students> cloudStudentsList;
 
   public RefillClouds(List<Students> s) {
-    this.studentsList = s;
+    this.cloudStudentsList = s;
   }
 
   /**
@@ -19,7 +20,8 @@ public class RefillClouds implements GameAction {
    */
   @Override
   public void apply(GameState gameState, IGameService gameService) {
-    gameState.getPlayingField().refillClouds(studentsList);
+    StudentBag studentBag = gameState.getPlayingField().getStudentBag();
+    gameService.refillClouds(studentBag, gameState.getPlayingField().getClouds(), cloudStudentsList);
   }
 
   /**
@@ -31,9 +33,9 @@ public class RefillClouds implements GameAction {
    */
   @Override
   public boolean isValid(GameState gameState) {
-    for (var s : studentsList)
+    for (var s : cloudStudentsList)
       if (s.getCount() != gameState.getRuleBook().playableStudentCount)
         return false;
-    return studentsList.size() == gameState.getRuleBook().cloudCount;
+    return cloudStudentsList.size() == gameState.getRuleBook().cloudCount;
   }
 }

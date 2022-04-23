@@ -9,9 +9,16 @@ import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import java.util.List;
 import java.util.Optional;
 
-
 public class GameService implements IGameService {
   private static IGameService gameService;
+
+  @Override
+  public void refillClouds(StudentBag studentBag, List<Cloud> clouds, List<Students> cloudStudentsList) {
+    for (int i = 0; i < clouds.size(); i++) {
+      clouds.get(i).setStudents(cloudStudentsList.get(i));
+      studentBag.removeStudents(cloudStudentsList.get(i));
+    }
+  }
 
   public static IGameService getGameService() {
     if (gameService == null) {
@@ -21,7 +28,7 @@ public class GameService implements IGameService {
   }
 
   /**
-   * removes 3 students of a certain HouseColor from the entrance of each player
+   * Removes 3 students of a certain HouseColor from the entrance of each player
    * then advances to next TurnPhase;
    */
   @Override

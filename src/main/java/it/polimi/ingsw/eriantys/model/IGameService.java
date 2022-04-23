@@ -26,5 +26,10 @@ public interface IGameService {
    * - adds given students to dest
    */
   void placeStudents(List<StudentMovement> movements);
+
+  /**
+   * Refills Clouds with the given students and removes them from the bag
+   */
+  void refillClouds(StudentBag studentBag, List<Cloud> clouds, List<Students> cloudStudentsList);
   void applyMotherNatureEffect(int islandIndex, PlayingField field, List<Player> players);
 }

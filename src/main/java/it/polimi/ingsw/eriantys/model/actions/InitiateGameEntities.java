@@ -39,7 +39,10 @@ public class InitiateGameEntities implements GameAction {
       gameState.getPlayingField().getStudentBag().removeStudents(islands.get(i));
     }
     // Initiate clouds' students
-    gameState.getPlayingField().refillClouds(clouds);
+    gameService.refillClouds(
+            gameState.getPlayingField().getStudentBag(),
+            gameState.getPlayingField().getClouds(),
+            clouds);
   }
 
   @Override

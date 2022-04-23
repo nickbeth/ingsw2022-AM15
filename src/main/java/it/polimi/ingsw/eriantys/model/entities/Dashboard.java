@@ -16,6 +16,10 @@ public class Dashboard {
     this.entrance = new Students(entrance);
   }
 
+  public Towers getTowers() {
+    return towers;
+  }
+
   public void addToEntrance(Students s) {
     entrance.addStudents(s);
   }

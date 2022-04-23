@@ -1,17 +1,13 @@
 package it.polimi.ingsw.eriantys.model;
 
+import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
-import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
+import it.polimi.ingsw.eriantys.model.enums.*;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class GameState {
   final private List<Player> players = new ArrayList<>(); // Players in the game
@@ -57,6 +53,7 @@ public class GameState {
 
   /**
    * returns the current player of current gamePhase
+   *
    * @return Player
    */
   public Player getCurrentPlayer() {
@@ -69,6 +66,7 @@ public class GameState {
 
   /**
    * returns order for PLANNING phase
+   *
    * @return List of players
    */
   public List<Player> getPlanOrderPlayers() {
@@ -126,7 +124,7 @@ public class GameState {
         case PICKING -> turnPhase = TurnPhase.PLACING;
       }
     }
-    if(ruleBook.gameMode == GameMode.NORMAL) {
+    if (ruleBook.gameMode == GameMode.NORMAL) {
       switch (turnPhase) {
         case PLACING -> turnPhase = TurnPhase.MOVING;
         case MOVING -> turnPhase = TurnPhase.PICKING;
@@ -136,6 +134,8 @@ public class GameState {
   }
 
   //TODO la win condition deve fare altre cose credo?
+  // todo e i test non ce li metti?
+
   /**
    * Checks:<br>
    * - if there are still students in the student Bag<br>
@@ -145,24 +145,48 @@ public class GameState {
    * - if one of these condition isn't true The Game ends
    */
   public void checkWinCondition() {
-    if(playingField.getStudentBag().isEmpty()) gamePhase = GamePhase.WIN;
+    if (playingField.getStudentBag().isEmpty()
+            || players.stream().allMatch(p -> p.getDashboard().noMoreTowers() || (p.getCards().size() == 0))
+            || playingField.getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
+    ) gamePhase = GamePhase.WIN;
+  }
 
-    for (Player p: players) {
-      if(p.getDashboard().noMoreTowers()) gamePhase = GamePhase.WIN;
+  public Optional<TowerColor> getWinner() {
+    Optional<TowerColor> winner = Optional.empty();
+    List<Player> players = new ArrayList<>(this.players);
+    players.stream().sorted(Comparator.comparingInt(p -> p.getDashboard().getTowers().count));
 
-      if(p.getCards().size() == 0) gamePhase = GamePhase.WIN;
+    Player p1 = players.get(0);
+    Player p2 = players.get(1);
+    int towerCount1 = playingField.getHeldProfessorCount(p1.getColorTeam());
+    int towerCount2 = playingField.getHeldProfessorCount(p2.getColorTeam());
+
+    // Checks who have fewer towers in their dashboard
+    if (p1.getDashboard().getTowers().count < p2.getDashboard().getTowers().count) {
+      winner = Optional.of(p1.getColorTeam());
     }
-
-    if (playingField.getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT) gamePhase = GamePhase.WIN;
-
+    // If they have the same amount of tower
+    else if (players.get(0).getDashboard().getTowers().count == players.get(1).getDashboard().getTowers().count) {
+      // Checks who have more professor
+      if (towerCount1 > towerCount2) {
+        winner = Optional.of(p1.getColorTeam());
+      } else if (towerCount1 < towerCount2) {
+        winner = Optional.of(p2.getColorTeam());
+      } else {
+        winner = Optional.empty();
+      }
+    }
+    return winner;
   }
 
 
   public RuleBook getRuleBook() {
     return ruleBook;
   }
+
   /**
    * returns player order for ACTION phase
+   *
    * @return List of players
    */
   public List<Player> getTurnOrderPlayers() {
