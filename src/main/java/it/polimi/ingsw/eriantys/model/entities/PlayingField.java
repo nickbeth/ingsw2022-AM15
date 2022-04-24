@@ -1,15 +1,12 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.tinylog.Logger;
 
 import java.util.*;
-
-import static it.polimi.ingsw.eriantys.model.RuleBook.STUDENT_PER_COLOR_SETUP;
 
 public class PlayingField {
   class InfluenceModifier {
@@ -18,11 +15,11 @@ public class PlayingField {
     private TowerColor addonTowerColor;
   }
 
-  private ArrayList<Island> islands;
-  private ArrayList<Cloud> clouds;
-  private StudentBag studentBag;
-  private EnumMap<HouseColor, TowerColor> professorHolder;
-  private List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
+  private final List<Island> islands;
+  private final List<Cloud> clouds;
+  private final StudentBag studentBag;
+  private final EnumMap<HouseColor, TowerColor> professorHolder;
+  private final List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
   private int coins;
   private int motherNaturePosition;
   private InfluenceModifier influenceModifier = new InfluenceModifier();
@@ -32,22 +29,18 @@ public class PlayingField {
 
   /**
    * Initializes playing field and all of its components
-   *
-   * @param ruleBook
    */
   public PlayingField(RuleBook ruleBook) {
     professorHolder = new EnumMap<>(HouseColor.class);
-    //initialize islands and student bag
-    islands = new ArrayList<>();
-    studentBag = new StudentBag();
 
-    // Creates first islands set
+    // Island initialization
+    islands = new ArrayList<>();
     for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
       islands.add(new Island());
     }
 
-
-    // definitive initialization of StudentBag
+    // StudentBag initialization
+    studentBag = new StudentBag();
     studentBag.initStudents(RuleBook.STUDENT_PER_COLOR);
 
     // initializing Clouds
@@ -64,16 +57,17 @@ public class PlayingField {
     motherNaturePosition = 0;
   }
 
-  public ArrayList<Island> getIslands() {
+  public List<Island> getIslands() {
     return islands;
   }
+
   //TODO manage lock island in merge Island
 
   /**
    * Merges islands[islandIndex] with adjacent islands if they have the same TowerColor<br/>
    * If the Merge gets applied also motherNaturePosition gets adjusted
    *
-   * @param islandIndex
+   * @param islandIndex Island index where to calculate mother's nature effect
    */
   public void mergeIslands(int islandIndex) {
     Island nextIsland = islands.get(islandIndex + 1 % islands.size());
@@ -101,15 +95,6 @@ public class PlayingField {
     }
   }
 
-  /**
-   * takes a student from StudentBag
-   *
-   * @return HouseColor of the student
-   */
-  public HouseColor takeStudentFromBag() {
-    return studentBag.takeRandomStudent();
-  }
-
   public StudentBag getStudentBag() {
     return studentBag;
   }
@@ -134,26 +119,10 @@ public class PlayingField {
     return islands.size();
   }
 
-  public void setIgnoredColor(HouseColor ignoredColor) {
-    influenceModifier.ignoredColor = ignoredColor;
-  }
-
-  public HouseColor getIgnoredColor() {
-    return influenceModifier.ignoredColor;
-  }
-
-  public void setIgnoreTower(boolean ignoreTower) {
-    influenceModifier.ignoreTower = ignoreTower;
-  }
-
-  public void setAddonTowerColor(TowerColor addonTowerColor) {
-    influenceModifier.addonTowerColor = addonTowerColor;
-  }
-
   /**
-   * moves motherNature pawn a certain amount
+   * Moves motherNature pawn a certain amount of positions
    *
-   * @param amount
+   * @param amount Amount of islands it's wanted to be moved
    */
   public void moveMotherNature(int amount) {
     motherNaturePosition = (motherNaturePosition + amount) % islands.size();
@@ -199,6 +168,7 @@ public class PlayingField {
     coins--;
   }
 
+
   // getCharacterCards(),getPlayedCharacterCard()
 
     /* maybe deprecated?
@@ -207,12 +177,8 @@ public class PlayingField {
     }*/
 
   //TODO influence count with CharacterCards
-
   /**
-   * returns the most influential player on the island, if there is none it returns an empty Optional.
-   *
-   * @param islandIndex
-   * @return Optional &#60TowerColor&#62
+   * Returns the most influential player on the island, if there is none it returns an empty Optional.
    */
   public Optional<TowerColor> getMostInfluential(int islandIndex) {
     Island island = islands.get(islandIndex);
@@ -247,6 +213,23 @@ public class PlayingField {
     }
 
     return Optional.of(maxEntry.getKey());
+  }
+
+  // Character Cards effect  -----------------------------------------------------------------------------
+  public void setIgnoredColor(HouseColor ignoredColor) {
+    influenceModifier.ignoredColor = ignoredColor;
+  }
+
+  public HouseColor getIgnoredColor() {
+    return influenceModifier.ignoredColor;
+  }
+
+  public void setIgnoreTower(boolean ignoreTower) {
+    influenceModifier.ignoreTower = ignoreTower;
+  }
+
+  public void setAddonTowerColor(TowerColor addonTowerColor) {
+    influenceModifier.addonTowerColor = addonTowerColor;
   }
 }
 
