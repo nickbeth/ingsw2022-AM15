@@ -5,11 +5,11 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 
-public class CreateGameState implements GameAction {
+public class CreateGame implements GameAction {
   private GameMode mode;
   private int playerCount;
 
-  public CreateGameState(GameMode mode, int playerCount) {
+  public CreateGame(GameMode mode, int playerCount) {
     this.mode = mode;
     this.playerCount = playerCount;
   }

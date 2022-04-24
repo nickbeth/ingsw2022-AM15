@@ -27,12 +27,13 @@ public class PickAssistantCard implements GameAction {
   @Override
   public void apply(GameState gameState, IGameService gameService) {
     gameService.pickAssistantCard(gameState.getCurrentPlayer(), cardIndex);
-    gameState.advancePlayer();
 
     // If all players have set the card the game continues
     Player lastPlayer = gameState.getPlanOrderPlayers().get(gameState.getPlanOrderPlayers().size() - 1);
-    if (gameState.getCurrentPlayer().equals(lastPlayer))
+    if (gameState.getCurrentPlayer().equals(lastPlayer)){
       gameState.advanceGamePhase();
+    }
+    gameState.advancePlayer();
   }
 
 

@@ -9,7 +9,7 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 
 public class PlanningMenu implements Menu {
   @Override
-  public void inputHandler(ActionInvoker invoker, String playerNickname, GameState game) {
+  public void commandMenu(ActionInvoker invoker, String playerNickname, GameState game) {
     Input input = null;
     Output output = null;
 
@@ -31,6 +31,9 @@ public class PlanningMenu implements Menu {
             output.show("Invalid command.");
           }
         }
+        if (game.checkWinCondition())
+          game.getWinner();
+
       }
     } while (game.getGamePhase() == GamePhase.PLANNING);
   }

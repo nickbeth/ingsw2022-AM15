@@ -36,6 +36,7 @@ public class MoveMotherNature implements GameAction {
     playingField.moveMotherNature(amount);
     int motherNaturePos = playingField.getMotherNaturePosition();
     List<Player> players = gameState.getPlayers();
+    gameState.getCurrentPlayer().unsetChosenCard();
     gameService.applyMotherNatureEffect(motherNaturePos, playingField, players);
   }
 

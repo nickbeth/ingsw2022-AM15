@@ -34,6 +34,7 @@ public class PickCloud implements GameAction {
     gameState.advanceTurnPhase();
     Player lastPlayer = gameState.getTurnOrderPlayers().get(gameState.getTurnOrderPlayers().size() - 1);
     if (gameState.getCurrentPlayer().equals(lastPlayer)) {
+      // todo gestione disconnessione random del client prima di pickare la propria cloud
       gameState.advanceGamePhase();
     }
     gameState.advancePlayer();

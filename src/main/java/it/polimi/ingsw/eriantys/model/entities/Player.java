@@ -12,10 +12,10 @@ import static it.polimi.ingsw.eriantys.model.enums.AssistantCard.getFullDeck;
 
 public class Player {
   private final String nickname;
+  private boolean connected;
   private final Dashboard dashboard;
   private final ArrayList<AssistantCard> cards;
   private final TowerColor team;
-
   private Optional<AssistantCard> chosenCard;
 
   private int maxMovement;
@@ -39,7 +39,7 @@ public class Player {
   }
 
   public int getMaxMovement() {
-    return chosenCard.get().movement;
+    return maxMovement;
   }
 
   public void addToMaxMovement(int moves) {
@@ -70,8 +70,21 @@ public class Player {
     return dashboard;
   }
 
+  public boolean isConnected() {
+    return connected;
+  }
+
+  public void unsetChosenCard() {
+    chosenCard = Optional.empty();
+  }
+
+  public void setConnected(boolean connected) {
+    this.connected = connected;
+  }
+
   /**
    * Sets the Players chosenCard and his maxMovement
+   *
    * @param assistantCardIndex
    */
   public void setPlayedCard(int assistantCardIndex) {

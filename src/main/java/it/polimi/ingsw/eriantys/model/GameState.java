@@ -9,19 +9,19 @@ import org.tinylog.Logger;
 import java.util.*;
 
 public class GameState {
-  final private List<Player> players = new ArrayList<>(); // Players in the game
-  final private List<Player> turnOrder = new ArrayList<>(); // List of players sorted by their turn order
-  final private List<Player> planOrder = new ArrayList<>(); // List of players sorted by their turn order
-  private int currentPlayer; // Nickname of the current player
+  private final List<Player> players = new ArrayList<>(); // Players in the game
+  private final List<Player> turnOrder = new ArrayList<>(); // List of players sorted by their turn order
+  private final List<Player> planOrder = new ArrayList<>(); // List of players sorted by their turn order
+  private Player currentPlayer;
   private GamePhase gamePhase; // Current phase of the game
   private TurnPhase turnPhase; // Current turn phase
   private final RuleBook ruleBook; // Set of rules used in this game
-  private PlayingField playingField; // Playing field of this game
+  private final PlayingField playingField; // Playing field of this game
 
   public GameState(int playerCount, GameMode mode) {
     ruleBook = RuleBook.makeRules(mode, playerCount);
     playingField = new PlayingField(ruleBook);
-    currentPlayer = 0;
+//    currentPlayer = 0;
     gamePhase = GamePhase.PLANNING;
     turnPhase = TurnPhase.PLACING;
   }
@@ -36,6 +36,7 @@ public class GameState {
     Player newPlayer = new Player(ruleBook, playerName, towerColor, new Students());
     players.add(newPlayer);
     planOrder.add(newPlayer);
+    currentPlayer = players.get(0);
     playingField.addTeam(towerColor);
   }
 
@@ -43,7 +44,11 @@ public class GameState {
    * Advances currentPlayer index
    */
   public void advancePlayer() {
-    currentPlayer = (currentPlayer + 1) % players.size();
+//    currentPlayer = (currentPlayer + 1) % players.size();
+    if (getGamePhase() == GamePhase.PLANNING)
+      currentPlayer = planOrder.get((planOrder.indexOf(currentPlayer) + 1) % players.size());
+    if (getGamePhase() == GamePhase.ACTION)
+      currentPlayer = turnOrder.get((planOrder.indexOf(currentPlayer) + 1) % players.size());
   }
 
   public List<Player> getPlayers() {
@@ -56,11 +61,7 @@ public class GameState {
    * @return Player
    */
   public Player getCurrentPlayer() {
-    if (getGamePhase() == GamePhase.PLANNING)
-      return planOrder.get(currentPlayer);
-    if (getGamePhase() == GamePhase.ACTION)
-      return turnOrder.get(currentPlayer);
-    return null;
+    return currentPlayer;
   }
 
   /**
@@ -143,11 +144,16 @@ public class GameState {
    * - if the island amount is allowed<br>
    * - if one of these condition isn't true The Game ends
    */
-  public void checkWinCondition() {
+  public boolean checkWinCondition() {
     if (playingField.getStudentBag().isEmpty()
-            || players.stream().allMatch(p -> p.getDashboard().noMoreTowers() || (p.getCards().size() == 0))
+            || players.stream().allMatch(p -> p.getDashboard().noMoreTowers()
+                                        || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
             || playingField.getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
-    ) gamePhase = GamePhase.WIN;
+    ) {
+      gamePhase = GamePhase.WIN;
+      return true;
+    }
+    return false;
   }
 
   public Optional<TowerColor> getWinner() {
@@ -155,6 +161,7 @@ public class GameState {
       private static int getUnusedTowerCount(Player player) {
         return player.getDashboard().getTowers().count;
       }
+
       private static int getHeldProfessorCount(Player player, PlayingField playingField) {
         return playingField.getHeldProfessorCount(player.getColorTeam());
       }
@@ -221,6 +228,6 @@ public class GameState {
   }
 
   public boolean isTurnOf(String nickname) {
-    return players.get(currentPlayer).getNickname().equals(nickname);
+    return currentPlayer.getNickname().equals(nickname);
   }
 }
