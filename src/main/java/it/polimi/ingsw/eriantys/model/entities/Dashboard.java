@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
+import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.tinylog.Logger;
@@ -24,22 +25,16 @@ public class Dashboard {
     entrance.addStudents(s);
   }
 
+  public boolean isEntranceFull(RuleBook ruleBook) {
+    return entrance.getCount() == ruleBook.entranceSize;
+  }
+
   public Students getEntrance() {
     return entrance;
   }
 
-  public void removeFromEntrance(HouseColor color) {
-    if (!entrance.tryRemoveStudent(color))
-      Logger.warn("Impossible to remove student from entrance. No students available");
-  }
-
   public Students getDiningHall() {
     return diningHall;
-  }
-
-  public void removeFromDining(HouseColor color) {
-    if (!diningHall.tryRemoveStudent(color))
-      Logger.warn("Impossible to remove student from diningHall. No students available");
   }
 
   /**

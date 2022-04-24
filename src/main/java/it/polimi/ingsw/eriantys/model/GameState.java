@@ -147,7 +147,7 @@ public class GameState {
   public boolean checkWinCondition() {
     if (playingField.getStudentBag().isEmpty()
             || players.stream().allMatch(p -> p.getDashboard().noMoreTowers()
-                                        || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
+            || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
             || playingField.getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
     ) {
       gamePhase = GamePhase.WIN;

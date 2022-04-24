@@ -31,5 +31,15 @@ public interface IGameService {
    * Refills Clouds with the given students and removes them from the bag
    */
   void refillClouds(StudentBag studentBag, List<Cloud> clouds, List<Students> cloudStudentsList);
+
+  /**
+   * If the destination island is not Locked it sets the tower color to the most influential Team
+   * and tries to merge adjacent islands. <br/>
+   * If there isn't a new most influential player nothing changes <br/>
+   * Modifies players' tower count if necessary. <br/>
+   * @param islandIndex
+   * @param field
+   * @param players
+   */
   void applyMotherNatureEffect(int islandIndex, PlayingField field, List<Player> players);
 }
