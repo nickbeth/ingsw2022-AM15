@@ -6,10 +6,12 @@ import it.polimi.ingsw.eriantys.controller.io_controls.Output;
 import it.polimi.ingsw.eriantys.controller.io_controls.OutputImpl;
 import it.polimi.ingsw.eriantys.model.ActionInvoker;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.actions.PickAssistantCard;
+import it.polimi.ingsw.eriantys.model.actions.ActivateCCEffect;
+import it.polimi.ingsw.eriantys.model.actions.ChooseCharacterCard;
+import it.polimi.ingsw.eriantys.model.actions.MoveMotherNature;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 
-public class PlanningMenu implements Menu {
+public class ActionMenu implements Menu {
   @Override
   public void commandMenu(ActionInvoker invoker, String playerNickname, GameState gameState) {
     Input input = new InputImpl();
@@ -21,13 +23,17 @@ public class PlanningMenu implements Menu {
         output.show("Not your turn dumbass");
       } else {
         switch (command.toLowerCase()) {
-          case "pick assistant" -> {
-            String cardIndex = input.getPlayerInput();
-            invoker.executeAction(new PickAssistantCard(Integer.parseInt(cardIndex), playerNickname));
+          case "place students" -> {
           }
-          case "anotherCase" -> {
-            System.out.println();
-            System.out.println();
+          case "move mother nature" -> {
+            int numberOfIsland = Integer.parseInt(input.getPlayerInput());
+            invoker.executeAction(new MoveMotherNature(playerNickname, numberOfIsland));
+          }
+          case "pick cloud" -> {
+          }
+          case "activate cc" -> {
+            invoker.executeAction(new ChooseCharacterCard(0));
+            (new CCMenu()).commandMenu(invoker, playerNickname, gameState);
           }
           default -> output.show("Invalid command.");
         }
@@ -35,6 +41,8 @@ public class PlanningMenu implements Menu {
           gameState.getWinner();
 
       }
-    } while (gameState.getGamePhase() == GamePhase.PLANNING);
+    } while (gameState.getGamePhase() == GamePhase.ACTION);
+
   }
+
 }

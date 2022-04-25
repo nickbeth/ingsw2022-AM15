@@ -14,10 +14,11 @@ public class GameState {
   private final List<Player> planOrder = new ArrayList<>(); // List of players sorted by their turn order
   private Player currentPlayer;
   private GamePhase gamePhase; // Current phase of the game
+
   private TurnPhase turnPhase; // Current turn phase
+
   private final RuleBook ruleBook; // Set of rules used in this game
   private final PlayingField playingField; // Playing field of this game
-
   public GameState(int playerCount, GameMode mode) {
     ruleBook = RuleBook.makeRules(mode, playerCount);
     playingField = new PlayingField(ruleBook);
@@ -131,6 +132,10 @@ public class GameState {
         case PICKING -> turnPhase = TurnPhase.PLACING;
       }
     }
+  }
+
+  public void setTurnPhase(TurnPhase turnPhase) {
+    this.turnPhase = turnPhase;
   }
 
   //TODO la win condition deve fare altre cose credo?

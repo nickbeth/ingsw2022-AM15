@@ -6,10 +6,9 @@ import it.polimi.ingsw.eriantys.controller.io_controls.Output;
 import it.polimi.ingsw.eriantys.controller.io_controls.OutputImpl;
 import it.polimi.ingsw.eriantys.model.ActionInvoker;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.actions.PickAssistantCard;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-public class PlanningMenu implements Menu {
+public class CCMenu implements Menu {
   @Override
   public void commandMenu(ActionInvoker invoker, String playerNickname, GameState gameState) {
     Input input = new InputImpl();
@@ -21,20 +20,18 @@ public class PlanningMenu implements Menu {
         output.show("Not your turn dumbass");
       } else {
         switch (command.toLowerCase()) {
-          case "pick assistant" -> {
-            String cardIndex = input.getPlayerInput();
-            invoker.executeAction(new PickAssistantCard(Integer.parseInt(cardIndex), playerNickname));
-          }
-          case "anotherCase" -> {
-            System.out.println();
-            System.out.println();
-          }
-          default -> output.show("Invalid command.");
-        }
-        if (gameState.checkWinCondition())
-          gameState.getWinner();
+          case " " -> {
 
+          }
+          case "move mother nature" -> {
+          }
+          case "pick cloud" -> {
+          }
+          case "activate cc" -> {
+          }
+          default -> System.out.println();
+        }
       }
-    } while (gameState.getGamePhase() == GamePhase.PLANNING);
+    } while (gameState.getTurnPhase() == TurnPhase.EFFECT);
   }
 }

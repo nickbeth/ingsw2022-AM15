@@ -5,10 +5,12 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MoveMotherNature implements GameAction {
   private int amount;
@@ -52,6 +54,7 @@ public class MoveMotherNature implements GameAction {
    */
   @Override
   public boolean isValid(GameState gameState) {
+    Optional<CharacterCard> cc = gameState.getPlayingField().getPlayedCharacterCard();
     return gameState.getCurrentPlayer().getNickname().equals(playerNickname) &&
             gameState.getGamePhase() == GamePhase.ACTION &&
             gameState.getTurnPhase() == TurnPhase.MOVING &&

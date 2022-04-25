@@ -1,8 +1,8 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.entities.character_card.ICharacterCard;
-import it.polimi.ingsw.eriantys.model.entities.character_card.influence_modifiers.InfluenceModifierCC;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.influence_modifiers.InfluenceModifierCC;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -11,32 +11,24 @@ import org.tinylog.Logger;
 import java.util.*;
 
 public class PlayingField {
-  class InfluenceModifier {
-    private HouseColor ignoredColor;
-    private boolean ignoreTower;
-    private TowerColor addonTowerColor;
-  }
-
   private final List<Island> islands;
   private final List<Cloud> clouds;
   private final StudentBag studentBag;
-
   private final ProfessorHolder professorHolder;
-
+  private final TeamsInfluenceTracer teamsInfluence;
   private final List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
   private int coins;
   private int motherNaturePosition;
-  private InfluenceModifier influenceModifier = new InfluenceModifier();
-  // TODO character card features still need implementation
-  private List<ICharacterCard> characterCards;
 
-  private ICharacterCard playedCaracterCard;
+  private List<CharacterCard> characterCards;
+  private Optional<CharacterCard> playedCharacterCard;
 
   /**
    * Initializes playing field and all of its components
    */
   public PlayingField(RuleBook ruleBook) {
     professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
+    teamsInfluence = new TeamsInfluenceTracer(new EnumMap<>(TowerColor.class));
 
     // Island initialization
     islands = new ArrayList<>();
@@ -178,77 +170,17 @@ public class PlayingField {
     coins--;
   }
 
-
-  // getCharacterCards(),getPlayedCharacterCard()
-
-    /* maybe deprecated?
-    public void setTower(player: String){
-
-    }*/
-
-  //TODO influence count with CharacterCards
-
-  /**
-   * Returns the most influential player on the island, if there is none it returns an empty Optional.
-   */
-  public Optional<TowerColor> getMostInfluential(int islandIndex) {
-    Island island = islands.get(islandIndex);
-    EnumMap<TowerColor, Integer> teamsInfluence = new EnumMap<>(TowerColor.class);
-
-    for (var team : teams) {
-      int influence = 0;
-
-      for (var color : HouseColor.values()) {
-        if (hasProfessor(color, team) && color != influenceModifier.ignoredColor) {
-          influence += island.getStudents().getCount(color);
-        }
-      }
-
-      if (team == island.getTowerColor() && !influenceModifier.ignoreTower)
-        influence += island.getTowerCount();
-
-      if (team == influenceModifier.addonTowerColor)
-        influence += 2;
-
-      teamsInfluence.put(team, influence);
-    }
-
-    Logger.debug(teamsInfluence.toString());
-
-    // Get the most influential team
-    var maxEntry = Collections.max(teamsInfluence.entrySet(), Map.Entry.comparingByValue());
-    // Check if 2 teams have the same influence value and return an empty Optional if so
-    for (var team : teams) {
-      if (maxEntry.getValue().equals(teamsInfluence.get(team)) && maxEntry.getKey() != team)
-        return Optional.empty();
-    }
-
-    return Optional.of(maxEntry.getKey());
-  }
-
-  // Character Cards effect  -----------------------------------------------------------------------------
-
-  public void setIgnoredColor(HouseColor ignoredColor) {
-    influenceModifier.ignoredColor = ignoredColor;
-  }
-
-  public HouseColor getIgnoredColor() {
-    return influenceModifier.ignoredColor;
-  }
-
-  public void setIgnoreTower(boolean ignoreTower) {
-    influenceModifier.ignoreTower = ignoreTower;
-  }
-
-  public void setAddonTowerColor(TowerColor addonTowerColor) {
-    influenceModifier.addonTowerColor = addonTowerColor;
-  }
-
+  // CC effect
   // Temporary method, just testing
 
-  public Optional<TowerColor> getMostInfluent(Island island) {
-    EnumMap<TowerColor, Integer> teamsInfluence = new EnumMap<>(TowerColor.class);
-    InfluenceModifierCC card = (InfluenceModifierCC) playedCaracterCard;
+  public Optional<TowerColor> getMostInfluential(int islandIndex) {
+    Island island = islands.get(islandIndex);
+
+    try {
+      InfluenceModifierCC card = (InfluenceModifierCC) playedCharacterCard.get();
+    } catch (Exception e) {
+      Logger.info("Not a modifier");
+    }
 
     for (TowerColor team : teams) {
       int influence = 0;
@@ -256,31 +188,21 @@ public class PlayingField {
       for (var color : HouseColor.values()) {
         influence += island.getStudents().getCount(color);
       }
-      teamsInfluence.put(team, card.applyModifier(influence));
+      playedCharacterCard.isPresent();
+      teamsInfluence.setInfluence(team, influence);
     }
-
     Logger.debug(teamsInfluence.toString());
 
-    // Get the most influential team
-    var maxEntry = Collections.max(teamsInfluence.entrySet(), Map.Entry.comparingByValue());
-    // Check if 2 teams have the same influence value and return an empty Optional if so
-    for (var team : teams) {
-      if (maxEntry.getValue().equals(teamsInfluence.get(team)) && maxEntry.getKey() != team)
-        return Optional.empty();
-    }
-
-//    return Optional.of(maxEntry.getKey());
-
-    return Optional.empty();
+    return teamsInfluence.getMostInflue();
   }
 
   public void setCharacterCard(int ccIndex) {
-    playedCaracterCard = characterCards.get(ccIndex);
+    playedCharacterCard = Optional.ofNullable(characterCards.get(ccIndex));
   }
 
 
-  public ICharacterCard getPlayedCharacterCard() {
-    return playedCaracterCard;
+  public Optional<CharacterCard> getPlayedCharacterCard() {
+    return playedCharacterCard;
   }
 }
 

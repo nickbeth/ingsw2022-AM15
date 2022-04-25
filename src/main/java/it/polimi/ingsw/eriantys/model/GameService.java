@@ -45,7 +45,7 @@ public class GameService implements IGameService {
 
   @Override
   public void ignoreColorInfluence(HouseColor ignoredColor, PlayingField playingField) {
-    playingField.setIgnoredColor(ignoredColor);
+//    playingField.setIgnoredColor(ignoredColor);
   }
 
   @Override
