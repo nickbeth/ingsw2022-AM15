@@ -9,7 +9,11 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.ActivateCCEffect;
 import it.polimi.ingsw.eriantys.model.actions.ChooseCharacterCard;
 import it.polimi.ingsw.eriantys.model.actions.MoveMotherNature;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
+
+import javax.swing.table.AbstractTableModel;
 
 public class ActionMenu implements Menu {
   @Override
@@ -26,14 +30,21 @@ public class ActionMenu implements Menu {
           case "place students" -> {
           }
           case "move mother nature" -> {
+            if (gameState.getTurnPhase() == TurnPhase.MOVING) {
+            }
             int numberOfIsland = Integer.parseInt(input.getPlayerInput());
             invoker.executeAction(new MoveMotherNature(playerNickname, numberOfIsland));
           }
           case "pick cloud" -> {
           }
+
           case "activate cc" -> {
             invoker.executeAction(new ChooseCharacterCard(0));
-            (new CCMenu()).commandMenu(invoker, playerNickname, gameState);
+            CharacterCard cc = gameState.getPlayingField().getPlayedCharacterCard();
+            if(cc.requiresInput())
+              (new CCMenu()).commandMenu(invoker, playerNickname, gameState);
+            else
+              invoker.executeAction(new ActivateCCEffect(cc));
           }
           default -> output.show("Invalid command.");
         }

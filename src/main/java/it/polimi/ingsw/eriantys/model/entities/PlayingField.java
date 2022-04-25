@@ -2,7 +2,6 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.influence_modifiers.InfluenceModifierCC;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -15,9 +14,9 @@ public class PlayingField {
   private final List<Cloud> clouds;
   private final StudentBag studentBag;
   private final ProfessorHolder professorHolder;
-  private final TeamsInfluenceTracer teamsInfluence;
   private final List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
-  private int coins;
+  private int bank;
+
   private int motherNaturePosition;
 
   private List<CharacterCard> characterCards;
@@ -28,7 +27,6 @@ public class PlayingField {
    */
   public PlayingField(RuleBook ruleBook) {
     professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
-    teamsInfluence = new TeamsInfluenceTracer(new EnumMap<>(TowerColor.class));
 
     // Island initialization
     islands = new ArrayList<>();
@@ -48,9 +46,9 @@ public class PlayingField {
 
     // the cloud count is the same as the number of players
     if (ruleBook.gameMode == GameMode.EXPERT)
-      coins = RuleBook.TOTAL_COINS - ruleBook.cloudCount;
+      bank = RuleBook.TOTAL_COINS - ruleBook.cloudCount;
     else
-      coins = 0;
+      bank = 0;
     motherNaturePosition = 0;
   }
 
@@ -58,10 +56,10 @@ public class PlayingField {
     return islands;
   }
 
-
   public ProfessorHolder getProfessorHolder() {
     return professorHolder;
   }
+
 
   //TODO manage lock island in merge Island
 
@@ -142,7 +140,7 @@ public class PlayingField {
    * @return boolean
    */
   public boolean hasProfessor(HouseColor professor, TowerColor team) {
-    return professorHolder.hasProfessor(professor, team);
+    return professorHolder.hasProfessor(team, professor);
   }
 
   public int getHeldProfessorCount(TowerColor team) {
@@ -163,46 +161,39 @@ public class PlayingField {
   }
 
   public void addCoin() {
-    coins++;
+    bank++;
   }
 
   public void removeCoin() {
-    coins--;
+    bank--;
   }
+
 
   // CC effect
   // Temporary method, just testing
-
   public Optional<TowerColor> getMostInfluential(int islandIndex) {
     Island island = islands.get(islandIndex);
-
-    try {
-      InfluenceModifierCC card = (InfluenceModifierCC) playedCharacterCard.get();
-    } catch (Exception e) {
-      Logger.info("Not a modifier");
-    }
-
-    for (TowerColor team : teams) {
-      int influence = 0;
-
-      for (var color : HouseColor.values()) {
-        influence += island.getStudents().getCount(color);
-      }
-      playedCharacterCard.isPresent();
-      teamsInfluence.setInfluence(team, influence);
-    }
-    Logger.debug(teamsInfluence.toString());
-
-    return teamsInfluence.getMostInflue();
+    return island.getTeamsInfluenceTracer().getMostInfluential();
   }
 
   public void setCharacterCard(int ccIndex) {
     playedCharacterCard = Optional.ofNullable(characterCards.get(ccIndex));
   }
+  public void setCharacterCard(CharacterCard cc) {
+    playedCharacterCard = Optional.ofNullable(cc);
+  }
 
 
-  public Optional<CharacterCard> getPlayedCharacterCard() {
-    return playedCharacterCard;
+  public CharacterCard getPlayedCharacterCard() {
+    return playedCharacterCard.get();
+  }
+
+  public int getBank() {
+    return bank;
+  }
+
+  public void addCoinsToBank(int amount) {
+    bank += amount;
   }
 }
 

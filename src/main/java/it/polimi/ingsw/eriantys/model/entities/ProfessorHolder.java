@@ -12,15 +12,19 @@ public record ProfessorHolder(
   /**
    * Returns true if a certain team has a certain professor
    *
-   * @param professor
    * @param team
+   * @param professor
    */
-  public boolean hasProfessor(HouseColor professor, TowerColor team) {
+  public boolean hasProfessor(TowerColor team, HouseColor professor) {
     return professorHolder.get(professor) == team;
   }
 
   public int getHeldProfessorCount(TowerColor team) {
-    return (int) Arrays.stream(HouseColor.values()).filter(color -> hasProfessor(color, team)).count();
+    return (int) Arrays.stream(HouseColor.values()).filter(color -> hasProfessor(team, color)).count();
+  }
+
+  public TowerColor getProfessorOwner(HouseColor professor) {
+    return professorHolder.get(professor);
   }
 
   public void setProfessorHolder(TowerColor team, HouseColor professor) {

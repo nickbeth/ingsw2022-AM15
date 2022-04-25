@@ -12,12 +12,17 @@ public class AddonMotherNatureMoves implements CharacterCard {
   }
 
   @Override
+  public int getCost() {
+    return 0;
+  }
+
+  @Override
   public boolean requiresInput() {
     return false;
   }
 
   @Override
-  public boolean isValid() {
+  public boolean isValid(GameState gameState) {
     return true;
   }
 }

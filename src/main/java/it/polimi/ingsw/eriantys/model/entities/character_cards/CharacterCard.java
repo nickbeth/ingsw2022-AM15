@@ -5,7 +5,7 @@ import it.polimi.ingsw.eriantys.model.IGameService;
 
 public interface CharacterCard {
   void applyEffect(GameState gameState, IGameService gameService);
+  int getCost();
   boolean requiresInput();
-//  CharacterCard setInput(Input input);
-  boolean isValid();
+  boolean isValid(GameState gameState);
 }

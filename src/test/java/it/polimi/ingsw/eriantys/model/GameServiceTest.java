@@ -52,6 +52,7 @@ class GameServiceTest {
     PlayingField p = new PlayingField(RuleBook.makeRules(GameMode.EXPERT, 3));
     gameService.ignoreColorInfluence(color, p);
 //    assertEquals(color, p.getIgnoredColor());
+  }
 
   @Test
   void lockIsland() {
@@ -124,16 +125,16 @@ class GameServiceTest {
     RuleBook rules = RuleBook.makeRules(GameMode.NORMAL, 2);
     PlayingField field = new PlayingField(rules);
     List<Player> players = new ArrayList<>();
-    players.add(new Player(rules , "gino",TowerColor.BLACK,new Students()));
-    players.add(new Player(rules , "franco",TowerColor.WHITE,new Students()));
+    players.add(new Player(rules, "gino", TowerColor.BLACK, new Students()));
+    players.add(new Player(rules, "franco", TowerColor.WHITE, new Students()));
 
-    TowerColor oldIslandColor = field.getIsland(1).getTowerColor();
+    TowerColor oldIslandColor = field.getIsland(1).getTowerColor().get();
     int oldIslandAmount = field.getIslandsAmount();
     int blackPTowerCount = players.get(0).getDashboard().towerCount();
     int whitePTowerCount = players.get(1).getDashboard().towerCount();
     Logger.debug("\nold amount " + oldIslandAmount);
     field.getIsland(1).setLocked(true);
-    gameService.applyMotherNatureEffect(1 , field, players);
+    gameService.applyMotherNatureEffect(1, field, players);
     Logger.debug("\nnew amount " + field.getIslandsAmount());
 
     assertEquals(oldIslandAmount, field.getIslandsAmount());
@@ -149,16 +150,16 @@ class GameServiceTest {
     PlayingField fieldMock = spy(field1);
     doReturn(Optional.empty()).when(fieldMock).getMostInfluential(1);
     List<Player> players = new ArrayList<>();
-    players.add(new Player(rules , "gino",TowerColor.BLACK,new Students()));
-    players.add(new Player(rules , "franco",TowerColor.WHITE,new Students()));
+    players.add(new Player(rules, "gino", TowerColor.BLACK, new Students()));
+    players.add(new Player(rules, "franco", TowerColor.WHITE, new Students()));
     Logger.debug("most influential in : " + fieldMock);
 
     int oldIslandAmount = fieldMock.getIslandsAmount();
-    TowerColor oldIslandColor = fieldMock.getIsland(1).getTowerColor();
+    TowerColor oldIslandColor = fieldMock.getIsland(1).getTowerColor().get();
     int blackPTowerCount = players.get(0).getDashboard().towerCount();
     int whitePTowerCount = players.get(1).getDashboard().towerCount();
     Logger.debug("\nold amount " + oldIslandAmount);
-    gameService.applyMotherNatureEffect(1 , fieldMock, players);
+    gameService.applyMotherNatureEffect(1, fieldMock, players);
     Logger.debug("\nnew amount " + fieldMock.getIslandsAmount());
 
     assertEquals(oldIslandAmount, fieldMock.getIslandsAmount());
@@ -174,8 +175,8 @@ class GameServiceTest {
     PlayingField fieldMock = spy(field);
     doReturn(Optional.of(TowerColor.WHITE)).when(fieldMock).getMostInfluential(1);
     List<Player> players = new ArrayList<>();
-    players.add(new Player(rules , "gino",TowerColor.BLACK,new Students()));
-    players.add(new Player(rules , "franco",TowerColor.WHITE,new Students()));
+    players.add(new Player(rules, "gino", TowerColor.BLACK, new Students()));
+    players.add(new Player(rules, "franco", TowerColor.WHITE, new Students()));
     fieldMock.getIsland(1).setTowerColor(TowerColor.BLACK);
     fieldMock.getIsland(1).setTowerCount(1);
     fieldMock.getIsland(2).setTowerColor(TowerColor.WHITE);
@@ -187,7 +188,7 @@ class GameServiceTest {
     int blackPTowerCount = players.get(0).getDashboard().towerCount();
     int whitePTowerCount = players.get(1).getDashboard().towerCount();
     Logger.debug("\nold amount " + oldIslandAmount);
-    gameService.applyMotherNatureEffect(1 , fieldMock, players);
+    gameService.applyMotherNatureEffect(1, fieldMock, players);
     Logger.debug("\nnew amount " + fieldMock.getIslandsAmount());
 
     assertEquals(oldIslandAmount - 2, fieldMock.getIslandsAmount());
@@ -195,7 +196,6 @@ class GameServiceTest {
     assertEquals(blackPTowerCount + 1, players.get(0).getDashboard().towerCount());
     assertEquals(whitePTowerCount - 1, players.get(1).getDashboard().towerCount());
   }
-
 
 
 }

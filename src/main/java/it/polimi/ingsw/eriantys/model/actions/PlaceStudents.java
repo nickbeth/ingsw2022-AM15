@@ -28,13 +28,14 @@ public class PlaceStudents implements GameAction {
    * Executes the movements: <br/>
    * - removes given students from src <br/>
    * - adds given students to dest
-   *
-   * @param gameState
-   * @param gameService
+   * - updates islands influences
    */
   @Override
   public void apply(GameState gameState, IGameService gameService) {
     gameService.placeStudents(movements);
+    gameState.getPlayingField().getIslands().forEach((island ->
+            island.updateInfluences(gameState.getPlayingField().getProfessorHolder())));
+    gameState.advanceTurnPhase();
   }
 
   /**

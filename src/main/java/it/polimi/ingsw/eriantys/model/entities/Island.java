@@ -4,8 +4,12 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.tinylog.Logger;
 
+import java.util.EnumMap;
+import java.util.Optional;
+
 public class Island extends Slot {
   private Students students = new Students();
+  private final TeamsInfluenceTracer teamsInfluence = new TeamsInfluenceTracer(new EnumMap<>(TowerColor.class));
   private Towers towers = new Towers();
   private boolean isLocked = false;
 
@@ -15,7 +19,6 @@ public class Island extends Slot {
    * @param students
    */
   public Island(Students students) {
-    // Initializing island with one student on
     towers.count = 0;
     towers.color = null;
     this.students.addStudents(students);
@@ -53,8 +56,8 @@ public class Island extends Slot {
     return towers.count;
   }
 
-  public TowerColor getTowerColor() {
-    return towers.color;
+  public Optional<TowerColor> getTowerColor() {
+    return towers.color != null? Optional.of(towers.color) : Optional.empty();
   }
 
   public boolean isLocked() {
@@ -69,5 +72,13 @@ public class Island extends Slot {
   @Override
   public void addStudentToSlot(HouseColor color) {
     this.students.addStudentToSlot(color);
+  }
+
+  public void updateInfluences(ProfessorHolder professorHolder) {
+    teamsInfluence.updateInfluence(this, professorHolder);
+  }
+
+  public TeamsInfluenceTracer getTeamsInfluenceTracer() {
+    return teamsInfluence;
   }
 }

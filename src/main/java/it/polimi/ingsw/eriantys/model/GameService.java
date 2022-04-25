@@ -83,7 +83,7 @@ public class GameService implements IGameService {
 
       if (mostInfluentialTeam.isPresent()) {
         // Set tower color
-        TowerColor oldColor = currIsland.getTowerColor();
+        TowerColor oldColor = currIsland.getTowerColor().get();
         currIsland.setTowerColor(mostInfluentialTeam.get());
 
         // If old color != new color => manage player towers

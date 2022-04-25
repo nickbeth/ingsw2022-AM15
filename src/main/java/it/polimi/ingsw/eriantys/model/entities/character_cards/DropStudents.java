@@ -17,6 +17,11 @@ public class DropStudents implements CharacterCard {
     this.colorToBeDropped = colorToBeDropped;
   }
 
+  @Override
+  public int getCost() {
+    return 0;
+  }
+
   /**
    * Removes 3 students of a certain HouseColor from the entrance of each player
    * then advances to next TurnPhase;
@@ -48,7 +53,7 @@ public class DropStudents implements CharacterCard {
 //  }
 
   @Override
-  public boolean isValid() {
+  public boolean isValid(GameState gameState) {
     return true;
   }
 }

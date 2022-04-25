@@ -19,6 +19,11 @@ public class Player {
   private Optional<AssistantCard> chosenCard;
 
   private int maxMovement;
+
+  public int getCoins() {
+    return coins;
+  }
+
   private int coins;
 
   public Player(RuleBook ruleBook, String nickname, TowerColor color, Students entranceStudents) {
@@ -58,11 +63,11 @@ public class Player {
     coins++;
   }
 
-  public void removeCoin() {
-    if (coins == 0) {
-      Logger.warn("No coin to remove");
+  public void removeCoins(int amount) {
+    if (coins - amount < 0) {
+      Logger.warn("Not enough coin to remove");
     } else {
-      coins--;
+      coins -= amount;
     }
   }
 

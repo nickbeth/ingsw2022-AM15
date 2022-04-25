@@ -12,6 +12,11 @@ import java.util.List;
 
 public class StealProfessor implements CharacterCard {
   @Override
+  public int getCost() {
+    return 0;
+  }
+
+  @Override
   public boolean requiresInput() {
     return false;
   }
@@ -29,7 +34,7 @@ public class StealProfessor implements CharacterCard {
         // If the curr player has the same amount of students in the dining hall of the other player
         if (currPlayerDash.getDiningHall().getCount(color) == dash.getDiningHall().getCount(color)
                 // and that player had that specific professor
-                && professorHolder.hasProfessor(color, dash.getTowers().color)) {
+                && professorHolder.hasProfessor(dash.getTowers().color, color)) {
           // The curr player steals the professor
           professorHolder.setProfessorHolder(currPlayerDash.getTowers().color, color);
         }
@@ -38,7 +43,7 @@ public class StealProfessor implements CharacterCard {
   }
 
   @Override
-  public boolean isValid() {
+  public boolean isValid(GameState gameState) {
     return false;
   }
 }

@@ -54,7 +54,7 @@ public class MoveMotherNature implements GameAction {
    */
   @Override
   public boolean isValid(GameState gameState) {
-    Optional<CharacterCard> cc = gameState.getPlayingField().getPlayedCharacterCard();
+    CharacterCard cc = gameState.getPlayingField().getPlayedCharacterCard();
     return gameState.getCurrentPlayer().getNickname().equals(playerNickname) &&
             gameState.getGamePhase() == GamePhase.ACTION &&
             gameState.getTurnPhase() == TurnPhase.MOVING &&

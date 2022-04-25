@@ -11,6 +11,11 @@ public class ForceMotherNatureEffects implements CharacterCard {
   }
 
   @Override
+  public int getCost() {
+    return 0;
+  }
+
+  @Override
   public boolean requiresInput() {
     return true;
   }
@@ -22,7 +27,7 @@ public class ForceMotherNatureEffects implements CharacterCard {
   }
 
   @Override
-  public boolean isValid() {
+  public boolean isValid(GameState gameState) {
     return true;
   }
 }
