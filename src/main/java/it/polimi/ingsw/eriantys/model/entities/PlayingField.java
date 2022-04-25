@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.influence_modifiers.InfluenceModifierCC;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -14,9 +15,9 @@ public class PlayingField {
   private final List<Cloud> clouds;
   private final StudentBag studentBag;
   private final ProfessorHolder professorHolder;
+  private final TeamsInfluenceTracer teamsInfluence;
   private final List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
   private int bank;
-
   private int motherNaturePosition;
 
   private List<CharacterCard> characterCards;
@@ -27,6 +28,7 @@ public class PlayingField {
    */
   public PlayingField(RuleBook ruleBook) {
     professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
+    teamsInfluence = new TeamsInfluenceTracer(new EnumMap<>(TowerColor.class));
 
     // Island initialization
     islands = new ArrayList<>();

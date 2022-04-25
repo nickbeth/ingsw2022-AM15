@@ -10,16 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropStudents implements CharacterCard {
-  private HouseColor colorToBeDropped;
-  private static int DROP_STUDENTS_AMOUNT = 3;
+  private final HouseColor studentColor;
+  private final static int DROP_STUDENTS_AMOUNT = 3;
+  private static int cost = 3;
 
-  public DropStudents(HouseColor colorToBeDropped) {
-    this.colorToBeDropped = colorToBeDropped;
-  }
-
-  @Override
-  public int getCost() {
-    return 0;
+  public DropStudents(HouseColor color) {
+    this.studentColor = color;
   }
 
   /**
@@ -28,32 +24,34 @@ public class DropStudents implements CharacterCard {
    */
   @Override
   public void applyEffect(GameState gameState, IGameService gameService) {
+    cost = 4;
+    gameState.getCurrentPlayer().removeCoins(cost);
+    gameState.getPlayingField().addCoinsToBank(cost);
+
     List<Students> diningHallList = new ArrayList<>();
     gameState.getPlayers().forEach((player) ->
             diningHallList.add(player.getDashboard().getDiningHall())
     );
     StudentBag bag = gameState.getPlayingField().getStudentBag();
-    gameService.dropStudents(diningHallList, colorToBeDropped, DROP_STUDENTS_AMOUNT, bag);
+    gameService.dropStudents(diningHallList, studentColor, DROP_STUDENTS_AMOUNT, bag);
   }
 
   @Override
   public boolean requiresInput() {
     return true;
   }
-
-  public CharacterCard myType(GameState gameState, IGameService gameService) {
-    return new DropStudents(HouseColor.PINK);
+  public int getCost() {
+    return cost;
   }
-
-//  @Override
-//  public CharacterCard setInput(Input input) {
-//    input.getPlayerInput();
-//    HouseColor color = HouseColor.PINK;
-//    return new DropStudents(color);
-//  }
-
+  /**
+   * Checks:
+   *  - if player has enough coins
+   * @param gameState
+   * @return
+   */
   @Override
   public boolean isValid(GameState gameState) {
-    return true;
+    return gameState.getCurrentPlayer().getCoins() >= cost;
   }
+
 }

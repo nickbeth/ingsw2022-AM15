@@ -6,6 +6,10 @@ import it.polimi.ingsw.eriantys.controller.io_controls.Output;
 import it.polimi.ingsw.eriantys.controller.io_controls.OutputImpl;
 import it.polimi.ingsw.eriantys.model.ActionInvoker;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.actions.ActivateCCEffect;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.DropStudents;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 public class CCMenu implements Menu {
@@ -14,20 +18,24 @@ public class CCMenu implements Menu {
     Input input = new InputImpl();
     Output output = new OutputImpl();
 
-    String command = input.getPlayerInput();
+    CharacterCard characterCard = gameState.getPlayingField().getPlayedCharacterCard();
+
     do {
       if (!gameState.isTurnOf(playerNickname)) {
-        output.show("Not your turn dumbass");
+        output.show("Not your turn");
       } else {
-        switch (command.toLowerCase()) {
-          case " " -> {
+        switch (characterCard.getClass().getSimpleName()) {
+          case "LockIsland" -> {
+          }
+          case "DropStudents" -> {
+            invoker.executeAction(new ActivateCCEffect(new DropStudents(HouseColor.PINK)));
+          }
+          case "ForceMotherNatureEffect" -> {
+          }
+          case "IgnoreColor" -> {
+          }
+          case "IgnoreTowers" -> {
 
-          }
-          case "move mother nature" -> {
-          }
-          case "pick cloud" -> {
-          }
-          case "activate cc" -> {
           }
           default -> System.out.println();
         }

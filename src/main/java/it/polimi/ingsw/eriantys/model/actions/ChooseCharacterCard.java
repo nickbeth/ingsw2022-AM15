@@ -17,7 +17,7 @@ public class ChooseCharacterCard implements GameAction {
   public void apply(GameState gameState, IGameService gameService) {
     PlayingField p = gameState.getPlayingField();
     p.setCharacterCard(ccIndex);
-    gameState.setTurnPhase(TurnPhase.EFFECT);
+    if(!p.getPlayedCharacterCard().requiresInput()) gameState.advanceTurnPhase();
   }
 
   @Override

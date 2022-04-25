@@ -19,11 +19,6 @@ public class Player {
   private Optional<AssistantCard> chosenCard;
 
   private int maxMovement;
-
-  public int getCoins() {
-    return coins;
-  }
-
   private int coins;
 
   public Player(RuleBook ruleBook, String nickname, TowerColor color, Students entranceStudents) {
@@ -69,6 +64,10 @@ public class Player {
     } else {
       coins -= amount;
     }
+  }
+
+  public int getCoins(){
+    return coins;
   }
 
   public Dashboard getDashboard() {

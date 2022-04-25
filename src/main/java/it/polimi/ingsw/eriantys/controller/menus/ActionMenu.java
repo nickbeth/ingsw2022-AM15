@@ -36,6 +36,7 @@ public class ActionMenu implements Menu {
             invoker.executeAction(new MoveMotherNature(playerNickname, numberOfIsland));
           }
           case "pick cloud" -> {
+
           }
 
           case "activate cc" -> {

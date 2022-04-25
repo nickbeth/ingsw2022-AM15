@@ -40,6 +40,7 @@ public class MoveMotherNature implements GameAction {
     List<Player> players = gameState.getPlayers();
     gameState.getCurrentPlayer().unsetChosenCard();
     gameService.applyMotherNatureEffect(motherNaturePos, playingField, players);
+    gameState.advanceTurnPhase();
   }
 
   /**
