@@ -52,7 +52,6 @@ class GameServiceTest {
     PlayingField p = new PlayingField(RuleBook.makeRules(GameMode.EXPERT, 3));
     gameService.ignoreColorInfluence(color, p);
 //    assertEquals(color, p.getIgnoredColor());
-  }
 
   @Test
   void lockIsland() {
