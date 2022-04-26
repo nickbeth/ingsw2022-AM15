@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
-import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.tinylog.Logger;
 
@@ -65,13 +64,13 @@ public class Island extends Slot {
   }
 
   @Override
-  public void removeStudentFromSlot(HouseColor color) {
-    this.students.removeStudentFromSlot(color);
+  public void removeStudentsFromSlot(Students students) {
+    this.students.removeStudentsFromSlot(students);
   }
 
   @Override
-  public void addStudentToSlot(HouseColor color) {
-    this.students.addStudentToSlot(color);
+  public void addStudentsToSlot(Students students) {
+    this.students.addStudentsToSlot(students);
   }
 
   public void updateInfluences(ProfessorHolder professorHolder) {

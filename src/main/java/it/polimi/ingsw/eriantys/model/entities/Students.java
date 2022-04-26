@@ -62,6 +62,19 @@ public class Students extends Slot {
     }
   }
 
+  // todo test
+  public boolean tryRemoveStudents(Students s) {
+    for (var color : HouseColor.values()) {
+      if (students.get(color) < s.getCount(color)) {
+        return false;
+      }
+    }
+    for (var color : HouseColor.values()) {
+      tryRemoveStudent(color);
+    }
+    return true;
+  }
+
   public boolean hasEnough(HouseColor color, int amount) {
     return students.get(color) >= amount;
   }
@@ -112,12 +125,12 @@ public class Students extends Slot {
   }
 
   @Override
-  public void removeStudentFromSlot(HouseColor color) {
-    tryRemoveStudent(color);
+  public void removeStudentsFromSlot(Students students) {
+    tryRemoveStudents(students);
   }
 
   @Override
-  public void addStudentToSlot(HouseColor color) {
-    addStudent(color);
+  public void addStudentsToSlot(Students students) {
+    addStudents(students);
   }
 }

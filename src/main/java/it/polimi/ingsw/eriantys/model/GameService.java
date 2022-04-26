@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.model;
 
 
-import it.polimi.ingsw.eriantys.model.actions.StudentMovement;
+import it.polimi.ingsw.eriantys.model.actions.StudentsMovement;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.LockIsland;
@@ -68,12 +68,18 @@ public class GameService implements IGameService {
     cloud.setStudents(new Students());
   }
 
+//  @Override
+//  public void placeStudents(List<StudentsMovement> movements) {
+//    movements.forEach((move) -> {
+//      move.src().removeStudentFromSlot(move.studentColor());
+//      move.dest().addStudentToSlot(move.studentColor());
+//    });
+//  }
+
   @Override
-  public void placeStudents(List<StudentMovement> movements) {
-    movements.forEach((move) -> {
-      move.src().removeStudentFromSlot(move.studentColor());
-      move.dest().addStudentToSlot(move.studentColor());
-    });
+  public void placeStudent(StudentsMovement move) {
+    move.src().removeStudentsFromSlot(move.students());
+    move.dest().addStudentsToSlot(move.students());
   }
 
 

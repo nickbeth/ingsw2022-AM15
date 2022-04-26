@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.model;
 
-import it.polimi.ingsw.eriantys.model.actions.StudentMovement;
+import it.polimi.ingsw.eriantys.model.actions.StudentsMovement;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
@@ -9,12 +9,16 @@ import java.util.List;
 // todo trasferire la javadoc dalle action alla interfaccia
 public interface IGameService {
   void dropStudents(List<Students> diningList, HouseColor color, int amount, StudentBag bag);
+
   void ignoreColorInfluence(HouseColor ignoredColor, PlayingField playingField);
+
   void lockIsland(Island island);
+
   void pickAssistantCard(Player player, int cardIndex);
 
   /**
    * Removes the students from the given cloud and moves them to the given entrance
+   *
    * @param cloud
    * @param dashboard
    */
@@ -25,7 +29,9 @@ public interface IGameService {
    * - removes given students from src <br/>
    * - adds given students to dest
    */
-  void placeStudents(List<StudentMovement> movements);
+//  void placeStudents(List<StudentsMovement> movements);
+
+  void placeStudent(StudentsMovement movements);
 
   /**
    * Refills Clouds with the given students and removes them from the bag
@@ -37,6 +43,7 @@ public interface IGameService {
    * and tries to merge adjacent islands. <br/>
    * If there isn't a new most influential player nothing changes <br/>
    * Modifies players' tower count if necessary. <br/>
+   *
    * @param islandIndex
    * @param field
    * @param players

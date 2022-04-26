@@ -36,7 +36,6 @@ public class ForceMotherNatureEffects implements CharacterCard {
    * Checks:<br>
    * - if the chosen index is allowed<br>
    * - if player has enough coins
-   *
    * @param gameState
    * @return
    */

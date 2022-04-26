@@ -12,9 +12,9 @@ import java.util.List;
 import static it.polimi.ingsw.eriantys.model.RuleBook.*;
 
 public class InitiateGameEntities implements GameAction {
-  private List<Students> entrances;
-  private List<Students> islands;
-  private List<Students> clouds;
+  private final List<Students> entrances;
+  private final List<Students> islands;
+  private final List<Students> clouds;
 
   public InitiateGameEntities(List<Students> entrances, List<Students> islands, List<Students> clouds) {
     this.entrances = entrances;
