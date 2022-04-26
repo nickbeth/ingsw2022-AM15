@@ -3,15 +3,11 @@ package it.polimi.ingsw.eriantys.model;
 
 import it.polimi.ingsw.eriantys.model.actions.StudentsMovement;
 import it.polimi.ingsw.eriantys.model.entities.*;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.LockIsland;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.locks.Lock;
 
 public class GameService implements IGameService {
   private static IGameService gameService;
@@ -29,32 +25,6 @@ public class GameService implements IGameService {
       gameService = new GameService();
     }
     return gameService;
-  }
-
-  /**
-   * Removes 3 students of a certain HouseColor from the entrance of each player
-   * then advances to next TurnPhase;
-   */
-  @Override
-  public void dropStudents(List<Students> diningList, HouseColor color, int amount, StudentBag bag) {
-    for (var entrance : diningList) {
-      for (int i = 0; i < amount; i++) {
-        if (entrance.getCount(color) != 0) {
-          entrance.tryRemoveStudent(color);
-          bag.addStudent(color);
-        }
-      }
-    }
-  }
-
-  @Override
-  public void ignoreColorInfluence(HouseColor ignoredColor, PlayingField playingField) {
-//    playingField.setIgnoredColor(ignoredColor);
-  }
-
-  @Override
-  public void lockIsland(Island island) {
-    island.setLocked(true);
   }
 
   @Override

@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import org.jline.utils.Log;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -14,10 +15,11 @@ public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) 
 
   public Integer getInfluence(TowerColor team) {
     try {
+      Logger.debug(teamsInfluence.get(team));
       return teamsInfluence.get(team);
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       Logger.error("INFLUENCE HAS NOT BEEN SET YET");
-      return null;
+      return 0;
     }
   }
 
@@ -44,9 +46,8 @@ public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) 
   }
 
   public void updateInfluence(Island island, ProfessorHolder professorHolder) {
-    // Initialize influences
+    // Initiate influences
     for (var color : TowerColor.values()) setInfluence(color, 0);
-
     // Updates influences
     for (TowerColor team : TowerColor.values()) {
       int influence = 0;
@@ -62,6 +63,7 @@ public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) 
 
       setInfluence(team, influence);
     }
+//    Logger.debug(this);
   }
 
   @Override

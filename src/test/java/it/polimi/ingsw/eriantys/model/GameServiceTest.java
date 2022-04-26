@@ -24,44 +24,6 @@ class GameServiceTest {
   private final IGameService gameService = getGameService();
 
   @Test
-  public void dropStudents() {
-    List<Students> entranceList = new ArrayList<>();
-    Students temp = new Students();
-    // Player1 has no pinks
-    entranceList.add(new Students(temp));
-    temp.addStudent(HouseColor.PINK);
-    temp.addStudent(HouseColor.PINK);
-    // Player1 2 pinks
-    entranceList.add(new Students(temp));
-    temp.addStudent(HouseColor.PINK);
-    temp.addStudent(HouseColor.PINK);
-    // Player1 4 pinks
-    entranceList.add(new Students(temp));
-
-    StudentBag studentBag = new StudentBag();
-    gameService.dropStudents(entranceList, HouseColor.PINK, 3, studentBag);
-
-    assertEquals(0, entranceList.get(0).getCount(HouseColor.PINK));
-    assertEquals(0, entranceList.get(1).getCount(HouseColor.PINK));
-    assertEquals(1, entranceList.get(2).getCount(HouseColor.PINK));
-  }
-
-  @Test
-  public void ignoreColorInfluence() {
-    HouseColor color = HouseColor.PINK;
-    PlayingField p = new PlayingField(RuleBook.makeRules(GameMode.EXPERT, 3));
-    gameService.ignoreColorInfluence(color, p);
-//    assertEquals(color, p.getIgnoredColor());
-  }
-
-  @Test
-  void lockIsland() {
-    Island island = new Island();
-    gameService.lockIsland(island);
-    assertTrue(island.isLocked());
-  }
-
-  @Test
   void pickAssistantCard() {
     // no test needed
   }
@@ -86,6 +48,7 @@ class GameServiceTest {
     );
   }
 
+  //todo fix test
   @Test
   public void placeStudents() {
     List<StudentsMovement> moves = new ArrayList<>();

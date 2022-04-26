@@ -11,8 +11,6 @@ import java.util.Optional;
 import static it.polimi.ingsw.eriantys.model.enums.TowerColor.BLACK;
 import static it.polimi.ingsw.eriantys.model.enums.TowerColor.WHITE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 
 class TeamsInfluenceTracerTest {
   private final TeamsInfluenceTracer tracer = new TeamsInfluenceTracer(new EnumMap<>(TowerColor.class));
