@@ -17,6 +17,7 @@ public class PlayingField {
   private final ProfessorHolder professorHolder;
   private final TeamsInfluenceTracer teamsInfluence;
   private final List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
+  private int locks;
   private int bank;
   private int motherNaturePosition;
 
@@ -47,10 +48,13 @@ public class PlayingField {
     }
 
     // the cloud count is the same as the number of players
-    if (ruleBook.gameMode == GameMode.EXPERT)
+    if (ruleBook.gameMode == GameMode.EXPERT) {
       bank = RuleBook.TOTAL_COINS - ruleBook.cloudCount;
-    else
+      locks = RuleBook.LOCK_AMOUNT;
+    } else {
       bank = 0;
+      locks = 0;
+    }
     motherNaturePosition = 0;
   }
 
@@ -82,23 +86,19 @@ public class PlayingField {
 
     //tries merging prev island
     if (prevIsland.getTowerColor().isPresent())
-      if (prevIsland.getTowerColor().get()  == currIsland.getTowerColor().get() )
-        merge(currIsland,prevIsland);
+      if (prevIsland.getTowerColor().get() == currIsland.getTowerColor().get())
+        merge(currIsland, prevIsland);
 
   }
 
   /**
    * merges secondIsland onto firstIsland
    */
-  private void merge(Island firstIsland, Island secondIsland){
+  private void merge(Island firstIsland, Island secondIsland) {
     //manage locks , and eventually return them to CC
-    if(secondIsland.isLocked() && firstIsland.isLocked()){
-      Optional<CharacterCard> CC = characterCards.stream().filter(card -> card.getClass().getSimpleName().equals("LockIsland")).findAny();
-      if(CC.isPresent()){
-        LockIsland lockIslandCC = (LockIsland)CC.get();
-        lockIslandCC.addToLocks();
-      } else Logger.warn("There is no LockIslandCC in characterCards");
-    }else if(secondIsland.isLocked() && !firstIsland.isLocked()) firstIsland.setLocked(true);
+    if (secondIsland.isLocked() && firstIsland.isLocked()) {
+      locks++;
+    } else if (secondIsland.isLocked() && !firstIsland.isLocked()) firstIsland.setLocked(true);
 
     if (islands.indexOf(secondIsland) <= motherNaturePosition) motherNaturePosition--;
     firstIsland.addStudents(secondIsland.getStudents());
@@ -128,6 +128,13 @@ public class PlayingField {
 
   public int getIslandsAmount() {
     return islands.size();
+  }
+
+  public void setLocks(int amount){
+    locks = amount;
+  }
+  public int getLocks(){
+    return locks;
   }
 
   /**
@@ -190,6 +197,7 @@ public class PlayingField {
   public void setPlayedCharacterCard(int ccIndex) {
     playedCharacterCard = Optional.ofNullable(characterCards.get(ccIndex));
   }
+
   public void setPlayedCharacterCard(CharacterCard cc) {
     playedCharacterCard = Optional.ofNullable(cc);
   }

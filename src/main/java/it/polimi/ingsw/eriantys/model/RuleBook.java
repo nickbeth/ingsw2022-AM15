@@ -23,6 +23,7 @@ public class RuleBook {
   public static final int DASHBOARD_TOWERS_3 = 6;
   public static final int ENTRANCE_SIZE_2_4 = 7;
   public static final int ENTRANCE_SIZE_3 = 9;
+  public static final int LOCK_AMOUNT = 4;
   // Constants for win conditions
   public static final int MIN_ISLAND_COUNT = 3;
 

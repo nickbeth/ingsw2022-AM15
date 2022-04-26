@@ -81,12 +81,7 @@ public class GameService implements IGameService {
   public void applyMotherNatureEffect(int islandIndex, PlayingField field, List<Player> players) {
     if (field.getIsland(islandIndex).isLocked()) {
       field.getIsland(islandIndex).setLocked(false);
-      //TODO gestire il ritorno dei lock alla CC in modo più elegante
-      Optional<CharacterCard> CC = field.getCharacterCards().stream().filter(card -> card.getClass().getSimpleName().equals("LockIsland")).findAny();
-      if(CC.isPresent()){
-        LockIsland lockIslandCC = (LockIsland)CC.get();
-        lockIslandCC.addToLocks();
-      } else Logger.warn("There is no LockIslandCC in characterCards");
+      field.setLocks(field.getLocks() + 1);
     } else {
       Optional<TowerColor> mostInfluentialTeam = field.getMostInfluential(islandIndex);
       Island currIsland = field.getIsland(islandIndex);

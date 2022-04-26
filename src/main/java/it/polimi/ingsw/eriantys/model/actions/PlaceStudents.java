@@ -32,6 +32,7 @@ public class PlaceStudents implements GameAction {
    */
   @Override
   public void apply(GameState gameState, IGameService gameService) {
+
     gameService.placeStudents(movements);
     gameState.getPlayingField().getIslands().forEach((island ->
             island.updateInfluences(gameState.getPlayingField().getProfessorHolder())));
