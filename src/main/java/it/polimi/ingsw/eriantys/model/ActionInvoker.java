@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.model;
 
-import it.polimi.ingsw.eriantys.GameAction;
+import it.polimi.ingsw.eriantys.model.actions.GameAction;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys;
+package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;

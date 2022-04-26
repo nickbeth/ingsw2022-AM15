@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
-import it.polimi.ingsw.eriantys.GameAction;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
