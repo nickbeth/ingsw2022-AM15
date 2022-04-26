@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IgnoreColor implements InfluenceModifierCC, CharacterCard {
-  private HouseColor ignoredColor;
+  private final HouseColor ignoredColor;
   private final static int BASE_COST = 3;
   private final static int INCREMENTED_COST = 4;
   private static int cost = BASE_COST;
@@ -41,6 +41,8 @@ public class IgnoreColor implements InfluenceModifierCC, CharacterCard {
       influenceTracer.setInfluence(teamOwningIgnoredProfessor, influenceTracer.getInfluence(teamOwningIgnoredProfessor) - ignoredStudentsCount);
     });
   }
+
+
 
   @Override
   public void applyEffect(GameState gameState, IGameService gameService) {

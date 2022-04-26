@@ -11,7 +11,7 @@ public class LockIsland implements CharacterCard {
   private static int cost = BASE_COST;
   private static int locks = LOCK_AMOUNT;
 
-  public LockIsland(String nickname, int index) {
+  public LockIsland(int index) {
     this.index = index;
   }
 
@@ -22,6 +22,10 @@ public class LockIsland implements CharacterCard {
     gameService.lockIsland(gameState.getPlayingField().getIsland(index));
     cost = INCREMENTED_COST;
     locks--;
+  }
+
+  public void addToLocks() {
+    locks++;
   }
 
   @Override
@@ -39,9 +43,6 @@ public class LockIsland implements CharacterCard {
    * - if the chosen index is allowed<br>
    * - if the chosen island is already locked<br>
    * - if player has enough coins
-   *
-   * @param gameState
-   * @return
    */
   @Override
   public boolean isValid(GameState gameState) {
@@ -52,4 +53,6 @@ public class LockIsland implements CharacterCard {
             locks > 0;
 
   }
+
+
 }

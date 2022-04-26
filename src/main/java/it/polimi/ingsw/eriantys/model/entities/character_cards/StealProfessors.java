@@ -11,7 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StealProfessors implements CharacterCard {
-  private static int cost = 2;
+  private final static int BASE_COST = 2;
+  private final static int INCREMENTED_COST = 3;
+  private static int cost = BASE_COST;
+
   @Override
   public boolean requiresInput() {
     return false;
@@ -25,12 +28,12 @@ public class StealProfessors implements CharacterCard {
   /**
    * Current player steals professors from owners if they have the same amount
    * of students.
+   *
    * @param gameState
    * @param gameService
    */
   @Override
   public void applyEffect(GameState gameState, IGameService gameService) {
-    cost = 3;
     gameState.getCurrentPlayer().removeCoins(cost);
     gameState.getPlayingField().addCoinsToBank(cost);
 
@@ -51,10 +54,13 @@ public class StealProfessors implements CharacterCard {
         }
       }
     });
+    cost = INCREMENTED_COST;
   }
+
   /**
    * Checks:
-   *  - if player has enough coins
+   * - if player has enough coins
+   *
    * @param gameState
    * @return
    */

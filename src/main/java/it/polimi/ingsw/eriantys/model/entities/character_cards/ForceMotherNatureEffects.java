@@ -5,7 +5,10 @@ import it.polimi.ingsw.eriantys.model.IGameService;
 
 public class ForceMotherNatureEffects implements CharacterCard {
   private final int islandIndex;
-  private static int cost = 1;
+  private final static int BASE_COST = 1;
+  private final static int INCREMENTED_COST = 2;
+  private static int cost = BASE_COST;
+
   public ForceMotherNatureEffects(int islandIndex) {
     this.islandIndex = islandIndex;
   }
@@ -23,16 +26,17 @@ public class ForceMotherNatureEffects implements CharacterCard {
 
   @Override
   public void applyEffect(GameState gameState, IGameService gameService) {
-    cost = 2;
     gameState.getCurrentPlayer().removeCoins(cost);
     gameState.getPlayingField().addCoinsToBank(cost);
     gameService.applyMotherNatureEffect(islandIndex, gameState.getPlayingField(), gameState.getPlayers());
+    cost = INCREMENTED_COST;
   }
 
   /**
    * Checks:<br>
    * - if the chosen index is allowed<br>
    * - if player has enough coins
+   *
    * @param gameState
    * @return
    */

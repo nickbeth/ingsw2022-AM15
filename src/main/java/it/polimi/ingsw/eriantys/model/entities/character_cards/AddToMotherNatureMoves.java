@@ -5,15 +5,16 @@ import it.polimi.ingsw.eriantys.model.IGameService;
 
 public class AddToMotherNatureMoves implements CharacterCard {
   private final static int MOVES = 2;
-  private static int PRICE = 3;
-  private static int cost = 1;
+  private final static int BASE_COST = 1;
+  private final static int INCREMENTED_COST = 2;
+  private static int cost = BASE_COST;
 
   @Override
   public void applyEffect(GameState gameState, IGameService gameService) {
-    cost = 2;
     gameState.getCurrentPlayer().removeCoins(cost);
     gameState.getPlayingField().addCoinsToBank(cost);
     gameState.getCurrentPlayer().addToMaxMovement(MOVES);
+    cost = INCREMENTED_COST;
   }
 
   @Override
