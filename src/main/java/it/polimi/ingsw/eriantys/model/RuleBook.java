@@ -35,23 +35,19 @@ public class RuleBook {
   }
 
   /**
-   * <p>Factory Method which sets the rules to play with based on the type of game</p>
-   * @param gameMode
-   * @param playersCount number of players playing the game
-   * @return  a RuleBook obj based on gameMode and the number of players
+   * RuleBook factory method
+   * @param gameMode the type of game
+   * @param playersCount number of players in the game
+   * @return A RuleBook instance populated with the appropriate values for the given game mode and number of players
+   * @throws IllegalArgumentException if the game mode or the number of players is invalid
    */
   public static RuleBook makeRules(GameMode gameMode, int playersCount) {
-    switch (playersCount) {
-      case 2:
-      case 4:
-        return new RuleBook(gameMode, playersCount,
-                PLAYABLE_STUDENTS_2_4, DASHBOARD_TOWERS_2_4, ENTRANCE_SIZE_2_4);
-      case 3:
-        return new RuleBook(gameMode, playersCount,
-                PLAYABLE_STUDENTS_3, DASHBOARD_TOWERS_3, ENTRANCE_SIZE_3);
-      default:
-        Logger.warn("INVALID NUMBER OF PLAYER");
-        return null;
-    }
+    return switch (playersCount) {
+      case 2, 4 -> new RuleBook(gameMode, playersCount,
+          PLAYABLE_STUDENTS_2_4, DASHBOARD_TOWERS_2_4, ENTRANCE_SIZE_2_4);
+      case 3 -> new RuleBook(gameMode, playersCount,
+          PLAYABLE_STUDENTS_3, DASHBOARD_TOWERS_3, ENTRANCE_SIZE_3);
+      default -> throw new IllegalArgumentException("Invalid number of players: " + playersCount);
+    };
   }
 }
