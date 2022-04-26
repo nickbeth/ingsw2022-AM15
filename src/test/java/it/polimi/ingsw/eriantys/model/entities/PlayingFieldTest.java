@@ -78,6 +78,7 @@ class PlayingFieldTest {
 
   @Test
   public void doubleMerge() {
+    //TODO modificare test per controllare il ritorno dei lock
     //merges leftIsland and RightIsland with currentIsland, index = 1
     ArrayList<Island> oldIslands = new ArrayList<>();
     p.getIsland(2).setTowerColor(TowerColor.BLACK);
@@ -87,12 +88,15 @@ class PlayingFieldTest {
     p.getIsland(1).setTowerCount(1);
     p.getIsland(0).setTowerCount(1);
     p.moveMotherNature(1);
+    Logger.debug("\nmother nature pos: " + p.getMotherNaturePosition());
     for (int i = 0; i < p.getIslandsAmount(); i++)
       oldIslands.add(p.getIsland(i));
     p.mergeIslands(1);
+
+    assertEquals(0, p.getMotherNaturePosition());
     assertSame(oldIslands.get(1), p.getIsland(0));
     assertSame(oldIslands.get(3), p.getIsland(1));
-    assertEquals(0, p.getMotherNaturePosition());
+
     assertEquals(3, p.getIsland(0).getTowerCount());
   }
 

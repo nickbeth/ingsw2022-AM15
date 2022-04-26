@@ -43,6 +43,7 @@ public class InitiateGameEntities implements GameAction {
             gameState.getPlayingField().getStudentBag(),
             gameState.getPlayingField().getClouds(),
             clouds);
+    //TODO initiate characterCards
   }
 
   @Override

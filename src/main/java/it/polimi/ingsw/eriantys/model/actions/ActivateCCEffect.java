@@ -14,7 +14,7 @@ public class ActivateCCEffect implements GameAction {
 
   @Override
   public void apply(GameState gameState, IGameService gameService) {
-    gameState.getPlayingField().setCharacterCard(cc);
+    gameState.getPlayingField().setPlayedCharacterCard(cc);
     gameState.getPlayingField().getPlayedCharacterCard().applyEffect(gameState, gameService);
   }
 

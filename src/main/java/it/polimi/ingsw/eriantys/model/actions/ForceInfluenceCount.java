@@ -15,7 +15,6 @@ public class ForceInfluenceCount implements GameAction {
     this.islandIndex = islandIndex;
     this.playerNickname = nickname;
   }
-  //TODO maybe change this? code is almost the same as in moveMotherNature action
 
   /**
    * If the selected island is not locked it sets the tower color to the most influential Team
@@ -29,38 +28,6 @@ public class ForceInfluenceCount implements GameAction {
   @Override
   public void apply(GameState gameState, IGameService gameService) {
     gameService.applyMotherNatureEffect(islandIndex, gameState.getPlayingField(), gameState.getPlayers());
-
-//    PlayingField playingField = gameState.getPlayingField();
-//    if (playingField.getIsland(islandIndex).isLocked()) {
-//      playingField.getIsland(islandIndex).setLocked(false);
-//      //TODO lock returns to the characterCard
-//    } else {
-//      Optional<TowerColor> mostInfluentialTeam = playingField.getMostInfluential(islandIndex);
-//      Island currIsland = playingField.getIsland(islandIndex);
-//
-//      if (mostInfluentialTeam.isPresent()) {
-//        // Set tower color
-//        TowerColor oldColor = currIsland.getTowerColor();
-//        currIsland.setTowerColor(mostInfluentialTeam.get());
-//
-//        // If old color != new color => manage player towers
-//        if (!oldColor.equals(mostInfluentialTeam.get())) {
-//          for (Player p : gameState.getPlayers()) {
-//
-//            // Remove towers from conquerors' dashboard
-//            if (p.getColorTeam() == mostInfluentialTeam.get()) {
-//              p.getDashboard().removeTowers(currIsland.getTowerCount());
-//            }
-//
-//            // Add towers to conquered dashboard
-//            if (p.getColorTeam() == oldColor) {
-//              p.getDashboard().addTowers(currIsland.getTowerCount());
-//            }
-//          }
-//        }
-//        playingField.mergeIslands(islandIndex);
-//      }
-//    }
     gameState.advanceTurnPhase();
   }
   /**

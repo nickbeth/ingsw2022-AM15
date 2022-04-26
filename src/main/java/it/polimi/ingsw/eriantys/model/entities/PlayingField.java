@@ -2,7 +2,7 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.influence_modifiers.InfluenceModifierCC;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.LockIsland;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -62,39 +62,48 @@ public class PlayingField {
     return professorHolder;
   }
 
-
-  //TODO manage lock island in merge Island
-
   /**
    * Merges islands[islandIndex] with adjacent islands if they have the same TowerColor<br/>
-   * If the Merge gets applied also motherNaturePosition gets adjusted
-   *
-   * @param islandIndex Island index where to calculate mother's nature effect
+   * - if the Merge gets applied also motherNaturePosition gets adjusted<br/>
+   * - excess locks return to the LockIsland CC<br/>
    */
   public void mergeIslands(int islandIndex) {
     Island nextIsland = islands.get(islandIndex + 1 % islands.size());
     Island prevIsland = (islandIndex == 0) ? islands.get(islands.size() - 1) : islands.get(islandIndex - 1);
     Island currIsland = islands.get(islandIndex);
-
-    Logger.debug("prev island:" + islands.indexOf(prevIsland));
-    Logger.debug("current island:" + islands.indexOf(currIsland));
-    Logger.debug("next island:" + islands.indexOf(nextIsland));
+    Logger.debug("\nprev island:" + islands.indexOf(prevIsland));
+    Logger.debug("\ncurrent island:" + islands.indexOf(currIsland));
+    Logger.debug("\nnext island:" + islands.indexOf(nextIsland));
 
     //tries merging next island
-    if (nextIsland.getTowerColor() == currIsland.getTowerColor()) {
-      currIsland.addStudents(nextIsland.getStudents());
-      currIsland.setTowerCount(currIsland.getTowerCount() + nextIsland.getTowerCount());
-      islands.remove(nextIsland);
-      if (islands.indexOf(nextIsland) <= motherNaturePosition) motherNaturePosition--;
-    }
+    if (nextIsland.getTowerColor().isPresent())
+      if (nextIsland.getTowerColor().get() == currIsland.getTowerColor().get())
+        merge(currIsland, nextIsland);
 
     //tries merging prev island
-    if (prevIsland.getTowerColor() == currIsland.getTowerColor()) {
-      currIsland.addStudents(prevIsland.getStudents());
-      currIsland.setTowerCount(currIsland.getTowerCount() + prevIsland.getTowerCount());
-      islands.remove(prevIsland);
-      if (islandIndex <= motherNaturePosition) motherNaturePosition--;
-    }
+    if (prevIsland.getTowerColor().isPresent())
+      if (prevIsland.getTowerColor().get()  == currIsland.getTowerColor().get() )
+        merge(currIsland,prevIsland);
+
+  }
+
+  /**
+   * merges secondIsland onto firstIsland
+   */
+  private void merge(Island firstIsland, Island secondIsland){
+    //manage locks , and eventually return them to CC
+    if(secondIsland.isLocked() && firstIsland.isLocked()){
+      Optional<CharacterCard> CC = characterCards.stream().filter(card -> card.getClass().getSimpleName().equals("LockIsland")).findAny();
+      if(CC.isPresent()){
+        LockIsland lockIslandCC = (LockIsland)CC.get();
+        lockIslandCC.addToLocks();
+      } else Logger.warn("There is no LockIslandCC in characterCards");
+    }else if(secondIsland.isLocked() && !firstIsland.isLocked()) firstIsland.setLocked(true);
+
+    if (islands.indexOf(secondIsland) <= motherNaturePosition) motherNaturePosition--;
+    firstIsland.addStudents(secondIsland.getStudents());
+    firstIsland.setTowerCount(firstIsland.getTowerCount() + secondIsland.getTowerCount());
+    islands.remove(secondIsland);
   }
 
   public StudentBag getStudentBag() {
@@ -178,16 +187,20 @@ public class PlayingField {
     return island.getTeamsInfluenceTracer().getMostInfluential();
   }
 
-  public void setCharacterCard(int ccIndex) {
+  public void setPlayedCharacterCard(int ccIndex) {
     playedCharacterCard = Optional.ofNullable(characterCards.get(ccIndex));
   }
-  public void setCharacterCard(CharacterCard cc) {
+  public void setPlayedCharacterCard(CharacterCard cc) {
     playedCharacterCard = Optional.ofNullable(cc);
   }
 
 
   public CharacterCard getPlayedCharacterCard() {
     return playedCharacterCard.get();
+  }
+
+  public List<CharacterCard> getCharacterCards() {
+    return characterCards;
   }
 
   public int getBank() {

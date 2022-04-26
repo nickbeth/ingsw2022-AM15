@@ -3,11 +3,15 @@ package it.polimi.ingsw.eriantys.model;
 
 import it.polimi.ingsw.eriantys.model.actions.StudentMovement;
 import it.polimi.ingsw.eriantys.model.entities.*;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.LockIsland;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
 
 public class GameService implements IGameService {
   private static IGameService gameService;
@@ -72,11 +76,17 @@ public class GameService implements IGameService {
     });
   }
 
+
   @Override
   public void applyMotherNatureEffect(int islandIndex, PlayingField field, List<Player> players) {
     if (field.getIsland(islandIndex).isLocked()) {
       field.getIsland(islandIndex).setLocked(false);
-      //TODO lock returns to the characterCard
+      //TODO gestire il ritorno dei lock alla CC in modo più elegante
+      Optional<CharacterCard> CC = field.getCharacterCards().stream().filter(card -> card.getClass().getSimpleName().equals("LockIsland")).findAny();
+      if(CC.isPresent()){
+        LockIsland lockIslandCC = (LockIsland)CC.get();
+        lockIslandCC.addToLocks();
+      } else Logger.warn("There is no LockIslandCC in characterCards");
     } else {
       Optional<TowerColor> mostInfluentialTeam = field.getMostInfluential(islandIndex);
       Island currIsland = field.getIsland(islandIndex);
