@@ -34,7 +34,7 @@ public class DropStudents implements GameAction {
             diningHallList.add(player.getDashboard().getDiningHall())
     );
     StudentBag bag = gameState.getPlayingField().getStudentBag();
-    gameService.dropStudents(diningHallList, studentColor, DROP_STUDENTS_AMOUNT, bag);
+//    gameService.dropStudents(diningHallList, studentColor, DROP_STUDENTS_AMOUNT, bag);
 
     gameState.advanceTurnPhase();
   }

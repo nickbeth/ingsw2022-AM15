@@ -1,8 +1,9 @@
-package it.polimi.ingsw.eriantys.model.entities.character_cards;
+package it.polimi.ingsw.eriantys.model.entities.character_cards.OLDCODE;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 
 public class LockIsland implements CharacterCard {
   private final int index;
@@ -19,7 +20,7 @@ public class LockIsland implements CharacterCard {
     PlayingField playingField = gameState.getPlayingField();
     gameState.getCurrentPlayer().removeCoins(cost);
     playingField.addCoinsToBank(cost);
-    gameService.lockIsland(gameState.getPlayingField().getIsland(index));
+//    gameService.lockIsland(gameState.getPlayingField().getIsland(index));
     playingField.setLocks(playingField.getLocks() - 1);
     cost = INCREMENTED_COST;
   }

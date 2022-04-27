@@ -1,9 +1,10 @@
-package it.polimi.ingsw.eriantys.model.entities.character_cards;
+package it.polimi.ingsw.eriantys.model.entities.character_cards.OLDCODE;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
 import java.util.ArrayList;

@@ -1,9 +1,10 @@
-package it.polimi.ingsw.eriantys.model.entities.character_cards;
+package it.polimi.ingsw.eriantys.model.entities.character_cards.OLDCODE;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.StudentBag;
 import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class DropStudents implements CharacterCard {
             diningHallList.add(player.getDashboard().getDiningHall())
     );
     StudentBag bag = gameState.getPlayingField().getStudentBag();
-    gameService.dropStudents(diningHallList, studentColor, DROP_STUDENTS_AMOUNT, bag);
+//    gameService.dropStudents(diningHallList, studentColor, DROP_STUDENTS_AMOUNT, bag);
     cost = INCREMENTED_COST;
   }
 

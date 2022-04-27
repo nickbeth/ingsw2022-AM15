@@ -8,7 +8,7 @@ import it.polimi.ingsw.eriantys.model.ActionInvoker;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.ActivateCCEffect;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.DropStudents;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.OLDCODE.DropStudents;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 

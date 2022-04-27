@@ -25,7 +25,6 @@ public class Player {
     this.nickname = nickname;
     team = color;
     coins = RuleBook.INITIAL_COINS;
-    // TODO gestire il caso di 4 players che condividono lo stesso numero di tower.
     dashboard = new Dashboard(entranceStudents, ruleBook.dashboardTowerCount, color);
     cards = getFullDeck();
   }

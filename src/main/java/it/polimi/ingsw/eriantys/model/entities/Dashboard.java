@@ -69,6 +69,5 @@ public class Dashboard {
   public int towerCount() {
     return towers.count;
   }
-
 }
 
