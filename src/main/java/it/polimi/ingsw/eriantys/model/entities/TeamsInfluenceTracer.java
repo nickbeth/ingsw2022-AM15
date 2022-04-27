@@ -7,22 +7,35 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-// todo Test
 public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) {
+
   public void setInfluence(TowerColor team, int influence) {
     teamsInfluence.put(team, influence);
   }
 
+  /**
+   * Return the influence of the given team on this island
+   *
+   * @param team
+   * @return influence
+   */
   public Integer getInfluence(TowerColor team) {
     try {
+      int influence = teamsInfluence.get(team);
       Logger.debug(teamsInfluence.get(team));
-      return teamsInfluence.get(team);
+      return influence;
     } catch (NullPointerException e) {
       Logger.error("INFLUENCE HAS NOT BEEN SET YET");
       return 0;
     }
   }
 
+  /**
+   * Returns an Optional TowerColor representing the team with the most influence on this island.
+   * Return empty in case of draw.
+   *
+   * @return Return and Optional of TowerColor
+   */
   public Optional<TowerColor> getMostInfluential() {
     // Get the most influential team
     Logger.debug(this);
@@ -45,6 +58,12 @@ public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) 
     }
   }
 
+  /**
+   * Updates the teams influence based on the given island info and the professor holder
+   *
+   * @param island
+   * @param professorHolder
+   */
   public void updateInfluence(Island island, ProfessorHolder professorHolder) {
     // Initiate influences
     for (var color : TowerColor.values()) setInfluence(color, 0);

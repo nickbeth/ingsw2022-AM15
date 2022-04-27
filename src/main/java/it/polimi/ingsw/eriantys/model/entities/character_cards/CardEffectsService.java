@@ -19,6 +19,13 @@ public class CardEffectsService implements ICardEffectsService {
     return cardEffects;
   }
 
+  /**
+   * Adds the given amount points to the current Team influence
+   *
+   * @param amount   Amount to add
+   * @param islands  Islands Set
+   * @param currTeam Current team playing
+   */
   @Override
   public void addToInfluence(int amount, List<Island> islands, TowerColor currTeam) {
     List<TeamsInfluenceTracer> teamsInfluenceList = new ArrayList<>();
@@ -33,6 +40,11 @@ public class CardEffectsService implements ICardEffectsService {
     });
   }
 
+  /**
+   * Modified the influences based on ignoring towers. Influence must be updated first
+   *
+   * @param islands Islands set
+   */
   @Override
   public void ignoreTowers(List<Island> islands) {
     // For each island, updates the influence by reducing it by the number of tower for the team conqueror
@@ -47,6 +59,13 @@ public class CardEffectsService implements ICardEffectsService {
     });
   }
 
+  /**
+   * Modified the influences based on the ignored color. Influence must be updated first
+   *
+   * @param islands Islands Set
+   * @param ignoredColor
+   * @param teamOwningIgnoredProfessor
+   */
   @Override
   public void ignoreColor(List<Island> islands, HouseColor ignoredColor, TowerColor teamOwningIgnoredProfessor) {
     // For each island updates teams' influence based on the ignored color
@@ -57,6 +76,15 @@ public class CardEffectsService implements ICardEffectsService {
     });
   }
 
+  /**
+   * Removes the amount of students from all the diningHall given. <br>
+   * If not enough students their count would go to zero
+   *
+   * @param diningList List of Students present in the player diningHall
+   * @param color      Student color to be dropped
+   * @param amount     Amount students to drop
+   * @param bag        Student bag where to insert the dropped students
+   */
   @Override
   public void dropStudents(List<Students> diningList, HouseColor color, int amount, StudentBag bag) {
     for (var entrance : diningList) {
@@ -69,6 +97,12 @@ public class CardEffectsService implements ICardEffectsService {
     }
   }
 
+  /**
+   * Force Mother Nature effects
+   * @param islandIndex
+   * @param field
+   * @param players
+   */
   @Override
   public void forceMotherNatureEffects(int islandIndex, PlayingField field, List<Player> players) {
 
@@ -103,6 +137,7 @@ public class CardEffectsService implements ICardEffectsService {
       }
     }
   }
+
 
   @Override
   public void addToMotherNatureMoves(Player currPlayer, int amount) {

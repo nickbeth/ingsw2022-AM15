@@ -60,4 +60,10 @@ class TeamsInfluenceTracerTest {
     tracer.updateInfluence(island, professorHolder);
     assertEquals(WHITE, tracer.getMostInfluential().get());
   }
+
+  @Test
+  public void exceptionHandle() {
+    assertEquals(0, tracer.getInfluence(WHITE));
+    assertEquals(Optional.empty(), tracer.getMostInfluential());
+  }
 }

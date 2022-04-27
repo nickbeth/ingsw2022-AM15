@@ -1,22 +1,26 @@
 package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
-import it.polimi.ingsw.eriantys.model.entities.Island;
-import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
-import it.polimi.ingsw.eriantys.model.entities.StudentBag;
-import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.entities.*;
+import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
+import java.util.*;
 
 import static it.polimi.ingsw.eriantys.model.entities.character_cards.CardEffectsService.getCardEffectsService;
+import static it.polimi.ingsw.eriantys.model.enums.TowerColor.BLACK;
+import static it.polimi.ingsw.eriantys.model.enums.TowerColor.WHITE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
+
+@ExtendWith(MockitoExtension.class)
 public class CardEffectsServiceTest {
   private final ICardEffectsService ccService = getCardEffectsService();
 
@@ -24,6 +28,7 @@ public class CardEffectsServiceTest {
   public void addToInfluence() {
     Students temp = new Students();
     temp.addStudent(HouseColor.PINK);
+
     List<Island> islands = new ArrayList<>();
     islands.add(new Island(new Students()));
     islands.add(new Island(new Students()));
@@ -43,16 +48,17 @@ public class CardEffectsServiceTest {
   void ignoreTowers() {
     Students temp = new Students();
     temp.addStudent(HouseColor.PINK);
+
     List<Island> islands = new ArrayList<>();
     islands.add(new Island(new Students()));
     islands.add(new Island(new Students()));
     ProfessorHolder professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
     professorHolder.setProfessorHolder(TowerColor.WHITE, HouseColor.PINK);
-    professorHolder.setProfessorHolder(TowerColor.BLACK, HouseColor.RED);
+    professorHolder.setProfessorHolder(BLACK, HouseColor.RED);
     islands.get(0).setTowerColor(TowerColor.WHITE);
     islands.get(0).addStudents(temp);
     islands.get(0).setTowerCount(10);
-    islands.get(1).setTowerColor(TowerColor.BLACK);
+    islands.get(1).setTowerColor(BLACK);
     islands.get(1).setTowerCount(7);
     islands.forEach(island -> island.updateInfluences(professorHolder));
 
@@ -60,10 +66,105 @@ public class CardEffectsServiceTest {
     ccService.ignoreTowers(islands);
     islands.forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
 
-    assertEquals(1,islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
-    assertEquals(0,islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.BLACK));
-    assertEquals(0,islands.get(1).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
-    assertEquals(0,islands.get(1).getTeamsInfluenceTracer().getInfluence(TowerColor.BLACK));
+    assertEquals(1, islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
+    assertEquals(0, islands.get(0).getTeamsInfluenceTracer().getInfluence(BLACK));
+    assertEquals(0, islands.get(1).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
+    assertEquals(0, islands.get(1).getTeamsInfluenceTracer().getInfluence(BLACK));
+  }
+
+  @Test
+  void ignoreColor() {
+    Students temp = new Students();
+    temp.addStudent(HouseColor.PINK);
+
+    List<Island> islands = new ArrayList<>();
+    islands.add(new Island(new Students()));
+    islands.add(new Island(new Students()));
+
+    ProfessorHolder professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
+    professorHolder.setProfessorHolder(TowerColor.WHITE, HouseColor.PINK);
+    professorHolder.setProfessorHolder(BLACK, HouseColor.RED);
+
+    islands.get(0).addStudents(temp);
+    temp.addStudent(HouseColor.RED);
+    temp.addStudent(HouseColor.RED);
+    temp.addStudent(HouseColor.RED);
+    islands.get(1).addStudents(temp);
+    islands.forEach(island -> island.updateInfluences(professorHolder));
+
+    islands.forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
+    ccService.ignoreColor(islands, HouseColor.PINK, professorHolder.getProfessorOwner(HouseColor.PINK));
+    assertEquals(0, islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
+    assertEquals(0, islands.get(1).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
+    assertEquals(0, islands.get(0).getTeamsInfluenceTracer().getInfluence(BLACK));
+    assertEquals(3, islands.get(1).getTeamsInfluenceTracer().getInfluence(BLACK));
+
+    islands.forEach(island -> island.updateInfluences(professorHolder));
+    ccService.ignoreColor(islands, HouseColor.RED, professorHolder.getProfessorOwner(HouseColor.RED));
+    islands.forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
+    assertEquals(1, islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
+    assertEquals(1, islands.get(1).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
+    assertEquals(0, islands.get(0).getTeamsInfluenceTracer().getInfluence(BLACK));
+    assertEquals(0, islands.get(1).getTeamsInfluenceTracer().getInfluence(BLACK));
+  }
+
+  @Test
+  public void dropStudents() {
+    List<Students> diningList = new ArrayList<>();
+    Students temp = new Students();
+    // Player1 has no pinks
+    diningList.add(new Students(temp));
+    temp.addStudent(HouseColor.PINK);
+    temp.addStudent(HouseColor.PINK);
+    // Player1 2 pinks
+    diningList.add(new Students(temp));
+    temp.addStudent(HouseColor.PINK);
+    temp.addStudent(HouseColor.PINK);
+    // Player1 4 pinks
+    diningList.add(new Students(temp));
+
+    StudentBag studentBag = new StudentBag();
+    ccService.dropStudents(diningList, HouseColor.PINK, 3, studentBag);
+
+    assertEquals(0, diningList.get(0).getCount(HouseColor.PINK));
+    assertEquals(0, diningList.get(1).getCount(HouseColor.PINK));
+    assertEquals(1, diningList.get(2).getCount(HouseColor.PINK));
+  }
+
+  @Test
+  public void forceMotherNatureEffects() {
+    RuleBook rules = RuleBook.makeRules(GameMode.NORMAL, 2);
+    PlayingField field = new PlayingField(rules);
+    PlayingField fieldMock = spy(field);
+    doReturn(Optional.of(TowerColor.WHITE)).when(fieldMock).getMostInfluential(1);
+    List<Player> players = new ArrayList<>();
+    players.add(new Player(rules, "gino", BLACK, new Students()));
+    players.add(new Player(rules, "franco", TowerColor.WHITE, new Students()));
+    fieldMock.getIsland(1).setTowerColor(BLACK);
+    fieldMock.getIsland(1).setTowerCount(1);
+    fieldMock.getIsland(2).setTowerColor(TowerColor.WHITE);
+    fieldMock.getIsland(2).setTowerCount(1);
+    fieldMock.getIsland(0).setTowerColor(TowerColor.WHITE);
+    fieldMock.getIsland(0).setTowerCount(1);
+
+    int oldIslandAmount = fieldMock.getIslandsAmount();
+    int blackPTowerCount = players.get(0).getDashboard().towerCount();
+    int whitePTowerCount = players.get(1).getDashboard().towerCount();
+    Logger.debug("\nold amount " + oldIslandAmount);
+    ccService.forceMotherNatureEffects(1, fieldMock, players);
+    Logger.debug("\nnew amount " + fieldMock.getIslandsAmount());
+
+    assertEquals(oldIslandAmount - 2, fieldMock.getIslandsAmount());
+    assertEquals(TowerColor.WHITE, fieldMock.getIsland(0).getTowerColor().get());
+    assertEquals(blackPTowerCount + 1, players.get(0).getDashboard().towerCount());
+    assertEquals(whitePTowerCount - 1, players.get(1).getDashboard().towerCount());
+  }
+
+  @Test
+  public void addToMotherNatureMoves() {
+    Player p = mock(Player.class);
+    ccService.addToMotherNatureMoves(p, 10);
+    assertTrue(true);
   }
 
   @Test
@@ -74,36 +175,31 @@ public class CardEffectsServiceTest {
   }
 
   @Test
-  void testAddToInfluence() {
-  }
-
-  @Test
-  void ignoreColor() {
-  }
-
-  @Test
-  public void dropStudents() {
-    List<Students> entranceList = new ArrayList<>();
+  public void stealProfessor() {
+    // DiningHall set up - 2 player. Both players have 2 pinks
     Students temp = new Students();
-    // Player1 has no pinks
-    entranceList.add(new Students(temp));
     temp.addStudent(HouseColor.PINK);
     temp.addStudent(HouseColor.PINK);
-    // Player1 2 pinks
-    entranceList.add(new Students(temp));
-    temp.addStudent(HouseColor.PINK);
-    temp.addStudent(HouseColor.PINK);
-    // Player1 4 pinks
-    entranceList.add(new Students(temp));
+    List<Dashboard> dashes = new ArrayList<>();
+    dashes.add(new Dashboard(new Students(), 10, TowerColor.WHITE));
+    dashes.add(new Dashboard(new Students(), 10, BLACK));
 
-    StudentBag studentBag = new StudentBag();
-    ccService.dropStudents(entranceList, HouseColor.PINK, 3, studentBag);
+    dashes.get(0).getDiningHall().setStudents(new Students(temp));
+    temp.addStudent(HouseColor.RED);
+    dashes.get(1).getDiningHall().setStudents(new Students(temp));
 
-    assertEquals(0, entranceList.get(0).getCount(HouseColor.PINK));
-    assertEquals(0, entranceList.get(1).getCount(HouseColor.PINK));
-    assertEquals(1, entranceList.get(2).getCount(HouseColor.PINK));
+    // Professor holder setup. BLACK has PINK, WHITE tries to STEAL
+    ProfessorHolder professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
+    professorHolder.setProfessorHolder(BLACK, HouseColor.PINK);
+    professorHolder.setProfessorHolder(BLACK, HouseColor.RED);
+
+    Logger.debug(professorHolder.toString());
+    Logger.debug("White tries to steal");
+    ccService.stealProfessor(dashes.get(0), dashes, professorHolder);
+    Logger.debug(professorHolder.toString());
+
+    assertEquals(BLACK, professorHolder.getProfessorOwner(HouseColor.RED));
+    assertEquals(WHITE, professorHolder.getProfessorOwner(HouseColor.PINK));
   }
-
-
 }
 

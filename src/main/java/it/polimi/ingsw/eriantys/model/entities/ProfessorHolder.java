@@ -30,4 +30,15 @@ public record ProfessorHolder(
   public void setProfessorHolder(TowerColor team, HouseColor professor) {
     professorHolder.put(professor, team);
   }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    Arrays.stream(HouseColor.values()).forEach(color -> {
+      if (professorHolder.get(color) != null)
+        builder.append("\nTeam ").append(professorHolder.get(color))
+                .append(" has ").append(color).append(" Professor");
+    });
+    return "\nProfessor holder: " + builder;
+  }
 }
