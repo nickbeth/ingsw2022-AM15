@@ -2,31 +2,31 @@ package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 
-import static it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum.CharacterCardType.INDEPENDENT;
-import static it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum.CharacterCardType.INFLUENCE_MODIFIER;
+import static it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum.CharacterCardType.*;
 
 public enum CharacterCardEnum {
   IGNORE_COLOR
-          ("", INFLUENCE_MODIFIER, 3, true, false),
+          ("", NO_INPUT, 3, true, false),
   IGNORE_TOWERS
-          ("", INFLUENCE_MODIFIER, 3, false, false),
+          ("", NO_INPUT, 3, false, false),
   ADD_TO_INFLUENCE
-          ("", INFLUENCE_MODIFIER, 3, false, false),
+          ("", NO_INPUT, 3, false, false),
   DROP_STUDENTS
-          ("", INDEPENDENT, 3, true, false),
+          ("", COLOR_INPUT, 3, true, false),
   FORCE_MOTHER_NATURE_EFFECTS
-          ("", INDEPENDENT, 3, true, false),
+          ("", ISLAND_INDEX_INPUT, 3, true, false),
   ADD_TO_MOTHER_NATURE_MOVES
-          ("", INDEPENDENT, 3, false, false),
+          ("", NO_INPUT, 3, false, false),
   LOCK_ISLAND
-          ("", INDEPENDENT, 3, true, false),
+          ("", ISLAND_INDEX_INPUT, 3, true, false),
   STEAL_PROFESSOR
-          ("", INDEPENDENT, 3, false, false),
+          ("", NO_INPUT, 3, false, false),
   ;
 
   public enum CharacterCardType {
-    INFLUENCE_MODIFIER,
-    INDEPENDENT
+    NO_INPUT,
+    COLOR_INPUT,
+    ISLAND_INDEX_INPUT
   }
 
   String description;
@@ -34,8 +34,6 @@ public enum CharacterCardEnum {
   int cost;
   boolean requiresInput;
   boolean used;
-
-  int islandIndex;
 
   CharacterCardEnum(String description, CharacterCardType type, int cost, boolean requiresInput, boolean used) {
     this.description = description;
@@ -54,14 +52,14 @@ public enum CharacterCardEnum {
   }
 
   public int getCost() {
-    return cost;
+    return !used ? cost : cost + 1;
   }
 
   public boolean isRequiredInput() {
     return requiresInput;
   }
 
-  public boolean isBuyable(GameState gameState) {
-    return gameState.getCurrentPlayer().getCoins() >= cost;
+  public boolean isBuyable(int coins) {
+    return coins >= cost;
   }
 }

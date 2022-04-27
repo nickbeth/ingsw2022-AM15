@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 
 public class CreateGame implements GameAction {
@@ -14,7 +13,7 @@ public class CreateGame implements GameAction {
   }
 
   @Override
-  public void apply(GameState gameState, IGameService gameService) {
+  public void apply(GameState gameState) {
     gameState = new GameState(playerCount, mode);
   }
 

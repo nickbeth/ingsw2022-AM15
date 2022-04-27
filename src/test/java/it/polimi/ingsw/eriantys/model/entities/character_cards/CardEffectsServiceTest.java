@@ -12,7 +12,6 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static it.polimi.ingsw.eriantys.model.entities.character_cards.CardEffectsService.getCardEffectsService;
 import static it.polimi.ingsw.eriantys.model.enums.TowerColor.BLACK;
 import static it.polimi.ingsw.eriantys.model.enums.TowerColor.WHITE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +21,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CardEffectsServiceTest {
-  private final ICardEffectsService ccService = getCardEffectsService();
 
   @Test
   public void addToInfluence() {
@@ -37,7 +35,7 @@ public class CardEffectsServiceTest {
 
     islands.forEach(island -> island.updateInfluences(professorHolder));
 
-    ccService.addToInfluence(2, islands, TowerColor.WHITE);
+    CardService.addToInfluence(2, islands, TowerColor.WHITE);
 
     islands.forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
     islands.forEach(island ->
@@ -63,7 +61,7 @@ public class CardEffectsServiceTest {
     islands.forEach(island -> island.updateInfluences(professorHolder));
 
     islands.forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
-    ccService.ignoreTowers(islands);
+    CardService.ignoreTowers(islands);
     islands.forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
 
     assertEquals(1, islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
@@ -93,14 +91,14 @@ public class CardEffectsServiceTest {
     islands.forEach(island -> island.updateInfluences(professorHolder));
 
     islands.forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
-    ccService.ignoreColor(islands, HouseColor.PINK, professorHolder.getProfessorOwner(HouseColor.PINK));
+    CardService.ignoreColor(islands, HouseColor.PINK, professorHolder.getProfessorOwner(HouseColor.PINK));
     assertEquals(0, islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
     assertEquals(0, islands.get(1).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
     assertEquals(0, islands.get(0).getTeamsInfluenceTracer().getInfluence(BLACK));
     assertEquals(3, islands.get(1).getTeamsInfluenceTracer().getInfluence(BLACK));
 
     islands.forEach(island -> island.updateInfluences(professorHolder));
-    ccService.ignoreColor(islands, HouseColor.RED, professorHolder.getProfessorOwner(HouseColor.RED));
+    CardService.ignoreColor(islands, HouseColor.RED, professorHolder.getProfessorOwner(HouseColor.RED));
     islands.forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
     assertEquals(1, islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
     assertEquals(1, islands.get(1).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
@@ -124,7 +122,7 @@ public class CardEffectsServiceTest {
     diningList.add(new Students(temp));
 
     StudentBag studentBag = new StudentBag();
-    ccService.dropStudents(diningList, HouseColor.PINK, 3, studentBag);
+    CardService.dropStudents(diningList, HouseColor.PINK, 3, studentBag);
 
     assertEquals(0, diningList.get(0).getCount(HouseColor.PINK));
     assertEquals(0, diningList.get(1).getCount(HouseColor.PINK));
@@ -151,7 +149,7 @@ public class CardEffectsServiceTest {
     int blackPTowerCount = players.get(0).getDashboard().towerCount();
     int whitePTowerCount = players.get(1).getDashboard().towerCount();
     Logger.debug("\nold amount " + oldIslandAmount);
-    ccService.forceMotherNatureEffects(1, fieldMock, players);
+    CardService.forceMotherNatureEffects(1, fieldMock, players);
     Logger.debug("\nnew amount " + fieldMock.getIslandsAmount());
 
     assertEquals(oldIslandAmount - 2, fieldMock.getIslandsAmount());
@@ -163,14 +161,14 @@ public class CardEffectsServiceTest {
   @Test
   public void addToMotherNatureMoves() {
     Player p = mock(Player.class);
-    ccService.addToMotherNatureMoves(p, 10);
+    CardService.addToMotherNatureMoves(p, 10);
     assertTrue(true);
   }
 
   @Test
   void lockIsland() {
     Island island = new Island();
-    ccService.lockIsland(island);
+    CardService.lockIsland(island);
     assertTrue(island.isLocked());
   }
 
@@ -195,7 +193,7 @@ public class CardEffectsServiceTest {
 
     Logger.debug(professorHolder.toString());
     Logger.debug("White tries to steal");
-    ccService.stealProfessor(dashes.get(0), dashes, professorHolder);
+    CardService.stealProfessor(dashes.get(0), dashes, professorHolder);
     Logger.debug(professorHolder.toString());
 
     assertEquals(BLACK, professorHolder.getProfessorOwner(HouseColor.RED));

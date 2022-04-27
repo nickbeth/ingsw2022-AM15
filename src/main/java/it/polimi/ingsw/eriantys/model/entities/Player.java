@@ -86,9 +86,9 @@ public class Player {
   }
 
   /**
-   * Sets the Players chosenCard and his maxMovement
+   * Sets the Player's chosenCard and his maxMovement
    *
-   * @param assistantCardIndex
+   * @param assistantCardIndex Index of the chosen card
    */
   public void setPlayedCard(int assistantCardIndex) {
     maxMovement = cards.get(assistantCardIndex).movement;

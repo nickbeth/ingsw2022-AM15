@@ -15,17 +15,30 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static it.polimi.ingsw.eriantys.model.GameService.getGameService;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GameServiceTest {
-  private final IGameService gameService = getGameService();
 
   @Test
   void pickAssistantCard() {
-    // no test needed
+    RuleBook mockRule = mock(RuleBook.class);
+    Player player = new Player(mockRule, "nick", TowerColor.WHITE, new Students());
+
+    GameService.pickAssistantCard(player, 9);
+    assertTrue(player.getChosenCard().isPresent());
+    assertEquals(player.getChosenCard().get().value, player.getTurnPriority());
+    assertEquals(player.getChosenCard().get().movement, player.getMaxMovement());
+    try {
+      GameService.pickAssistantCard(player, 10);
+    } catch (Exception e) {
+      Logger.info("Index out of bound");
+    }
+    GameService.pickAssistantCard(player, 5);
+    assertTrue(player.getChosenCard().isPresent());
+    assertEquals(player.getChosenCard().get().value, player.getTurnPriority());
+    assertEquals(player.getChosenCard().get().movement, player.getMaxMovement());
   }
 
   @Test
@@ -38,7 +51,7 @@ class GameServiceTest {
     temp.addStudent(HouseColor.PINK);
     cloud.setStudents(new Students(temp));
 
-    gameService.pickCloud(cloud, dashboard);
+    GameService.pickCloud(cloud, dashboard);
 
     Arrays.stream(HouseColor.values()).forEach((color) ->
             assertEquals(0, cloud.getStudents().getCount(color))
@@ -48,43 +61,82 @@ class GameServiceTest {
     );
   }
 
-  //todo fix test
   @Test
   public void placeStudents() {
-    List<StudentsMovement> moves = new ArrayList<>();
-    // SRC Slot has 4 PINKS
-    Students entranceSRC = new Students();
-//    entranceSRC.addStudentsToSlot(HouseColor.PINK);
-//    entranceSRC.addStudentsToSlot(HouseColor.PINK);
-//    entranceSRC.addStudentsToSlot(HouseColor.PINK);
-//    entranceSRC.addStudentsToSlot(HouseColor.PINK);
+    Students temp = new Students();
+    temp.addStudent(HouseColor.PINK);
+    temp.addStudent(HouseColor.PINK);
+    Students src = new Students(temp);
+    Students dest = new Students();
 
-    // DEST Slot has none
-    Students diningHallDEST = new Students();
+    StudentsMovement move = new StudentsMovement(temp, src, dest);
 
-    // 3x PINKS from SRC to DEST
-//    moves.add(new StudentsMovement(HouseColor.PINK, entranceSRC, diningHallDEST));
-//    moves.add(new StudentsMovement(HouseColor.PINK, entranceSRC, diningHallDEST));
-//    moves.add(new StudentsMovement(HouseColor.PINK, entranceSRC, diningHallDEST));
+    // src has 2 PINKS -> dest who has 0
+    assertTrue(GameService.placeStudents(move));
+    assertEquals(0, src.getCount(HouseColor.PINK));
+    assertEquals(2, dest.getCount(HouseColor.PINK));
 
-//    gameService.placeStudents(moves);
-
-    assertEquals(1, entranceSRC.getCount(HouseColor.PINK));
-    assertEquals(3, diningHallDEST.getCount(HouseColor.PINK));
-
-    // SRC is still entranceSRC
     Island island = new Island();
-    moves.clear();
-//    moves.add(new StudentsMovement(HouseColor.PINK, entranceSRC, island));
+    move = new StudentsMovement(temp, src, island);
+    src.addStudent(HouseColor.PINK);
+    src.addStudent(HouseColor.PINK);
 
-//    gameService.placeStudents(moves);
+    // src has 2 PINKS -> island who has 0
+    assertTrue(GameService.placeStudents(move));
+    assertEquals(0, src.getCount(HouseColor.PINK));
+    assertEquals(2, island.getStudents().getCount(HouseColor.PINK));
 
-    assertEquals(0, entranceSRC.getCount(HouseColor.PINK));
-    assertEquals(1, island.getStudents().getCount(HouseColor.PINK));
+    // src has 1 PINKS
+    src.addStudent(HouseColor.PINK);
+    assertFalse(GameService.placeStudents(move));
+    assertEquals(1, src.getCount(HouseColor.PINK));
+    assertEquals(2, island.getStudents().getCount(HouseColor.PINK));
+
   }
 
   @Test
-  void MotherNatureIslandLocked() {
+  public void refillCloud() {
+    StudentBag studentBag = new StudentBag();
+    Logger.debug(studentBag.getStudents());
+    List<Cloud> clouds = new ArrayList<>();
+    clouds.add(new Cloud(new Students()));
+    clouds.add(new Cloud(new Students()));
+
+    List<Students> studentsList = new ArrayList<>();
+    Students temp = new Students();
+    temp.addStudent(HouseColor.PINK);
+    studentsList.add(new Students(temp));
+    temp.addStudent(HouseColor.PINK);
+    studentsList.add(new Students(temp));
+
+    // Moving 1 PINK -> cloud1, 2 PINKS -> cloud2
+    GameService.refillClouds(studentBag, clouds, studentsList);
+
+    // Bag is empty, no operation has been executed so the clouds are still empty
+    clouds.forEach(cloud -> {
+//      Logger.debug(cloud.getStudents());
+      assertTrue(cloud.isEmpty());
+    });
+
+    temp.setStudents(new Students());
+    int initialAmountInBag = 10;
+    temp.addStudents(HouseColor.PINK, initialAmountInBag);
+    studentBag.getStudents().setStudents(temp);
+
+    // Moving 1 PINK -> cloud1, 2 PINKS -> cloud2
+    GameService.refillClouds(studentBag, clouds, studentsList);
+
+    Logger.debug(clouds.get(0).getStudents());
+    assertFalse(clouds.get(0).isEmpty());
+    Logger.debug(clouds.get(1).getStudents());
+    assertFalse(clouds.get(1).isEmpty());
+    int totalStudentsMoved = clouds.get(0).getStudents().getCount() + clouds.get(1).getStudents().getCount();
+    Logger.debug(studentBag.getStudents());
+    assertEquals(totalStudentsMoved, initialAmountInBag - studentBag.getStudents().getCount());
+  }
+
+  @Test
+  public void MotherNatureIslandLocked() {
     RuleBook rules = RuleBook.makeRules(GameMode.NORMAL, 2);
     PlayingField field = new PlayingField(rules);
     List<Player> players = new ArrayList<>();
@@ -97,7 +149,7 @@ class GameServiceTest {
     int whitePTowerCount = players.get(1).getDashboard().towerCount();
     Logger.debug("\nold amount " + oldIslandAmount);
     field.getIsland(1).setLocked(true);
-    gameService.applyMotherNatureEffect(1, field, players);
+    GameService.applyMotherNatureEffect(1, field, players);
     Logger.debug("\nnew amount " + field.getIslandsAmount());
 
     assertEquals(oldIslandAmount, field.getIslandsAmount());
@@ -122,7 +174,7 @@ class GameServiceTest {
     int blackPTowerCount = players.get(0).getDashboard().towerCount();
     int whitePTowerCount = players.get(1).getDashboard().towerCount();
     Logger.debug("\nold amount " + oldIslandAmount);
-    gameService.applyMotherNatureEffect(1, fieldMock, players);
+    GameService.applyMotherNatureEffect(1, fieldMock, players);
     Logger.debug("\nnew amount " + fieldMock.getIslandsAmount());
 
     assertEquals(oldIslandAmount, fieldMock.getIslandsAmount());
@@ -151,11 +203,12 @@ class GameServiceTest {
     int blackPTowerCount = players.get(0).getDashboard().towerCount();
     int whitePTowerCount = players.get(1).getDashboard().towerCount();
     Logger.debug("\nold amount " + oldIslandAmount);
-    gameService.applyMotherNatureEffect(1, fieldMock, players);
+    GameService.applyMotherNatureEffect(1, fieldMock, players);
     Logger.debug("\nnew amount " + fieldMock.getIslandsAmount());
 
     assertEquals(oldIslandAmount - 2, fieldMock.getIslandsAmount());
-    assertEquals(TowerColor.WHITE, fieldMock.getIsland(0).getTowerColor());
+    if (fieldMock.getIsland(0).getTowerColor().isPresent())
+      assertEquals(TowerColor.WHITE, fieldMock.getIsland(0).getTowerColor().get());
     assertEquals(blackPTowerCount + 1, players.get(0).getDashboard().towerCount());
     assertEquals(whitePTowerCount - 1, players.get(1).getDashboard().towerCount());
   }

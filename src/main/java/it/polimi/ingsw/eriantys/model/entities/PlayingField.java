@@ -190,6 +190,7 @@ public class PlayingField {
   // Temporary method, just testing
   public Optional<TowerColor> getMostInfluential(int islandIndex) {
     Island island = islands.get(islandIndex);
+    island.updateInfluences(professorHolder);
     return island.getTeamsInfluenceTracer().getMostInfluential();
   }
 

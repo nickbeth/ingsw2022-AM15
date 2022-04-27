@@ -46,6 +46,10 @@ public class Students extends Slot {
     students.put(color, students.get(color) + 1);
   }
 
+  public void addStudents(HouseColor color, int amount) {
+    students.put(color, students.get(color) + amount);
+  }
+
   /**
    * Removes one student with the given color
    *
@@ -65,12 +69,14 @@ public class Students extends Slot {
   // todo test
   public boolean tryRemoveStudents(Students s) {
     for (var color : HouseColor.values()) {
+      // If even one amount of students is not enough
       if (students.get(color) < s.getCount(color)) {
         return false;
       }
     }
     for (var color : HouseColor.values()) {
-      tryRemoveStudent(color);
+      for (int i = 0; i < s.getCount(color); i++)
+        tryRemoveStudent(color);
     }
     return true;
   }
@@ -120,13 +126,14 @@ public class Students extends Slot {
   @Override
   public String toString() {
     StringBuilder s = new StringBuilder();
-    students.forEach((c, v) -> s.append(c + " - " + v + "" + "\n"));
+    students.forEach((c, v) ->
+            s.append("\n").append(c).append(" - ").append(v));
     return s.toString();
   }
 
   @Override
-  public void removeStudentsFromSlot(Students students) {
-    tryRemoveStudents(students);
+  public boolean removeStudentsFromSlot(Students students) {
+    return tryRemoveStudents(students);
   }
 
   @Override

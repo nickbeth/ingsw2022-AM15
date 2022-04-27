@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 
 public class ChooseCharacterCard implements GameAction {
@@ -12,7 +11,7 @@ public class ChooseCharacterCard implements GameAction {
   }
 
   @Override
-  public void apply(GameState gameState, IGameService gameService) {
+  public void apply(GameState gameState) {
     PlayingField p = gameState.getPlayingField();
     p.setPlayedCharacterCard(ccIndex);
     if(!p.getPlayedCharacterCard().requiresInput()) gameState.advanceTurnPhase();

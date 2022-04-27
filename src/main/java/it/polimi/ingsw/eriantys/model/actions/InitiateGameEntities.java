@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.Students;
@@ -25,7 +25,7 @@ public class InitiateGameEntities implements GameAction {
    * Initiate students in the entrances, islands and clouds.
    */
   @Override
-  public void apply(GameState gameState, IGameService gameService) {
+  public void apply(GameState gameState) {
     // Initiate players entrances
     List<Player> players = gameState.getPlayers();
     for (int i = 0; i < entrances.size(); i++) {
@@ -38,7 +38,7 @@ public class InitiateGameEntities implements GameAction {
       gameState.getPlayingField().getStudentBag().removeStudents(islands.get(i));
     }
     // Initiate clouds' students
-    gameService.refillClouds(
+    GameService.refillClouds(
             gameState.getPlayingField().getStudentBag(),
             gameState.getPlayingField().getClouds(),
             clouds);

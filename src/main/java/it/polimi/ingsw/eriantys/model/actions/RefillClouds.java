@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.StudentBag;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 
@@ -18,15 +18,16 @@ public class RefillClouds implements GameAction {
    * Refills the clouds with the given students and removes them from the bag
    */
   @Override
-  public void apply(GameState gameState, IGameService gameService) {
+  public void apply(GameState gameState) {
     StudentBag studentBag = gameState.getPlayingField().getStudentBag();
-    gameService.refillClouds(studentBag, gameState.getPlayingField().getClouds(), cloudStudentsList);
+    GameService.refillClouds(studentBag, gameState.getPlayingField().getClouds(), cloudStudentsList);
   }
 
   /**
    * Checks:
    * - if the list of given students is the right size
    * - if the given students are the right amount
+   *
    * @param gameState
    * @return
    */

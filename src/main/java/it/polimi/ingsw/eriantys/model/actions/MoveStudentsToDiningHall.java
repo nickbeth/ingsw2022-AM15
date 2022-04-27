@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -14,11 +14,11 @@ public class MoveStudentsToDiningHall implements GameAction {
   }
 
   @Override
-  public void apply(GameState gameState, IGameService gameService) {
+  public void apply(GameState gameState) {
     Slot currEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
     Slot destination = gameState.getCurrentPlayer().getDashboard().getDiningHall();
     StudentsMovement move = new StudentsMovement(students, currEntrance, destination);
-    gameService.placeStudent(move);
+    GameService.placeStudents(move);
   }
 
   @Override

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 
 public class ActivateCCEffect implements GameAction {
@@ -12,9 +11,9 @@ public class ActivateCCEffect implements GameAction {
   }
 
   @Override
-  public void apply(GameState gameState, IGameService gameService) {
+  public void apply(GameState gameState) {
     gameState.getPlayingField().setPlayedCharacterCard(cc);
-    gameState.getPlayingField().getPlayedCharacterCard().applyEffect(gameState, gameService);
+    gameState.getPlayingField().getPlayedCharacterCard().applyEffect(gameState);
   }
 
   @Override

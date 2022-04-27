@@ -23,7 +23,7 @@ public class PlanningMenu implements Menu {
         switch (command.toLowerCase()) {
           case "pick assistant" -> {
             String cardIndex = input.getPlayerInput();
-            invoker.executeAction(new PickAssistantCard(Integer.parseInt(cardIndex), playerNickname));
+            invoker.executeAction(new PickAssistantCard(Integer.parseInt(cardIndex)));
           }
           case "anotherCase" -> {
             System.out.println();

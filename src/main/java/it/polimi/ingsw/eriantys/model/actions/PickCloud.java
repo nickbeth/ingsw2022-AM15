@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
@@ -18,18 +18,17 @@ public class PickCloud implements GameAction {
   /**
    * Gets students from pickedCloud and puts them onto the players entrance,then advances turnPhase
    * ,if it's the last player it advances GamePhase , and then advances player.
+   *  @param gameState
    *
-   * @param gameState
-   * @param gameService
    */
   @Override
-  public void apply(GameState gameState, IGameService gameService) {
+  public void apply(GameState gameState) {
     Cloud cloud = gameState.getPlayingField().getCloud(cloudIndex);
     Dashboard dashboard = gameState.getCurrentPlayer().getDashboard();
 
     // Checks if the player needs to pick a cloud. This is needed in case of in turn disconnection
     if(cloud.getStudents().getCount() + dashboard.getEntrance().getCount() == gameState.getRuleBook().entranceSize){
-      gameService.pickCloud(cloud, dashboard);
+      GameService.pickCloud(cloud, dashboard);
     }
 
     // Make the game advance its phases

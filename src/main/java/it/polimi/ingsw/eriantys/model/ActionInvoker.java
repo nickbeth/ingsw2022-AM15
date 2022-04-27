@@ -4,22 +4,19 @@ import it.polimi.ingsw.eriantys.model.actions.GameAction;
 
 import java.util.*;
 
-import static it.polimi.ingsw.eriantys.model.GameService.getGameService;
 
 public class ActionInvoker {
   private List<GameAction> gameActions;
   private GameState gameState;
-  private IGameService gameService;
 
   private ActionInvoker(GameState gameState) {
-    gameService = getGameService();
     gameActions = new ArrayList<>();
     this.gameState = gameState;
   }
 
   public boolean executeAction(GameAction action) {
     if (action.isValid(gameState)) {
-      action.apply(gameState, gameService);
+      action.apply(gameState);
       gameActions.add(action);
       return true;
     }

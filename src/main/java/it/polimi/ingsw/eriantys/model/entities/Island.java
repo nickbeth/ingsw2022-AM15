@@ -64,8 +64,8 @@ public class Island extends Slot {
   }
 
   @Override
-  public void removeStudentsFromSlot(Students students) {
-    this.students.removeStudentsFromSlot(students);
+  public boolean removeStudentsFromSlot(Students students) {
+    return this.students.removeStudentsFromSlot(students);
   }
 
   @Override

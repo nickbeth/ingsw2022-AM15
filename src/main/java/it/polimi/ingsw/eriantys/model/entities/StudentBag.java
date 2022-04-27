@@ -56,16 +56,23 @@ public class StudentBag {
   }
 
   /**
-   * removes given students from bag
+   * Removes given students from bag
    */
-  public void removeStudents(Students s) {
-    for (HouseColor c : HouseColor.values()) {
-      int count = s.getCount(c);
-      while(count > 0){
-        count--;
-        students.tryRemoveStudent(c);
-      }
-    }
+  // todo test
+  public boolean removeStudents(Students s) {
+    // try to remove the students all at once
+//    if (!this.students.tryRemoveStudents(s)) {
+//      // if it can't do that (no students left in the bag) try to remove them one by one
+//      Logger.warn("GAME SHOULD END. NO STUDENTS LEFT IN THE BAG");
+//      for (HouseColor c : HouseColor.values()) {
+//        int count = s.getCount(c);
+//        while (count > 0) {
+//          count--;
+//          students.tryRemoveStudent(c);
+//        }
+//      }
+//    }
+    return this.students.tryRemoveStudents(s);
   }
 
   public boolean isEmpty() {

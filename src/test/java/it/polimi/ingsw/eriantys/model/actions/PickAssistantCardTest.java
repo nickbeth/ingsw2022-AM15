@@ -72,7 +72,7 @@ class PickAssistantCardTest {
     hand.add(c1.get());
     when(curr.getCards()).thenReturn(hand);
 
-    assertTrue(new PickAssistantCard(0, name).isValid(game));
+    assertTrue(new PickAssistantCard(0).isValid(game));
 
     Logger.debug("\nSecond test");
 
@@ -83,11 +83,11 @@ class PickAssistantCardTest {
     hand.add(c4.get());
     when(curr.getCards()).thenReturn(hand);
 
-    assertTrue(new PickAssistantCard(0, name).isValid(game));
+    assertTrue(new PickAssistantCard(0).isValid(game));
 
     // CurrPlayer had another choice
     hand.add(c5.get());
 
-    assertFalse(new PickAssistantCard(0,name).isValid(game));
+    assertFalse(new PickAssistantCard(0).isValid(game));
   }
 }

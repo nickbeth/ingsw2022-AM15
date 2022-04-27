@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.GameService;
-import it.polimi.ingsw.eriantys.model.IGameService;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -59,8 +58,7 @@ class PlayingFieldTest {
     p.getCloud(1).setStudents(new Students());
     p.getCloud(2).setStudents(new Students());
 
-    IGameService gameService = GameService.getGameService();
-    gameService.refillClouds(p.getStudentBag(),p.getClouds(),studentsList);
+    GameService.refillClouds(p.getStudentBag(),p.getClouds(),studentsList);
 
     Logger.debug("new students in cloud:\n" + p.getCloud(0).getStudents().toString());
     assertEquals(4, p.getCloud(0).getStudents().getCount(HouseColor.RED));
