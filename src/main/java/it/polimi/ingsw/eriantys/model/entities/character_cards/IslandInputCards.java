@@ -1,13 +1,14 @@
 package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects.IslandInputCC;
 
-public class IslandInputCC implements CharacterCard {
-  private final IslandInputCCI onIslandEffect;
+public class IslandInputCards implements CharacterCard {
+  private final IslandInputCC onIslandEffect;
   private final CharacterCardEnum card;
   private final int islandIndex;
 
-  public IslandInputCC(IslandInputCCI onIslandEffect, CharacterCardEnum card, int islandIndex) {
+  public IslandInputCards(IslandInputCC onIslandEffect, CharacterCardEnum card, int islandIndex) {
     this.onIslandEffect = onIslandEffect;
     this.card = card;
     this.islandIndex = islandIndex;

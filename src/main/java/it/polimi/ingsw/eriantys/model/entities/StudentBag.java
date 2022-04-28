@@ -58,7 +58,6 @@ public class StudentBag {
   /**
    * Removes given students from bag
    */
-  // todo test
   public boolean removeStudents(Students s) {
     // try to remove the students all at once
 //    if (!this.students.tryRemoveStudents(s)) {

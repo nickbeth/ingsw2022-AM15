@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.model.entities.character_cards;
+package it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects;
 
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;

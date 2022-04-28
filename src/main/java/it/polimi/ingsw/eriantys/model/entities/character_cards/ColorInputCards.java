@@ -1,19 +1,23 @@
 package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects.ColorInputCC;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
-public class NoInputCC implements CharacterCard {
-  private final INoInputCC noInputEffect;
+public class ColorInputCards implements CharacterCard {
+  private final ColorInputCC colorInputCC;
   private final CharacterCardEnum card;
+  private final HouseColor color;
 
-  public NoInputCC(INoInputCC noInputEffect, CharacterCardEnum card) {
-    this.noInputEffect = noInputEffect;
+  public ColorInputCards(ColorInputCC colorInputCC, CharacterCardEnum card, HouseColor color) {
+    this.colorInputCC = colorInputCC;
     this.card = card;
+    this.color = color;
   }
 
   @Override
   public void applyEffect(GameState gameState) {
-    noInputEffect.applyEffect(gameState);
+    colorInputCC.applyEffect(gameState, color);
     gameState.getCurrentPlayer().removeCoins(card.getCost());
     gameState.getPlayingField().addCoinsToBank(card.getCost());
   }
@@ -25,7 +29,7 @@ public class NoInputCC implements CharacterCard {
 
   @Override
   public boolean requiresInput() {
-    return card.isRequiredInput();
+    return card.requiresInput;
   }
 
   @Override
