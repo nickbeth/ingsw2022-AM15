@@ -59,6 +59,9 @@ public enum CharacterCardEnum {
     return requiresInput;
   }
 
+  /**
+   * returns true if the given amount of coins is enough to use the card
+   */
   public boolean isBuyable(int coins) {
     return coins >= cost;
   }
