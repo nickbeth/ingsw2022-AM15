@@ -1,12 +1,16 @@
 package it.polimi.ingsw.eriantys.model;
 
+import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
+import it.polimi.ingsw.eriantys.model.entities.PlayingField;
+import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +41,23 @@ class GameStateTest {
 
   @Test
   void advancePlayer() {
-    //no test required
+    game.addPlayer("gino", TowerColor.BLACK);
+    GameState spyedField = spy(game);
+
+    //tests correct advancement for plan order
+    doReturn(GamePhase.PLANNING).when(spyedField).getGamePhase();
+    Player oldPlayerTwo = spyedField.getPlanOrderPlayers().get(1);
+    spyedField.advancePlayer();
+    assertEquals(oldPlayerTwo, spyedField.getCurrentPlayer());
+
+    //tests correct advancement for action phase order
+    spyedField.advancePlayer();
+    spyedField.advanceGamePhase();
+
+    doReturn(GamePhase.ACTION).when(spyedField).getGamePhase();
+    oldPlayerTwo = spyedField.getTurnOrderPlayers().get(1);
+    spyedField.advancePlayer();
+    assertEquals(oldPlayerTwo, spyedField.getCurrentPlayer());
   }
 
 
@@ -73,5 +93,82 @@ class GameStateTest {
     assertEquals(oldSecond, threePlayerGame.getPlanOrderPlayers().get(0));
     assertEquals(oldThird, threePlayerGame.getPlanOrderPlayers().get(1));
     assertEquals(oldFirst, threePlayerGame.getPlanOrderPlayers().get(2));
+  }
+
+  @Test
+  void checkNoTowerWin() {
+    game.addPlayer("franco", TowerColor.WHITE);
+    List<Player> players = new ArrayList<>();
+    GameState spyedGame = spy(game);
+    Player p1 = spy(spyedGame.getPlayers().get(0));
+    Player p2 = spy(spyedGame.getPlayers().get(1));
+    Dashboard d1 = mock(Dashboard.class);
+    Dashboard d2 = mock(Dashboard.class);
+
+    // necessary stubbing
+    doReturn(d1).when(p1).getDashboard();
+    doReturn(d2).when(p2).getDashboard();
+    when(d1.noMoreTowers()).thenReturn(true);
+    when(d2.noMoreTowers()).thenReturn(true);
+    players.add(p1);
+    players.add(p2);
+    doReturn(players).when(spyedGame).getPlayers();
+
+    assertTrue(spyedGame.checkWinCondition());
+
+    when(d2.noMoreTowers()).thenReturn(false);
+
+    assertTrue(spyedGame.checkWinCondition());
+
+    when(d1.noMoreTowers()).thenReturn(false);
+
+    assertFalse(spyedGame.checkWinCondition());
+  }
+
+  @Test
+  void checkNoCardsWin() {
+    game.addPlayer("franco", TowerColor.WHITE);
+    List<Player> players = new ArrayList<>();
+    GameState spyedGame = spy(game);
+    Player p1 = spy(spyedGame.getPlayers().get(0));
+    Player p2 = spy(spyedGame.getPlayers().get(1));
+
+    ArrayList<AssistantCard> cards = new ArrayList<>();
+    // necessary stubbing
+
+    players.add(p1);
+    players.add(p2);
+    doReturn(players).when(spyedGame).getPlayers();
+    assertFalse(spyedGame.checkWinCondition());
+
+    doReturn(cards).when(p1).getCards();
+    doReturn(Optional.empty()).when(p1).getChosenCard();
+    assertTrue(spyedGame.checkWinCondition());
+
+    Optional<AssistantCard> assistantCard = Optional.of(AssistantCard.FIVE);
+    doReturn(assistantCard).when(p1).getChosenCard();
+    assertFalse(spyedGame.checkWinCondition());
+  }
+
+  @Test
+  void checkNoIslandsWin() {
+    game.addPlayer("franco", TowerColor.WHITE);
+
+    GameState spyedGame = spy(game);
+    PlayingField spyedField = spy(spyedGame.getPlayingField());
+
+    when(spyedField.getIslandsAmount()).thenReturn(3);
+    doReturn(spyedField).when(spyedGame).getPlayingField();
+
+    assertTrue(spyedGame.checkWinCondition());
+
+    when(spyedField.getIslandsAmount()).thenReturn(8);
+    assertFalse(spyedGame.checkWinCondition());
+
+  }
+
+
+  @Test
+  void getWinner() {
   }
 }

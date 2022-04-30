@@ -16,7 +16,7 @@ public class Player {
   private final Dashboard dashboard;
   private final ArrayList<AssistantCard> cards;
   private final TowerColor team;
-  private Optional<AssistantCard> chosenCard;
+  private Optional<AssistantCard> chosenCard = Optional.empty();;
 
   private int maxMovement;
   private int coins;
@@ -50,7 +50,7 @@ public class Player {
   }
 
   public int getTurnPriority() {
-    return chosenCard.get().value;
+    return chosenCard.isPresent() ? chosenCard.get().value : 0 ;
   }
 
   public void addCoin() {

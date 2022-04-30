@@ -42,7 +42,7 @@ public class GameState {
   }
 
   /**
-   * Advances currentPlayer index
+   * sets current player to next in line depending on GamePhase
    */
   public void advancePlayer() {
 //    currentPlayer = (currentPlayer + 1) % players.size();
@@ -150,10 +150,10 @@ public class GameState {
    * - if one of these condition isn't true The Game ends
    */
   public boolean checkWinCondition() {
-    if (playingField.getStudentBag().isEmpty()
-            || players.stream().allMatch(p -> p.getDashboard().noMoreTowers()
+    if (getPlayingField().getStudentBag().isEmpty()
+            || getPlayers().stream().anyMatch(p -> p.getDashboard().noMoreTowers()
             || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
-            || playingField.getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
+            || getPlayingField().getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
     ) {
       gamePhase = GamePhase.WIN;
       return true;

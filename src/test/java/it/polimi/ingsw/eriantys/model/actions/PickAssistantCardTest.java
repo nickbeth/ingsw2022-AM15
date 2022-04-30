@@ -36,7 +36,7 @@ class PickAssistantCardTest {
 
   public void setup() {
     when(game.getCurrentPlayer()).thenReturn(curr);
-    when(game.getGamePhase()).thenReturn(phase);
+    //when(game.getGamePhase()).thenReturn(phase);
 
     players.add(p2);
     players.add(p3);
@@ -44,7 +44,7 @@ class PickAssistantCardTest {
     players.add(curr);
 
     when(game.getPlayers()).thenReturn(players);
-    when(curr.getNickname()).thenReturn(name);
+    //when(curr.getNickname()).thenReturn(name);
   }
 
   @Test

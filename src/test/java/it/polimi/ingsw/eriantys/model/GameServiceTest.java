@@ -142,6 +142,7 @@ class GameServiceTest {
     List<Player> players = new ArrayList<>();
     players.add(new Player(rules, "gino", TowerColor.BLACK, new Students()));
     players.add(new Player(rules, "franco", TowerColor.WHITE, new Students()));
+    field.getIsland(1).setTowerColor(TowerColor.WHITE);
 
     TowerColor oldIslandColor = field.getIsland(1).getTowerColor().get();
     int oldIslandAmount = field.getIslandsAmount();
@@ -153,7 +154,7 @@ class GameServiceTest {
     Logger.debug("\nnew amount " + field.getIslandsAmount());
 
     assertEquals(oldIslandAmount, field.getIslandsAmount());
-    assertEquals(oldIslandColor, field.getIsland(1).getTowerColor());
+    assertEquals(oldIslandColor, field.getIsland(1).getTowerColor().get());
     assertEquals(blackPTowerCount, players.get(0).getDashboard().towerCount());
     assertEquals(whitePTowerCount, players.get(1).getDashboard().towerCount());
   }
@@ -168,6 +169,7 @@ class GameServiceTest {
     players.add(new Player(rules, "gino", TowerColor.BLACK, new Students()));
     players.add(new Player(rules, "franco", TowerColor.WHITE, new Students()));
     Logger.debug("most influential in : " + fieldMock);
+    fieldMock.getIsland(1).setTowerColor(TowerColor.WHITE);
 
     int oldIslandAmount = fieldMock.getIslandsAmount();
     TowerColor oldIslandColor = fieldMock.getIsland(1).getTowerColor().get();
@@ -178,7 +180,7 @@ class GameServiceTest {
     Logger.debug("\nnew amount " + fieldMock.getIslandsAmount());
 
     assertEquals(oldIslandAmount, fieldMock.getIslandsAmount());
-    assertEquals(oldIslandColor, fieldMock.getIsland(1).getTowerColor());
+    assertEquals(oldIslandColor, fieldMock.getIsland(1).getTowerColor().get());
     assertEquals(blackPTowerCount, players.get(0).getDashboard().towerCount());
     assertEquals(whitePTowerCount, players.get(1).getDashboard().towerCount());
   }

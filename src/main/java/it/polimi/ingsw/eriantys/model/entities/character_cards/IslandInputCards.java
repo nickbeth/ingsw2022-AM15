@@ -23,16 +23,16 @@ public class IslandInputCards implements CharacterCard {
 
   @Override
   public int getCost() {
-    return 0;
+    return card.getCost();
   }
 
   @Override
   public boolean requiresInput() {
-    return false;
+    return card.isRequiredInput();
   }
 
   @Override
   public boolean isValid(GameState gameState) {
-    return false;
+    return card.isBuyable(gameState.getCurrentPlayer().getCoins());
   }
 }

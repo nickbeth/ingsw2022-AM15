@@ -53,8 +53,7 @@ public class InitiateGameEntities implements GameAction {
             islands.size() == ISLAND_COUNT &&
             islands.stream().allMatch((students) -> students.getCount() == INITIAL_ISLAND_STUDENTS) &&
             clouds.size() == ruleBook.entranceSize &&
-            clouds.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount)
-            ;
+            clouds.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount);
 
   }
 }
