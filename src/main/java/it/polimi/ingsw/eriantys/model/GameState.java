@@ -139,7 +139,6 @@ public class GameState {
   }
 
   //TODO la win condition deve fare altre cose credo?
-  // todo e i test non ce li metti?
 
   /**
    * Checks:<br>
@@ -161,6 +160,11 @@ public class GameState {
     return false;
   }
 
+  /**
+   * returns TowerColor of the player who has less towers in their dashboard
+   * - if two player have the same amount of towers it checks the amount of professors
+   *
+   */
   public Optional<TowerColor> getWinner() {
     class Temp {
       private static int getUnusedTowerCount(Player player) {
@@ -175,16 +179,19 @@ public class GameState {
     int heldProfessorCount = 0;
     Optional<TowerColor> winner = Optional.empty();
 
-    for (Player p : players) {
+    for (Player p : getPlayers()) {
       // If the player has fewer towers in his dashboard he's the winner
       if (Temp.getUnusedTowerCount(p) < towerCount) {
         towerCount = Temp.getUnusedTowerCount(p);
         winner = Optional.of(p.getColorTeam());
+        heldProfessorCount = Temp.getHeldProfessorCount(p, getPlayingField());
       } else if (Temp.getUnusedTowerCount(p) == towerCount) {
-        // If equals number of tower checks z
-        if (Temp.getHeldProfessorCount(p, playingField) > heldProfessorCount) {
+        // If equals number of tower checks held professor count
+        if (Temp.getHeldProfessorCount(p, getPlayingField()) > heldProfessorCount) {
+          Logger.debug("ora vince lui");
           winner = Optional.of(p.getColorTeam());
-        } else {
+          heldProfessorCount = Temp.getHeldProfessorCount(p, getPlayingField());
+        } else if (Temp.getHeldProfessorCount(p, getPlayingField()) == heldProfessorCount){
           winner = Optional.empty();
         }
       }

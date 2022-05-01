@@ -3,12 +3,11 @@ package it.polimi.ingsw.eriantys.model;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
-import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
-import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import it.polimi.ingsw.eriantys.model.entities.Towers;
+import it.polimi.ingsw.eriantys.model.enums.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +96,7 @@ class GameStateTest {
 
   @Test
   void checkNoTowerWin() {
-    game.addPlayer("franco", TowerColor.WHITE);
+    game.addPlayer("gino", TowerColor.BLACK);
     List<Player> players = new ArrayList<>();
     GameState spyedGame = spy(game);
     Player p1 = spy(spyedGame.getPlayers().get(0));
@@ -127,7 +126,7 @@ class GameStateTest {
 
   @Test
   void checkNoCardsWin() {
-    game.addPlayer("franco", TowerColor.WHITE);
+    game.addPlayer("GINO", TowerColor.BLACK);
     List<Player> players = new ArrayList<>();
     GameState spyedGame = spy(game);
     Player p1 = spy(spyedGame.getPlayers().get(0));
@@ -152,7 +151,7 @@ class GameStateTest {
 
   @Test
   void checkNoIslandsWin() {
-    game.addPlayer("franco", TowerColor.WHITE);
+    game.addPlayer("GINO", TowerColor.BLACK);
 
     GameState spyedGame = spy(game);
     PlayingField spyedField = spy(spyedGame.getPlayingField());
@@ -169,6 +168,95 @@ class GameStateTest {
 
 
   @Test
-  void getWinner() {
+  void getTowerWinner() {
+    game.addPlayer("GINO", TowerColor.BLACK);
+    List<Player> players = new ArrayList<>();
+    GameState spyedGame = spy(game);
+    Player p1 = spy(spyedGame.getPlayers().get(0));
+    Player p2 = spy(spyedGame.getPlayers().get(1));
+    players.add(p1);
+    players.add(p2);
+
+
+    p1.getDashboard().getTowers().count = 3;
+    p2.getDashboard().getTowers().count = 2;
+
+    doReturn(players).when(spyedGame).getPlayers();
+
+    assertEquals(TowerColor.BLACK, spyedGame.getWinner().get());
+
+  }
+
+  @Test
+  void getSameTowerWinner() {
+    game.addPlayer("GINO", TowerColor.BLACK);
+    List<Player> players = new ArrayList<>();
+    GameState spyedGame = spy(game);
+    Player p1 = spy(spyedGame.getPlayers().get(0));
+    Player p2 = spy(spyedGame.getPlayers().get(1));
+    players.add(p1);
+    players.add(p2);
+    PlayingField field = mock(PlayingField.class);
+
+    p1.getDashboard().getTowers().count = 2;
+    p2.getDashboard().getTowers().count = 2;
+
+
+    doReturn(players).when(spyedGame).getPlayers();
+    doReturn(field).when(spyedGame).getPlayingField();
+    when(field.getHeldProfessorCount(TowerColor.WHITE)).thenReturn(2);
+    when(field.getHeldProfessorCount(TowerColor.BLACK)).thenReturn(1);
+
+
+    assertEquals(TowerColor.WHITE, spyedGame.getWinner().get());
+  }
+
+  @Test
+  void noWinner() {
+    game.addPlayer("GINO", TowerColor.BLACK);
+    List<Player> players = new ArrayList<>();
+    GameState spyedGame = spy(game);
+    Player p1 = spy(spyedGame.getPlayers().get(0));
+    Player p2 = spy(spyedGame.getPlayers().get(1));
+    players.add(p1);
+    players.add(p2);
+    PlayingField field = mock(PlayingField.class);
+
+    p1.getDashboard().getTowers().count = 2;
+    p2.getDashboard().getTowers().count = 2;
+
+
+    doReturn(players).when(spyedGame).getPlayers();
+    doReturn(field).when(spyedGame).getPlayingField();
+    when(field.getHeldProfessorCount(TowerColor.WHITE)).thenReturn(2);
+    when(field.getHeldProfessorCount(TowerColor.BLACK)).thenReturn(2);
+
+    assertEquals(Optional.empty(), spyedGame.getWinner());
+  }
+
+  @Test
+  void advanceTurnPhase() {
+    game.addPlayer("gino", TowerColor.BLACK);
+
+    game.advanceTurnPhase();
+    assertEquals(TurnPhase.MOVING, game.getTurnPhase());
+    game.advanceTurnPhase();
+    assertEquals(TurnPhase.PICKING, game.getTurnPhase());
+    game.advanceTurnPhase();
+    assertEquals(TurnPhase.PLACING, game.getTurnPhase());
+
+    GameState expGame = new GameState(2, GameMode.EXPERT);
+    expGame.addPlayer("gino", TowerColor.BLACK);
+    expGame.addPlayer("franco", TowerColor.WHITE);
+
+    expGame.advanceTurnPhase();
+    assertEquals(TurnPhase.EFFECT, expGame.getTurnPhase());
+    expGame.advanceTurnPhase();
+    assertEquals(TurnPhase.MOVING, expGame.getTurnPhase());
+    expGame.advanceTurnPhase();
+    assertEquals(TurnPhase.PICKING, expGame.getTurnPhase());
+    expGame.advanceTurnPhase();
+    assertEquals(TurnPhase.PLACING, expGame.getTurnPhase());
+
   }
 }
