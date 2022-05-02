@@ -19,6 +19,7 @@ public class IslandInputCards implements CharacterCard {
     onIslandEffect.applyEffect(gameState, islandIndex);
     gameState.getCurrentPlayer().removeCoins(card.getCost());
     gameState.getPlayingField().addCoinsToBank(card.getCost());
+    card.used = true;
   }
 
   @Override

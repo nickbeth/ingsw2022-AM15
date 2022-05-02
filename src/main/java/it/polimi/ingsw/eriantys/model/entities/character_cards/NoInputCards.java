@@ -17,6 +17,7 @@ public class NoInputCards implements CharacterCard {
     noInputEffect.applyEffect(gameState);
     gameState.getCurrentPlayer().removeCoins(card.getCost());
     gameState.getPlayingField().addCoinsToBank(card.getCost());
+    card.used = true;
   }
 
   @Override

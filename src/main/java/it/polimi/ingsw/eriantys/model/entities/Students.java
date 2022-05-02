@@ -66,7 +66,6 @@ public class Students extends Slot {
     }
   }
 
-  // todo test
   public boolean tryRemoveStudents(Students s) {
     for (var color : HouseColor.values()) {
       // If even one amount of students is not enough

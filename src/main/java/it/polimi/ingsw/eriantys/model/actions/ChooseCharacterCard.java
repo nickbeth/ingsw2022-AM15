@@ -17,6 +17,7 @@ public class ChooseCharacterCard implements GameAction {
     if (!p.getPlayedCharacterCard().requiresInput()) {
       p.getPlayedCharacterCard().applyEffect(gameState);
       gameState.advanceTurnPhase();
+
     }
   }
 

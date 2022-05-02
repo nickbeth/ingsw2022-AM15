@@ -20,6 +20,7 @@ public class ColorInputCards implements CharacterCard {
     colorInputCC.applyEffect(gameState, color);
     gameState.getCurrentPlayer().removeCoins(card.getCost());
     gameState.getPlayingField().addCoinsToBank(card.getCost());
+    card.used = true;
   }
 
   @Override
