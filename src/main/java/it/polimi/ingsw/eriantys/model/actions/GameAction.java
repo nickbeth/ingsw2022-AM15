@@ -2,7 +2,9 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 
-public interface GameAction {
+import java.io.Serializable;
+
+public interface GameAction extends Serializable {
   void apply(GameState gameState);
   boolean isValid(GameState gameState);
 }
