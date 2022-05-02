@@ -33,4 +33,9 @@ public class NoInputCards implements CharacterCard {
   public boolean isValid(GameState gameState) {
     return card.isBuyable(gameState.getCurrentPlayer().getCoins());
   }
+
+  @Override
+  public CharacterCardEnum getCardEnum() {
+    return card;
+  }
 }

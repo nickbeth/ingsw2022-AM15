@@ -9,16 +9,20 @@ public class ChooseCharacterCard implements GameAction {
   public ChooseCharacterCard(int ccIndex) {
     this.ccIndex = ccIndex;
   }
-
+  //todo gestione del prezzo della CC
   @Override
   public void apply(GameState gameState) {
     PlayingField p = gameState.getPlayingField();
     p.setPlayedCharacterCard(ccIndex);
-    if(!p.getPlayedCharacterCard().requiresInput()) gameState.advanceTurnPhase();
+    if (!p.getPlayedCharacterCard().requiresInput()) {
+      p.getPlayedCharacterCard().applyEffect(gameState);
+      gameState.advanceTurnPhase();
+    }
   }
 
   @Override
   public boolean isValid(GameState gameState) {
-    return false;
+    return ccIndex >= 0 &&
+            ccIndex < 3;
   }
 }

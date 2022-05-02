@@ -7,4 +7,5 @@ public interface CharacterCard {
   int getCost();
   boolean requiresInput();
   boolean isValid(GameState gameState);
+  CharacterCardEnum getCardEnum();
 }

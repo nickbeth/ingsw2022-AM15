@@ -211,6 +211,10 @@ public class PlayingField {
     return characterCards;
   }
 
+  public void setCharacterCards(List<CharacterCard> cards) {
+    characterCards = cards;
+  }
+
   public int getBank() {
     return bank;
   }
