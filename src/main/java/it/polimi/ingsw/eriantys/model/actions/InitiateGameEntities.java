@@ -5,7 +5,12 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
+import it.polimi.ingsw.eriantys.model.enums.GameMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.model.RuleBook.*;
@@ -14,15 +19,17 @@ public class InitiateGameEntities implements GameAction {
   private final List<Students> entrances;
   private final List<Students> islands;
   private final List<Students> clouds;
+  private final List<CharacterCardEnum> cardsEnum;
 
-  public InitiateGameEntities(List<Students> entrances, List<Students> islands, List<Students> clouds) {
+  public InitiateGameEntities(List<Students> entrances, List<Students> islands, List<Students> clouds, List<CharacterCardEnum> cardsEnum) {
     this.entrances = entrances;
     this.islands = islands;
     this.clouds = clouds;
+    this.cardsEnum = cardsEnum;
   }
 
   /**
-   * Initiate students in the entrances, islands and clouds.
+   * Initiate students in the entrances, islands , clouds.
    */
   @Override
   public void apply(GameState gameState) {
@@ -42,7 +49,12 @@ public class InitiateGameEntities implements GameAction {
             gameState.getPlayingField().getStudentBag(),
             gameState.getPlayingField().getClouds(),
             clouds);
-    //TODO initiate characterCards
+    //initiate characterCards
+    if(gameState.getRuleBook().gameMode == GameMode.EXPERT) {
+      List<CharacterCard> cards = new ArrayList<>();
+      cardsEnum.forEach(card -> cards.add(CharacterCardCreator.create(card)));
+      gameState.getPlayingField().setCharacterCards(cards);
+    }
   }
 
   @Override
@@ -53,7 +65,8 @@ public class InitiateGameEntities implements GameAction {
             islands.size() == ISLAND_COUNT &&
             islands.stream().allMatch((students) -> students.getCount() == INITIAL_ISLAND_STUDENTS) &&
             clouds.size() == ruleBook.entranceSize &&
-            clouds.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount);
+            clouds.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount) &&
+            cardsEnum.size() == PLAYABLE_CC_AMOUNT;
 
   }
 }
