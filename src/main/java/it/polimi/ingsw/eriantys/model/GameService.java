@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.model;
 import it.polimi.ingsw.eriantys.model.actions.StudentsMovement;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,7 @@ public interface GameService {
     for (int i = 0; i < clouds.size(); i++) {
       if (studentBag.removeStudents(cloudStudentsList.get(i)))
         clouds.get(i).setStudents(cloudStudentsList.get(i));
+      Logger.debug(clouds.get(i).getStudents());
     }
   }
 

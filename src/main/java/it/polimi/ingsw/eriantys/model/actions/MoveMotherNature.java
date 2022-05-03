@@ -21,13 +21,8 @@ public class MoveMotherNature implements GameAction {
 
   /**
    * Moves motherNature. <br/>
-   * If the destination island is not Locked it sets the tower color to the most influential Team
-   * and tries to merge adjacent islands. <br/>
-   * If there isn't a new most influential player nothing changes <br/>
-   * Modifies players' tower count if necessary. <br/>
-   * It advances turnPhase.
-   *  @param gameState
-   *
+   * Applys motherNatureEffects on the island where mothernature resides<br>
+   * Advances turnPhase.
    */
   @Override
   public void apply(GameState gameState) {
@@ -35,16 +30,12 @@ public class MoveMotherNature implements GameAction {
     playingField.moveMotherNature(amount);
     int motherNaturePos = playingField.getMotherNaturePosition();
     List<Player> players = gameState.getPlayers();
-    gameState.getCurrentPlayer().unsetChosenCard();
     GameService.applyMotherNatureEffect(motherNaturePos, playingField, players);
     gameState.advanceTurnPhase();
   }
 
   /**
    * checks:<br/>
-   * - If current player is the player who did the action<br/>
-   * - If the gamePhase is ACTION<br/>
-   * - If the turnPhase is MOVING<br/>
    * - If the amount of movements is allowed<br/>
    *
    * @param gameState
@@ -52,11 +43,7 @@ public class MoveMotherNature implements GameAction {
    */
   @Override
   public boolean isValid(GameState gameState) {
-    CharacterCard cc = gameState.getPlayingField().getPlayedCharacterCard();
-    return gameState.getCurrentPlayer().getNickname().equals(playerNickname) &&
-            gameState.getGamePhase() == GamePhase.ACTION &&
-            gameState.getTurnPhase() == TurnPhase.MOVING &&
-            amount > 0 &&
+    return amount > 0 &&
             gameState.getCurrentPlayer().getMaxMovement() >= amount;
   }
 }

@@ -19,7 +19,7 @@ public class RuleBook {
   public static final int STUDENT_PER_COLOR_SETUP = 2;
   // Constants based on the type of game
   public static final int PLAYABLE_STUDENTS_2_4 = 3;
-  public static final int PLAYABLE_STUDENTS_3 = 3;
+  public static final int PLAYABLE_STUDENTS_3 = 4;
   public static final int DASHBOARD_TOWERS_2_4 = 8;
   public static final int DASHBOARD_TOWERS_3 = 6;
   public static final int ENTRANCE_SIZE_2_4 = 7;

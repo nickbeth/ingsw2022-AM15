@@ -38,6 +38,7 @@ public class PickCloud implements GameAction {
       // todo gestione disconnessione random del client prima di pickare la propria cloud
       gameState.advanceGamePhase();
     }
+    gameState.getCurrentPlayer().unsetChosenCard();
     gameState.advancePlayer();
   }
 

@@ -15,14 +15,24 @@ public class MoveStudentsToIsland implements GameAction {
     this.islandIndex = islandIndex;
   }
 
+  /**
+   * moves students from entrance to island,
+   *  if this is the last allowed movement it advances turn phase
+   */
   @Override
   public void apply(GameState gameState) {
     Slot currEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
     Slot destination = gameState.getPlayingField().getIsland(islandIndex);
     StudentsMovement move = new StudentsMovement(students, currEntrance, destination);
     GameService.placeStudents(move);
+    if(gameState.getCurrentPlayer().getDashboard().getEntrance().getCount()
+            <= gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount)
+      gameState.advanceTurnPhase();
   }
 
+  /**
+   * Checks if the current player's entrance has enough students for action
+   */
   @Override
   public boolean isValid(GameState gameState) {
     Students currEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance();

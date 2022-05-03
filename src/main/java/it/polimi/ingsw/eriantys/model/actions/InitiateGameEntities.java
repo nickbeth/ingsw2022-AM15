@@ -29,7 +29,8 @@ public class InitiateGameEntities implements GameAction {
   }
 
   /**
-   * Initiate students in the entrances, islands , clouds.
+   * Puts given students in entrances, islands, clouds and from bag.
+   * Creates characterCards from given enum
    */
   @Override
   public void apply(GameState gameState) {
@@ -57,14 +58,17 @@ public class InitiateGameEntities implements GameAction {
     }
   }
 
+  /**
+   * Checks if the sizes and amount of the given entities is valid
+   */
   @Override
   public boolean isValid(GameState gameState) {
     RuleBook ruleBook = gameState.getRuleBook();
-    return entrances.size() == ruleBook.entranceSize &&
+    return entrances.size() == ruleBook.cloudCount &&
             entrances.stream().allMatch((students) -> students.getCount() == ruleBook.entranceSize) &&
             islands.size() == ISLAND_COUNT &&
             islands.stream().allMatch((students) -> students.getCount() == INITIAL_ISLAND_STUDENTS) &&
-            clouds.size() == ruleBook.entranceSize &&
+            clouds.size() == ruleBook.cloudCount &&
             clouds.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount) &&
             cardsEnum.size() == PLAYABLE_CC_AMOUNT;
 

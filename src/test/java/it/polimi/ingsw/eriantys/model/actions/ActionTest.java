@@ -1,0 +1,183 @@
+package it.polimi.ingsw.eriantys.model.actions;
+
+import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
+import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
+import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.tinylog.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ActionTest {
+  GameState normalGame;
+  GameState expertGame;
+
+  @BeforeEach
+  void setUp() {
+    normalGame = new GameState(3, GameMode.NORMAL);
+    expertGame = new GameState(3, GameMode.EXPERT);
+    normalGame.addPlayer("gino", TowerColor.WHITE);
+    normalGame.addPlayer("franco", TowerColor.BLACK);
+    normalGame.addPlayer("mauro", TowerColor.GRAY);
+    expertGame.addPlayer("gino", TowerColor.WHITE);
+    expertGame.addPlayer("franco", TowerColor.BLACK);
+    expertGame.addPlayer("mauro", TowerColor.GRAY);
+  }
+
+  @Test
+  void moveMotherNature() {
+    GameAction action = new MoveMotherNature("gino",3);
+    normalGame.getPlayingField().moveMotherNature(11);
+    normalGame.setTurnPhase(TurnPhase.MOVING);
+    normalGame.advanceGamePhase();
+    normalGame.getCurrentPlayer().addToMaxMovement(3);
+
+    assertTrue(action.isValid(normalGame));
+    action.apply(normalGame);
+    assertEquals(2, normalGame.getPlayingField().getMotherNaturePosition());
+    assertEquals(TurnPhase.PICKING,normalGame.getTurnPhase());
+  }
+
+  @Test
+  void moveStudentsToDiningHall() {
+    Students s= new Students();
+    s.addStudent(HouseColor.RED);
+    s.addStudent(HouseColor.RED);
+    s.addStudent(HouseColor.RED);
+    s.addStudent(HouseColor.RED);
+
+    Students entrance = new Students(s);
+    entrance.addStudents(HouseColor.BLUE, normalGame.getRuleBook().entranceSize - 4);
+
+
+    s.tryRemoveStudent(HouseColor.RED);
+
+    normalGame.getCurrentPlayer().getDashboard().getEntrance().addStudents(entrance);
+
+    GameAction action = new MoveStudentsToDiningHall(s);
+    normalGame.setTurnPhase(TurnPhase.PLACING);
+    normalGame.advanceGamePhase();
+
+    assertTrue(action.isValid(normalGame));
+    action.apply(normalGame);
+    assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
+    //tests turn phase advancement when its last movement
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.BLUE,1);
+    action = new MoveStudentsToDiningHall(s);
+    action.apply(normalGame);
+    assertEquals(TurnPhase.MOVING, normalGame.getTurnPhase());
+    //check a false isValid
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.RED,2);
+    action = new MoveStudentsToDiningHall(s);
+    assertFalse(action.isValid(normalGame));
+  }
+
+  @Test
+  void moveStudentsToIsland() {
+    Students s= new Students();
+    s.addStudent(HouseColor.RED);
+    s.addStudent(HouseColor.RED);
+    s.addStudent(HouseColor.RED);
+    s.addStudent(HouseColor.RED);
+
+    Students islanders = new Students(s);
+    islanders.addStudents(HouseColor.BLUE, normalGame.getRuleBook().entranceSize - 4);
+    s.tryRemoveStudent(HouseColor.RED);
+
+    normalGame.getCurrentPlayer().getDashboard().getEntrance().addStudents(islanders);
+
+    GameAction action = new MoveStudentsToIsland(s,0);
+    normalGame.setTurnPhase(TurnPhase.PLACING);
+    normalGame.advanceGamePhase();
+
+    assertTrue(action.isValid(normalGame));
+    action.apply(normalGame);
+    assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
+    //tests turn phase advancement when its last movement
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.BLUE,1);
+    action = new MoveStudentsToIsland(s, 0);
+    action.apply(normalGame);
+    assertEquals(TurnPhase.MOVING, normalGame.getTurnPhase());
+    //check a false isValid
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.RED,2);
+    action = new MoveStudentsToIsland(s, 0);
+    assertFalse(action.isValid(normalGame));
+  }
+
+  @Test
+  void initiateGameEntities() {
+    List<Students> entrances = new ArrayList<>();
+    List<Students> islands = new ArrayList<>();
+    List<Students> clouds = new ArrayList<>();
+    List<CharacterCardEnum> cards = new ArrayList<>();
+
+    //setup entrance students
+    Students s = new Students();
+    s.addStudents(HouseColor.RED, 9);
+    entrances.add(new Students(s));
+    entrances.add(new Students(s));
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.YELLOW, 9);
+    entrances.add(new Students(s));
+
+    //setup islands students
+    s.setStudents(new Students());
+    s.addStudent(HouseColor.BLUE);
+    Logger.debug(s.getCount());
+    for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
+      islands.add(new Students(s));
+    }
+
+    //setup clouds students
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.GREEN, 4);
+    for (int i = 0; i < expertGame.getRuleBook().cloudCount; i++) {
+      clouds.add(new Students(s));
+    }
+
+    cards.add(CharacterCardEnum.ADD_TO_INFLUENCE);
+    cards.add(CharacterCardEnum.ADD_TO_INFLUENCE);
+    cards.add(CharacterCardEnum.ADD_TO_INFLUENCE);
+
+    GameAction action = new InitiateGameEntities(entrances, islands, clouds, cards);
+
+    assertTrue(action.isValid(expertGame));
+    action.apply(expertGame);
+
+    assertEquals(9, expertGame.getPlayers().get(0).getDashboard().getEntrance().getCount());
+    assertEquals(9, expertGame.getPlayers().get(0).getDashboard().getEntrance().getCount(HouseColor.RED));
+    assertEquals(9, expertGame.getPlayers().get(1).getDashboard().getEntrance().getCount());
+    assertEquals(9, expertGame.getPlayers().get(1).getDashboard().getEntrance().getCount(HouseColor.RED));
+    assertEquals(9, expertGame.getPlayers().get(2).getDashboard().getEntrance().getCount());
+    assertEquals(9, expertGame.getPlayers().get(2).getDashboard().getEntrance().getCount(HouseColor.YELLOW));
+
+    for (int i = 0; i < islands.size(); i++) {
+      assertEquals(1, expertGame.getPlayingField().getIsland(i).getStudents().getCount());
+      assertEquals(1, expertGame.getPlayingField().getIsland(i).getStudents().getCount(HouseColor.BLUE));
+    }
+
+    for (int i = 0; i < clouds.size(); i++) {
+      assertEquals(4, expertGame.getPlayingField().getClouds().get(i).getStudents().getCount());
+      assertEquals(4, expertGame.getPlayingField().getClouds().get(i).getStudents().getCount(HouseColor.GREEN));
+    }
+
+    for (int i = 0; i < cards.size(); i++) {
+      assertEquals(cards.get(i), expertGame.getPlayingField().getCharacterCards().get(i).getCardEnum());
+    }
+
+  }
+}
