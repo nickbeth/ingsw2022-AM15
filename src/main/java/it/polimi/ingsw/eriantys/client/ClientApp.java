@@ -1,6 +1,10 @@
 package it.polimi.ingsw.eriantys.client;
 
+import it.polimi.ingsw.eriantys.model.actions.GameAction;
+import it.polimi.ingsw.eriantys.model.actions.PickAssistantCard;
 import it.polimi.ingsw.eriantys.network.Client;
+import it.polimi.ingsw.eriantys.network.Message;
+import it.polimi.ingsw.eriantys.network.MessageType;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -29,12 +33,12 @@ public class ClientApp {
    * Asks the user for server's address and port
    */
   private void readServerAddress() {
-    System.out.println("Enter the IP address of the server (default: localhost):");
+    System.out.print("Enter the IP address of the server (default: localhost): ");
     String input = scanner.nextLine();
     if (!input.isEmpty())
       address = input;
 
-    System.out.println("Enter the port the server is running on (default: 1234):");
+    System.out.print("Enter the port the server is running on (default: 1234): ");
 
     while (true) {
       input = scanner.nextLine();
@@ -51,13 +55,37 @@ public class ClientApp {
   private void sendCommands() {
     String input;
     while (true) {
-      System.out.println("Enter the command to send to the server: ");
-      input = scanner.nextLine();
       try {
-        networkClient.send(input);
-        System.out.println(networkClient.receive());
-      } catch (IOException ignored) {
+        printMenu();
+        input = scanner.nextLine();
+
+        switch (Integer.parseInt(input)) {
+          case 1 -> {
+            GameAction action = new PickAssistantCard(1);
+            Message message = new Message.Builder().type(MessageType.GAMEDATA).action(action).build();
+            networkClient.send(message);
+            message = networkClient.receive();
+            System.out.println("Reply from server: '" + message.toString() + "'");
+          }
+          case 0 -> {
+            networkClient.close();
+            return;
+          }
+        }
+      } catch (NumberFormatException e) {
+        System.out.println("Invalid choice, please try again");
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
+  }
+
+  private void printMenu() {
+    StringBuilder ss = new StringBuilder();
+
+    ss.append("1. Invia un message contenente una `PickAssistantCard` action\n")
+        .append("0. Esci\n");
+
+    System.out.print(ss);
   }
 }

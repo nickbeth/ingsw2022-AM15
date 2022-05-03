@@ -4,14 +4,16 @@ import org.tinylog.Logger;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
+/**
+ * A wrapper around java.io.Socket for sending and receiving Message objects.
+ */
 public class Client {
   public static final int DEFAULT_PORT = Server.DEFAULT_PORT;
 
   private Socket socket;
-  private PrintWriter out;
-  private BufferedReader in;
+  private ObjectOutputStream out;
+  private ObjectInputStream in;
 
   /**
    * Default constructor, creates and empty client
@@ -26,8 +28,8 @@ public class Client {
    */
   Client(Socket socket) throws IOException {
     this.socket = socket;
-    out = new PrintWriter(socket.getOutputStream());
-    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    out = new ObjectOutputStream(socket.getOutputStream());
+    in = new ObjectInputStream(socket.getInputStream());
   }
 
   /**
@@ -38,18 +40,28 @@ public class Client {
    */
   public void connect(String address, int port) throws IOException {
     socket = new Socket(address, port);
-    out = new PrintWriter(socket.getOutputStream());
-    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    out = new ObjectOutputStream(socket.getOutputStream());
+    in = new ObjectInputStream(socket.getInputStream());
     Logger.info("Connected to: {}", socket.getRemoteSocketAddress());
   }
 
-  public <T> void send(T msg) throws IOException {
-    out.println(msg.toString());
+  public void send(Message msg) throws IOException {
+    out.writeObject(msg);
     out.flush();
   }
 
-  public String receive() throws IOException {
-    return in.readLine();
+  public Message receive() throws IOException {
+    Message recv = null;
+    try {
+      recv = (Message) in.readObject();
+    } catch (ClassNotFoundException e) {
+      Logger.error("Invalid message type: {}", e.getMessage());
+    }
+    return recv;
+  }
+
+  public void close() throws IOException {
+    socket.close();
   }
 
   public String toString() {

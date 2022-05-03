@@ -1,17 +1,13 @@
 package it.polimi.ingsw.eriantys.server;
 
-import it.polimi.ingsw.eriantys.network.Client;
-import it.polimi.ingsw.eriantys.network.Server;
+import it.polimi.ingsw.eriantys.network.*;
 import org.tinylog.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class ServerApp {
   private final int port;
   private Server networkServer = new Server();
-
-  private ArrayList<Client> clients = new ArrayList<>();
 
   ServerApp(int port) {
     this.port = port;
@@ -40,9 +36,13 @@ public class ServerApp {
   private void handleClient(Client client) {
     try {
       while (true) {
-        String recv = client.receive();
-        Logger.info("Received: " + recv);
-        client.send("Server says thank you!");
+        Message recv = client.receive();
+        System.out.println("Received message: '" + recv.toString() + "' from: " + client);
+        if (recv.type() == MessageType.GAMEDATA) {
+          System.out.println();
+          System.out.println("Placeholder: should execute '" + recv.gameAction() + "' on the server game state here");
+          client.send(recv);
+        }
       }
     } catch (IOException e) {
       Logger.error(e.getMessage());

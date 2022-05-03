@@ -112,4 +112,9 @@ public class Message implements Serializable {
   public GameInfo gameInfo() {
     return gameInfo;
   }
+
+  @Override
+  public String toString() {
+    return "Message[type=" + type + ", action=" + gameAction + ", error=" + error + ", gameInfo=" + gameInfo + "]";
+  }
 }
