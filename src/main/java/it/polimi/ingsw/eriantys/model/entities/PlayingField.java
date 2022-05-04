@@ -20,7 +20,7 @@ public class PlayingField {
   private int bank;
   private int motherNaturePosition;
 
-  private List<CharacterCard> characterCards;
+  private List<CharacterCard> characterCards = new ArrayList<>();
   private Optional<CharacterCard> playedCharacterCard;
 
   /**

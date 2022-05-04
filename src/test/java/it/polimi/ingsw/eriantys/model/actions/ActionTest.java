@@ -2,13 +2,11 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
-import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import it.polimi.ingsw.eriantys.model.enums.HouseColor;
-import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
-import org.junit.jupiter.api.BeforeAll;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
+import it.polimi.ingsw.eriantys.model.enums.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tinylog.Logger;
@@ -178,6 +176,79 @@ public class ActionTest {
     for (int i = 0; i < cards.size(); i++) {
       assertEquals(cards.get(i), expertGame.getPlayingField().getCharacterCards().get(i).getCardEnum());
     }
-
   }
+
+  @Test
+  void chooseCC() {
+    normalGame.getPlayingField().getCharacterCards().add(0, CharacterCardCreator.create(CharacterCardEnum.IGNORE_TOWERS));
+    GameAction action = new ChooseCharacterCard(0);
+    assertTrue(action.isValid(normalGame));
+    action.apply(normalGame);
+    assertEquals(CharacterCardEnum.IGNORE_TOWERS, normalGame.getPlayingField().getPlayedCharacterCard().getCardEnum());
+  }
+
+  @Test
+  void pickCloud() {
+
+    List<Students> clouds = new ArrayList<>();
+    Students s = new Students();
+    s.addStudents(HouseColor.GREEN, 4);
+    for (int i = 0; i < normalGame.getRuleBook().cloudCount; i++) {
+      clouds.add(new Students(s));
+    }
+    List<Students> entrances = new ArrayList<>();
+    //initiate game entities
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.RED, 9);
+    entrances.add(new Students(s));
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.YELLOW, 5);
+    entrances.add(new Students(s));
+    entrances.add(new Students(s));
+    GameAction action = new InitiateGameEntities(entrances, new ArrayList<>(), clouds, new ArrayList<>());
+
+    //second to last player
+    action.apply(normalGame);
+    action = new PickCloud(0);
+    normalGame.advanceGamePhase();
+    normalGame.setTurnPhase(TurnPhase.PICKING);
+    normalGame.advancePlayer();
+    assertTrue(action.isValid(normalGame));
+    action.apply(normalGame);
+    assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
+    assertEquals(GamePhase.ACTION, normalGame.getGamePhase());
+    assertEquals(normalGame.getTurnOrderPlayers().get(2), normalGame.getCurrentPlayer());
+
+    //last player
+    action = new PickCloud(1);
+    normalGame.setTurnPhase(TurnPhase.PICKING);
+    assertTrue(action.isValid(normalGame));
+
+    action.apply(normalGame);
+    assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
+    assertEquals(GamePhase.PLANNING, normalGame.getGamePhase());
+    assertEquals(normalGame.getPlanOrderPlayers().get(0), normalGame.getCurrentPlayer());
+
+    //is valid tests
+    action = new PickCloud(6);
+    assertFalse(action.isValid(normalGame));
+
+    action = new PickCloud(0);
+    assertFalse(action.isValid(normalGame));
+  }
+
+  @Test
+  void refillClouds() {
+    List<Students> clouds = new ArrayList<>();
+    Students s = new Students();
+    s.addStudents(HouseColor.GREEN, 4);
+    for (int i = 0; i < normalGame.getRuleBook().cloudCount; i++) {
+      clouds.add(new Students(s));
+    }
+    GameAction action = new RefillClouds(clouds);
+    assertTrue(action.isValid(normalGame));
+    clouds.add(new Students(s));
+    assertFalse(action.isValid(normalGame));
+  }
+
 }

@@ -8,16 +8,15 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 public class PickCloud implements GameAction {
   private int cloudIndex;
-  private String playerNickname;
 
-  public PickCloud(String nickname, int index) {
+  public PickCloud(int index) {
     this.cloudIndex = index;
-    this.playerNickname = nickname;
   }
 
+  //todo gestire meglio la disconnessione e testarla
   /**
    * Gets students from pickedCloud and puts them onto the players entrance,then advances turnPhase
-   * ,if it's the last player it advances GamePhase , and then advances player.
+   * ,if the current player is the last player it advances GamePhase , and then advances player.
    *  @param gameState
    *
    */
@@ -44,24 +43,12 @@ public class PickCloud implements GameAction {
 
   /**
    * Checks:<br>
-   * If currentPlayer is the player who did the action<br>
-   * If the gamePhase is ACTION<br>
-   * If the turnPhase is PICKING<br>
    * If the cloud index is allowed<br>
    * If the picked cloud is empty<br>
-   *
-   * @param gameState
-   * @return boolean
    */
   @Override
   public boolean isValid(GameState gameState) {
-    Cloud cloud = gameState.getPlayingField().getCloud(cloudIndex);
-    Dashboard dashboard = gameState.getCurrentPlayer().getDashboard();
-
-    return gameState.getCurrentPlayer().getNickname().equals(playerNickname) &&
-            gameState.getGamePhase() == GamePhase.ACTION &&
-            gameState.getTurnPhase() == TurnPhase.PICKING &&
-            cloudIndex >= 0 &&
+    return cloudIndex >= 0 &&
             cloudIndex < gameState.getRuleBook().cloudCount &&
             (!gameState.getPlayingField().getCloud(cloudIndex).isEmpty());
   }
