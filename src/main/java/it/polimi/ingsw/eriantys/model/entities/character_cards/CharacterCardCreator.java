@@ -9,7 +9,7 @@ import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import java.util.ArrayList;
 import java.util.List;
 
-// todo test
+
 public class CharacterCardCreator {
 
   public static CharacterCard create(CharacterCardEnum playedCard) {

@@ -11,7 +11,7 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 public class CCMenu implements Menu {
   @Override
-  public void commandMenu(ActionInvoker invoker, String playerNickname, GameState gameState) {
+  public void commandMenu(ActionInvoker invoker, String playerNickname, GameState gameState, String action) {
     Input input = new InputImpl();
     Output output = new OutputImpl();
 

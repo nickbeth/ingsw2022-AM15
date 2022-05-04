@@ -1,9 +1,5 @@
 package it.polimi.ingsw.eriantys.controller.menus;
 
-import it.polimi.ingsw.eriantys.controller.io_controls.Input;
-import it.polimi.ingsw.eriantys.controller.io_controls.InputImpl;
-import it.polimi.ingsw.eriantys.controller.io_controls.Output;
-import it.polimi.ingsw.eriantys.controller.io_controls.OutputImpl;
 import it.polimi.ingsw.eriantys.model.ActionInvoker;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.ActivateCCEffect;
@@ -13,26 +9,20 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-import javax.swing.table.AbstractTableModel;
-
 public class ActionMenu implements Menu {
   @Override
-  public void commandMenu(ActionInvoker invoker, String playerNickname, GameState gameState) {
-    Input input = new InputImpl();
-    Output output = new OutputImpl();
-
-    String command = input.getPlayerInput();
+  public void commandMenu(ActionInvoker invoker, String playerNickname, GameState gameState, String action) {
     do {
       if (!gameState.isTurnOf(playerNickname)) {
-        output.show("Not your turn dumbass");
+//        show("Not your turn dumbass");
       } else {
-        switch (command.toLowerCase()) {
+        switch (action) {
           case "place students" -> {
           }
           case "move mother nature" -> {
             if (gameState.getTurnPhase() == TurnPhase.MOVING) {
             }
-            int numberOfIsland = Integer.parseInt(input.getPlayerInput());
+            int numberOfIsland = 0;
             invoker.executeAction(new MoveMotherNature(playerNickname, numberOfIsland));
           }
           case "pick cloud" -> {
@@ -43,11 +33,12 @@ public class ActionMenu implements Menu {
             invoker.executeAction(new ChooseCharacterCard(0));
             CharacterCard cc = gameState.getPlayingField().getPlayedCharacterCard();
             if(cc.requiresInput())
-              (new CCMenu()).commandMenu(invoker, playerNickname, gameState);
+              (new CCMenu()).commandMenu(invoker, playerNickname, gameState, action);
             else
               invoker.executeAction(new ActivateCCEffect(cc));
           }
-          default -> output.show("Invalid command.");
+          default -> { // show("Invalid command.");
+          }
         }
         if (gameState.checkWinCondition())
           gameState.getWinner();

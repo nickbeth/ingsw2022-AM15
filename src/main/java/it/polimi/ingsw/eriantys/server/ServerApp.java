@@ -27,6 +27,7 @@ public class ServerApp {
       try {
         Client newClient = networkServer.accept();
         new Thread(() -> handleClient(newClient)).start();
+        //Java NIO
       } catch (IOException e) {
         Logger.error(e.getMessage());
       }
