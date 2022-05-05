@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
-import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects.CardService;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -63,9 +62,8 @@ public class CharacterCardCreator {
         }, playedCard);
       }
       case LOCK_ISLAND -> {
-        return new IslandInputCards(((gameState, islandIndex) -> {
-          CardService.lockIsland(gameState.getPlayingField().getIsland(islandIndex));
-        }), playedCard, 0);
+        return new IslandInputCards(((gameState, islandIndex) ->
+                CardService.lockIsland(gameState.getPlayingField().getIsland(islandIndex))), playedCard, 0);
       }
       case STEAL_PROFESSOR -> {
         return new NoInputCards(gameState -> {

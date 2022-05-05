@@ -50,7 +50,7 @@ public class InitiateGameEntities implements GameAction {
             gameState.getPlayingField().getStudentBag(),
             gameState.getPlayingField().getClouds(),
             clouds);
-    //initiate characterCards
+    // Initiate characterCards
     if(gameState.getRuleBook().gameMode == GameMode.EXPERT) {
       List<CharacterCard> cards = new ArrayList<>();
       cardsEnum.forEach(card -> cards.add(CharacterCardCreator.create(card)));

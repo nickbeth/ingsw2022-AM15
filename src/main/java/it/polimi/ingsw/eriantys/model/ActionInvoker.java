@@ -9,7 +9,7 @@ public class ActionInvoker {
   private List<GameAction> gameActions;
   private GameState gameState;
 
-  private ActionInvoker(GameState gameState) {
+  public ActionInvoker(GameState gameState) {
     gameActions = new ArrayList<>();
     this.gameState = gameState;
   }

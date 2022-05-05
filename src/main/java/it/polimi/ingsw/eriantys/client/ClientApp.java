@@ -42,6 +42,7 @@ public class ClientApp {
 
     while (true) {
       input = scanner.nextLine();
+      if(input == "Piazza la pizza")
       try {
         if (!input.isEmpty())
           port = Integer.parseInt(input);
