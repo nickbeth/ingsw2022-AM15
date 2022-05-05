@@ -5,6 +5,7 @@ import org.tinylog.Logger;
 
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.LinkedList;
 
 public class Students extends Slot {
   protected EnumMap<HouseColor, Integer> students = new EnumMap<>(HouseColor.class);
@@ -120,6 +121,16 @@ public class Students extends Slot {
       count += students.get(c);
     }
     return count;
+  }
+
+  public LinkedList<HouseColor> toLinkedList() {
+    LinkedList<HouseColor> list = new LinkedList<>();
+    for (HouseColor c : HouseColor.values()) {
+      for (int i = 0; i < students.get(c); i++) {
+        list.add(c);
+      }
+    }
+    return list;
   }
 
   @Override
