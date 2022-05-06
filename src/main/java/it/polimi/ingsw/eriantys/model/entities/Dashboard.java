@@ -1,14 +1,13 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.tinylog.Logger;
 
 public class Dashboard {
-  private Students entrance;
-  private Students diningHall;
-  private Towers towers = new Towers();
+  private final Students entrance;
+  private final Students diningHall;
+  private final Towers towers = new Towers();
 
   public Dashboard(Students entrance, int towerCount, TowerColor towerColor) {
     towers.color = towerColor;
@@ -40,7 +39,7 @@ public class Dashboard {
   /**
    * Adds the given amount of tower
    *
-   * @param amount
+   * @param amount The amount of towers to add
    */
   public void addTowers(int amount) {
     towers.count += amount;
@@ -49,7 +48,7 @@ public class Dashboard {
   /**
    * Removes the given amount of tower. If the amount is greater than towers count then it goes to 0.
    *
-   * @param amount
+   * @param amount The amount of towers to remove
    */
   public void removeTowers(int amount) {
     // Could be simplified with:
@@ -68,6 +67,10 @@ public class Dashboard {
 
   public int towerCount() {
     return towers.count;
+  }
+
+  public TowerColor towerColor() {
+    return towers.color;
   }
 }
 
