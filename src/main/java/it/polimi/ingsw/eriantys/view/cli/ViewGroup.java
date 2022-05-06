@@ -1,8 +1,10 @@
-package it.polimi.ingsw.eriantys.cli;
+package it.polimi.ingsw.eriantys.view.cli;
 
-import java.beans.PropertyChangeListener;
+import it.polimi.ingsw.eriantys.view.View;
+import org.tinylog.Logger;
+
+import java.beans.PropertyChangeEvent;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,9 +36,9 @@ public class ViewGroup extends View {
   /**
    * Draws all views in this group.
    */
-  public void draw(PrintStream o) throws IOException {
+  public void draw() throws IOException {
     for (View view : viewList) {
-      view.draw(o);
+      view.draw();
     }
   }
 }

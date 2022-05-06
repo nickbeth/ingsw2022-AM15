@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.cli.utils;
+package it.polimi.ingsw.eriantys.view.cli.utils;
 
 // @formatter:off
 
