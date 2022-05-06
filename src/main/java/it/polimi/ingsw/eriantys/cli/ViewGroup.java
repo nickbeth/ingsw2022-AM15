@@ -33,7 +33,7 @@ public class ViewGroup extends View {
   /**
    * Draws all views in this group.
    */
-  public void draw(PrintStream o) throws IOException {
+  public void draw(PrintStream o) {
     for (View view : viewList) {
       view.draw(o);
     }
