@@ -20,6 +20,7 @@ public class GameState {
 
   private final RuleBook ruleBook; // Set of rules used in this game
   private final PlayingField playingField; // Playing field of this game
+
   public GameState(int playerCount, GameMode mode) {
     ruleBook = RuleBook.makeRules(mode, playerCount);
     playingField = new PlayingField(ruleBook);

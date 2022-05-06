@@ -14,16 +14,17 @@ public class StudentBag {
   }
 
   /**
-   * initializes the student amount in students to a certain amount for every color
+   * Initializes the amount of students in the bag to a certain amount for every color
    *
    * @param amount
    */
-  public void initStudents(int amount) {
+  public StudentBag initStudents(int amount) {
     students.setStudents(new Students());
     for (int i = 0; i < amount; i++) {
       for (HouseColor c : HouseColor.values())
         students.addStudent(c);
     }
+    return this;
   }
 
   //qui solo per il testing?

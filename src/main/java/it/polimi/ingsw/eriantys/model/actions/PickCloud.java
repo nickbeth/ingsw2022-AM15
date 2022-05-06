@@ -7,6 +7,7 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 public class PickCloud implements GameAction {
+
   private int cloudIndex;
 
   public PickCloud(int index) {

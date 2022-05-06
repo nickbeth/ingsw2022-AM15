@@ -20,6 +20,13 @@ public class Message implements Serializable {
     private GameAction gameAction;
     private GameInfo gameInfo;
 
+    public Builder() {
+    }
+
+    public Builder(MessageType type) {
+      this.type = type;
+    }
+
     /**
      * Sets the type of this message. If the type is different from the previous one,
      * the underlying parameters will be reset.
@@ -29,9 +36,6 @@ public class Message implements Serializable {
      * @see #reset()
      */
     public Builder type(MessageType type) {
-      if (this.type != type) {
-        reset();
-      }
       this.type = type;
       return this;
     }
