@@ -45,25 +45,39 @@ public class Client {
     Logger.info("Connected to: {}", socket.getRemoteSocketAddress());
   }
 
+  /**
+   * Sends a message.
+   * @param msg The message to send
+   */
   public void send(Message msg) throws IOException {
     out.writeObject(msg);
     out.flush();
   }
 
-  public Message receive() throws IOException {
-    Message recv = null;
+  /**
+   * Receives a message. This method blocks until a message is received.
+   * @return The received message
+   */
+  public Message receive() throws IOException, ClassNotFoundException {
     try {
-      recv = (Message) in.readObject();
+      return (Message) in.readObject();
     } catch (ClassNotFoundException e) {
-      Logger.error("Invalid message type: {}", e.getMessage());
+      Logger.error("Invalid message class type: {}", e.getMessage());
+      throw e;
     }
-    return recv;
   }
 
+  /**
+   * Closes this socket.
+   */
   public void close() throws IOException {
     socket.close();
   }
 
+  /**
+   * Prints this socket in the following format: [hostname]/[host address]:[port]
+   */
+  @Override
   public String toString() {
     return socket.getRemoteSocketAddress().toString();
   }

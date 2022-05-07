@@ -45,7 +45,7 @@ public class ServerApp {
           client.send(recv);
         }
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       Logger.error(e.getMessage());
     }
   }
