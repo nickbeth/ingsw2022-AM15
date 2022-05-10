@@ -2,18 +2,20 @@ package it.polimi.ingsw.eriantys.network;
 
 import org.tinylog.Logger;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 /**
  * A wrapper around java.io.Socket for sending and receiving Message objects.
  */
 public class Client {
-  public static final int DEFAULT_PORT = Server.DEFAULT_PORT;
-
   private Socket socket;
-  private ObjectOutputStream out;
-  private ObjectInputStream in;
+  private OutputStream out;
+  private InputStream in;
 
   /**
    * Default constructor, creates and empty client
@@ -28,8 +30,8 @@ public class Client {
    */
   Client(Socket socket) throws IOException {
     this.socket = socket;
-    out = new ObjectOutputStream(socket.getOutputStream());
-    in = new ObjectInputStream(socket.getInputStream());
+    out = socket.getOutputStream();
+    in = socket.getInputStream();
   }
 
   /**
@@ -40,27 +42,31 @@ public class Client {
    */
   public void connect(String address, int port) throws IOException {
     socket = new Socket(address, port);
-    out = new ObjectOutputStream(socket.getOutputStream());
-    in = new ObjectInputStream(socket.getInputStream());
+    out = socket.getOutputStream();
+    in = socket.getInputStream();
     Logger.info("Connected to: {}", socket.getRemoteSocketAddress());
   }
 
   /**
    * Sends a message.
+   *
    * @param msg The message to send
    */
   public void send(Message msg) throws IOException {
-    out.writeObject(msg);
+    ByteBuffer serialized = SerializationHelper.serialize(msg);
+    out.write(serialized.array(), 0, serialized.limit());
     out.flush();
   }
 
   /**
    * Receives a message. This method blocks until a message is received.
+   *
    * @return The received message
    */
   public Message receive() throws IOException, ClassNotFoundException {
     try {
-      return (Message) in.readObject();
+      ObjectInputStream ois = new ObjectInputStream(in);
+      return (Message) ois.readObject();
     } catch (ClassNotFoundException e) {
       Logger.error("Invalid message class type: {}", e.getMessage());
       throw e;
