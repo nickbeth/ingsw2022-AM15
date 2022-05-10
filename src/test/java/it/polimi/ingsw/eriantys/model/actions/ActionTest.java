@@ -34,7 +34,7 @@ public class ActionTest {
 
   @Test
   void moveMotherNature() {
-    GameAction action = new MoveMotherNature("gino",3);
+    GameAction action = new MoveMotherNature(3);
     normalGame.getPlayingField().moveMotherNature(11);
     normalGame.setTurnPhase(TurnPhase.MOVING);
     normalGame.advanceGamePhase();
@@ -43,12 +43,12 @@ public class ActionTest {
     assertTrue(action.isValid(normalGame));
     action.apply(normalGame);
     assertEquals(2, normalGame.getPlayingField().getMotherNaturePosition());
-    assertEquals(TurnPhase.PICKING,normalGame.getTurnPhase());
+    assertEquals(TurnPhase.PICKING, normalGame.getTurnPhase());
   }
 
   @Test
   void moveStudentsToDiningHall() {
-    Students s= new Students();
+    Students s = new Students();
     s.addStudent(HouseColor.RED);
     s.addStudent(HouseColor.RED);
     s.addStudent(HouseColor.RED);
@@ -71,20 +71,20 @@ public class ActionTest {
     assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
     //tests turn phase advancement when its last movement
     s.setStudents(new Students());
-    s.addStudents(HouseColor.BLUE,1);
+    s.addStudents(HouseColor.BLUE, 1);
     action = new MoveStudentsToDiningHall(s);
     action.apply(normalGame);
     assertEquals(TurnPhase.MOVING, normalGame.getTurnPhase());
     //check a false isValid
     s.setStudents(new Students());
-    s.addStudents(HouseColor.RED,2);
+    s.addStudents(HouseColor.RED, 2);
     action = new MoveStudentsToDiningHall(s);
     assertFalse(action.isValid(normalGame));
   }
 
   @Test
   void moveStudentsToIsland() {
-    Students s= new Students();
+    Students s = new Students();
     s.addStudent(HouseColor.RED);
     s.addStudent(HouseColor.RED);
     s.addStudent(HouseColor.RED);
@@ -96,7 +96,7 @@ public class ActionTest {
 
     normalGame.getCurrentPlayer().getDashboard().getEntrance().addStudents(islanders);
 
-    GameAction action = new MoveStudentsToIsland(s,0);
+    GameAction action = new MoveStudentsToIsland(s, 0);
     normalGame.setTurnPhase(TurnPhase.PLACING);
     normalGame.advanceGamePhase();
 
@@ -105,13 +105,13 @@ public class ActionTest {
     assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
     //tests turn phase advancement when its last movement
     s.setStudents(new Students());
-    s.addStudents(HouseColor.BLUE,1);
+    s.addStudents(HouseColor.BLUE, 1);
     action = new MoveStudentsToIsland(s, 0);
     action.apply(normalGame);
     assertEquals(TurnPhase.MOVING, normalGame.getTurnPhase());
     //check a false isValid
     s.setStudents(new Students());
-    s.addStudents(HouseColor.RED,2);
+    s.addStudents(HouseColor.RED, 2);
     action = new MoveStudentsToIsland(s, 0);
     assertFalse(action.isValid(normalGame));
   }

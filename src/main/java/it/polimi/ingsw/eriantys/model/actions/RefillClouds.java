@@ -8,7 +8,7 @@ import it.polimi.ingsw.eriantys.model.entities.Students;
 import java.util.List;
 
 public class RefillClouds implements GameAction {
-  private List<Students> clouds;
+  private final List<Students> clouds;
 
   public RefillClouds(List<Students> s) {
     this.clouds = s;
@@ -24,14 +24,14 @@ public class RefillClouds implements GameAction {
   }
 
   /**
-   * Checks:
-   * - if the list of given students is the right size
+   * Checks: <br/>
+   * - if the list of given students is the right size <br/>
    * - if the given students are the right amount
    */
   @Override
   public boolean isValid(GameState gameState) {
-    for (var s : clouds)
-      if (s.getCount() != gameState.getRuleBook().playableStudentCount)
+    for (var students : clouds)
+      if (students.getCount() != gameState.getRuleBook().playableStudentCount)
         return false;
     return clouds.size() == gameState.getRuleBook().cloudCount;
   }

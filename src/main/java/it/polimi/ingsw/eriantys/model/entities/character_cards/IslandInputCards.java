@@ -3,6 +3,9 @@ package it.polimi.ingsw.eriantys.model.entities.character_cards;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects.IslandInputCC;
 
+/**
+ * Class dedicated to the Character Cards which needs islandIndex input
+ */
 public class IslandInputCards implements CharacterCard {
   private final IslandInputCC onIslandEffect;
   private final CharacterCardEnum card;
@@ -34,7 +37,14 @@ public class IslandInputCards implements CharacterCard {
 
   @Override
   public boolean isValid(GameState gameState) {
-    return card.isBuyable(gameState.getCurrentPlayer().getCoins());
+    return card.isPurchasable(gameState.getCurrentPlayer().getCoins())
+            && islandIndex >= 0
+            && islandIndex < gameState.getPlayingField().getIslandsAmount();
+  }
+
+  @Override
+  public boolean isUsed() {
+    return card.used;
   }
 
   @Override

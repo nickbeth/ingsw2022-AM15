@@ -32,4 +32,8 @@ public class ActionInvoker {
       return false;
     }
   }
+
+  public GameState getGameState() {
+    return gameState;
+  }
 }

@@ -12,10 +12,8 @@ import java.util.List;
 
 public class MoveMotherNature implements GameAction {
   private int amount;
-  private String playerNickname;
 
-  public MoveMotherNature(String nickname, int amount) {
-    this.playerNickname = nickname;
+  public MoveMotherNature(int amount) {
     this.amount = amount;
   }
 

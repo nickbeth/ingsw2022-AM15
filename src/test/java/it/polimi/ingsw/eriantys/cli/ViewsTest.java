@@ -1,8 +1,10 @@
-package it.polimi.ingsw.eriantys.model.cli;
+package it.polimi.ingsw.eriantys.cli;
 
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
+import it.polimi.ingsw.eriantys.cli.views.IslandView;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
+import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
@@ -46,5 +48,14 @@ public class ViewsTest {
     dashboard.removeTowers(3);
     System.out.println("Dashboard view after some changes:");
     dashboardView.draw(System.out);
+  }
+
+  @Test
+  public void printIsland() {
+    Island island = new Island(new Students());
+    View view = new IslandView(island);
+
+    island.getStudents().addStudents(HouseColor.PINK, 5);
+    view.draw(System.out);
   }
 }

@@ -6,11 +6,14 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 public class ActivateCCEffect implements GameAction {
   private CharacterCard cc;
 
-  //todo gestione del prezzo della CC
   public ActivateCCEffect(CharacterCard cc) {
     this.cc = cc;
   }
 
+  /**
+   * Activate the effect of the played character card
+   * todo Gestire il caso di carta già utilizzata sopra. Il chiamante deve già fornire una CC usata
+   */
   @Override
   public void apply(GameState gameState) {
     gameState.getPlayingField().setPlayedCharacterCard(cc);
@@ -18,8 +21,11 @@ public class ActivateCCEffect implements GameAction {
     gameState.advanceTurnPhase();
   }
 
+  /**
+   * Checks if the CC passed is buyable and playable
+   */
   @Override
   public boolean isValid(GameState gameState) {
-    return cc.getCardEnum().equals(gameState.getPlayingField().getPlayedCharacterCard().getCardEnum());
+    return gameState.getPlayingField().getPlayedCharacterCard().isValid(gameState);
   }
 }

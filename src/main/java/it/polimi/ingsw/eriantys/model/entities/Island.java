@@ -56,7 +56,7 @@ public class Island extends Slot {
   }
 
   public Optional<TowerColor> getTowerColor() {
-    return towers.color != null? Optional.of(towers.color) : Optional.empty();
+    return towers.color != null ? Optional.of(towers.color) : Optional.empty();
   }
 
   public boolean isLocked() {

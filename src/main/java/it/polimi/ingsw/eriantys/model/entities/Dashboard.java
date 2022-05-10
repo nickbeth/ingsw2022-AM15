@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import it.polimi.ingsw.eriantys.model.entities.*;
 import org.tinylog.Logger;
 
 public class Dashboard {

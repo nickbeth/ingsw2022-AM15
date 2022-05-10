@@ -3,6 +3,9 @@ package it.polimi.ingsw.eriantys.model.entities.character_cards;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects.NoInputCC;
 
+/**
+ * Class dedicated to the Character Cards which needs no further inputs
+ */
 public class NoInputCards implements CharacterCard {
   private final NoInputCC noInputEffect;
   private final CharacterCardEnum card;
@@ -32,7 +35,12 @@ public class NoInputCards implements CharacterCard {
 
   @Override
   public boolean isValid(GameState gameState) {
-    return card.isBuyable(gameState.getCurrentPlayer().getCoins());
+    return card.isPurchasable(gameState.getCurrentPlayer().getCoins());
+  }
+
+  @Override
+  public boolean isUsed() {
+    return card.used;
   }
 
   @Override

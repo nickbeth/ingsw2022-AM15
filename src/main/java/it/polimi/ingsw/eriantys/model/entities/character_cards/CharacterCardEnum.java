@@ -1,7 +1,5 @@
 package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
-import it.polimi.ingsw.eriantys.model.GameState;
-
 import static it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum.CharacterCardType.*;
 
 public enum CharacterCardEnum {
@@ -62,7 +60,7 @@ public enum CharacterCardEnum {
   /**
    * returns true if the given amount of coins is enough to use the card
    */
-  public boolean isBuyable(int coins) {
+  public boolean isPurchasable(int coins) {
     return coins >= cost;
   }
 }

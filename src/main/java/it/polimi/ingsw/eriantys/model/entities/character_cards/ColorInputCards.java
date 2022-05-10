@@ -4,6 +4,9 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects.ColorInputCC;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
+/**
+ * Class dedicated to the Character Cards which needs color input
+ */
 public class ColorInputCards implements CharacterCard {
   private final ColorInputCC colorInputCC;
   private final CharacterCardEnum card;
@@ -14,6 +17,7 @@ public class ColorInputCards implements CharacterCard {
     this.card = card;
     this.color = color;
   }
+
 
   @Override
   public void applyEffect(GameState gameState) {
@@ -29,13 +33,18 @@ public class ColorInputCards implements CharacterCard {
   }
 
   @Override
+  public boolean isUsed() {
+    return card.used;
+  }
+
+  @Override
   public boolean requiresInput() {
     return card.requiresInput;
   }
 
   @Override
   public boolean isValid(GameState gameState) {
-    return card.isBuyable(gameState.getCurrentPlayer().getCoins());
+    return card.isPurchasable(gameState.getCurrentPlayer().getCoins());
   }
 
   @Override

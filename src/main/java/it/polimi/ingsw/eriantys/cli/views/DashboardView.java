@@ -18,14 +18,6 @@ import static it.polimi.ingsw.eriantys.cli.utils.Util.*;
  * A class that draws a {@link Dashboard} to the given PrintStream.
  */
 public class DashboardView extends View {
-  private static final char TOWER_CHAR = 'T';
-  private static final char STUDENT_CHAR = '*';
-  private static final String PROF_CHAR = "O";
-  private static final String EMPTY_CHAR = ".";
-  private static final char PADDING = ' ';
-  private static final String PADDING_DOUBLE = "  ";
-  private static final String PADDING_TRIPLE = "   ";
-
   private final int MAX_TOWER;
   private final int MAX_STUDENTS;
 

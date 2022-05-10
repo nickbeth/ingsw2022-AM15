@@ -81,6 +81,9 @@ public class Students extends Slot {
     return true;
   }
 
+  /**
+   * @return Returns true if there are more students of the given color than the given amount
+   */
   public boolean hasEnough(HouseColor color, int amount) {
     return students.get(color) >= amount;
   }
@@ -105,8 +108,7 @@ public class Students extends Slot {
   /**
    * Returns the number of students of the given color
    *
-   * @param color
-   * @return number of students of that color
+   * @return Number of students of that color
    */
   public int getCount(HouseColor color) {
     return students.get(color);

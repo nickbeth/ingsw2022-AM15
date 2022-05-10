@@ -47,15 +47,21 @@ public class Client {
 
   /**
    * Sends a message.
+   *
    * @param msg The message to send
    */
-  public void send(Message msg) throws IOException {
-    out.writeObject(msg);
-    out.flush();
+  public void send(Message msg) {
+    try {
+      out.writeObject(msg);
+      out.flush();
+    } catch (IOException e) {
+      Logger.error("Message not sent " + e.getMessage());
+    }
   }
 
   /**
    * Receives a message. This method blocks until a message is received.
+   *
    * @return The received message
    */
   public Message receive() throws IOException, ClassNotFoundException {

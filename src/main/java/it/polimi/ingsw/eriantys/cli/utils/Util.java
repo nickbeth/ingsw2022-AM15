@@ -5,6 +5,14 @@ import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.fusesource.jansi.Ansi;
 
 public class Util {
+  public static final char TOWER_CHAR = 'T';
+  public static final char STUDENT_CHAR = '*';
+  public static final String PROF_CHAR = "O";
+  public static final String EMPTY_CHAR = ".";
+  public static final char PADDING = ' ';
+  public static final String PADDING_DOUBLE = "  ";
+  public static final String PADDING_TRIPLE = "   ";
+
   /**
    * Maps a HouseColor to the corresponding Ansi color code using the Jansi library.
    */
