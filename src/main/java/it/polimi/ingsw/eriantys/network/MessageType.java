@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.network;
 
 public enum MessageType {
-  CONTROL,
+  PING,
   GAMEDATA,
   ERROR,
   START_GAME,
