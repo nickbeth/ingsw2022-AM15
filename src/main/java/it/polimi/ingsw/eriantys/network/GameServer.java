@@ -11,6 +11,7 @@ public class GameServer implements Runnable {
 
   /**
    * Runs the game server loop.
+   * This method is supposed to be run on its own thread.
    */
   @Override
   public void run() {
@@ -19,8 +20,8 @@ public class GameServer implements Runnable {
         MessageQueueEntry entry = messageQueue.take();
         Client client = entry.client();
         Message message = entry.message();
-        client.send(message);
         System.out.println(entry);
+        client.send(message);
       } catch (InterruptedException e) {
         // We should never be interrupted
         throw new AssertionError(e);

@@ -2,7 +2,6 @@ package it.polimi.ingsw.eriantys.network;
 
 import org.tinylog.Logger;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -54,11 +53,12 @@ public class Server implements Runnable {
     Logger.debug("Listening for incoming connections");
     Socket clientSocket = serverSocket.accept();
     Logger.debug("Accepted incoming client: {}", clientSocket.getRemoteSocketAddress());
-    return new Client(clientSocket);
+    return new Client(clientSocket, messageQueue);
   }
 
   /**
    * Runs the server accept loop.
+   * This method is supposed to be run on its own thread.
    */
   @Override
   public void run() {
@@ -70,9 +70,7 @@ public class Server implements Runnable {
         Client newClient = accept();
         // Reset the error count after every successful accept
         errorCount = 0;
-        Thread t = new Thread(() -> clientListenerThread(newClient));
-        t.setName("sock-" + threadSeqNumber++);
-        t.start();
+        new Thread(newClient, "sock-" + threadSeqNumber++).start();
       } catch (IOException e) {
         Logger.error("An error occurred while accepting: {}", e);
         if (++errorCount > ACCEPT_RESTART_THRESHOLD) {
@@ -85,30 +83,6 @@ public class Server implements Runnable {
           }
         }
       }
-    }
-    Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
-  }
-
-  /**
-   * The thread that will listen to the client and add received messages to the queue.
-   *
-   * @param client The client to listen to
-   */
-  private void clientListenerThread(Client client) {
-    Logger.debug("Starting thread '{}'", Thread.currentThread().getName());
-    try {
-      while (true) {
-        try {
-          messageQueue.add(new MessageQueueEntry(client, client.receive()));
-        } catch (ClassNotFoundException e) {
-          Logger.error("Received invalid message: {}", e);
-        }
-      }
-    } catch (EOFException e) {
-      // Client disconnected while we were waiting on receive, gracefully exit
-      Logger.debug("Client '{}' disconnected", client);
-    } catch (IOException e) {
-      Logger.error("An error occurred on client '{}': {}", client, e);
     }
     Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
   }

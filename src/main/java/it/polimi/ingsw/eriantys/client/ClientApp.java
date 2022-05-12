@@ -2,25 +2,32 @@ package it.polimi.ingsw.eriantys.client;
 
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.actions.PickAssistantCard;
-import it.polimi.ingsw.eriantys.network.Client;
-import it.polimi.ingsw.eriantys.network.Message;
-import it.polimi.ingsw.eriantys.network.MessageType;
+import it.polimi.ingsw.eriantys.network.*;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientApp {
   private String address;
   private int port = Client.DEFAULT_PORT;
 
-  private Scanner scanner = new Scanner(System.in);
-  private Client networkClient = new Client();
+  private final Scanner scanner;
+  private final Client networkClient;
+
+  public ClientApp() {
+    this.scanner = new Scanner(System.in);
+    BlockingQueue<MessageQueueEntry> messageQueue = new LinkedBlockingQueue<>();
+    this.networkClient = new Client(messageQueue);
+  }
 
   public void run() {
     while (true) {
       try {
         readServerAddress();
         networkClient.connect(address, port);
+        new Thread(networkClient, "sock").start();
         break;
       } catch (IOException e) {
         System.out.println("Failed to connect to the server: '" + e.getMessage() + "'");
@@ -64,13 +71,12 @@ public class ClientApp {
             GameAction action = new PickAssistantCard(1);
             Message message = new Message.Builder().type(MessageType.GAMEDATA).action(action).build();
             networkClient.send(message);
-            message = networkClient.receive();
-            System.out.println("Reply from server: '" + message.toString() + "'");
           }
           case 0 -> {
             networkClient.close();
             return;
           }
+          default -> throw new NumberFormatException();
         }
       } catch (NumberFormatException e) {
         System.out.println("Invalid choice, please try again");
