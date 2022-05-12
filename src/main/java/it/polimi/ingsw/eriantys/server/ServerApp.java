@@ -1,52 +1,39 @@
 package it.polimi.ingsw.eriantys.server;
 
-import it.polimi.ingsw.eriantys.network.*;
+import it.polimi.ingsw.eriantys.network.GameServer;
+import it.polimi.ingsw.eriantys.network.Message;
+import it.polimi.ingsw.eriantys.network.Server;
 import org.tinylog.Logger;
 
 import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class ServerApp {
   private final int port;
-  private Server networkServer = new Server();
+  private final Server networkServer;
+  private final GameServer gameServer;
 
   ServerApp(int port) {
     this.port = port;
+    // Create a shared queue between the network server and the game server
+    // Messages sent by clients will be added to this queue
+    // The game server will poll the queue for messages to process
+    BlockingQueue<Message> messageQueue = new LinkedBlockingQueue<>();
+    this.networkServer = new Server(port, messageQueue);
+    this.gameServer = new GameServer(messageQueue);
   }
 
   public void run() {
     try {
-      networkServer.start(port);
-      runListener();
+      // Initialize then network server and launch the accepting thread
+      networkServer.start();
+      new Thread(networkServer, "accept").start();
+
+      // Run the game server loop in this thread
+      gameServer.run();
     } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void runListener() {
-    while (true) {
-      try {
-        Client newClient = networkServer.accept();
-        new Thread(() -> handleClient(newClient)).start();
-        //Java NIO
-      } catch (IOException e) {
-        Logger.error(e.getMessage());
-      }
-    }
-  }
-
-  private void handleClient(Client client) {
-    try {
-      while (true) {
-        Message recv = client.receive();
-        System.out.println("Received message: '" + recv.toString() + "' from: " + client);
-        if (recv.type() == MessageType.GAMEDATA) {
-          System.out.println();
-          System.out.println("Placeholder: should execute '" + recv.gameAction() + "' on the server game state here");
-          client.send(recv);
-        }
-      }
-    } catch (Exception e) {
-      Logger.error(e.getMessage());
+      Logger.error("Server failed to initialize: {}", e);
     }
   }
 }
