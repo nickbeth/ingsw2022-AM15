@@ -18,7 +18,7 @@ public class Server implements Runnable {
 
   int port;
   private ServerSocket serverSocket;
-  private final BlockingQueue<Message> messageQueue;
+  private final BlockingQueue<MessageQueueEntry> messageQueue;
 
   /**
    * Creates a new server.
@@ -26,7 +26,7 @@ public class Server implements Runnable {
    * @param port         The server port
    * @param messageQueue The shared queue where received messages will be added
    */
-  public Server(int port, BlockingQueue<Message> messageQueue) {
+  public Server(int port, BlockingQueue<MessageQueueEntry> messageQueue) {
     this.port = port;
     this.messageQueue = messageQueue;
   }
@@ -99,7 +99,7 @@ public class Server implements Runnable {
     try {
       while (true) {
         try {
-          messageQueue.add(client.receive());
+          messageQueue.add(new MessageQueueEntry(client, client.receive()));
         } catch (ClassNotFoundException e) {
           Logger.error("Received invalid message: {}", e);
         }

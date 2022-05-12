@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.server;
 
 import it.polimi.ingsw.eriantys.network.GameServer;
-import it.polimi.ingsw.eriantys.network.Message;
+import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
 import it.polimi.ingsw.eriantys.network.Server;
 import org.tinylog.Logger;
 
@@ -19,7 +19,7 @@ public class ServerApp {
     // Create a shared queue between the network server and the game server
     // Messages sent by clients will be added to this queue
     // The game server will poll the queue for messages to process
-    BlockingQueue<Message> messageQueue = new LinkedBlockingQueue<>();
+    BlockingQueue<MessageQueueEntry> messageQueue = new LinkedBlockingQueue<>();
     this.networkServer = new Server(port, messageQueue);
     this.gameServer = new GameServer(messageQueue);
   }

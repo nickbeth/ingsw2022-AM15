@@ -3,9 +3,9 @@ package it.polimi.ingsw.eriantys.network;
 import java.util.concurrent.BlockingQueue;
 
 public class GameServer implements Runnable {
-  private final BlockingQueue<Message> messageQueue;
+  private final BlockingQueue<MessageQueueEntry> messageQueue;
 
-  public GameServer(BlockingQueue<Message> messageQueue) {
+  public GameServer(BlockingQueue<MessageQueueEntry> messageQueue) {
     this.messageQueue = messageQueue;
   }
 
@@ -16,8 +16,11 @@ public class GameServer implements Runnable {
   public void run() {
     while (true) {
       try {
-        Message message = messageQueue.take();
-        System.out.println(message);
+        MessageQueueEntry entry = messageQueue.take();
+        Client client = entry.client();
+        Message message = entry.message();
+        client.send(message);
+        System.out.println(entry);
       } catch (InterruptedException e) {
         // We should never be interrupted
         throw new AssertionError(e);
