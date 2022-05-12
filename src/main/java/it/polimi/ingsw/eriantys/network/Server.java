@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.network;
 
 import org.tinylog.Logger;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -50,7 +51,7 @@ public class Server implements Runnable {
    * @return The accepted client
    */
   public Client accept() throws IOException {
-    Logger.debug("Waiting for incoming connections");
+    Logger.debug("Listening for incoming connections");
     Socket clientSocket = serverSocket.accept();
     Logger.debug("Accepted incoming client: {}", clientSocket.getRemoteSocketAddress());
     return new Client(clientSocket);
@@ -100,11 +101,14 @@ public class Server implements Runnable {
         try {
           messageQueue.add(client.receive());
         } catch (ClassNotFoundException e) {
-          Logger.error("Received invalid message: {}", e.getMessage());
+          Logger.error("Received invalid message: {}", e);
         }
       }
+    } catch (EOFException e) {
+      // Client disconnected while we were waiting on receive, gracefully exit
+      Logger.debug("Client '{}' disconnected", client);
     } catch (IOException e) {
-      Logger.error("An error occurred on client '{}': {}", client, e.getMessage());
+      Logger.error("An error occurred on client '{}': {}", client, e);
     }
     Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
   }
