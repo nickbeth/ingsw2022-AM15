@@ -44,7 +44,7 @@ abstract public class Controller {
 
     // Send message for creating server game
     client.send(new Message.Builder(START_GAME)
-        .gameInfo(info).build());
+            .gameInfo(info).build());
     invoker = new ObservableActionInvoker(new GameState(info.getPlayersNickname().size(), info.getMode()));
 
     // Initialize the game entities
@@ -83,12 +83,12 @@ abstract public class Controller {
     }
     // Action Creation
     GameAction action =
-        new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
+            new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
 
     client.send(new Message.Builder()
-        .action(action)
-        .gameInfo(info)
-        .type(MessageType.INITIALIZE_GAME).build());
+            .action(action)
+            .gameInfo(info)
+            .type(MessageType.INITIALIZE_GAME).build());
     //  invoker.executeAction(action); // once server returns the same action it will be invoked
   }
 
@@ -97,9 +97,9 @@ abstract public class Controller {
    */
   public void sendPickAssistantCard(int assistantCardIndex) {
     client.send(new Message.Builder(GAMEDATA)
-        .action(new PickAssistantCard(assistantCardIndex))
-        .gameInfo(info)
-        .build());
+            .action(new PickAssistantCard(assistantCardIndex))
+            .gameInfo(info)
+            .build());
   }
 
   /**
@@ -109,9 +109,9 @@ abstract public class Controller {
    */
   public void sendPickCloud(int cloudIndex) {
     client.send(new Message.Builder(GAMEDATA)
-        .action(new PickCloud(cloudIndex))
-        .gameInfo(info)
-        .build());
+            .action(new PickCloud(cloudIndex))
+            .gameInfo(info)
+            .build());
   }
 
   /**
@@ -132,9 +132,9 @@ abstract public class Controller {
     }
 
     client.send(new Message.Builder(GAMEDATA)
-        .action(new RefillClouds(cloudsStudents))
-        .gameInfo(info)
-        .build());
+            .action(new RefillClouds(cloudsStudents))
+            .gameInfo(info)
+            .build());
   }
 
   /**
@@ -142,9 +142,9 @@ abstract public class Controller {
    */
   public void sendActivateEffect(CharacterCard cc) {
     client.send(new Message.Builder(GAMEDATA)
-        .action(new ActivateCCEffect(cc))
-        .gameInfo(info)
-        .build());
+            .action(new ActivateCCEffect(cc))
+            .gameInfo(info)
+            .build());
   }
 
   /**
@@ -154,9 +154,9 @@ abstract public class Controller {
    */
   public void sendChooseCharacterCard(int ccIndex) {
     client.send(new Message.Builder(GAMEDATA)
-        .action(new ChooseCharacterCard(ccIndex))
-        .gameInfo(info)
-        .build());
+            .action(new ChooseCharacterCard(ccIndex))
+            .gameInfo(info)
+            .build());
   }
 
   /**
@@ -166,33 +166,32 @@ abstract public class Controller {
    */
   public void sendMoveMotherNature(int amount) {
     client.send(new Message.Builder(GAMEDATA)
-        .action(new MoveMotherNature(amount))
-        .gameInfo(info)
-        .build());
+            .action(new MoveMotherNature(amount))
+            .gameInfo(info)
+            .build());
   }
 
   /**
    * Send a message to the server with MoveStudentsToDiningHall action
-   *
    * @param students Students to move
    */
   public void sendMoveStudentsToDiningHall(Students students) {
     client.send(new Message.Builder(GAMEDATA)
-        .action(new MoveStudentsToDiningHall(students))
-        .gameInfo(info)
-        .build());
+            .action(new MoveStudentsToDiningHall(students))
+            .gameInfo(info)
+            .build());
   }
 
   /**
    * Send a message to the server with MoveStudentsToIsland action
-   *
-   * @param students    Students to move
+   * @param students Students to move
    * @param islandIndex Index of island destination
    */
   public void sendMoveStudentsToIsland(Students students, int islandIndex) {
     client.send(new Message.Builder(GAMEDATA)
-        .action(new MoveStudentsToIsland(students, islandIndex))
-        .gameInfo(info)
-        .build());
+            .action(new MoveStudentsToIsland(students, islandIndex))
+            .gameInfo(info)
+            .build());
   }
+
 }

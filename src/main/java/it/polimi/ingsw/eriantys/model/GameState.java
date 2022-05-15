@@ -59,6 +59,18 @@ public class GameState {
   }
 
   /**
+   * @param nickname
+   * @return The player corresponding to the given Nickname. Else return null if none is found
+   */
+  public Player getPlayer(String nickname) {
+    for (int i = 0; i < players.size(); i++) {
+      if (players.get(i).getNickname().equals(nickname))
+        return players.get(i);
+    }
+    return null;
+  }
+
+  /**
    * returns the current player of current gamePhase
    *
    * @return Player
@@ -165,7 +177,6 @@ public class GameState {
   /**
    * returns TowerColor of the player who has less towers in their dashboard
    * - if two player have the same amount of towers it checks the amount of professors
-   *
    */
   public Optional<TowerColor> getWinner() {
     class Temp {
@@ -193,7 +204,7 @@ public class GameState {
           Logger.debug("ora vince lui");
           winner = Optional.of(p.getColorTeam());
           heldProfessorCount = Temp.getHeldProfessorCount(p, getPlayingField());
-        } else if (Temp.getHeldProfessorCount(p, getPlayingField()) == heldProfessorCount){
+        } else if (Temp.getHeldProfessorCount(p, getPlayingField()) == heldProfessorCount) {
           winner = Optional.empty();
         }
       }
