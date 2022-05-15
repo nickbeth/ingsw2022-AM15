@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.cli;
 
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.cli.views.IslandView;
+import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Island;
@@ -12,7 +13,9 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -56,6 +59,27 @@ public class ViewsTest {
     View view = new IslandView(island);
 
     island.getStudents().addStudents(HouseColor.PINK, 5);
+    island.getStudents().addStudents(HouseColor.RED, 1);
+    island.getStudents().addStudents(HouseColor.YELLOW, 8);
+    view.draw(System.out);
+  }
+
+  @Test
+  public void printIslands() {
+    List<Island> islandList = new ArrayList<>();
+    Island island = new Island(new Students());
+
+    island.getStudents().addStudents(HouseColor.PINK, 5);
+    island.getStudents().addStudents(HouseColor.RED, 1);
+    island.getStudents().addStudents(HouseColor.YELLOW, 8);
+
+    islandList.add(island);
+    islandList.add(island);
+    islandList.add(island);
+    islandList.add(island);
+
+    View view = new IslandsView(islandList);
+
     view.draw(System.out);
   }
 }
