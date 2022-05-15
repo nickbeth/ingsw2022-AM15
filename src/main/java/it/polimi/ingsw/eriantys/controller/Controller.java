@@ -24,13 +24,14 @@ import static it.polimi.ingsw.eriantys.network.MessageType.START_GAME;
  * The Controller manages the creation and the sending of messages to the Server
  */
 abstract public class Controller {
-  private Client client;
-  private ObservableActionInvoker invoker;
-  private GameInfo info;
+  private final Client client;
+  private final ObservableActionInvoker invoker;
+  private final GameInfo info;
 
   public Controller(Client client, GameInfo info) {
     this.client = client;
     this.info = info;
+    invoker = new ObservableActionInvoker(new GameState(info.getPlayersNickname().size(), info.getMode()));
   }
 
   // todo EXECUTED ONLY BY THE HOST, MUST BE MANAGED BEFORE
@@ -45,7 +46,6 @@ abstract public class Controller {
     // Send message for creating server game
     client.send(new Message.Builder(START_GAME)
             .gameInfo(info).build());
-    invoker = new ObservableActionInvoker(new GameState(info.getPlayersNickname().size(), info.getMode()));
 
     // Initialize the game entities
     // todo verificare se l'inizializzazione del game è stata fatta secondo le regole
@@ -95,11 +95,17 @@ abstract public class Controller {
   /**
    * Send a message to the server with MoveMotherNature action
    */
-  public void sendPickAssistantCard(int assistantCardIndex) {
+  public boolean sendPickAssistantCard(int assistantCardIndex) {
+    GameAction action = new PickAssistantCard(assistantCardIndex);
+
+    if (!action.isValid(invoker.gameState))
+      return false;
+
     client.send(new Message.Builder(GAMEDATA)
-            .action(new PickAssistantCard(assistantCardIndex))
+            .action(action)
             .gameInfo(info)
             .build());
+    return true;
   }
 
   /**
@@ -107,11 +113,17 @@ abstract public class Controller {
    *
    * @param cloudIndex Index of the position of the chosen island
    */
-  public void sendPickCloud(int cloudIndex) {
+  public boolean sendPickCloud(int cloudIndex) {
+    GameAction action = new PickCloud(cloudIndex);
+
+    if (!action.isValid(invoker.gameState))
+      return false;
+
     client.send(new Message.Builder(GAMEDATA)
-            .action(new PickCloud(cloudIndex))
+            .action(action)
             .gameInfo(info)
             .build());
+    return true;
   }
 
   /**
@@ -152,11 +164,17 @@ abstract public class Controller {
    *
    * @param ccIndex Index of the position of the chosen character card
    */
-  public void sendChooseCharacterCard(int ccIndex) {
+  public boolean sendChooseCharacterCard(int ccIndex) {
+    GameAction action = new ChooseCharacterCard(ccIndex);
+
+    if (!action.isValid(invoker.gameState))
+      return false;
+
     client.send(new Message.Builder(GAMEDATA)
-            .action(new ChooseCharacterCard(ccIndex))
+            .action(action)
             .gameInfo(info)
             .build());
+    return true;
   }
 
   /**
@@ -164,34 +182,54 @@ abstract public class Controller {
    *
    * @param amount Amount of island mother nature is wanted to be moved
    */
-  public void sendMoveMotherNature(int amount) {
+  public boolean sendMoveMotherNature(int amount) {
+    GameAction action = new MoveMotherNature(amount);
+
+    if (!action.isValid(invoker.gameState))
+      return false;
+
     client.send(new Message.Builder(GAMEDATA)
-            .action(new MoveMotherNature(amount))
+            .action(action)
             .gameInfo(info)
             .build());
+    return true;
   }
 
   /**
    * Send a message to the server with MoveStudentsToDiningHall action
+   *
    * @param students Students to move
    */
-  public void sendMoveStudentsToDiningHall(Students students) {
+  public boolean sendMoveStudentsToDiningHall(Students students) {
+    GameAction action = new MoveStudentsToDiningHall(students);
+
+    if (!action.isValid(invoker.gameState))
+      return false;
+
     client.send(new Message.Builder(GAMEDATA)
-            .action(new MoveStudentsToDiningHall(students))
+            .action(action)
             .gameInfo(info)
             .build());
+    return true;
   }
 
   /**
    * Send a message to the server with MoveStudentsToIsland action
-   * @param students Students to move
+   *
+   * @param students    Students to move
    * @param islandIndex Index of island destination
+   * @return True if the action is valid and sent.
    */
-  public void sendMoveStudentsToIsland(Students students, int islandIndex) {
+  public boolean sendMoveStudentsToIsland(Students students, int islandIndex) {
+    GameAction action = new MoveStudentsToIsland(students, islandIndex);
+
+    if (!action.isValid(invoker.gameState))
+      return false;
+
     client.send(new Message.Builder(GAMEDATA)
-            .action(new MoveStudentsToIsland(students, islandIndex))
+            .action(action)
             .gameInfo(info)
             .build());
+    return true;
   }
-
 }

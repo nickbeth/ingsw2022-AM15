@@ -14,15 +14,20 @@ public abstract class Menu {
   /**
    * Shows the options the player can make
    */
-  protected abstract void showOptions();
+  public abstract void showOptions();
+
+  public void showViewOptions() {
+    System.out.println("1 - View dashboards");
+    System.out.println("2 - View islands");
+    System.out.println("*** others ***");
+  }
 
   /**
    * Control logic of the choice of the player
+   * @param paramBuilder
    */
-  protected abstract Input.InputBuilder makeChoice();
+  public abstract void makeChoice(ParamBuilder paramBuilder);
 
-  /**
-   *
-   */
-  protected abstract Menu nextMenu();
+
+  public abstract Menu nextMenu();
 }

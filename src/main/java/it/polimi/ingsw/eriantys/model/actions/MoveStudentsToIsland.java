@@ -17,7 +17,7 @@ public class MoveStudentsToIsland implements GameAction {
 
   /**
    * moves students from entrance to island,
-   *  if this is the last allowed movement it advances turn phase
+   * if this is the last allowed movement it advances turn phase
    */
   @Override
   public void apply(GameState gameState) {
@@ -25,7 +25,7 @@ public class MoveStudentsToIsland implements GameAction {
     Slot destination = gameState.getPlayingField().getIsland(islandIndex);
     StudentsMovement move = new StudentsMovement(students, currEntrance, destination);
     GameService.placeStudents(move);
-    if(gameState.getCurrentPlayer().getDashboard().getEntrance().getCount()
+    if (gameState.getCurrentPlayer().getDashboard().getEntrance().getCount()
             <= gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount)
       gameState.advanceTurnPhase();
   }
@@ -40,6 +40,8 @@ public class MoveStudentsToIsland implements GameAction {
       if (!currEntrance.hasEnough(color, students.getCount(color)))
         return false;
     }
+    if (students.getCount() > gameState.getRuleBook().playableStudentCount)
+      return false;
     return true;
   }
 }
