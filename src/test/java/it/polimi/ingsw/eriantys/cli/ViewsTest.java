@@ -1,16 +1,12 @@
 package it.polimi.ingsw.eriantys.cli;
 
-import it.polimi.ingsw.eriantys.cli.views.DashboardView;
-import it.polimi.ingsw.eriantys.cli.views.IslandView;
-import it.polimi.ingsw.eriantys.cli.views.IslandsView;
+import it.polimi.ingsw.eriantys.cli.views.*;
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.entities.Dashboard;
-import it.polimi.ingsw.eriantys.model.entities.Island;
-import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
-import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -20,6 +16,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ViewsTest {
+  private static Students students = new Students();
+
+  @BeforeAll
+  static void setUp() {
+    students.addStudents(HouseColor.PINK, 5);
+    students.addStudents(HouseColor.RED, 1);
+    students.addStudents(HouseColor.YELLOW, 8);
+  }
+
   /**
    * Draw a dashboard, play around with it and draw it again.
    */
@@ -54,24 +59,24 @@ public class ViewsTest {
   }
 
   @Test
+  public void printStudent() {
+    View view = new StudentsView(students);
+
+    view.draw(System.out);
+  }
+
+  @Test
   public void printIsland() {
-    Island island = new Island(new Students());
+    Island island = new Island(students);
     View view = new IslandView(island);
 
-    island.getStudents().addStudents(HouseColor.PINK, 5);
-    island.getStudents().addStudents(HouseColor.RED, 1);
-    island.getStudents().addStudents(HouseColor.YELLOW, 8);
     view.draw(System.out);
   }
 
   @Test
   public void printIslands() {
     List<Island> islandList = new ArrayList<>();
-    Island island = new Island(new Students());
-
-    island.getStudents().addStudents(HouseColor.PINK, 5);
-    island.getStudents().addStudents(HouseColor.RED, 1);
-    island.getStudents().addStudents(HouseColor.YELLOW, 8);
+    Island island = new Island(students);
 
     islandList.add(island);
     islandList.add(island);
@@ -79,6 +84,21 @@ public class ViewsTest {
     islandList.add(island);
 
     View view = new IslandsView(islandList);
+
+    view.draw(System.out);
+  }
+
+  @Test
+  public void printClouds() {
+    List<Cloud> clouds = new ArrayList<>();
+    Cloud cloud = new Cloud(students);
+
+    clouds.add(cloud);
+    clouds.add(cloud);
+    clouds.add(cloud);
+    clouds.add(cloud);
+
+    View view = new CloudsView(clouds);
 
     view.draw(System.out);
   }

@@ -4,6 +4,7 @@ import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
+import it.polimi.ingsw.eriantys.controller.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
@@ -25,14 +26,15 @@ public class MenuActions extends Menu {
     showViewOptions();
     int studentsLeft = game.getRuleBook().playableStudentCount - studentMoved;
     if (playerNickname.equals(game.getCurrentPlayer().getNickname())) {
-      System.out.println(
-              MessageFormat.format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
-      System.out.println(
-              MessageFormat.format("W - Move a student from entrance to dining ({0} left)", studentsLeft));
+      if (game.getTurnPhase() == TurnPhase.PLACING) {
+        System.out.println(
+                MessageFormat.format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
+        System.out.println(
+                MessageFormat.format("W - Move a student from entrance to dining ({0} left)", studentsLeft));
+      }
       System.out.println("E - Choose character card");
       System.out.println("R - Activate character card effect");
       System.out.println("T - Move mother nature");
-      System.out.println("Y - Pick a cloud");
     }
   }
 
@@ -47,10 +49,9 @@ public class MenuActions extends Menu {
         // Move Students from entrance to island
         case "Q", "q" -> {
           // Check of the Turn phase
-          if (!game.getTurnPhase().equals(TurnPhase.PLACING)) {
-            System.out.println("Action not available in this phase.");
+          if (!game.getTurnPhase().equals(TurnPhase.PLACING))
             break;
-          }
+
           paramBuilder.flushStudentToMove();
 
           // Takes the color
@@ -76,10 +77,9 @@ public class MenuActions extends Menu {
         // Move Students from entrance to dining
         case "W", "w" -> {
           // Check of the Turn phase
-          if (!game.getTurnPhase().equals(TurnPhase.PLACING)) {
-            System.out.println("Action not available in this phase.");
+          if (!game.getTurnPhase().equals(TurnPhase.PLACING))
             break;
-          }
+
           paramBuilder.flushStudentToMove();
 
           // Takes the color
@@ -93,10 +93,7 @@ public class MenuActions extends Menu {
           }
         }
         // Pick a cloud
-        case "Y", "y" -> {
-          if (controller.sendPickCloud(0))
-            done = true;
-        }
+
         default -> System.out.println("Choose a valid option");
       }
     } while (!done);
@@ -104,6 +101,6 @@ public class MenuActions extends Menu {
 
   @Override
   public Menu nextMenu() {
-    return null;
+    return new MenuPickAssistantCard(game, playerNickname, controller);
   }
 }

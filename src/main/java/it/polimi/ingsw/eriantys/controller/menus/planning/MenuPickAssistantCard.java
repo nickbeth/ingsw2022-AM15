@@ -10,9 +10,9 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class MenuPicking extends Menu {
+public class MenuPickAssistantCard extends Menu {
 
-  public MenuPicking(GameState game, String playerNickname, Controller controller) {
+  public MenuPickAssistantCard(GameState game, String playerNickname, Controller controller) {
     this.game = game;
     this.playerNickname = playerNickname;
     this.controller = controller;
@@ -36,12 +36,16 @@ public class MenuPicking extends Menu {
       switch (s.nextLine()) {
         case "A", "a" -> {
           (new AssistantCardsView(game.getPlayer(playerNickname))).draw(System.out);
+          int index = -1;
           try {
             System.out.print("Choose card index:");
-            controller.sendPickAssistantCard(s.nextInt());
+
             done = true;
           } catch (InputMismatchException e) {
             System.out.println("Please insert a number");
+          }
+          if (!controller.sendPickAssistantCard(index)) {
+            System.out.println("Invalid input parameters.");
           }
         }
         default -> System.out.println("Choose a valid option");
