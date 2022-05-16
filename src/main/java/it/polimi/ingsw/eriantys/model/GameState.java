@@ -24,7 +24,6 @@ public class GameState {
   public GameState(int playerCount, GameMode mode) {
     ruleBook = RuleBook.makeRules(mode, playerCount);
     playingField = new PlayingField(ruleBook);
-//    currentPlayer = 0;
     gamePhase = GamePhase.PLANNING;
     turnPhase = TurnPhase.PLACING;
   }
@@ -32,11 +31,11 @@ public class GameState {
   /**
    * Adds a player to the player List and planOrder List
    *
-   * @param playerName Player nickname
-   * @param towerColor Team color chosen
+   * @param nickname The player's nickname
+   * @param towerColor The chosen tower color
    */
-  public void addPlayer(String playerName, TowerColor towerColor) {
-    Player newPlayer = new Player(ruleBook, playerName, towerColor, new Students());
+  public void addPlayer(String nickname, TowerColor towerColor) {
+    Player newPlayer = new Player(ruleBook, nickname, towerColor, new Students());
     players.add(newPlayer);
     planOrder.add(newPlayer);
     currentPlayer = players.get(0);
@@ -44,7 +43,7 @@ public class GameState {
   }
 
   /**
-   * sets current player to next in line depending on GamePhase
+   * Sets current player to next in line depending on GamePhase
    */
   public void advancePlayer() {
 //    currentPlayer = (currentPlayer + 1) % players.size();
@@ -59,13 +58,12 @@ public class GameState {
   }
 
   /**
-   * @param nickname
-   * @return The player corresponding to the given Nickname. Else return null if none is found
+   * @return The player corresponding to the given Nickname, or null if none is found
    */
   public Player getPlayer(String nickname) {
-    for (int i = 0; i < players.size(); i++) {
-      if (players.get(i).getNickname().equals(nickname))
-        return players.get(i);
+    for (Player player : players) {
+      if (player.getNickname().equals(nickname))
+        return player;
     }
     return null;
   }
@@ -164,9 +162,9 @@ public class GameState {
    */
   public boolean checkWinCondition() {
     if (getPlayingField().getStudentBag().isEmpty()
-            || getPlayers().stream().anyMatch(p -> p.getDashboard().noMoreTowers()
-            || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
-            || getPlayingField().getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
+        || getPlayers().stream().anyMatch(p -> p.getDashboard().noMoreTowers()
+        || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
+        || getPlayingField().getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
     ) {
       gamePhase = GamePhase.WIN;
       return true;
