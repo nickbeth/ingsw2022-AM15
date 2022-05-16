@@ -2,10 +2,10 @@ package it.polimi.ingsw.eriantys.controller.menus.action;
 
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
-import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
 public class MenuColor extends Menu {
   @Override
@@ -21,7 +21,6 @@ public class MenuColor extends Menu {
   public void makeChoice(ParamBuilder paramBuilder) {
     Scanner s = new Scanner(System.in);
     boolean done;
-    HouseColor chosenColor = null;
 
     do {
       showOptions();
@@ -29,27 +28,17 @@ public class MenuColor extends Menu {
 
       // Choose the color
       switch (s.nextLine()) {
-        case "1" -> chosenColor = HouseColor.PINK;
-        case "2" -> chosenColor = HouseColor.RED;
-        case "3" -> chosenColor = HouseColor.BLUE;
-        case "4" -> chosenColor = HouseColor.YELLOW;
-        case "5" -> chosenColor = HouseColor.GREEN;
+        case "1" -> paramBuilder.setChosenColor(PINK);
+        case "2" -> paramBuilder.setChosenColor(RED);
+        case "3" -> paramBuilder.setChosenColor(BLUE);
+        case "4" -> paramBuilder.setChosenColor(YELLOW);
+        case "5" -> paramBuilder.setChosenColor(GREEN);
         default -> {
           System.out.println("Insert a valid option");
           done = false;
         }
       }
     } while (!done);
-
-    // Ask for amount
-    int amount;
-    try {
-      System.out.print("Amount: ");
-      amount = s.nextInt();
-      paramBuilder.addStudentColor(chosenColor, amount);
-    } catch (InputMismatchException e) {
-      System.out.println("Insert a number");
-    }
   }
 
   @Override

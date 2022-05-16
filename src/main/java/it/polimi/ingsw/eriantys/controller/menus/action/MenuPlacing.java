@@ -16,13 +16,13 @@ import java.util.Scanner;
 
 public class MenuPlacing extends Menu {
   private int studentMoved = 0;
-
+  
   public MenuPlacing(GameState game, String playerNickname, Controller controller) {
     this.game = game;
     this.playerNickname = playerNickname;
     this.controller = controller;
   }
-
+  
   @Override
   public void showOptions() {
     showViewOptions();
@@ -36,12 +36,12 @@ public class MenuPlacing extends Menu {
       }
     }
   }
-
+  
   @Override
   public void makeChoice(ParamBuilder paramBuilder) {
     Scanner s = new Scanner(System.in);
     boolean done = false;
-
+    
     do {
       showOptions();
       switch (s.nextLine()) {
@@ -50,16 +50,28 @@ public class MenuPlacing extends Menu {
           // Check of the Turn phase
           if (!game.getTurnPhase().equals(TurnPhase.PLACING))
             break;
-
+          
           paramBuilder.flushStudentToMove();
-
+          
           // Shows entrance
           (new DashboardView(game.getRuleBook(), game.getCurrentPlayer().getDashboard(),
                   game.getPlayingField().getProfessorHolder())).draw(System.out);
+          
           // Takes the color
           (new MenuColor()).makeChoice(paramBuilder);
+          
+          // Ask for amount
+          int amount;
+          try {
+            System.out.print("Amount: ");
+            amount = s.nextInt();
+            paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
+          } catch (InputMismatchException e) {
+            System.out.println("Insert a number");
+          }
+          
           studentMoved += paramBuilder.getStudentsToMove().getCount();
-
+          
           // Takes island input and send the action
           int islandIndex = -1;
           try {
@@ -82,13 +94,24 @@ public class MenuPlacing extends Menu {
           // Check of the Turn phase
           if (!game.getTurnPhase().equals(TurnPhase.PLACING))
             break;
-
+          
           paramBuilder.flushStudentToMove();
-
+          
           // Takes the color
           (new MenuColor()).makeChoice(paramBuilder);
+          
+          // Ask for amount
+          int amount;
+          try {
+            System.out.print("Amount: ");
+            amount = s.nextInt();
+            paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
+          } catch (InputMismatchException e) {
+            System.out.println("Insert a number");
+          }
+          
           studentMoved += paramBuilder.getStudentsToMove().getCount();
-
+          
           // Send actions
           if (!controller.sendMoveStudentsToDiningHall(paramBuilder.getStudentsToMove())) {
             studentMoved -= paramBuilder.getStudentsToMove().getCount();
@@ -108,16 +131,17 @@ public class MenuPlacing extends Menu {
           } catch (InputMismatchException e) {
             System.out.println("Input must be a number");
           }
-          if (!controller.sendChooseCharacterCard(1)) {
+          if (!controller.sendChooseCharacterCard(ccIndex)) {
             System.out.println("Invalid input parameters");
           }
+          (new MenuEffect(game, playerNickname, controller)).makeChoice(paramBuilder);
         }
-
+        
         default -> System.out.println("Choose a valid option");
       }
     } while (!done);
   }
-
+  
   @Override
   public Menu nextMenu() {
     return new MenuPickAssistantCard(game, playerNickname, controller);

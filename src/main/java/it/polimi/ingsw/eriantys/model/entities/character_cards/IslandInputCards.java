@@ -9,14 +9,17 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects
 public class IslandInputCards implements CharacterCard {
   private final IslandInputCC onIslandEffect;
   private final CharacterCardEnum card;
-  private final int islandIndex;
-
-  public IslandInputCards(IslandInputCC onIslandEffect, CharacterCardEnum card, int islandIndex) {
+  private int islandIndex = -1;
+  
+  public IslandInputCards(IslandInputCC onIslandEffect, CharacterCardEnum card) {
     this.onIslandEffect = onIslandEffect;
     this.card = card;
+  }
+  
+  public void setIslandIndex(int islandIndex) {
     this.islandIndex = islandIndex;
   }
-
+  
   @Override
   public void applyEffect(GameState gameState) {
     onIslandEffect.applyEffect(gameState, islandIndex);
@@ -24,29 +27,29 @@ public class IslandInputCards implements CharacterCard {
     gameState.getPlayingField().addCoinsToBank(card.getCost());
     card.used = true;
   }
-
+  
   @Override
   public int getCost() {
     return card.getCost();
   }
-
+  
   @Override
   public boolean requiresInput() {
     return card.isRequiredInput();
   }
-
+  
   @Override
   public boolean isValid(GameState gameState) {
     return card.isPurchasable(gameState.getCurrentPlayer().getCoins())
             && islandIndex >= 0
             && islandIndex < gameState.getPlayingField().getIslandsAmount();
   }
-
+  
   @Override
   public boolean isUsed() {
     return card.used;
   }
-
+  
   @Override
   public CharacterCardEnum getCardEnum() {
     return card;

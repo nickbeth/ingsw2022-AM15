@@ -1,11 +1,21 @@
 package it.polimi.ingsw.eriantys.controller.menus;
 
+import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
 public class ParamBuilder {
   private Students studentsToMove = new Students();
-
+  private HouseColor chosenColor;
+  
+  public HouseColor getChosenColor() {
+    return chosenColor;
+  }
+  
+  public void setChosenColor(HouseColor chosenColor) {
+    this.chosenColor = chosenColor;
+  }
+  
   public Students getStudentsToMove() {
     return studentsToMove;
   }
