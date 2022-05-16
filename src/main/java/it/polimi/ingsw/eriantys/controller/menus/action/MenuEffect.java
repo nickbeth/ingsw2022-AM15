@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.controller.menus.action;
 
+import it.polimi.ingsw.eriantys.cli.views.CharacterCardView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
@@ -41,8 +42,7 @@ public class MenuEffect extends Menu {
           int ccIndex = -1;
           try {
             System.out.println("Playable character cards: ");
-            //todo stampare a schermo le character card
-
+            (new CharacterCardView(game.getPlayingField().getCharacterCards())).draw(System.out);
             System.out.println("Choose a character card: ");
             ccIndex = s.nextInt();
           } catch (InputMismatchException e) {

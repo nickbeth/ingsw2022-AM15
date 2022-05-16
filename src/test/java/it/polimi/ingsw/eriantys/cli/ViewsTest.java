@@ -4,6 +4,8 @@ import it.polimi.ingsw.eriantys.cli.views.*;
 import it.polimi.ingsw.eriantys.controller.GameLobby;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.*;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -15,7 +17,7 @@ import java.util.EnumMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
 public class ViewsTest {
   private static Students students = new Students();
 
@@ -105,7 +107,8 @@ public class ViewsTest {
     view.draw(System.out);
   }
 
-  @Test void printGameLobby() {
+  @Test
+  public void printGameLobby() {
     GameLobby lobby = new GameLobby();
     lobby.setColor("gino", TowerColor.BLACK);
     lobby.setColor("mario", TowerColor.WHITE);
@@ -115,5 +118,15 @@ public class ViewsTest {
 
     (new GameLobbyView(lobby)).draw(System.out);
 
+  }
+
+  @Test
+  public void printCharacterCards() {
+    List<CharacterCard> cards = new ArrayList<>();
+    cards.add(CharacterCardCreator.create(CharacterCardEnum.IGNORE_COLOR));
+    cards.add(CharacterCardCreator.create(CharacterCardEnum.IGNORE_TOWERS));
+    cards.add(CharacterCardCreator.create(CharacterCardEnum.STEAL_PROFESSOR));
+
+    (new CharacterCardView(cards)).draw(System.out);
   }
 }
