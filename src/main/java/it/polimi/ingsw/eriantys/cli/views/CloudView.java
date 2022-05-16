@@ -15,6 +15,6 @@ public class CloudView extends View {
 
   @Override
   public void draw(PrintStream o) {
-    (new StudentsView(cloud.getStudents())).draw(System.out);
+    (new StudentsView(cloud.getStudents())).draw(o);
   }
 }

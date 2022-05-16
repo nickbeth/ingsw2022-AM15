@@ -17,7 +17,7 @@ public class CloudsView extends View {
   public void draw(PrintStream o) {
     for (int i = 0; i < clouds.size(); i++) {
       System.out.println("Cloud - " + i);
-      (new CloudView(clouds.get(i))).draw(System.out);
+      (new CloudView(clouds.get(i))).draw(o);
     }
   }
 }

@@ -14,6 +14,6 @@ public class IslandView extends View {
 
   @Override
   public void draw(PrintStream o) {
-    (new StudentsView(island.getStudents())).draw(System.out);
+    (new StudentsView(island.getStudents())).draw(o);
   }
 }
