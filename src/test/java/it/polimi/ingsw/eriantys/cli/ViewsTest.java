@@ -1,10 +1,11 @@
 package it.polimi.ingsw.eriantys.cli;
 
 import it.polimi.ingsw.eriantys.cli.views.*;
-import it.polimi.ingsw.eriantys.controller.GameLobby;
+import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -17,7 +18,6 @@ import java.util.EnumMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
 public class ViewsTest {
   private static Students students = new Students();
 
@@ -109,15 +109,14 @@ public class ViewsTest {
 
   @Test
   public void printGameLobby() {
-    GameLobby lobby = new GameLobby();
-    lobby.setColor("gino", TowerColor.BLACK);
-    lobby.setColor("mario", TowerColor.WHITE);
-    lobby.setColor("franco", TowerColor.GRAY);
+    GameInfo lobby = new GameInfo();
     lobby.setMode(GameMode.EXPERT);
-    lobby.setPlayerAmount(3);
+    lobby.setMaxPlayerCount(3);
+    lobby.addPlayer("gino", TowerColor.BLACK);
+    lobby.addPlayer("mario", TowerColor.WHITE);
+    lobby.addPlayer("franco", TowerColor.GRAY);
 
     (new GameLobbyView(lobby)).draw(System.out);
-
   }
 
   @Test

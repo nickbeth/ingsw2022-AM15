@@ -1,18 +1,19 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
 import it.polimi.ingsw.eriantys.cli.View;
-import it.polimi.ingsw.eriantys.controller.GameLobby;
+import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
-
-import static it.polimi.ingsw.eriantys.cli.utils.Util.*;
 
 import java.io.PrintStream;
 
-public class GameLobbyView extends View {
-  private GameLobby gameLobby;
+import static it.polimi.ingsw.eriantys.cli.utils.Util.PADDING;
+import static it.polimi.ingsw.eriantys.cli.utils.Util.printColored;
 
-  public GameLobbyView(GameLobby gameLobby) {
-    this.gameLobby = gameLobby;
+public class GameLobbyView extends View {
+  private GameInfo gameInfo;
+
+  public GameLobbyView(GameInfo gameInfo) {
+    this.gameInfo = gameInfo;
   }
 
   /**
@@ -21,13 +22,13 @@ public class GameLobbyView extends View {
   @Override
   public void draw(PrintStream o) {
     o.append(printColored("GAMEINFO:", HouseColor.RED)).append("\n");
-    o.println("Game mode: " + gameLobby.getMode().toString());
-    o.println(gameLobby.getPlayerAmount() + " player game");
+    o.println("Game mode: " + gameInfo.getMode().toString());
+    o.println(gameInfo.getMaxPlayerCount() + " player game");
     o.println("\nConnected players:");
-    gameLobby.getNicknameToTeamColor().forEach((key, value) -> {
+    gameInfo.getJoinedPlayers().forEach((key, value) -> {
       o.print(key);
-      if (value != null) o.append(PADDING).append(printColored(value.toString(), value)).append("\n");
+      if (value != null)
+        o.append(PADDING).append(printColored(value.toString(), value)).append("\n");
     });
-
   }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.network;
 
+import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 
 import java.io.Serializable;
