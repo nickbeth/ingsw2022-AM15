@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.cli;
 
 import it.polimi.ingsw.eriantys.cli.views.*;
+import it.polimi.ingsw.eriantys.controller.GameLobby;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
@@ -76,14 +77,15 @@ public class ViewsTest {
   @Test
   public void printIslands() {
     List<Island> islandList = new ArrayList<>();
-    Island island = new Island(students);
 
-    islandList.add(island);
-    islandList.add(island);
-    islandList.add(island);
-    islandList.add(island);
+    islandList.add(new Island(students));
+    islandList.add(new Island(students));
+    islandList.add(new Island(students));
+    islandList.add(new Island(students));
+    islandList.get(0).setLocked(true);
+    islandList.get(2).setLocked(true);
 
-    View view = new IslandsView(islandList);
+    View view = new IslandsView(islandList, 0);
 
     view.draw(System.out);
   }
@@ -101,5 +103,17 @@ public class ViewsTest {
     View view = new CloudsView(clouds);
 
     view.draw(System.out);
+  }
+
+  @Test void printGameLobby() {
+    GameLobby lobby = new GameLobby();
+    lobby.setColor("gino", TowerColor.BLACK);
+    lobby.setColor("mario", TowerColor.WHITE);
+    lobby.setColor("franco", TowerColor.GRAY);
+    lobby.setMode(GameMode.EXPERT);
+    lobby.setPlayerAmount(3);
+
+    (new GameLobbyView(lobby)).draw(System.out);
+
   }
 }

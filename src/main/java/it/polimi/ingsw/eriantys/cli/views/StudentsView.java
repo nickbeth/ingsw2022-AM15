@@ -28,8 +28,7 @@ public class StudentsView extends View {
                 .append(PADDING)
                 .append(color.toString()).append(":")
                 .append("\t")
-                .append(printCountStudents(students.getCount(color)))
-                .append("\n");
+                .append(printCountStudents(students.getCount(color)));
         o.append(printColored(s.toString(), color));
       }
     }
