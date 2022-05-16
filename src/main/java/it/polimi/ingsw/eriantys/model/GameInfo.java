@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.model;
 
-import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
@@ -27,11 +26,12 @@ public class GameInfo implements Serializable {
    */
   private final Map<String, TowerColor> joinedPlayers = new HashMap<>();
 
-  /**
-   * Creates a set of rules from the previously set parameters.
-   */
-  public RuleBook makeRules() {
-    return RuleBook.makeRules(mode, maxPlayerCount);
+  public boolean isReady() {
+    return !joinedPlayers.containsValue(null);
+  }
+
+  public void start() {
+    lobbyState = LobbyState.STARTED;
   }
 
   public int getMaxPlayerCount() {
@@ -72,5 +72,9 @@ public class GameInfo implements Serializable {
 
   public void addPlayer(String nickname) {
     joinedPlayers.put(nickname, null);
+  }
+
+  public TowerColor getPlayerColor(String nickname) {
+    return joinedPlayers.get(nickname);
   }
 }
