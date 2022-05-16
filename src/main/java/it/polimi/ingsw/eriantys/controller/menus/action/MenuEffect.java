@@ -1,18 +1,17 @@
-package it.polimi.ingsw.eriantys.controller.menus.planning;
+package it.polimi.ingsw.eriantys.controller.menus.action;
 
-import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
-import it.polimi.ingsw.eriantys.controller.menus.action.MenuPlacing;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class MenuPickAssistantCard extends Menu {
+public class MenuEffect extends Menu {
 
-  public MenuPickAssistantCard(GameState game, String playerNickname, Controller controller) {
+  public MenuEffect(GameState game, String playerNickname, Controller controller) {
     this.game = game;
     this.playerNickname = playerNickname;
     this.controller = controller;
@@ -22,7 +21,8 @@ public class MenuPickAssistantCard extends Menu {
   public void showOptions() {
     showViewOptions();
     if (playerNickname.equals(game.getCurrentPlayer().getNickname())) {
-      System.out.println("A - Choose assistant card");
+      System.out.println("E - Choose character card");
+      System.out.println("R - Activate character card effect");
     }
   }
 
@@ -34,27 +34,34 @@ public class MenuPickAssistantCard extends Menu {
     do {
       showOptions();
       switch (s.nextLine()) {
-        case "A", "a" -> {
-          (new AssistantCardsView(game.getPlayer(playerNickname))).draw(System.out);
-          int index = -1;
+        // Choose a character card from those in playing field
+        case "E", "e" -> {
+          if (!game.getTurnPhase().equals(TurnPhase.EFFECT))
+            break;
+          int ccIndex = -1;
           try {
-            System.out.print("Choose card index:");
+            System.out.println("Playable character cards: ");
+            //todo stampare a schermo le character card
 
-            done = true;
+            System.out.println("Choose a character card: ");
+            ccIndex = s.nextInt();
           } catch (InputMismatchException e) {
-            System.out.println("Please insert a number");
+            System.out.println("Input must be a number");
           }
-          if (!controller.sendPickAssistantCard(index)) {
-            System.out.println("Invalid input parameters.");
+          if (!controller.sendChooseCharacterCard(1)) {
+            System.out.println("Invalid input parameters");
           }
         }
+        //todo activate CC effect
         default -> System.out.println("Choose a valid option");
       }
     } while (!done);
   }
 
+  //todo pensare bene al next menu
   @Override
   public Menu nextMenu() {
     return (new MenuPlacing(game, playerNickname, controller));
   }
+
 }

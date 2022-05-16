@@ -1,19 +1,16 @@
 package it.polimi.ingsw.eriantys.controller.menus.action;
 
-import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
 import it.polimi.ingsw.eriantys.cli.views.CloudsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class MenuPickCloud extends Menu {
+public class MenuPicking extends Menu {
 
-  public MenuPickCloud(GameState game, String playerNickname, Controller controller) {
+  public MenuPicking(GameState game, String playerNickname, Controller controller) {
     this.game = game;
     this.playerNickname = playerNickname;
     this.controller = controller;
@@ -46,9 +43,10 @@ public class MenuPickCloud extends Menu {
     } while (!done);
   }
 
+  //todo pensare bene al next menu
   @Override
   public Menu nextMenu() {
-    return (new MenuActions(game, playerNickname, controller));
+    return (new MenuPlacing(game, playerNickname, controller));
   }
 
 }
