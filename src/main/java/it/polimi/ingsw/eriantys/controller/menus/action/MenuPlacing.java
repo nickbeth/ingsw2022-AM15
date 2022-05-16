@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.controller.menus.action;
 
+import it.polimi.ingsw.eriantys.cli.views.CharacterCardView;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
@@ -94,6 +95,24 @@ public class MenuPlacing extends Menu {
             System.out.println("Invalid input parameters");
           }
         }
+        // Choose a character card from those in playing field
+        case "E", "e" -> {
+          if (!game.getTurnPhase().equals(TurnPhase.EFFECT))
+            break;
+          int ccIndex = -1;
+          try {
+            System.out.println("Playable character cards: ");
+            (new CharacterCardView(game.getPlayingField().getCharacterCards())).draw(System.out);
+            System.out.println("Choose a character card: ");
+            ccIndex = s.nextInt();
+          } catch (InputMismatchException e) {
+            System.out.println("Input must be a number");
+          }
+          if (!controller.sendChooseCharacterCard(1)) {
+            System.out.println("Invalid input parameters");
+          }
+        }
+
         default -> System.out.println("Choose a valid option");
       }
     } while (!done);
