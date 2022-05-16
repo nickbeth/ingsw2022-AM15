@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.server;
 
-import it.polimi.ingsw.eriantys.network.GameServer;
 import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
 import it.polimi.ingsw.eriantys.network.Server;
 import org.tinylog.Logger;
@@ -27,7 +26,7 @@ public class ServerApp {
   public void run() {
     try {
       // Initialize then network server and launch the accepting thread
-      networkServer.start();
+      networkServer.init();
       new Thread(networkServer, "accept").start();
 
       // Run the game server loop in this thread

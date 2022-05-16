@@ -33,7 +33,7 @@ public class Server implements Runnable {
   /**
    * Initializes the server socket.
    */
-  public void start() throws IOException {
+  public void init() throws IOException {
     if (serverSocket != null) {
       try {
         serverSocket.close();
@@ -75,7 +75,7 @@ public class Server implements Runnable {
         Logger.error("An error occurred while accepting: {}", e);
         if (++errorCount > ACCEPT_RESTART_THRESHOLD) {
           try {
-            start();
+            init();
             Logger.warn("The server encountered a fatal error and was restarted");
           } catch (IOException ex) {
             Logger.error("The server encountered a fatal error and could not be restarted: {}", ex);
