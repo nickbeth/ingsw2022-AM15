@@ -1,12 +1,17 @@
 package it.polimi.ingsw.eriantys.server;
 
 import it.polimi.ingsw.eriantys.model.GameInfo;
+import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import it.polimi.ingsw.eriantys.network.*;
+import it.polimi.ingsw.eriantys.network.Client;
+import it.polimi.ingsw.eriantys.network.Message;
+import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
+import it.polimi.ingsw.eriantys.network.MessageType;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
@@ -156,6 +161,29 @@ public class GameServer implements Runnable {
   }
 
   private void handlePlayAction(Client client, Message message) {
+    String gameCode = message.gameCode();
+    GameEntry gameEntry = activeGames.get(gameCode);
+    GameAction action = message.gameAction();
+
+    if (!Objects.equals(message.nickname(), gameEntry.getCurrentPlayer())) {
+      String errorMessage = String.format("Game with code '%s' received an action from an invalid player '%s'", gameCode, message.nickname());
+      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    if (message.gameAction() == null) {
+      String errorMessage = String.format("Game with code '%s' received a malformed action", gameCode);
+      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    if (!gameEntry.executeAction(action)) {
+      String errorMessage = String.format("Game with code '%s' tried to apply an invalid action: %s", gameCode, action.getClass().getSimpleName());
+      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEDATA).gameCode(gameCode).action(action).build());
   }
 
   private void handleError(Client client, Message message) {

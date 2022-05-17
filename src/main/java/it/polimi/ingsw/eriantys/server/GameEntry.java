@@ -1,7 +1,9 @@
 package it.polimi.ingsw.eriantys.server;
 
+import it.polimi.ingsw.eriantys.controller.ActionInvoker;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
 
@@ -12,11 +14,17 @@ public class GameEntry {
   private final GameInfo gameInfo;
   private final HashMap<String, Client> players;
   private final GameState gameState;
+  private final ActionInvoker actionInvoker;
 
   public GameEntry(GameInfo gameInfo) {
     this.players = new HashMap<>();
     this.gameInfo = gameInfo;
     this.gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
+    this.actionInvoker = new ActionInvoker(gameState);
+  }
+
+  public boolean executeAction(GameAction action) {
+    return actionInvoker.executeAction(action);
   }
 
   public Client getClient(String nickname) {
@@ -42,6 +50,10 @@ public class GameEntry {
 
   public void removePlayer(String nickname) {
     players.remove(nickname);
+  }
+
+  public String getCurrentPlayer() {
+    return gameState.getCurrentPlayer().getNickname();
   }
 
   public boolean isFull() {
