@@ -36,6 +36,7 @@ class PickAssistantCardTest {
 
   public void setup() {
     when(game.getCurrentPlayer()).thenReturn(curr);
+    when(game.getGamePhase()).thenReturn(GamePhase.PLANNING);
     //when(game.getGamePhase()).thenReturn(phase);
 
     players.add(p2);

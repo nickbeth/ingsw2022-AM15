@@ -181,6 +181,9 @@ public class ActionTest {
   @Test
   void chooseCC() {
     normalGame.getPlayingField().getCharacterCards().add(0, CharacterCardCreator.create(CharacterCardEnum.IGNORE_TOWERS));
+    normalGame.setTurnPhase(TurnPhase.PLACING);
+    normalGame.advanceGamePhase();
+
     GameAction action = new ChooseCharacterCard(0);
     assertTrue(action.isValid(normalGame));
     action.apply(normalGame);
