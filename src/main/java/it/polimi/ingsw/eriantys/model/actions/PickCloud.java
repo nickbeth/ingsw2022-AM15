@@ -2,9 +2,9 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.entities.*;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
+import it.polimi.ingsw.eriantys.model.entities.Cloud;
+import it.polimi.ingsw.eriantys.model.entities.Dashboard;
+import it.polimi.ingsw.eriantys.model.entities.Player;
 
 public class PickCloud implements GameAction {
 
@@ -15,11 +15,12 @@ public class PickCloud implements GameAction {
   }
 
   //todo gestire meglio la disconnessione e testarla
+
   /**
    * Gets students from pickedCloud and puts them onto the players entrance,then advances turnPhase
    * ,if the current player is the last player it advances GamePhase , and then advances player.
-   *  @param gameState
    *
+   * @param gameState
    */
   @Override
   public void apply(GameState gameState) {
@@ -27,7 +28,7 @@ public class PickCloud implements GameAction {
     Dashboard dashboard = gameState.getCurrentPlayer().getDashboard();
 
     // Checks if the player needs to pick a cloud. This is needed in case of in turn disconnection
-    if(cloud.getStudents().getCount() + dashboard.getEntrance().getCount() == gameState.getRuleBook().entranceSize){
+    if (cloud.getStudents().getCount() + dashboard.getEntrance().getCount() == gameState.getRuleBook().entranceSize) {
       GameService.pickCloud(cloud, dashboard);
     }
 
@@ -50,7 +51,7 @@ public class PickCloud implements GameAction {
   @Override
   public boolean isValid(GameState gameState) {
     return cloudIndex >= 0 &&
-            cloudIndex < gameState.getRuleBook().cloudCount &&
-            (!gameState.getPlayingField().getCloud(cloudIndex).isEmpty());
+        cloudIndex < gameState.getRuleBook().cloudCount &&
+        (!gameState.getPlayingField().getCloud(cloudIndex).isEmpty());
   }
 }

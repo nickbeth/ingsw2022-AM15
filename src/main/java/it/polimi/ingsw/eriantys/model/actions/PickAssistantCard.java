@@ -42,8 +42,7 @@ public class PickAssistantCard implements GameAction {
       List<AssistantCard> alreadyPlayedCards = new ArrayList<>();
       gameState.getPlayers().forEach(player -> {
         if (player.getChosenCard().isPresent() && !player.equals(currPlayer)) {
-          Logger.debug("Card played: {}",
-                  player.getChosenCard().get());
+          Logger.debug("Card played: {}", player.getChosenCard().get());
           alreadyPlayedCards.add(player.getChosenCard().get());
         }
       });
@@ -54,11 +53,9 @@ public class PickAssistantCard implements GameAction {
           Logger.debug("Same card played {} - {}", c, chosenCard);
           // If so, if I have even one card that has not been played then it's not ok
           for (AssistantCard myCard : currPlayer.getCards()) {
-            Logger.debug("Card in my hand: {}",
-                    myCard);
+            Logger.debug("Card in my hand: {}", myCard);
             if (!alreadyPlayedCards.contains(myCard)) {
-              Logger.debug("it could've been played {}",
-                      myCard);
+              Logger.debug("it could've been played {}", myCard);
               return false;
             }
           }

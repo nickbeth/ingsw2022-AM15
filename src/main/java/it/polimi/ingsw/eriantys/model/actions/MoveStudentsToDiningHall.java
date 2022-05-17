@@ -6,8 +6,6 @@ import it.polimi.ingsw.eriantys.model.entities.Slot;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
-import java.util.Random;
-
 public class MoveStudentsToDiningHall implements GameAction {
   private final Students students;
 

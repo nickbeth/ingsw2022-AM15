@@ -4,9 +4,6 @@ import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.util.List;
 
