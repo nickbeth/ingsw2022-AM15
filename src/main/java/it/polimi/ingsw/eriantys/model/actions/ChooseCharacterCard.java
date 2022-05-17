@@ -2,6 +2,8 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 public class ChooseCharacterCard implements GameAction {
   private int ccIndex;
@@ -21,9 +23,17 @@ public class ChooseCharacterCard implements GameAction {
     }
   }
 
+  /**
+   * @param gameState
+   * @return false:
+   * - If index is outof bounds
+   * - If TurnPhase and ActionPhase aren't PLACING & ACTION
+   */
   @Override
   public boolean isValid(GameState gameState) {
     return ccIndex >= 0 &&
-            ccIndex < 3;
+            ccIndex < 3 &&
+            gameState.getTurnPhase() == TurnPhase.PLACING &&
+            gameState.getGamePhase() == GamePhase.ACTION;
   }
 }

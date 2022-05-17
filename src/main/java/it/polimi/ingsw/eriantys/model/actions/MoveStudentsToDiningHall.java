@@ -4,7 +4,9 @@ import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
 import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 public class MoveStudentsToDiningHall implements GameAction {
   private final Students students;
@@ -38,6 +40,7 @@ public class MoveStudentsToDiningHall implements GameAction {
       if (!currEntrance.hasEnough(color, students.getCount(color)))
         return false;
     }
-    return true;
+    return gameState.getTurnPhase() == TurnPhase.PLACING &&
+            gameState.getGamePhase() == GamePhase.ACTION;
   }
 }

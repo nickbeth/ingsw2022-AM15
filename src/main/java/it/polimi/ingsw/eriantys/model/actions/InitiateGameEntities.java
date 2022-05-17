@@ -59,7 +59,8 @@ public class InitiateGameEntities implements GameAction {
   }
 
   /**
-   * Checks if the sizes and amount of the given entities is valid
+   * Checks:
+   * - If the sizes and amount of the given entities is valid
    */
   @Override
   public boolean isValid(GameState gameState) {

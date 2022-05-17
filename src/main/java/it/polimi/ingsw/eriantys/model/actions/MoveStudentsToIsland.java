@@ -4,7 +4,9 @@ import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
 import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 public class MoveStudentsToIsland implements GameAction {
   private Students students;
@@ -42,6 +44,7 @@ public class MoveStudentsToIsland implements GameAction {
     }
     if (students.getCount() > gameState.getRuleBook().playableStudentCount)
       return false;
-    return true;
+    return gameState.getTurnPhase() == TurnPhase.PLACING &&
+            gameState.getGamePhase() == GamePhase.ACTION;
   }
 }

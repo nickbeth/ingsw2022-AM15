@@ -4,6 +4,8 @@ import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -66,6 +68,6 @@ public class PickAssistantCard implements GameAction {
       Logger.warn("\nIndex out of bound for Assistant card list. Message: " + e.getMessage());
       return false;
     }
-    return true;
+    return gameState.getGamePhase() == GamePhase.PLANNING;
   }
 }

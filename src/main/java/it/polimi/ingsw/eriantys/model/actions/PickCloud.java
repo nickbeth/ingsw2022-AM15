@@ -5,6 +5,8 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Cloud;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 public class PickCloud implements GameAction {
 
@@ -52,6 +54,8 @@ public class PickCloud implements GameAction {
   public boolean isValid(GameState gameState) {
     return cloudIndex >= 0 &&
         cloudIndex < gameState.getRuleBook().cloudCount &&
-        (!gameState.getPlayingField().getCloud(cloudIndex).isEmpty());
+        (!gameState.getPlayingField().getCloud(cloudIndex).isEmpty()) &&
+        gameState.getTurnPhase() == TurnPhase.PICKING &&
+        gameState.getGamePhase() == GamePhase.ACTION;
   }
 }
