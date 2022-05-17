@@ -8,32 +8,27 @@ import java.util.List;
 
 public class ActionInvoker {
   protected List<GameAction> gameActions;
-  protected GameState gameState;
+  protected final GameState gameState;
 
   public ActionInvoker(GameState gameState) {
-    gameActions = new ArrayList<>();
+    this.gameActions = new ArrayList<>();
     this.gameState = gameState;
   }
 
   /**
-   * Execute the Game Action passed as parameter
+   * Applies the given {@link GameAction} to the game state.
    *
-   * @param action The Action which modifies the gameState
-   * @return True if action is valid and succeed. False otherwise.
+   * @param action The {@link GameAction} to apply to the game state
+   * @return {@code true} if action was valid and was applied successfully, {@code false} otherwise
    */
   public boolean executeAction(GameAction action) {
     synchronized (gameState) {
       if (action.isValid(gameState)) {
         action.apply(gameState);
         gameActions.add(action);
-
         return true;
       }
       return false;
     }
-  }
-
-  public GameState getGameState() {
-    return gameState;
   }
 }

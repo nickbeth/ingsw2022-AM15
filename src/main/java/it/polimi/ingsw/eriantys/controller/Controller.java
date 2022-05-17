@@ -133,7 +133,7 @@ abstract public class Controller {
   public void sendRefillCloud() {
     List<Students> cloudsStudents = new ArrayList<>();
     Students temp = new Students();
-    StudentBag currentBag = invoker.getGameState().getPlayingField().getStudentBag();
+    StudentBag currentBag = gameState.getPlayingField().getStudentBag();
     
     // Populate clouds with random students from bag
     for (int cloudIter = 0; cloudIter < gameState.getRuleBook().cloudCount; cloudIter++) {
