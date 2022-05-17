@@ -2,10 +2,12 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.entities.Player;
+import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
 import it.polimi.ingsw.eriantys.model.enums.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class ActionTest {
   GameState normalGame;
@@ -253,5 +256,40 @@ public class ActionTest {
     clouds.add(new Students(s));
     assertFalse(action.isValid(normalGame));
   }
+
+  @Test
+  public void ActivateEffect() {
+    GameState gameState = spy(new GameState(4, GameMode.NORMAL));
+    PlayingField field = spy(new PlayingField(RuleBook.makeRules(GameMode.NORMAL, 4)));
+    gameState.addPlayer("p1", TowerColor.WHITE);
+    gameState.addPlayer("p2", TowerColor.BLACK);
+    gameState.addPlayer("p3", TowerColor.WHITE);
+    gameState.addPlayer("p4", TowerColor.BLACK);
+
+    doReturn(field).when(gameState).getPlayingField();
+    CharacterCard cc = CharacterCardCreator.create(CharacterCardEnum.IGNORE_COLOR);
+
+    CharacterCard sCC = spy(cc);
+    doNothing().when(sCC).applyEffect(any());
+    doReturn(sCC).when(field).getPlayedCharacterCard();
+
+    gameState.getPlayingField().getCharacterCards()
+            .add(cc);
+    gameState.getPlayingField().setPlayedCharacterCard(0);
+    gameState.setTurnPhase(TurnPhase.EFFECT);
+    gameState.advanceGamePhase();
+    gameState.getCurrentPlayer().addCoin();
+    gameState.getCurrentPlayer().addCoin();
+    CharacterCard newCC = CharacterCardCreator.create(CharacterCardEnum.IGNORE_COLOR);
+    ((ColorInputCards) newCC).setColor(HouseColor.RED);
+    GameAction action = new ActivateCCEffect(newCC);
+
+
+    assertTrue(action.isValid(gameState));
+    action.apply(gameState);
+    assertEquals(newCC, gameState.getPlayingField().getCharacterCards().get(0));
+    assertEquals(sCC, gameState.getPlayingField().getPlayedCharacterCard());
+  }
+
 
 }
