@@ -149,7 +149,19 @@ public class GameServer implements Runnable {
   private void handleStartGame(Client client, Message message) {
     String gameCode = message.gameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
+    GameAction action = message.gameAction();
 
+
+    if (message.gameAction() == null) {
+      String errorMessage = String.format("Game with code '%s' received a malformed initialization action", gameCode);
+      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+    if (!gameEntry.executeAction(action)) {
+      String errorMessage = String.format("Game with code '%s' tried to apply an invalid action: %s", gameCode, action.getClass().getSimpleName());
+      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
     // Check if the game is ready and start the game
     if (!gameEntry.getGameInfo().start()) {
       String errorMessage = String.format("Game with code '%s' is not ready to be started", gameCode);
@@ -157,7 +169,8 @@ public class GameServer implements Runnable {
       return;
     }
 
-    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+    //todo il client come lo distingue tra un messaggio con action e uno di game lobby
+    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).action(action).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
 
   private void handlePlayAction(Client client, Message message) {

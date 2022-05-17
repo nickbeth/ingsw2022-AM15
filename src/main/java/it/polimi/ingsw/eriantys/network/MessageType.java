@@ -18,7 +18,7 @@ public enum MessageType {
   GAMEINFO,
 
   // Game actions
-  INITIALIZE_GAME,
+  //INITIALIZE_GAME,
   START_GAME,
   PLAY_ACTION,
   // Game data
