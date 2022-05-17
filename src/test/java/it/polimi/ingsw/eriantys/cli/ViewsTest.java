@@ -113,8 +113,8 @@ public class ViewsTest {
     lobby.setMode(GameMode.EXPERT);
     lobby.setMaxPlayerCount(3);
     lobby.addPlayer("gino", TowerColor.BLACK);
-    lobby.addPlayer("mario", TowerColor.WHITE);
-    lobby.addPlayer("franco", TowerColor.GRAY);
+    lobby.addPlayer("maria", TowerColor.WHITE);
+    lobby.addPlayer("franco");
 
     (new GameLobbyView(lobby)).draw(System.out);
   }

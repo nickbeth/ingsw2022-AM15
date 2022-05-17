@@ -8,6 +8,8 @@ public enum BoxSymbols {
   UP_AND_LEFT('┘'),
   HORIZONTAL('─'),
   VERTICAL('│'),
+  VERTICAL_AND_RIGHT('├'),
+  VERTICAL_AND_LEFT('┤'),
 
   // Regular arcs
   ARC_DOWN_AND_RIGHT('╭'),
