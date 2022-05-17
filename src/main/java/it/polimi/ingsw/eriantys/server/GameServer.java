@@ -46,7 +46,7 @@ public class GameServer implements Runnable {
     Message message = entry.message();
 
     if (message.type() == null) {
-      Logger.warn("Invalid message type: {}", message);
+      Logger.warn("Received a message with an invalid message type: {}", message);
       return;
     }
     if (message.nickname() == null) {
@@ -131,6 +131,12 @@ public class GameServer implements Runnable {
     GameEntry gameEntry = activeGames.get(gameCode);
 
     TowerColor chosenTowerColor = message.gameInfo().getPlayerColor(message.nickname());
+    if (gameEntry.getGameInfo().isTowerColorValid(message.nickname(), chosenTowerColor)) {
+      String errorMessage = String.format("Tower color '%s' is not available", chosenTowerColor);
+      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
     gameEntry.setPlayerColor(message.nickname(), chosenTowerColor);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
@@ -139,13 +145,13 @@ public class GameServer implements Runnable {
     String gameCode = message.gameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
 
-    if (!gameEntry.getGameInfo().isReady()) {
+    // Check if the game is ready and start the game
+    if (!gameEntry.getGameInfo().start()) {
       String errorMessage = String.format("Game with code '%s' is not ready to be started", gameCode);
       client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
-    gameEntry.getGameInfo().start();
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
 
