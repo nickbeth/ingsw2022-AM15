@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
-public class MenuColor extends Menu {
+public class MenuStudentColor extends Menu {
   @Override
   public void showOptions() {
     System.out.println("1 - Pink");

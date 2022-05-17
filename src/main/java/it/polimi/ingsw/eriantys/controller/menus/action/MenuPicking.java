@@ -5,6 +5,7 @@ import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.util.Scanner;
 
@@ -33,10 +34,16 @@ public class MenuPicking extends Menu {
       showOptions();
       switch (s.nextLine()) {
         case "Q", "q" -> {
+          if (!game.getTurnPhase().equals(TurnPhase.PICKING))
+            break;
           System.out.println("Choose cloud index: ");
           (new CloudsView(game.getPlayingField().getClouds())).draw(System.out);
-          if (controller.sendPickCloud(0))
-            done = true;
+
+          if (!controller.sendPickCloud(0)) {
+            System.out.println("Invalid input parameters");
+            return;
+          }
+          done = true;
         }
         default -> System.out.println("Choose a valid option");
       }

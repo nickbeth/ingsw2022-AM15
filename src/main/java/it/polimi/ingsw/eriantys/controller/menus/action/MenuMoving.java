@@ -55,6 +55,7 @@ public class MenuMoving extends Menu {
           //sends action
           if (!controller.sendMoveMotherNature(amount)) {
             System.out.println("Invalid input parameters");
+            return;
           }
         }
         default -> System.out.println("Choose a valid option");
