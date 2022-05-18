@@ -4,14 +4,15 @@ import it.polimi.ingsw.eriantys.cli.views.CloudsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
+import it.polimi.ingsw.eriantys.controller.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.util.Scanner;
 
-public class MenuPicking extends Menu {
+public class MenuPickingCloud extends Menu {
 
-  public MenuPicking(GameState game, String playerNickname, Controller controller) {
+  public MenuPickingCloud(GameState game, String playerNickname, Controller controller) {
     this.game = game;
     this.playerNickname = playerNickname;
     this.controller = controller;
@@ -53,7 +54,7 @@ public class MenuPicking extends Menu {
   //todo pensare bene al next menu
   @Override
   public Menu nextMenu() {
-    return (new MenuPlacing(game, playerNickname, controller));
+    return new MenuPickAssistantCard(game, playerNickname, controller);
   }
 
 }

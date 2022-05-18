@@ -66,7 +66,7 @@ public class MenuMoving extends Menu {
   //todo pensare bene al next menu
   @Override
   public Menu nextMenu() {
-    return (new MenuPlacing(game, playerNickname, controller));
+    return new MenuPickingCloud(game, playerNickname, controller);
   }
 
 }

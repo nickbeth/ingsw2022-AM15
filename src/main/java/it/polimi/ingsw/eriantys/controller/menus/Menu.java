@@ -15,7 +15,7 @@ public abstract class Menu {
   /**
    * Shows the options the player can make
    */
-  public abstract void showOptions();
+  protected abstract void showOptions();
 
   public void showViewOptions() {
     System.out.println("1 - View dashboards");

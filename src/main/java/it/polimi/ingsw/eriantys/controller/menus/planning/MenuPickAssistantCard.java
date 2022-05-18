@@ -55,6 +55,6 @@ public class MenuPickAssistantCard extends Menu {
 
   @Override
   public Menu nextMenu() {
-    return (new MenuPlacing(game, playerNickname, controller));
+    return new MenuPlacing(game, playerNickname, controller);
   }
 }

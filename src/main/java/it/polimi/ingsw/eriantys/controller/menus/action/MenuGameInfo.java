@@ -4,6 +4,7 @@ import it.polimi.ingsw.eriantys.cli.views.CloudsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
+import it.polimi.ingsw.eriantys.controller.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -56,7 +57,7 @@ public class MenuGameInfo extends Menu {
             return;
           }
           try {
-            towerColor = new ArrayList<TowerColor>(Arrays.asList(TowerColor.values())).get(team - 1);
+            towerColor = new ArrayList<>(Arrays.asList(TowerColor.values())).get(team - 1);
           } catch (IndexOutOfBoundsException e) {
             System.out.println("Invalid number");
             return;
@@ -66,7 +67,7 @@ public class MenuGameInfo extends Menu {
             return;
           }
         }
-        //starts and inititiates a game
+        //starts and initiates a game
         case "S", "s" -> {
           if (gameInfo.getLobbyState() != GameInfo.LobbyState.WAITING)
             break;
@@ -84,7 +85,7 @@ public class MenuGameInfo extends Menu {
   //todo pensare bene al next menu
   @Override
   public Menu nextMenu() {
-    return (new MenuPlacing(game, playerNickname, controller));
+    return new MenuPickAssistantCard(game, playerNickname, controller);
   }
 
 }

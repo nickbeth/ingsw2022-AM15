@@ -149,6 +149,6 @@ public class MenuPlacing extends Menu {
   //todo pensare bene i next menu
   @Override
   public Menu nextMenu() {
-    return new MenuPickAssistantCard(game, playerNickname, controller);
+    return new MenuMoving(game, playerNickname, controller);
   }
 }

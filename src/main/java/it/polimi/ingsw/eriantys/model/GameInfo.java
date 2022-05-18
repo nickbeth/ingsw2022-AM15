@@ -27,7 +27,8 @@ public class GameInfo implements Serializable {
   private final Map<String, TowerColor> joinedPlayers = new HashMap<>();
 
   /**
-   * Checks if the game is ready to start.
+   * Checks if the game is ready to start. <br>
+   * Checks if the number of player is reached and the color conditions
    *
    * @return {@code true} if the game is ready to start, {@code false} otherwise
    */

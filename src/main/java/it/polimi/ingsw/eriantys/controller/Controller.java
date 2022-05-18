@@ -266,4 +266,8 @@ abstract public class Controller {
             .build());
     return true;
   }
+  
+  public GameState getGameState() {
+    return gameState;
+  }
 }

@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -15,20 +16,20 @@ import java.util.concurrent.BlockingQueue;
  */
 public class Client implements Runnable {
   public static final int DEFAULT_PORT = Server.DEFAULT_PORT;
-
+  
   private Socket socket;
   private ObjectOutputStream out;
   private ObjectInputStream in;
-
+  
   private final BlockingQueue<MessageQueueEntry> messageQueue;
-
+  
   /**
    * Default constructor, creates and empty client
    */
   public Client(BlockingQueue<MessageQueueEntry> messageQueue) {
     this.messageQueue = messageQueue;
   }
-
+  
   /**
    * Creates a new client from the given socket
    *
@@ -40,7 +41,7 @@ public class Client implements Runnable {
     in = new ObjectInputStream(socket.getInputStream());
     this.messageQueue = messageQueue;
   }
-
+  
   /**
    * Connects to a remote server by creating a new socket
    *
@@ -48,12 +49,16 @@ public class Client implements Runnable {
    * @param port    The server port
    */
   public void connect(String address, int port) throws IOException {
-    socket = new Socket(address, port);
+    try {
+      socket = new Socket(address, port);
+    } catch (UnknownHostException e) {
+      System.out.println("Impossible to connect to the server. Check ip and port.");
+    }
     out = new ObjectOutputStream(socket.getOutputStream());
     in = new ObjectInputStream(socket.getInputStream());
     Logger.info("Connected to: {}", socket.getRemoteSocketAddress());
   }
-
+  
   /**
    * Sends a message.
    *
@@ -67,7 +72,7 @@ public class Client implements Runnable {
       Logger.error("Message not sent " + e.getMessage());
     }
   }
-
+  
   /**
    * Receives a message. This method blocks until a message is received.
    *
@@ -76,14 +81,14 @@ public class Client implements Runnable {
   public Message receive() throws IOException, ClassNotFoundException {
     return (Message) in.readObject();
   }
-
+  
   /**
    * Closes this socket.
    */
   public void close() throws IOException {
     socket.close();
   }
-
+  
   /**
    * Runs the client listening loop. Receive messages and adds them to the message queue.
    * This method is supposed to be run on its own thread.
@@ -104,13 +109,13 @@ public class Client implements Runnable {
       // Client disconnected while we were waiting on receive
       Logger.debug("Client '{}' disconnected", this);
     } catch (SocketException e) {
-
+    
     } catch (IOException e) {
       Logger.error("An error occurred on socket '{}': {}", this, e);
     }
     Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
   }
-
+  
   /**
    * Prints this socket in the following format: [hostname]/[host address]:[port]
    */
