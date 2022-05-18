@@ -7,6 +7,7 @@ public enum BoxSymbols {
   UP_AND_RIGHT('└'),
   UP_AND_LEFT('┘'),
   HORIZONTAL('─'),
+  HORIZONTAL_DASH('-'),
   VERTICAL('│'),
   VERTICAL_AND_RIGHT('├'),
   VERTICAL_AND_LEFT('┤'),
