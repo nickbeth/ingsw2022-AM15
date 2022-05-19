@@ -11,7 +11,7 @@ import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.*;
 import static it.polimi.ingsw.eriantys.cli.utils.Util.PADDING;
 
 public class GameLobbyView extends View {
-  private GameInfo gameInfo;
+  private final GameInfo gameInfo;
 
   public GameLobbyView(GameInfo gameInfo) {
     this.gameInfo = gameInfo;

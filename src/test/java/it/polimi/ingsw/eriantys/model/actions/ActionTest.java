@@ -1,5 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
+import it.polimi.ingsw.eriantys.cli.views.IslandView;
+import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
@@ -179,6 +181,7 @@ public class ActionTest {
     for (int i = 0; i < cards.size(); i++) {
       assertEquals(cards.get(i), expertGame.getPlayingField().getCharacterCards().get(i).getCardEnum());
     }
+
   }
 
   @Test
@@ -259,36 +262,89 @@ public class ActionTest {
 
   @Test
   public void ActivateEffect() {
-    GameState gameState = spy(new GameState(4, GameMode.NORMAL));
-    PlayingField field = spy(new PlayingField(RuleBook.makeRules(GameMode.NORMAL, 4)));
+    GameState gameState = new GameState(4, GameMode.EXPERT);
+    PlayingField field = gameState.getPlayingField();
     gameState.addPlayer("p1", TowerColor.WHITE);
     gameState.addPlayer("p2", TowerColor.BLACK);
     gameState.addPlayer("p3", TowerColor.WHITE);
     gameState.addPlayer("p4", TowerColor.BLACK);
 
-    doReturn(field).when(gameState).getPlayingField();
-    CharacterCard cc = CharacterCardCreator.create(CharacterCardEnum.IGNORE_COLOR);
+    List<Students> entrances = new ArrayList<>();
+    List<Students> islands = new ArrayList<>();
+    List<Students> clouds = new ArrayList<>();
+    List<CharacterCardEnum> cards = new ArrayList<>();
 
-    CharacterCard sCC = spy(cc);
-    doNothing().when(sCC).applyEffect(any());
-    doReturn(sCC).when(field).getPlayedCharacterCard();
+    //setup entrance students
+    Students s = new Students();
+    s.addStudents(HouseColor.RED, 9);
+    entrances.add(new Students(s));
+    entrances.add(new Students(s));
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.YELLOW, 9);
+    entrances.add(new Students(s));
 
-    gameState.getPlayingField().getCharacterCards()
-            .add(cc);
+    //setup islands students
+    s.setStudents(new Students());
+    s.addStudent(HouseColor.BLUE);
+    Logger.debug(s.getCount());
+    for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
+      islands.add(new Students(s));
+    }
+    islands.get(0).addStudents(HouseColor.RED, 5);
+
+
+    //setup clouds students
+    s.setStudents(new Students());
+    s.addStudents(HouseColor.GREEN, 4);
+    for (int i = 0; i < gameState.getRuleBook().cloudCount; i++) {
+      clouds.add(new Students(s));
+    }
+
+    cards.add(CharacterCardEnum.IGNORE_COLOR);
+    cards.add(CharacterCardEnum.ADD_TO_INFLUENCE);
+    cards.add(CharacterCardEnum.LOCK_ISLAND);
+
+    GameAction action = new InitiateGameEntities(entrances, islands, clouds, cards);
+
+    //doReturn(field).when(gameState).getPlayingField();
+    //doNothing().when(sCC).applyEffect(any());
+    //doReturn(sCC).when(field).getPlayedCharacterCard();
+    action.apply(gameState);
+    Logger.debug(field.getCharacterCards().get(0));
+
     gameState.getPlayingField().setPlayedCharacterCard(0);
     gameState.setTurnPhase(TurnPhase.EFFECT);
     gameState.advanceGamePhase();
     gameState.getCurrentPlayer().addCoin();
     gameState.getCurrentPlayer().addCoin();
+    field.getIslands().forEach(is -> is.updateInfluences(field.getProfessorHolder()));
+    field.getIsland(0).setTowerColor(TowerColor.WHITE);
+    field.getIsland(0).setTowerCount(1);
+    //gameState.getPlayingField().getIslands().forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
+
     CharacterCard newCC = CharacterCardCreator.create(CharacterCardEnum.IGNORE_COLOR);
     ((ColorInputCards) newCC).setColor(HouseColor.RED);
-    GameAction action = new ActivateCCEffect(newCC);
+
+    GameAction actionDue = new ActivateCCEffect(newCC);
+    //(new IslandView(gameState.getPlayingField().getIsland(0))).draw(System.out);
 
 
-    assertTrue(action.isValid(gameState));
-    action.apply(gameState);
-    assertEquals(newCC, gameState.getPlayingField().getCharacterCards().get(0));
-    assertEquals(sCC, gameState.getPlayingField().getPlayedCharacterCard());
+    (new IslandsView(gameState.getPlayingField().getIslands(), 0)).draw(System.out);
+    assertTrue(actionDue.isValid(gameState));
+    actionDue.apply(gameState);
+    Logger.debug(field.getPlayedCharacterCard().getCardEnum());
+    assertEquals(0 , gameState.getCurrentPlayer().getCoins());
+    assertEquals(4, field.getPlayedCharacterCard().getCost());
+    gameState.getCurrentPlayer().addCoin();
+    gameState.getCurrentPlayer().addCoin();
+    gameState.getCurrentPlayer().addCoin();
+    gameState.getCurrentPlayer().addCoin();
+
+    newCC = field.getCharacterCards().get(0);
+    actionDue = new ActivateCCEffect(newCC);
+    actionDue.apply(gameState);
+    assertEquals(0 , gameState.getCurrentPlayer().getCoins());
+    assertEquals(4, field.getPlayedCharacterCard().getCost());
   }
 
 

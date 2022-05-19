@@ -9,6 +9,7 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +53,12 @@ public class InitiateGameEntities implements GameAction {
             clouds);
     // Initiate characterCards
     if(gameState.getRuleBook().gameMode == GameMode.EXPERT) {
+
       List<CharacterCard> cards = new ArrayList<>();
       cardsEnum.forEach(card -> cards.add(CharacterCardCreator.create(card)));
+      Logger.info(cards.toString());
       gameState.getPlayingField().setCharacterCards(cards);
+
     }
   }
 

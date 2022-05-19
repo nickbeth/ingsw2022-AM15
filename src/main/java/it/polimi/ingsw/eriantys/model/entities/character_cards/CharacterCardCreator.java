@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
 import it.polimi.ingsw.eriantys.model.entities.*;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects.CardService;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
 import java.util.ArrayList;

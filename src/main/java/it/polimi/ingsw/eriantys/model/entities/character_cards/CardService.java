@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects;
+package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -40,6 +40,8 @@ public interface CardService {
    */
   static void ignoreColor(List<Island> islands, HouseColor ignoredColor, TowerColor teamOwningIgnoredProfessor) {
 // For each island updates teams' influence based on the ignored color
+    if (teamOwningIgnoredProfessor == null)
+      return;
     islands.forEach((island) -> {
       TeamsInfluenceTracer influenceTracer = island.getTeamsInfluenceTracer();
       Integer ignoredStudentsCount = island.getStudents().getCount(ignoredColor);
@@ -127,6 +129,7 @@ public interface CardService {
 
   /**
    * Give the chance to exceed the limit of Mother Nature's movement by the amount
+   *
    * @param currPlayer
    * @param amount
    */
@@ -136,6 +139,7 @@ public interface CardService {
 
   /**
    * Lock the given island
+   *
    * @param island
    */
   static void lockIsland(Island island) {
@@ -144,6 +148,7 @@ public interface CardService {
 
   /**
    * Change the holders of the professor even if the curr Dashboard has only<br/> the same amount of students in the dining hall of other player
+   *
    * @param currDashboard
    * @param dashboards
    * @param professorHolder

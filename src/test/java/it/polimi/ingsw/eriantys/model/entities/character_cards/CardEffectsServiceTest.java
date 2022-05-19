@@ -2,7 +2,6 @@ package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.*;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects.CardService;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
