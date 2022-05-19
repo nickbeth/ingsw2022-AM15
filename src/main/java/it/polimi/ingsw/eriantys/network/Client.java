@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 
@@ -108,8 +107,6 @@ public class Client implements Runnable {
     } catch (EOFException e) {
       // Client disconnected while we were waiting on receive
       Logger.debug("Client '{}' disconnected", this);
-    } catch (SocketException e) {
-    
     } catch (IOException e) {
       Logger.error("An error occurred on socket '{}': {}", this, e);
     }

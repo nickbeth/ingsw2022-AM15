@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.controller;
 
-
+import it.polimi.ingsw.eriantys.client.MessageHandler;
+import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.actions.*;
@@ -10,10 +11,9 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
-import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.network.Message;
-import it.polimi.ingsw.eriantys.network.MessageType;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,22 +23,25 @@ import static it.polimi.ingsw.eriantys.network.MessageType.*;
 /**
  * The Controller manages the creation and the sending of messages to the Server
  */
-abstract public class Controller {
-  protected final Client client;
-  protected final ObservableActionInvoker invoker;
-  protected final GameInfo gameInfo;
-  protected final GameState gameState;
-  protected final String playerNickname;
-
-  public Controller(Client client, GameInfo gameInfo, String playerNickname) {
-    this.client = client;
-    this.gameInfo = gameInfo;
-    this.gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
-    this.invoker = new ObservableActionInvoker(gameState);
-    this.playerNickname = playerNickname;
+abstract public class Controller implements Runnable {
+  public static Controller create(boolean isGui, Client networkClient, MessageHandler messageHandler) {
+    if (isGui)
+      return new GuiController(networkClient, messageHandler);
+    else
+      return new CliController(networkClient, messageHandler);
   }
 
-  // todo EXECUTED ONLY BY THE HOST, MUST BE MANAGED BEFORE
+  protected Client networkClient;
+  protected MessageHandler messageHandler;
+  protected ObservableActionInvoker invoker;
+  protected GameInfo gameInfo;
+  protected GameState gameState;
+  protected String nickname;
+
+  public Controller(Client networkClient, MessageHandler messageHandler) {
+    this.networkClient = networkClient;
+    this.messageHandler = messageHandler;
+  }
 
   /**
    * Creates the gameState in the client invoker. <br>
@@ -48,7 +51,6 @@ abstract public class Controller {
   public boolean startGame() {
     // Send message for creating server game
     // Initialize the game entities
-    // todo verificare se l'inizializzazione del game è stata fatta secondo le regole
 
     if (!gameInfo.start())
       return false;
@@ -86,10 +88,10 @@ abstract public class Controller {
     // Action Creation
     GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
 
-    client.send(new Message.Builder(START_GAME)
+    networkClient.send(new Message.Builder(START_GAME)
             .action(action)
             .gameInfo(gameInfo)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
 
     return true;
@@ -104,9 +106,9 @@ abstract public class Controller {
     if (!action.isValid(invoker.gameState))
       return false;
 
-    client.send(new Message.Builder(PLAY_ACTION)
+    networkClient.send(new Message.Builder(PLAY_ACTION)
             .action(action)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
     return true;
   }
@@ -122,9 +124,9 @@ abstract public class Controller {
     if (!action.isValid(invoker.gameState))
       return false;
 
-    client.send(new Message.Builder(PLAY_ACTION)
+    networkClient.send(new Message.Builder(PLAY_ACTION)
             .action(action)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
     return true;
   }
@@ -146,7 +148,7 @@ abstract public class Controller {
       temp = new Students(); // clear temp
     }
 
-    client.send(new Message.Builder(GAMEDATA)
+    networkClient.send(new Message.Builder(GAMEDATA)
             .action(new RefillClouds(cloudsStudents))
             .gameInfo(gameInfo)
             .build());
@@ -161,7 +163,7 @@ abstract public class Controller {
     if (!action.isValid(invoker.gameState))
       return false;
 
-    client.send(new Message.Builder(GAMEDATA)
+    networkClient.send(new Message.Builder(GAMEDATA)
             .action(action)
             .gameInfo(gameInfo)
             .build());
@@ -179,9 +181,9 @@ abstract public class Controller {
     if (!action.isValid(invoker.gameState))
       return false;
 
-    client.send(new Message.Builder(PLAY_ACTION)
+    networkClient.send(new Message.Builder(PLAY_ACTION)
             .action(action)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
     return true;
   }
@@ -197,9 +199,9 @@ abstract public class Controller {
     if (!action.isValid(invoker.gameState))
       return false;
 
-    client.send(new Message.Builder(GAMEDATA)
+    networkClient.send(new Message.Builder(GAMEDATA)
             .action(action)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
     return true;
   }
@@ -215,9 +217,9 @@ abstract public class Controller {
     if (!action.isValid(invoker.gameState))
       return false;
 
-    client.send(new Message.Builder(PLAY_ACTION)
+    networkClient.send(new Message.Builder(PLAY_ACTION)
             .action(action)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
     return true;
   }
@@ -235,39 +237,56 @@ abstract public class Controller {
     if (!action.isValid(invoker.gameState))
       return false;
 
-    client.send(new Message.Builder(PLAY_ACTION)
+    networkClient.send(new Message.Builder(PLAY_ACTION)
             .action(action)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
     return true;
   }
 
   public void sendCreateGame(GameInfo gameInfo) {
-    client.send(new Message.Builder(CREATE_GAME)
+    networkClient.send(new Message.Builder(CREATE_GAME)
             .gameInfo(gameInfo)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
   }
 
   public void sendJoinGame(GameInfo gameInfo) {
-    client.send(new Message.Builder(JOIN_GAME)
+    networkClient.send(new Message.Builder(JOIN_GAME)
             .gameInfo(gameInfo)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
   }
 
   public boolean sendSelectTower(TowerColor color) {
-    if (!gameInfo.isTowerColorValid(playerNickname, color))
+    if (!gameInfo.isTowerColorValid(nickname, color))
       return false;
-    gameInfo.addPlayer(playerNickname, color);
-    client.send(new Message.Builder(SELECT_TOWER)
+    gameInfo.addPlayer(nickname, color);
+    networkClient.send(new Message.Builder(SELECT_TOWER)
             .gameInfo(gameInfo)
-            .nickname(playerNickname)
+            .nickname(nickname)
             .build());
     return true;
   }
-  
+
   public GameState getGameState() {
     return gameState;
+  }
+
+  public GameInfo getGameInfo() {
+    return gameInfo;
+  }
+
+  public String getNickname() {
+    return nickname;
+  }
+
+  public boolean connect(String address, int port) {
+    try {
+      networkClient.connect(address, port);
+    } catch (IOException e) {
+      return false;
+    }
+    return true;
   }
 }

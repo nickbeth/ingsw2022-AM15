@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.controller.menus.action;
 
+import it.polimi.ingsw.eriantys.cli.views.GameLobbyView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
@@ -19,6 +20,7 @@ public class MenuGameInfo extends Menu {
 
   @Override
   public void showOptions() {
+    (new GameLobbyView(controller.getGameInfo())).draw(System.out);
     System.out.println("C - Choose a tower color");
     System.out.println("S - Start game");
     //todo leave game?
