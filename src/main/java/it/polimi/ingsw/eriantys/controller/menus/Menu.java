@@ -1,17 +1,13 @@
 package it.polimi.ingsw.eriantys.controller.menus;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.model.GameInfo;
-import it.polimi.ingsw.eriantys.model.GameState;
 
 /**
  * Abstract class dedicated to the management of the input interaction
  */
 public abstract class Menu {
-  protected GameState game;
-  protected String playerNickname;
   protected Controller controller;
-  protected GameInfo gameInfo;
+
   /**
    * Shows the options the player can make
    */
@@ -25,6 +21,7 @@ public abstract class Menu {
 
   /**
    * Control logic of the choice of the player
+   *
    * @param paramBuilder
    */
   public abstract void makeChoice(ParamBuilder paramBuilder);

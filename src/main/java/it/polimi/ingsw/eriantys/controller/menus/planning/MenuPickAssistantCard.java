@@ -5,23 +5,19 @@ import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.controller.menus.action.MenuPlacing;
-import it.polimi.ingsw.eriantys.model.GameState;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuPickAssistantCard extends Menu {
-
-  public MenuPickAssistantCard(GameState game, String playerNickname, Controller controller) {
-    this.game = game;
-    this.playerNickname = playerNickname;
+  public MenuPickAssistantCard(Controller controller) {
     this.controller = controller;
   }
 
   @Override
   public void showOptions() {
     showViewOptions();
-    if (playerNickname.equals(game.getCurrentPlayer().getNickname())) {
+    if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       System.out.println("A - Choose assistant card");
     }
   }
@@ -35,11 +31,10 @@ public class MenuPickAssistantCard extends Menu {
       showOptions();
       switch (s.nextLine()) {
         case "A", "a" -> {
-          (new AssistantCardsView(game.getPlayer(playerNickname))).draw(System.out);
+          (new AssistantCardsView(controller.getGameState().getPlayer(controller.getNickname()))).draw(System.out);
           int index = -1;
           try {
             System.out.print("Choose card index:");
-
             done = true;
           } catch (InputMismatchException e) {
             System.out.println("Please insert a number");
@@ -55,6 +50,6 @@ public class MenuPickAssistantCard extends Menu {
 
   @Override
   public Menu nextMenu() {
-    return new MenuPlacing(game, playerNickname, controller);
+    return new MenuPlacing(controller);
   }
 }

@@ -6,8 +6,6 @@ import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
-import it.polimi.ingsw.eriantys.controller.menus.planning.MenuPickAssistantCard;
-import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.text.MessageFormat;
@@ -17,18 +15,16 @@ import java.util.Scanner;
 public class MenuPlacing extends Menu {
   private int studentMoved = 0;
 
-  public MenuPlacing(GameState game, String playerNickname, Controller controller) {
-    this.game = game;
-    this.playerNickname = playerNickname;
+  public MenuPlacing(Controller controller) {
     this.controller = controller;
   }
 
   @Override
   public void showOptions() {
     showViewOptions();
-    int studentsLeft = game.getRuleBook().playableStudentCount - studentMoved;
-    if (playerNickname.equals(game.getCurrentPlayer().getNickname())) {
-      if (game.getTurnPhase() == TurnPhase.PLACING) {
+    int studentsLeft = controller.getGameState().getRuleBook().playableStudentCount - studentMoved;
+    if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
+      if (controller.getGameState().getTurnPhase() == TurnPhase.PLACING) {
         System.out.println(
                 MessageFormat.format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
         System.out.println(
@@ -49,14 +45,14 @@ public class MenuPlacing extends Menu {
         // Move Students from entrance to island
         case "Q", "q" -> {
           // Check of the Turn phase
-          if (!game.getTurnPhase().equals(TurnPhase.PLACING))
+          if (!controller.getGameState().getTurnPhase().equals(TurnPhase.PLACING))
             break;
 
           paramBuilder.flushStudentToMove();
 
           // Shows entrance
-          (new DashboardView(game.getRuleBook(), game.getCurrentPlayer().getDashboard(),
-                  game.getPlayingField().getProfessorHolder())).draw(System.out);
+          (new DashboardView(controller.getGameState().getRuleBook(), controller.getGameState().getCurrentPlayer().getDashboard(),
+                  controller.getGameState().getPlayingField().getProfessorHolder())).draw(System.out);
 
           // Takes the color
           (new MenuStudentColor()).makeChoice(paramBuilder);
@@ -78,8 +74,8 @@ public class MenuPlacing extends Menu {
           try {
             // Shows islands
             System.out.println("Choose an island: ");
-            (new IslandsView(game.getPlayingField().getIslands(),
-                    game.getPlayingField().getMotherNaturePosition())).draw(System.out);
+            (new IslandsView(controller.getGameState().getPlayingField().getIslands(),
+                    controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(System.out);
             islandIndex = s.nextInt();
           } catch (InputMismatchException e) {
             System.out.println("Number required");
@@ -93,7 +89,7 @@ public class MenuPlacing extends Menu {
         // Move Students from entrance to dining
         case "W", "w" -> {
           // Check of the Turn phase
-          if (!game.getTurnPhase().equals(TurnPhase.PLACING))
+          if (!controller.getGameState().getTurnPhase().equals(TurnPhase.PLACING))
             break;
 
           paramBuilder.flushStudentToMove();
@@ -121,12 +117,12 @@ public class MenuPlacing extends Menu {
         }
         // Choose a character card from those in playing field
         case "E", "e" -> {
-          if (!game.getTurnPhase().equals(TurnPhase.EFFECT))
+          if (!controller.getGameState().getTurnPhase().equals(TurnPhase.EFFECT))
             break;
           int ccIndex = -1;
           try {
             System.out.println("Playable character cards: ");
-            (new CharacterCardView(game.getPlayingField().getCharacterCards())).draw(System.out);
+            (new CharacterCardView(controller.getGameState().getPlayingField().getCharacterCards())).draw(System.out);
             System.out.println("Choose a character card: ");
             ccIndex = s.nextInt();
           } catch (InputMismatchException e) {
@@ -137,7 +133,7 @@ public class MenuPlacing extends Menu {
             System.out.println("Invalid input parameters");
             return;
           }
-          (new MenuEffect(game, playerNickname, controller)).makeChoice(paramBuilder);
+          (new MenuEffect(controller)).makeChoice(paramBuilder);
           done = true;
         }
 
@@ -146,9 +142,8 @@ public class MenuPlacing extends Menu {
     } while (!done);
   }
 
-  //todo pensare bene i next menu
   @Override
   public Menu nextMenu() {
-    return new MenuMoving(game, playerNickname, controller);
+    return new MenuMoving(controller);
   }
 }

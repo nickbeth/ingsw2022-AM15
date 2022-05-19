@@ -1,12 +1,10 @@
 package it.polimi.ingsw.eriantys.controller.menus.action;
 
-import it.polimi.ingsw.eriantys.cli.views.CloudsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.controller.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.model.GameInfo;
-import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
 import java.util.ArrayList;
@@ -15,13 +13,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuGameInfo extends Menu {
-
-
-  public MenuGameInfo(GameState game, String playerNickname, GameInfo gameInfo, Controller controller) {
-    this.game = game;
-    this.playerNickname = playerNickname;
+  public MenuGameInfo(Controller controller) {
     this.controller = controller;
-    this.gameInfo = gameInfo;
   }
 
   @Override
@@ -42,7 +35,7 @@ public class MenuGameInfo extends Menu {
       switch (s.nextLine()) {
         //choose a tower color for the lobby
         case "C", "c" -> {
-          if (gameInfo.getLobbyState() != GameInfo.LobbyState.WAITING)
+          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
             break;
           System.out.println("Choose tower color: ");
           System.out.println("1 - WHITE");
@@ -69,7 +62,7 @@ public class MenuGameInfo extends Menu {
         }
         //starts and initiates a game
         case "S", "s" -> {
-          if (gameInfo.getLobbyState() != GameInfo.LobbyState.WAITING)
+          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
             break;
           if (!controller.startGame()) {
             System.out.println("There are not enough players with a chosen tower color to start");
@@ -82,10 +75,8 @@ public class MenuGameInfo extends Menu {
     } while (!done);
   }
 
-  //todo pensare bene al next menu
   @Override
   public Menu nextMenu() {
-    return new MenuPickAssistantCard(game, playerNickname, controller);
+    return new MenuPickAssistantCard(controller);
   }
-
 }

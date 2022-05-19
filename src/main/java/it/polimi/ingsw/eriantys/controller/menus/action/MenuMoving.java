@@ -4,24 +4,20 @@ import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
-import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuMoving extends Menu {
-
-  public MenuMoving(GameState game, String playerNickname, Controller controller) {
-    this.game = game;
-    this.playerNickname = playerNickname;
+  public MenuMoving(Controller controller) {
     this.controller = controller;
   }
 
   @Override
   public void showOptions() {
     showViewOptions();
-    if (playerNickname.equals(game.getCurrentPlayer().getNickname())) {
+    if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       System.out.println("T - Move mother nature");
     }
   }
@@ -37,7 +33,7 @@ public class MenuMoving extends Menu {
         // Move mother nature a certain amount
         case "T", "t" -> {
           // Check of the Turn phase
-          if (!game.getTurnPhase().equals(TurnPhase.MOVING))
+          if (!controller.getGameState().getTurnPhase().equals(TurnPhase.MOVING))
             break;
 
           // Takes amount input and send the action
@@ -45,8 +41,8 @@ public class MenuMoving extends Menu {
           try {
             // Shows islands
             System.out.println("Playing Field: ");
-            (new IslandsView(game.getPlayingField().getIslands(),
-                    game.getPlayingField().getMotherNaturePosition())).draw(System.out);
+            (new IslandsView(controller.getGameState().getPlayingField().getIslands(),
+                    controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(System.out);
             System.out.println("Insert the amount of mother nature movements: ");
             amount = s.nextInt();
           } catch (InputMismatchException e) {
@@ -66,7 +62,7 @@ public class MenuMoving extends Menu {
   //todo pensare bene al next menu
   @Override
   public Menu nextMenu() {
-    return new MenuPickingCloud(game, playerNickname, controller);
+    return new MenuPickingCloud(controller);
   }
 
 }
