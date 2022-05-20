@@ -6,12 +6,18 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 
 /**
  * A wrapper around java.io.Socket for sending and receiving Message objects.
+ *
+ * <p> This class supports the <i>attachment</i> of a single arbitrary object.
+ * An object can be attached via the {@link #attach attach} method and then later retrieved via
+ * the {@link #attachment() attachment} method.  </p>
  */
 public class Client implements Runnable {
   public static final int DEFAULT_PORT = Server.DEFAULT_PORT;
@@ -36,9 +42,10 @@ public class Client implements Runnable {
    */
   Client(Socket socket, BlockingQueue<MessageQueueEntry> messageQueue) throws IOException {
     this.socket = socket;
-    out = new ObjectOutputStream(socket.getOutputStream());
-    in = new ObjectInputStream(socket.getInputStream());
+    this.out = new ObjectOutputStream(socket.getOutputStream());
+    this.in = new ObjectInputStream(socket.getInputStream());
     this.messageQueue = messageQueue;
+    this.attachment = null;
   }
 
   /**
@@ -57,7 +64,7 @@ public class Client implements Runnable {
     in = new ObjectInputStream(socket.getInputStream());
     Logger.info("Connected to: {}", socket.getRemoteSocketAddress());
   }
-  
+
   /**
    * Sends a message.
    *
@@ -71,7 +78,7 @@ public class Client implements Runnable {
       Logger.warn("An error occurred while sending message {}: {}", msg.getClass().getSimpleName(), e);
     }
   }
-  
+
   /**
    * Receives a message. This method blocks until a message is received.
    *
@@ -111,6 +118,50 @@ public class Client implements Runnable {
       Logger.error("An error occurred on socket '{}': {}", this, e);
     }
     Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
+  }
+
+  /**
+   * A VarHandle of the attachment object, used for fast atomic access.
+   *
+   * @implNote Requires Java9+
+   */
+  private static final VarHandle ATTACHMENT;
+
+  static {
+    try {
+      MethodHandles.Lookup l = MethodHandles.lookup();
+      ATTACHMENT = l.findVarHandle(Client.class, "attachment", Object.class);
+    } catch (Exception e) {
+      throw new InternalError(e);
+    }
+  }
+
+  private volatile Object attachment;
+
+  /**
+   * Attaches the given object to this key.
+   *
+   * <p> An attached object may later be retrieved via the {@link #attachment()
+   * attachment} method.  Only one object may be attached at a time; invoking
+   * this method causes any previous attachment to be discarded.  The current
+   * attachment may be discarded by attaching {@code null}.  </p>
+   *
+   * @param ob The object to be attached; may be {@code null}
+   * @return The previously-attached object, if any,
+   * otherwise {@code null}
+   */
+  public final Object attach(Object ob) {
+    return ATTACHMENT.getAndSet(this, ob);
+  }
+
+  /**
+   * Retrieves the current attachment.
+   *
+   * @return The object currently attached to this key,
+   * or {@code null} if there is no attachment
+   */
+  public final Object attachment() {
+    return attachment;
   }
 
   /**
