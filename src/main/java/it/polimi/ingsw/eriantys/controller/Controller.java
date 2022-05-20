@@ -35,6 +35,7 @@ abstract public class Controller implements Runnable {
   protected GameInfo gameInfo;
   protected GameState gameState;
   protected String nickname;
+  protected String gameCode;
 
   public Controller(Client networkClient) {
     this.networkClient = networkClient;
@@ -266,12 +267,27 @@ abstract public class Controller implements Runnable {
     return true;
   }
 
+  public boolean connect(String address, int port) {
+    try {
+      networkClient.connect(address, port);
+    } catch (IOException e) {
+      return false;
+    }
+    return true;
+  }
+
+  abstract public void showError(String error);
+
   public ObservableActionInvoker getActionInvoker() {
     return actionInvoker;
   }
 
   public GameInfo getGameInfo() {
     return gameInfo;
+  }
+
+  public void setGameInfo(GameInfo gameInfo) {
+    this.gameInfo = gameInfo;
   }
 
   public GameState getGameState() {
@@ -282,12 +298,7 @@ abstract public class Controller implements Runnable {
     return nickname;
   }
 
-  public boolean connect(String address, int port) {
-    try {
-      networkClient.connect(address, port);
-    } catch (IOException e) {
-      return false;
-    }
-    return true;
+  public String getGameCode() {
+    return gameCode;
   }
 }

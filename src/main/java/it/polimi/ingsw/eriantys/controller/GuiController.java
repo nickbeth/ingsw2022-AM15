@@ -8,6 +8,11 @@ public class GuiController extends Controller implements Runnable {
   }
 
   @Override
+  public void showError(String error) {
+
+  }
+
+  @Override
   public void run() {
 
   }

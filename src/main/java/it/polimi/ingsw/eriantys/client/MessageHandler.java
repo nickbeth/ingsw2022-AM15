@@ -1,11 +1,11 @@
 package it.polimi.ingsw.eriantys.client;
 
-import it.polimi.ingsw.eriantys.controller.ActionInvoker;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.ObservableActionInvoker;
 import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
 import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
+import it.polimi.ingsw.eriantys.network.MessageType;
 import org.tinylog.Logger;
 
 import java.util.concurrent.BlockingQueue;
@@ -53,14 +53,22 @@ public class MessageHandler implements Runnable {
   }
 
   private void handlePing(Client client, Message message) {
+    client.send(new Message.Builder(MessageType.PONG)
+            .nickname(controller.getNickname())
+            .gameCode(controller.getGameCode())
+            .build());
   }
 
   private void handleGameInfo(Client client, Message message) {
+    controller.setGameInfo(message.gameInfo());
   }
 
   private void handleGameData(Client client, Message message) {
+    ObservableActionInvoker actionInvoker = controller.getActionInvoker();
+    actionInvoker.executeAction(message.gameAction());
   }
 
   private void handleError(Client client, Message message) {
+    controller.showError(message.error());
   }
 }
