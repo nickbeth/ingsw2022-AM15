@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.controller.menus.action;
+package it.polimi.ingsw.eriantys.controller.menus;
 
 import it.polimi.ingsw.eriantys.cli.views.GameLobbyView;
 import it.polimi.ingsw.eriantys.controller.Controller;
