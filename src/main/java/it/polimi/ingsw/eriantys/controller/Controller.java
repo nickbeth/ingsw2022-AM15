@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.controller;
 
-import it.polimi.ingsw.eriantys.client.MessageHandler;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
@@ -24,11 +23,11 @@ import static it.polimi.ingsw.eriantys.network.MessageType.*;
  * The Controller manages the creation and the sending of messages to the Server
  */
 abstract public class Controller implements Runnable {
-  public static Controller create(boolean isGui, Client networkClient, MessageHandler messageHandler) {
+  public static Controller create(boolean isGui, Client networkClient) {
     if (isGui)
-      return new GuiController(networkClient, messageHandler);
+      return new GuiController(networkClient);
     else
-      return new CliController(networkClient, messageHandler);
+      return new CliController(networkClient);
   }
 
   protected Client networkClient;
@@ -38,9 +37,8 @@ abstract public class Controller implements Runnable {
   protected GameState gameState;
   protected String nickname;
 
-  public Controller(Client networkClient, MessageHandler messageHandler) {
+  public Controller(Client networkClient) {
     this.networkClient = networkClient;
-    this.messageHandler = messageHandler;
   }
 
   /**

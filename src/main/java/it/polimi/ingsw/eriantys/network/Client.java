@@ -68,7 +68,7 @@ public class Client implements Runnable {
       out.writeObject(msg);
       out.flush();
     } catch (IOException e) {
-      Logger.error("Message not sent " + e.getMessage());
+      Logger.warn("An error occurred while sending message {}: {}", msg.getClass().getSimpleName(), e);
     }
   }
   

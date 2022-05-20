@@ -11,16 +11,15 @@ public class ClientApp {
   private final boolean isGui;
 
   private final Client networkClient;
-  private final MessageHandler messageHandler;
-
   private final Controller controller;
+  private final MessageHandler messageHandler;
 
   public ClientApp(boolean isGui) {
     this.isGui = isGui;
     BlockingQueue<MessageQueueEntry> messageQueue = new LinkedBlockingQueue<>();
     this.networkClient = new Client(messageQueue);
-    this.messageHandler = new MessageHandler(messageQueue);
-    this.controller = Controller.create(isGui, networkClient, messageHandler);
+    this.controller = Controller.create(isGui, networkClient);
+    this.messageHandler = new MessageHandler(controller, messageQueue);
   }
 
   public void run() {
