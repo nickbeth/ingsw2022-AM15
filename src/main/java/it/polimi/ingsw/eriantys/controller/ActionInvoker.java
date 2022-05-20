@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActionInvoker {
-  protected List<GameAction> gameActions;
-  protected final GameState gameState;
+  private final List<GameAction> gameActions;
+  private final GameState gameState;
 
   public ActionInvoker(GameState gameState) {
     this.gameActions = new ArrayList<>();

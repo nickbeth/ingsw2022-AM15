@@ -31,8 +31,7 @@ abstract public class Controller implements Runnable {
   }
 
   protected Client networkClient;
-  protected MessageHandler messageHandler;
-  protected ObservableActionInvoker invoker;
+  protected ObservableActionInvoker actionInvoker;
   protected GameInfo gameInfo;
   protected GameState gameState;
   protected String nickname;
@@ -101,7 +100,7 @@ abstract public class Controller implements Runnable {
   public boolean sendPickAssistantCard(int assistantCardIndex) {
     GameAction action = new PickAssistantCard(assistantCardIndex);
 
-    if (!action.isValid(invoker.gameState))
+    if (!action.isValid(gameState))
       return false;
 
     networkClient.send(new Message.Builder(PLAY_ACTION)
@@ -119,7 +118,7 @@ abstract public class Controller implements Runnable {
   public boolean sendPickCloud(int cloudIndex) {
     GameAction action = new PickCloud(cloudIndex);
 
-    if (!action.isValid(invoker.gameState))
+    if (!action.isValid(gameState))
       return false;
 
     networkClient.send(new Message.Builder(PLAY_ACTION)
@@ -158,7 +157,7 @@ abstract public class Controller implements Runnable {
   public boolean sendActivateEffect(CharacterCard cc) {
     GameAction action = new ActivateCCEffect(cc);
 
-    if (!action.isValid(invoker.gameState))
+    if (!action.isValid(gameState))
       return false;
 
     networkClient.send(new Message.Builder(GAMEDATA)
@@ -176,7 +175,7 @@ abstract public class Controller implements Runnable {
   public boolean sendChooseCharacterCard(int ccIndex) {
     GameAction action = new ChooseCharacterCard(ccIndex);
 
-    if (!action.isValid(invoker.gameState))
+    if (!action.isValid(gameState))
       return false;
 
     networkClient.send(new Message.Builder(PLAY_ACTION)
@@ -194,7 +193,7 @@ abstract public class Controller implements Runnable {
   public boolean sendMoveMotherNature(int amount) {
     GameAction action = new MoveMotherNature(amount);
 
-    if (!action.isValid(invoker.gameState))
+    if (!action.isValid(gameState))
       return false;
 
     networkClient.send(new Message.Builder(GAMEDATA)
@@ -212,7 +211,7 @@ abstract public class Controller implements Runnable {
   public boolean sendMoveStudentsToDiningHall(Students students) {
     GameAction action = new MoveStudentsToDiningHall(students);
 
-    if (!action.isValid(invoker.gameState))
+    if (!action.isValid(gameState))
       return false;
 
     networkClient.send(new Message.Builder(PLAY_ACTION)
@@ -232,7 +231,7 @@ abstract public class Controller implements Runnable {
   public boolean sendMoveStudentsToIsland(Students students, int islandIndex) {
     GameAction action = new MoveStudentsToIsland(students, islandIndex);
 
-    if (!action.isValid(invoker.gameState))
+    if (!action.isValid(gameState))
       return false;
 
     networkClient.send(new Message.Builder(PLAY_ACTION)
@@ -267,12 +266,16 @@ abstract public class Controller implements Runnable {
     return true;
   }
 
-  public GameState getGameState() {
-    return gameState;
+  public ObservableActionInvoker getActionInvoker() {
+    return actionInvoker;
   }
 
   public GameInfo getGameInfo() {
     return gameInfo;
+  }
+
+  public GameState getGameState() {
+    return gameState;
   }
 
   public String getNickname() {
