@@ -15,20 +15,20 @@ import java.util.concurrent.BlockingQueue;
  */
 public class Client implements Runnable {
   public static final int DEFAULT_PORT = Server.DEFAULT_PORT;
-  
+
   private Socket socket;
   private ObjectOutputStream out;
   private ObjectInputStream in;
-  
+
   private final BlockingQueue<MessageQueueEntry> messageQueue;
-  
+
   /**
    * Default constructor, creates and empty client
    */
   public Client(BlockingQueue<MessageQueueEntry> messageQueue) {
     this.messageQueue = messageQueue;
   }
-  
+
   /**
    * Creates a new client from the given socket
    *
@@ -40,7 +40,7 @@ public class Client implements Runnable {
     in = new ObjectInputStream(socket.getInputStream());
     this.messageQueue = messageQueue;
   }
-  
+
   /**
    * Connects to a remote server by creating a new socket
    *
@@ -80,14 +80,14 @@ public class Client implements Runnable {
   public Message receive() throws IOException, ClassNotFoundException {
     return (Message) in.readObject();
   }
-  
+
   /**
    * Closes this socket.
    */
   public void close() throws IOException {
     socket.close();
   }
-  
+
   /**
    * Runs the client listening loop. Receive messages and adds them to the message queue.
    * This method is supposed to be run on its own thread.
@@ -112,7 +112,7 @@ public class Client implements Runnable {
     }
     Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
   }
-  
+
   /**
    * Prints this socket in the following format: [hostname]/[host address]:[port]
    */
