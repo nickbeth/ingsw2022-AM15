@@ -6,6 +6,8 @@ import it.polimi.ingsw.eriantys.controller.menus.action.MenuConnect;
 import it.polimi.ingsw.eriantys.network.Client;
 import org.fusesource.jansi.Ansi;
 
+import javax.swing.*;
+
 public class CliController extends Controller implements Runnable {
   public CliController(Client networkClient) {
     super(networkClient);
