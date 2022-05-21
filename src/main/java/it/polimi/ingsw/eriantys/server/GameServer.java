@@ -75,6 +75,8 @@ public class GameServer implements Runnable {
     switch (message.type()) {
       case PONG -> handlePong(client, message);
 
+      case NICKNAME_REQUEST -> handleNicknameRequest(client, message);
+
       case CREATE_GAME -> handleCreateGame(client, message);
       case JOIN_GAME -> handleJoinGame(client, message);
       case SELECT_TOWER -> handleSelectTower(client, message);
@@ -90,6 +92,25 @@ public class GameServer implements Runnable {
     attachment.resetMissedHeartbeatCount();
   }
 
+  private void handleNicknameRequest(Client client, Message message) {
+    String nickname = message.nickname();
+    if (nickname == null || nickname.isBlank()) {
+      String errorMessage = String.format("Nickname '%s' is invalid", nickname);
+      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    if (activeNicknames.contains(nickname)) {
+      String errorMessage = String.format("Nickname '%s' is already in use", nickname);
+      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    activeNicknames.add(nickname);
+    client.attach(new ClientAttachment(nickname));
+    client.send(new Message.Builder().type(MessageType.NICKNAME_OK).nickname(nickname).build());
+  }
+
   private void handleCreateGame(Client client, Message message) {
     String gameCode = generateGameCode();
     if (activeNicknames.contains(message.nickname())) {
@@ -103,7 +124,6 @@ public class GameServer implements Runnable {
 
     activeGames.put(gameCode, gameEntry);
     activeNicknames.add(message.nickname());
-    client.attach(new ClientAttachment(message.nickname()));
     ((ClientAttachment) client.attachment()).setGameCode(gameCode);
 
     client.send(new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
@@ -141,7 +161,6 @@ public class GameServer implements Runnable {
     }
 
     gameEntry.addPlayer(message.nickname(), client);
-    client.attach(new ClientAttachment(message.nickname()));
     ((ClientAttachment) client.attachment()).setGameCode(gameCode);
 
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
