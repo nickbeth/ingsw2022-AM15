@@ -169,8 +169,7 @@ public class GameServer implements Runnable {
       return;
     }
 
-    //todo il client come lo distingue tra un messaggio con action e uno di game lobby
-    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).action(action).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.START_GAME).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).action(action).build());
   }
 
   private void handlePlayAction(Client client, Message message) {
