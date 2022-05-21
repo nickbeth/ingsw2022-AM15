@@ -14,18 +14,26 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static it.polimi.ingsw.eriantys.server.Util.generateGameCode;
 
 public class GameServer implements Runnable {
+  private static final int HEARTBEAT_INTERVAL_SECONDS = 2;
+  private static final int HEARTBEAT_DISCONNECTION_THRESHOLD = 5;
+
   private final BlockingQueue<MessageQueueEntry> messageQueue;
   private final HashMap<String, GameEntry> activeGames;
   private final Set<String> activeNicknames;
+  private final ScheduledExecutorService heartbeatService;
 
   public GameServer(BlockingQueue<MessageQueueEntry> messageQueue) {
     this.messageQueue = messageQueue;
     this.activeGames = new HashMap<>();
     this.activeNicknames = new HashSet<>();
+    this.heartbeatService = Executors.newScheduledThreadPool(1);
   }
 
   /**
@@ -50,6 +58,11 @@ public class GameServer implements Runnable {
     Client client = entry.client();
     Message message = entry.message();
 
+    if (message == null) {
+      Logger.warn("Received a 'null' message");
+      return;
+    }
+
     if (message.type() == null) {
       Logger.warn("Received a message with an invalid message type: {}", message);
       return;
@@ -60,7 +73,6 @@ public class GameServer implements Runnable {
     }
 
     switch (message.type()) {
-      case PING -> handlePing(client, message);
       case PONG -> handlePong(client, message);
 
       case CREATE_GAME -> handleCreateGame(client, message);
@@ -70,16 +82,12 @@ public class GameServer implements Runnable {
       case START_GAME -> handleStartGame(client, message);
 
       case PLAY_ACTION -> handlePlayAction(client, message);
-      case ERROR -> handleError(client, message);
     }
   }
 
-  private void handlePing(Client client, Message message) {
-    client.send(new Message.Builder().type(MessageType.PONG).build());
-  }
-
   private void handlePong(Client client, Message message) {
-
+    var attachment = (ClientAttachment) client.attachment();
+    attachment.resetMissedHeartbeatCount();
   }
 
   private void handleCreateGame(Client client, Message message) {
@@ -95,7 +103,11 @@ public class GameServer implements Runnable {
 
     activeGames.put(gameCode, gameEntry);
     activeNicknames.add(message.nickname());
+    client.attach(new ClientAttachment(message.nickname()));
+    ((ClientAttachment) client.attachment()).setGameCode(gameCode);
+
     client.send(new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+    initHeartbeat(client);
   }
 
   private void handleJoinGame(Client client, Message message) {
@@ -108,14 +120,15 @@ public class GameServer implements Runnable {
       return;
     }
 
-    if (gameEntry.isFull()) {
-      String errorMessage = String.format("Game with code '%s' is full", gameCode);
+    // TODO: handle player reconnections
+    if (gameEntry.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING) {
+      String errorMessage = String.format("Game with code '%s' has already started", gameCode);
       client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
-    if (gameEntry.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING) {
-      String errorMessage = String.format("Game with code '%s' has already started", gameCode);
+    if (gameEntry.isFull()) {
+      String errorMessage = String.format("Game with code '%s' is full", gameCode);
       client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
@@ -128,7 +141,11 @@ public class GameServer implements Runnable {
     }
 
     gameEntry.addPlayer(message.nickname(), client);
+    client.attach(new ClientAttachment(message.nickname()));
+    ((ClientAttachment) client.attachment()).setGameCode(gameCode);
+
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+    initHeartbeat(client);
   }
 
   private void handleSelectTower(Client client, Message message) {
@@ -198,9 +215,6 @@ public class GameServer implements Runnable {
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEDATA).gameCode(gameCode).action(action).build());
   }
 
-  private void handleError(Client client, Message message) {
-  }
-
   /**
    * Sends a message to all clients in the given lobby.
    *
@@ -209,5 +223,28 @@ public class GameServer implements Runnable {
    */
   private void broadcastMessage(GameEntry gameEntry, Message message) {
     gameEntry.getClients().forEach(client -> client.send(message));
+  }
+
+  private void initHeartbeat(Client client) {
+    heartbeatService.schedule(new Runnable() {
+      @Override
+      public void run() {
+        var attachment = (ClientAttachment) client.attachment();
+        if (attachment.increaseMissedHeartbeatCount() > HEARTBEAT_DISCONNECTION_THRESHOLD) {
+          Logger.debug("Player '{}' playing game '{}' marked as disconnected", attachment.nickname(), attachment.gameCode());
+          GameEntry gameEntry = activeGames.get(attachment.gameCode());
+          // If game entry is null, ignore
+          if (gameEntry == null)
+            return;
+
+          gameEntry.disconnectPlayer(attachment.nickname());
+          return;
+        }
+
+        // Send another ping and re-schedule only if threshold was not reached
+        client.send(new Message.Builder().type(MessageType.PING).build());
+        heartbeatService.schedule(this, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
+      }
+    }, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
   }
 }

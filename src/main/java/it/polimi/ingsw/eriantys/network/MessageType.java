@@ -7,7 +7,9 @@ package it.polimi.ingsw.eriantys.network;
  * and are further divided into client commands followed by the type of the server response.
  */
 public enum MessageType {
+  // Sent by server to clients
   PING,
+  // Reply to ping from clients
   PONG,
 
   // Lobby actions
@@ -18,7 +20,6 @@ public enum MessageType {
   GAMEINFO,
 
   // Game actions
-  //INITIALIZE_GAME,
   START_GAME,
   PLAY_ACTION,
   // Game data

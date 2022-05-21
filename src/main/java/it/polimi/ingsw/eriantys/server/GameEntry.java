@@ -48,8 +48,14 @@ public class GameEntry {
     gameInfo.addPlayer(nickname, towerColor);
   }
 
-  public void removePlayer(String nickname) {
+  public void disconnectPlayer(String nickname) {
     players.remove(nickname);
+    gameState.getPlayer(nickname).setConnected(false);
+  }
+
+  public void reconnectPlayer(String nickname, Client client) {
+    players.put(nickname, client);
+    gameState.getPlayer(nickname).setConnected(true);
   }
 
   public String getCurrentPlayer() {
