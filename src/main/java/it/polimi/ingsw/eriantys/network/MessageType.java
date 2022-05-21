@@ -12,6 +12,11 @@ public enum MessageType {
   // Reply to ping from clients
   PONG,
 
+  // Nickname selection
+  NICKNAME_REQUEST,
+  // Server response
+  NICKNAME_OK,
+
   // Lobby actions
   CREATE_GAME,
   JOIN_GAME,
