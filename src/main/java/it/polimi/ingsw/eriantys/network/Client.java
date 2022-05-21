@@ -70,7 +70,7 @@ public class Client implements Runnable {
    *
    * @param msg The message to send
    */
-  public void send(Message msg) {
+  public synchronized void send(Message msg) {
     try {
       out.writeObject(msg);
       out.flush();
