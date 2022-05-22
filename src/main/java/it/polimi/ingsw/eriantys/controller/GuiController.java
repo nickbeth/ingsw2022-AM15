@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.controller;
 
-import it.polimi.ingsw.eriantys.gui.CreateOrJoin;
+import it.polimi.ingsw.eriantys.gui.Gui;
 import it.polimi.ingsw.eriantys.network.Client;
 import javafx.application.Application;
 
@@ -16,7 +16,7 @@ public class GuiController extends Controller implements Runnable {
 
   @Override
   public void run() {
-    Application.launch(CreateOrJoin.class);
+    Application.launch(Gui.class);
   }
 
 
