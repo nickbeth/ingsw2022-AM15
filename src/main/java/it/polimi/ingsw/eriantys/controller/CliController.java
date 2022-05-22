@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.controller;
 
 import it.polimi.ingsw.eriantys.cli.Menu;
-import it.polimi.ingsw.eriantys.cli.menus.action.MenuConnect;
+import it.polimi.ingsw.eriantys.cli.menus.MenuConnect;
 import it.polimi.ingsw.eriantys.network.Client;
 import org.fusesource.jansi.Ansi;
 

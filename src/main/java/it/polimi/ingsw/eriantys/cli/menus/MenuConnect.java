@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.cli.menus.action;
+package it.polimi.ingsw.eriantys.cli.menus;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.cli.Menu;
