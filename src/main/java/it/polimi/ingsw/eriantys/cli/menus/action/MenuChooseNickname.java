@@ -1,8 +1,7 @@
-package it.polimi.ingsw.eriantys.controller.menus.action;
+package it.polimi.ingsw.eriantys.cli.menus.action;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.controller.menus.Menu;
-import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
+import it.polimi.ingsw.eriantys.cli.Menu;
 
 import java.util.Scanner;
 
@@ -17,7 +16,7 @@ public class MenuChooseNickname extends Menu {
   }
 
   @Override
-  public void makeChoice(ParamBuilder paramBuilder) {
+  public void makeChoice() {
     Scanner s = new Scanner(System.in);
     String input;
     boolean done = false;

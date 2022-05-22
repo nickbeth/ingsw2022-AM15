@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.controller.menus;
+package it.polimi.ingsw.eriantys.cli;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
 
@@ -21,10 +21,8 @@ public abstract class Menu {
 
   /**
    * Control logic of the choice of the player
-   *
-   * @param paramBuilder
    */
-  public abstract void makeChoice(ParamBuilder paramBuilder);
+  public abstract void makeChoice();
 
 
   public abstract Menu nextMenu();

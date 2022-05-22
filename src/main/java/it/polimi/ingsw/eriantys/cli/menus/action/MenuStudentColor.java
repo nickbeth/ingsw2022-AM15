@@ -1,14 +1,12 @@
-package it.polimi.ingsw.eriantys.controller.menus.action;
+package it.polimi.ingsw.eriantys.cli.menus.action;
 
-import it.polimi.ingsw.eriantys.controller.menus.Menu;
-import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
+import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
 
 import java.util.Scanner;
 
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
-public class MenuStudentColor extends Menu {
-  @Override
+public class MenuStudentColor {
   public void showOptions() {
     System.out.println("1 - Pink");
     System.out.println("2 - Red");
@@ -17,7 +15,6 @@ public class MenuStudentColor extends Menu {
     System.out.println("5 - Green");
   }
 
-  @Override
   public void makeChoice(ParamBuilder paramBuilder) {
     Scanner s = new Scanner(System.in);
     boolean done;
@@ -39,10 +36,5 @@ public class MenuStudentColor extends Menu {
         }
       }
     } while (!done);
-  }
-
-  @Override
-  public Menu nextMenu() {
-    return null;
   }
 }

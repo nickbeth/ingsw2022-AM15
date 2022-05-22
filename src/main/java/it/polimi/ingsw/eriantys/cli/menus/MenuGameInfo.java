@@ -1,10 +1,9 @@
-package it.polimi.ingsw.eriantys.controller.menus;
+package it.polimi.ingsw.eriantys.cli.menus;
 
+import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.views.GameLobbyView;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.controller.menus.Menu;
-import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
-import it.polimi.ingsw.eriantys.controller.menus.planning.MenuPickAssistantCard;
+import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
@@ -28,7 +27,7 @@ public class MenuGameInfo extends Menu {
   }
 
   @Override
-  public void makeChoice(ParamBuilder paramBuilder) {
+  public void makeChoice() {
     Scanner s = new Scanner(System.in);
     boolean done = false;
 

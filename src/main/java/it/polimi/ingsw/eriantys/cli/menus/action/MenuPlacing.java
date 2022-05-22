@@ -1,11 +1,11 @@
-package it.polimi.ingsw.eriantys.controller.menus.action;
+package it.polimi.ingsw.eriantys.cli.menus.action;
 
+import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.cli.views.CharacterCardView;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.controller.menus.Menu;
-import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
+import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.text.MessageFormat;
@@ -35,9 +35,10 @@ public class MenuPlacing extends Menu {
   }
 
   @Override
-  public void makeChoice(ParamBuilder paramBuilder) {
+  public void makeChoice() {
     Scanner s = new Scanner(System.in);
     boolean done = false;
+    ParamBuilder paramBuilder = new ParamBuilder();
 
     do {
       showOptions();
@@ -133,7 +134,7 @@ public class MenuPlacing extends Menu {
             System.out.println("Invalid input parameters");
             return;
           }
-          (new MenuEffect(controller)).makeChoice(paramBuilder);
+          (new MenuEffect(controller)).makeChoice();
           done = true;
         }
 

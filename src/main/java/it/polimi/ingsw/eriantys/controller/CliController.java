@@ -1,12 +1,9 @@
 package it.polimi.ingsw.eriantys.controller;
 
-import it.polimi.ingsw.eriantys.controller.menus.Menu;
-import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
-import it.polimi.ingsw.eriantys.controller.menus.action.MenuConnect;
+import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.action.MenuConnect;
 import it.polimi.ingsw.eriantys.network.Client;
 import org.fusesource.jansi.Ansi;
-
-import javax.swing.*;
 
 public class CliController extends Controller implements Runnable {
   public CliController(Client networkClient) {
@@ -22,7 +19,7 @@ public class CliController extends Controller implements Runnable {
   public void run() {
     Menu currentMenu = new MenuConnect(this);
     while (true) {
-      currentMenu.makeChoice(new ParamBuilder());
+      currentMenu.makeChoice();
       currentMenu = currentMenu.nextMenu();
     }
   }

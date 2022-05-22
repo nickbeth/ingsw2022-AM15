@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.controller.menus;
+package it.polimi.ingsw.eriantys.cli.menus;
 
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;

@@ -1,9 +1,8 @@
-package it.polimi.ingsw.eriantys.controller.menus.action;
+package it.polimi.ingsw.eriantys.cli.menus.action;
 
+import it.polimi.ingsw.eriantys.cli.menus.MenuGameInfo;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.controller.menus.Menu;
-import it.polimi.ingsw.eriantys.controller.menus.MenuGameInfo;
-import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
+import it.polimi.ingsw.eriantys.cli.Menu;
 
 import java.util.Scanner;
 
@@ -22,7 +21,7 @@ public class MenuCreateOrJoin extends Menu {
   }
 
   @Override
-  public void makeChoice(ParamBuilder paramBuilder) {
+  public void makeChoice() {
     Scanner s = new Scanner(System.in);
     boolean done = false;
 

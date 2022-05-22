@@ -1,10 +1,9 @@
-package it.polimi.ingsw.eriantys.controller.menus.planning;
+package it.polimi.ingsw.eriantys.cli.menus.planning;
 
+import it.polimi.ingsw.eriantys.cli.menus.action.MenuPlacing;
 import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.controller.menus.Menu;
-import it.polimi.ingsw.eriantys.controller.menus.ParamBuilder;
-import it.polimi.ingsw.eriantys.controller.menus.action.MenuPlacing;
+import it.polimi.ingsw.eriantys.cli.Menu;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -23,7 +22,7 @@ public class MenuPickAssistantCard extends Menu {
   }
 
   @Override
-  public void makeChoice(ParamBuilder paramBuilder) {
+  public void makeChoice() {
     Scanner s = new Scanner(System.in);
     boolean done = false;
 
