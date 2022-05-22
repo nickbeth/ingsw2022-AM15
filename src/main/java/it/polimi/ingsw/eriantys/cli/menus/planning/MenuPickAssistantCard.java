@@ -1,10 +1,11 @@
 package it.polimi.ingsw.eriantys.cli.menus.planning;
 
+import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.action.MenuPlacing;
 import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.cli.Menu;
 
+import java.io.PrintStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,7 +15,7 @@ public class MenuPickAssistantCard extends Menu {
   }
 
   @Override
-  public void showOptions() {
+  public void showOptions(PrintStream out) {
     showViewOptions();
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       System.out.println("A - Choose assistant card");
@@ -22,13 +23,12 @@ public class MenuPickAssistantCard extends Menu {
   }
 
   @Override
-  public void makeChoice() {
-    Scanner s = new Scanner(System.in);
+  public void show(Scanner in, PrintStream out) {
     boolean done = false;
 
     do {
-      showOptions();
-      switch (s.nextLine()) {
+      showOptions(out);
+      switch (in.nextLine()) {
         case "A", "a" -> {
           (new AssistantCardsView(controller.getGameState().getPlayer(controller.getNickname()))).draw(System.out);
           int index = -1;
@@ -48,7 +48,7 @@ public class MenuPickAssistantCard extends Menu {
   }
 
   @Override
-  public Menu nextMenu() {
+  public Menu next() {
     return new MenuPlacing(controller);
   }
 }

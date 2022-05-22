@@ -1,9 +1,10 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
-import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.network.Client;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 
 /**
@@ -15,44 +16,43 @@ public class MenuConnect extends Menu {
   }
 
   @Override
-  public void showOptions() {
+  public void showOptions(PrintStream out) {
   }
 
   @Override
-  public void makeChoice() {
-    Scanner s = new Scanner(System.in);
+  public void show(Scanner in, PrintStream out) {
     String input, address = null;
     int port = Client.DEFAULT_PORT;
     boolean done = false;
 
     do {
-      System.out.print("Enter the IP address of the server (default: localhost): ");
-      input = s.nextLine();
+      out.print("Enter the IP address of the server (default: localhost): ");
+      input = in.nextLine();
       if (!input.isBlank())
         address = input;
 
-      System.out.print("Enter the port the server is running on (default: 1234): ");
+      out.print("Enter the port the server is running on (default: 1234): ");
       while (true) {
-        input = s.nextLine();
+        input = in.nextLine();
         try {
           if (!input.isEmpty())
             port = Integer.parseInt(input);
           break;
         } catch (NumberFormatException e) {
-          System.out.println("Invalid port, try again");
+          out.println("Invalid port, try again");
         }
       }
 
       if (controller.connect(address, port)) {
         done = true;
       } else {
-        System.out.println("Failed to connect to the server");
+        out.println("Failed to connect to the server");
       }
     } while (!done);
   }
 
   @Override
-  public Menu nextMenu() {
+  public Menu next() {
     return new MenuChooseNickname(controller);
   }
 }

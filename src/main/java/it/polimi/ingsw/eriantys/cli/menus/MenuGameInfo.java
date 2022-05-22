@@ -1,12 +1,13 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
 import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.cli.views.GameLobbyView;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -18,46 +19,44 @@ public class MenuGameInfo extends Menu {
   }
 
   @Override
-  public void showOptions() {
-    (new GameLobbyView(controller.getGameInfo())).draw(System.out);
-    System.out.println("C - Choose a tower color");
-    System.out.println("S - Start game");
+  public void showOptions(PrintStream out) {
+    (new GameLobbyView(controller.getGameInfo())).draw(out);
+    out.println("C - Choose a tower color");
+    out.println("S - Start game");
     //todo leave game?
-    //showViewOptions();
   }
 
   @Override
-  public void makeChoice() {
-    Scanner s = new Scanner(System.in);
+  public void show(Scanner in, PrintStream out) {
     boolean done = false;
 
     do {
-      showOptions();
-      switch (s.nextLine()) {
+      showOptions(out);
+      switch (in.nextLine()) {
         //choose a tower color for the lobby
         case "C", "c" -> {
           if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
             break;
-          System.out.println("Choose tower color: ");
-          System.out.println("1 - WHITE");
-          System.out.println("2 - BLACK");
-          System.out.println("3 - GRAY");
+          out.println("Choose tower color: ");
+          out.println("1 - WHITE");
+          out.println("2 - BLACK");
+          out.println("3 - GRAY");
           int team = -1;
           TowerColor towerColor;
           try {
-            team = s.nextInt();
+            team = in.nextInt();
           } catch (InputMismatchException e) {
-            System.out.println("Input must be a number");
+            out.println("Input must be a number");
             return;
           }
           try {
             towerColor = new ArrayList<>(Arrays.asList(TowerColor.values())).get(team - 1);
           } catch (IndexOutOfBoundsException e) {
-            System.out.println("Invalid number");
+            out.println("Invalid number");
             return;
           }
           if (!controller.sendSelectTower(towerColor)) {
-            System.out.println("Maximum of " + towerColor + " players already reached");
+            out.println("Maximum of " + towerColor + " players already reached");
             return;
           }
         }
@@ -66,18 +65,18 @@ public class MenuGameInfo extends Menu {
           if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
             break;
           if (!controller.startGame()) {
-            System.out.println("There are not enough players with a chosen tower color to start");
+            out.println("There are not enough players with a chosen tower color to start");
             return;
           }
           done = true;
         }
-        default -> System.out.println("Choose a valid option");
+        default -> out.println("Choose a valid option");
       }
     } while (!done);
   }
 
   @Override
-  public Menu nextMenu() {
+  public Menu next() {
     return new MenuPickAssistantCard(controller);
   }
 }

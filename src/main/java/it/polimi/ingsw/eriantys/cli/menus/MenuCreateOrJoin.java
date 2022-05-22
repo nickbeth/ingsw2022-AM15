@@ -1,9 +1,9 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
-import it.polimi.ingsw.eriantys.cli.menus.MenuGameInfo;
-import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.controller.Controller;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 
 /**
@@ -15,48 +15,47 @@ public class MenuCreateOrJoin extends Menu {
   }
 
   @Override
-  public void showOptions() {
-    System.out.println("1 - Create a new game");
-    System.out.println("2 - Join an existing game");
+  public void showOptions(PrintStream out) {
+    out.println("1 - Create a new game");
+    out.println("2 - Join an existing game");
   }
 
   @Override
-  public void makeChoice() {
-    Scanner s = new Scanner(System.in);
+  public void show(Scanner in, PrintStream out) {
     boolean done = false;
 
     do {
-      showOptions();
-      switch (s.nextLine()) {
+      showOptions(out);
+      switch (in.nextLine()) {
         case "1" -> {
-          showCreateOptions(s);
+          showCreateOptions(in, out);
           done = true;
         }
         case "2" -> {
-          showJoinOptions(s);
+          showJoinOptions(in, out);
           done = true;
         }
-        default -> System.out.println("Invalid choice");
+        default -> out.println("Invalid choice");
       }
     } while (!done);
   }
 
   @Override
-  public Menu nextMenu() {
+  public Menu next() {
     return new MenuGameInfo(controller);
   }
 
-  private void showCreateOptions(Scanner s) {
-    System.out.print("Enter the game mode: ");
-    s.nextLine();
-    System.out.print("Enter the number of players: ");
-    s.nextLine();
+  private void showCreateOptions(Scanner in, PrintStream out) {
+    out.print("Enter the game mode: ");
+    in.nextLine();
+    out.print("Enter the number of players: ");
+    in.nextLine();
     // TODO: handle input and call controller
   }
 
-  private void showJoinOptions(Scanner s) {
-    System.out.print("Enter the game code: ");
-    s.nextLine();
+  private void showJoinOptions(Scanner in, PrintStream out) {
+    out.print("Enter the game code: ");
+    in.nextLine();
     // TODO: handle input and call controller
   }
 }

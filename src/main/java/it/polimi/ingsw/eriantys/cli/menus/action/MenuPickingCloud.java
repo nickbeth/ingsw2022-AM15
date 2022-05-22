@@ -1,11 +1,12 @@
 package it.polimi.ingsw.eriantys.cli.menus.action;
 
-import it.polimi.ingsw.eriantys.cli.views.CloudsView;
-import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
+import it.polimi.ingsw.eriantys.cli.views.CloudsView;
+import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class MenuPickingCloud extends Menu {
@@ -14,41 +15,40 @@ public class MenuPickingCloud extends Menu {
   }
 
   @Override
-  public void showOptions() {
+  public void showOptions(PrintStream out) {
     showViewOptions();
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
-      System.out.println("Q - Pick cloud");
+      out.println("Q - Pick cloud");
     }
   }
 
   @Override
-  public void makeChoice() {
-    Scanner s = new Scanner(System.in);
+  public void show(Scanner in, PrintStream out) {
     boolean done = false;
 
     do {
-      showOptions();
-      switch (s.nextLine()) {
+      showOptions(out);
+      switch (in.nextLine()) {
         case "Q", "q" -> {
           if (!controller.getGameState().getTurnPhase().equals(TurnPhase.PICKING))
             break;
-          System.out.println("Choose cloud index: ");
-          (new CloudsView(controller.getGameState().getPlayingField().getClouds())).draw(System.out);
+          out.println("Choose cloud index: ");
+          (new CloudsView(controller.getGameState().getPlayingField().getClouds())).draw(out);
 
           if (!controller.sendPickCloud(0)) {
-            System.out.println("Invalid input parameters");
+            out.println("Invalid input parameters");
             return;
           }
           done = true;
         }
-        default -> System.out.println("Choose a valid option");
+        default -> out.println("Choose a valid option");
       }
     } while (!done);
   }
 
   //todo pensare bene al next menu
   @Override
-  public Menu nextMenu() {
+  public Menu next() {
     return new MenuPickAssistantCard(controller);
   }
 

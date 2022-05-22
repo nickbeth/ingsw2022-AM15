@@ -1,13 +1,14 @@
 package it.polimi.ingsw.eriantys.cli.menus.action;
 
+import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.cli.views.CharacterCardView;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
+import java.io.PrintStream;
 import java.text.MessageFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -20,29 +21,28 @@ public class MenuPlacing extends Menu {
   }
 
   @Override
-  public void showOptions() {
+  public void showOptions(PrintStream out) {
     showViewOptions();
     int studentsLeft = controller.getGameState().getRuleBook().playableStudentCount - studentMoved;
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       if (controller.getGameState().getTurnPhase() == TurnPhase.PLACING) {
-        System.out.println(
+        out.println(
                 MessageFormat.format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
-        System.out.println(
+        out.println(
                 MessageFormat.format("W - Move a student from entrance to dining ({0} left)", studentsLeft));
-        System.out.println("E - Play a character card");
+        out.println("E - Play a character card");
       }
     }
   }
 
   @Override
-  public void makeChoice() {
-    Scanner s = new Scanner(System.in);
+  public void show(Scanner in, PrintStream out) {
     boolean done = false;
     ParamBuilder paramBuilder = new ParamBuilder();
 
     do {
-      showOptions();
-      switch (s.nextLine()) {
+      showOptions(out);
+      switch (in.nextLine()) {
         // Move Students from entrance to island
         case "Q", "q" -> {
           // Check of the Turn phase
@@ -53,19 +53,19 @@ public class MenuPlacing extends Menu {
 
           // Shows entrance
           (new DashboardView(controller.getGameState().getRuleBook(), controller.getGameState().getCurrentPlayer().getDashboard(),
-                  controller.getGameState().getPlayingField().getProfessorHolder())).draw(System.out);
+                  controller.getGameState().getPlayingField().getProfessorHolder())).draw(out);
 
           // Takes the color
-          (new MenuStudentColor()).makeChoice(paramBuilder);
+          (new MenuStudentColor()).show(in, out, paramBuilder);
 
           // Ask for amount
           int amount;
           try {
-            System.out.print("Amount: ");
-            amount = s.nextInt();
+            out.print("Amount: ");
+            amount = in.nextInt();
             paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
           } catch (InputMismatchException e) {
-            System.out.println("Insert a number");
+            out.println("Insert a number");
           }
 
           studentMoved += paramBuilder.getStudentsToMove().getCount();
@@ -74,17 +74,17 @@ public class MenuPlacing extends Menu {
           int islandIndex = -1;
           try {
             // Shows islands
-            System.out.println("Choose an island: ");
+            out.println("Choose an island: ");
             (new IslandsView(controller.getGameState().getPlayingField().getIslands(),
-                    controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(System.out);
-            islandIndex = s.nextInt();
+                    controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(out);
+            islandIndex = in.nextInt();
           } catch (InputMismatchException e) {
-            System.out.println("Number required");
+            out.println("Number required");
             studentMoved -= paramBuilder.getStudentsToMove().getCount();
           }
           // Send actions
           if (!controller.sendMoveStudentsToIsland(paramBuilder.getStudentsToMove(), islandIndex)) {
-            System.out.println("Invalid input parameters");
+            out.println("Invalid input parameters");
           }
         }
         // Move Students from entrance to dining
@@ -96,16 +96,16 @@ public class MenuPlacing extends Menu {
           paramBuilder.flushStudentToMove();
 
           // Takes the color
-          (new MenuStudentColor()).makeChoice(paramBuilder);
+          (new MenuStudentColor()).show(in, out, paramBuilder);
 
           // Ask for amount
           int amount;
           try {
-            System.out.print("Amount: ");
-            amount = s.nextInt();
+            out.print("Amount: ");
+            amount = in.nextInt();
             paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
           } catch (InputMismatchException e) {
-            System.out.println("Insert a number");
+            out.println("Insert a number");
           }
 
           studentMoved += paramBuilder.getStudentsToMove().getCount();
@@ -113,7 +113,7 @@ public class MenuPlacing extends Menu {
           // Send actions
           if (!controller.sendMoveStudentsToDiningHall(paramBuilder.getStudentsToMove())) {
             studentMoved -= paramBuilder.getStudentsToMove().getCount();
-            System.out.println("Invalid input parameters");
+            out.println("Invalid input parameters");
           }
         }
         // Choose a character card from those in playing field
@@ -122,29 +122,29 @@ public class MenuPlacing extends Menu {
             break;
           int ccIndex = -1;
           try {
-            System.out.println("Playable character cards: ");
-            (new CharacterCardView(controller.getGameState().getPlayingField().getCharacterCards())).draw(System.out);
-            System.out.println("Choose a character card: ");
-            ccIndex = s.nextInt();
+            out.println("Playable character cards: ");
+            (new CharacterCardView(controller.getGameState().getPlayingField().getCharacterCards())).draw(out);
+            out.println("Choose a character card: ");
+            ccIndex = in.nextInt();
           } catch (InputMismatchException e) {
-            System.out.println("Input must be a number");
+            out.println("Input must be a number");
             return;
           }
           if (!controller.sendChooseCharacterCard(ccIndex)) {
-            System.out.println("Invalid input parameters");
+            out.println("Invalid input parameters");
             return;
           }
-          (new MenuEffect(controller)).makeChoice();
+          (new MenuEffect(controller)).show(in, out);
           done = true;
         }
 
-        default -> System.out.println("Choose a valid option");
+        default -> out.println("Choose a valid option");
       }
     } while (!done);
   }
 
   @Override
-  public Menu nextMenu() {
+  public Menu next() {
     return new MenuMoving(controller);
   }
 }

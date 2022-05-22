@@ -1,10 +1,11 @@
 package it.polimi.ingsw.eriantys.cli.menus.action;
 
+import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
+import java.io.PrintStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,21 +15,20 @@ public class MenuMoving extends Menu {
   }
 
   @Override
-  public void showOptions() {
+  public void showOptions(PrintStream out) {
     showViewOptions();
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
-      System.out.println("T - Move mother nature");
+      out.println("T - Move mother nature");
     }
   }
 
   @Override
-  public void makeChoice() {
-    Scanner s = new Scanner(System.in);
+  public void show(Scanner in, PrintStream out) {
     boolean done = false;
 
     do {
-      showOptions();
-      switch (s.nextLine()) {
+      showOptions(out);
+      switch (in.nextLine()) {
         // Move mother nature a certain amount
         case "T", "t" -> {
           // Check of the Turn phase
@@ -39,28 +39,28 @@ public class MenuMoving extends Menu {
           int amount = -1;
           try {
             // Shows islands
-            System.out.println("Playing Field: ");
+            out.println("Playing Field: ");
             (new IslandsView(controller.getGameState().getPlayingField().getIslands(),
-                    controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(System.out);
-            System.out.println("Insert the amount of mother nature movements: ");
-            amount = s.nextInt();
+                    controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(out);
+            out.println("Insert the amount of mother nature movements: ");
+            amount = in.nextInt();
           } catch (InputMismatchException e) {
-            System.out.println("Input must be a number");
+            out.println("Input must be a number");
           }
           //sends action
           if (!controller.sendMoveMotherNature(amount)) {
-            System.out.println("Invalid input parameters");
+            out.println("Invalid input parameters");
             return;
           }
         }
-        default -> System.out.println("Choose a valid option");
+        default -> out.println("Choose a valid option");
       }
     } while (!done);
   }
 
   //todo pensare bene al next menu
   @Override
-  public Menu nextMenu() {
+  public Menu next() {
     return new MenuPickingCloud(controller);
   }
 

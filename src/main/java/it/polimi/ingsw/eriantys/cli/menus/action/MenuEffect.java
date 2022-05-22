@@ -1,14 +1,15 @@
 package it.polimi.ingsw.eriantys.cli.menus.action;
 
+import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 
+import java.io.PrintStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -18,7 +19,7 @@ public class MenuEffect extends Menu {
   }
 
   @Override
-  public void showOptions() {
+  public void showOptions(PrintStream out) {
     CharacterCard cc = controller.getGameState().getPlayingField().getPlayedCharacterCard();
     GameAction action;
 
@@ -53,7 +54,7 @@ public class MenuEffect extends Menu {
   }
 
   @Override
-  public void makeChoice() {
+  public void show(Scanner in, PrintStream out) {
     boolean done = false;
     ParamBuilder paramBuilder = new ParamBuilder();
     CharacterCard cc = controller.getGameState().getPlayingField().getPlayedCharacterCard();
@@ -61,8 +62,8 @@ public class MenuEffect extends Menu {
 //    if (cc instanceof NoInputCards) continue;
     do {
       if (cc instanceof ColorInputCards) {
-        System.out.println("Insert color: ");
-        (new MenuStudentColor()).makeChoice(paramBuilder);
+        out.println("Insert color: ");
+        (new MenuStudentColor()).show(in, out, paramBuilder);
         ((ColorInputCards) cc).setColor(paramBuilder.getChosenColor());
       }
 
@@ -70,26 +71,26 @@ public class MenuEffect extends Menu {
         // View islands
         (new IslandsView(controller.getGameState().getPlayingField().getIslands(),
                 controller.getGameState().getPlayingField().getMotherNaturePosition()))
-                .draw(System.out);
-        System.out.println("Insert island index: ");
+                .draw(out);
+        out.println("Insert island index: ");
 
         try {
-          int index = (new Scanner(System.in)).nextInt();
+          int index = in.nextInt();
           ((IslandInputCards) cc).setIslandIndex(index);
         } catch (InputMismatchException e) {
-          System.out.println("Input must be a number");
+          out.println("Input must be a number");
         }
       }
 
       if (controller.sendActivateEffect(cc))
         done = true;
       else
-        System.out.println("Invalid input parameters");
+        out.println("Invalid input parameters");
     } while (!done);
   }
 
   @Override
-  public Menu nextMenu() {
+  public Menu next() {
     return null;
   }
 }
