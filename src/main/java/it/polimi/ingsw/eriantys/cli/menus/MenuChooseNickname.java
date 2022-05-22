@@ -27,7 +27,7 @@ public class MenuChooseNickname extends Menu {
       if (input.isBlank()) {
         out.println("A nickname cannot be empty or blank");
       } else {
-        // TODO: call controller to send a message
+        controller.sendNickname(input);
         done = true;
       }
     } while (!done);

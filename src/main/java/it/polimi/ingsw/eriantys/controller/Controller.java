@@ -242,6 +242,12 @@ abstract public class Controller implements Runnable {
     return true;
   }
 
+  public void sendNickname(String nickname) {
+    networkClient.send(new Message.Builder(NICKNAME_REQUEST)
+            .nickname(nickname)
+            .build());
+  }
+
   public void sendCreateGame(GameInfo gameInfo) {
     networkClient.send(new Message.Builder(CREATE_GAME)
             .gameInfo(gameInfo)
