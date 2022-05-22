@@ -15,7 +15,7 @@ public class MenuCreateOrJoin extends Menu {
   }
 
   @Override
-  public void showOptions(PrintStream out) {
+  protected void showOptions(PrintStream out) {
     out.println("1 - Create a new game");
     out.println("2 - Join an existing game");
   }

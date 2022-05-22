@@ -15,7 +15,7 @@ public class MenuPickAssistantCard extends Menu {
   }
 
   @Override
-  public void showOptions(PrintStream out) {
+  protected void showOptions(PrintStream out) {
     showViewOptions();
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       System.out.println("A - Choose assistant card");

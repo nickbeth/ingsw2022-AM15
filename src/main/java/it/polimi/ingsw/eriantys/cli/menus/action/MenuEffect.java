@@ -19,7 +19,7 @@ public class MenuEffect extends Menu {
   }
 
   @Override
-  public void showOptions(PrintStream out) {
+  protected void showOptions(PrintStream out) {
     CharacterCard cc = controller.getGameState().getPlayingField().getPlayedCharacterCard();
     GameAction action;
 

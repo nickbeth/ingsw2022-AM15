@@ -21,7 +21,7 @@ public class MenuPlacing extends Menu {
   }
 
   @Override
-  public void showOptions(PrintStream out) {
+  protected void showOptions(PrintStream out) {
     showViewOptions();
     int studentsLeft = controller.getGameState().getRuleBook().playableStudentCount - studentMoved;
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {

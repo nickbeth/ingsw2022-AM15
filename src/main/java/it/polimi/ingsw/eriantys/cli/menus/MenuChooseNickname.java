@@ -12,7 +12,7 @@ public class MenuChooseNickname extends Menu {
   }
 
   @Override
-  public void showOptions(PrintStream out) {
+  protected void showOptions(PrintStream out) {
     out.print("Enter your nickname: ");
   }
 

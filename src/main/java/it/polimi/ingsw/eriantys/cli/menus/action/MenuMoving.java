@@ -15,7 +15,7 @@ public class MenuMoving extends Menu {
   }
 
   @Override
-  public void showOptions(PrintStream out) {
+  protected void showOptions(PrintStream out) {
     showViewOptions();
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       out.println("T - Move mother nature");

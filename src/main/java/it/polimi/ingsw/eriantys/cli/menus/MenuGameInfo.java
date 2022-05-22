@@ -19,7 +19,7 @@ public class MenuGameInfo extends Menu {
   }
 
   @Override
-  public void showOptions(PrintStream out) {
+  protected void showOptions(PrintStream out) {
     (new GameLobbyView(controller.getGameInfo())).draw(out);
     out.println("C - Choose a tower color");
     out.println("S - Start game");

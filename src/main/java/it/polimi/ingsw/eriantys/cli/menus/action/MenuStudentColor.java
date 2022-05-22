@@ -8,7 +8,7 @@ import java.util.Scanner;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
 public class MenuStudentColor {
-  public void showOptions(PrintStream out) {
+  protected void showOptions(PrintStream out) {
     out.println("1 - Pink");
     out.println("2 - Red");
     out.println("3 - Blue");

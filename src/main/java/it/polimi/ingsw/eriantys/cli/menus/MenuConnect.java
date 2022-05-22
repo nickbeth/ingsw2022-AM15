@@ -16,7 +16,7 @@ public class MenuConnect extends Menu {
   }
 
   @Override
-  public void showOptions(PrintStream out) {
+  protected void showOptions(PrintStream out) {
   }
 
   @Override
