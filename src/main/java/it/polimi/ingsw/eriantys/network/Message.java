@@ -17,8 +17,8 @@ public class Message implements Serializable {
    */
   public static class Builder {
     private MessageType type;
-    private String gameCode;
     private String nickname;
+    private String gameCode;
     private String error;
     private GameAction gameAction;
     private GameInfo gameInfo;
@@ -41,22 +41,22 @@ public class Message implements Serializable {
     }
 
     /**
-     * Sets the game code of this message.
-     *
-     * @return The builder instance
-     */
-    public Builder gameCode(String gameCode) {
-      this.gameCode = gameCode;
-      return this;
-    }
-
-    /**
      * Sets the nickname of this message.
      *
      * @return The builder instance
      */
     public Builder nickname(String nickname) {
       this.nickname = nickname;
+      return this;
+    }
+
+    /**
+     * Sets the game code of this message.
+     *
+     * @return The builder instance
+     */
+    public Builder gameCode(String gameCode) {
+      this.gameCode = gameCode;
       return this;
     }
 
@@ -94,9 +94,9 @@ public class Message implements Serializable {
      * Resets all underlying parameters.
      */
     public Builder reset() {
-      this.gameCode = null;
-      this.nickname = null;
       this.type = null;
+      this.nickname = null;
+      this.gameCode = null;
       this.error = null;
       this.gameAction = null;
       this.gameInfo = null;
@@ -107,21 +107,21 @@ public class Message implements Serializable {
      * Builds a new message based on the given parameters.
      */
     public Message build() {
-      return new Message(type, gameCode, nickname, error, gameAction, gameInfo);
+      return new Message(type, nickname, gameCode, error, gameAction, gameInfo);
     }
   }
 
   private final MessageType type;
-  private final String gameCode;
   private final String nickname;
+  private final String gameCode;
   private final String error;
   private final GameAction gameAction;
   private final GameInfo gameInfo;
 
-  private Message(MessageType type, String gameCode, String nickname, String error, GameAction gameAction, GameInfo gameInfo) {
+  private Message(MessageType type, String nickname, String gameCode, String error, GameAction gameAction, GameInfo gameInfo) {
     this.type = type;
-    this.gameCode = gameCode;
     this.nickname = nickname;
+    this.gameCode = gameCode;
     this.error = error;
     this.gameAction = gameAction;
     this.gameInfo = gameInfo;
@@ -154,11 +154,11 @@ public class Message implements Serializable {
   @Override
   public String toString() {
     return "Message[type=" + type +
-        ", gameCode=" + gameCode +
-        ", nickname=" + nickname +
-        ", action=" + gameAction().getClass().getSimpleName() +
-        ", error=" + error +
-        ", gameInfo=" + gameInfo +
-        "]";
+            ", nickname=" + nickname +
+            ", gameCode=" + gameCode +
+            ", error=" + error +
+            ", action=" + (gameAction != null ? gameAction().getClass().getSimpleName() : null) +
+            ", gameInfo=" + gameInfo +
+            "]";
   }
 }
