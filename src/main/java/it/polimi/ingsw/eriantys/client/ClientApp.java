@@ -16,6 +16,9 @@ public class ClientApp {
 
   public ClientApp(boolean isGui) {
     this.isGui = isGui;
+    // Create a shared queue between the network client and the message handler
+    // Received messages will be added to this queue
+    // The message handler will poll the queue for messages to process
     BlockingQueue<MessageQueueEntry> messageQueue = new LinkedBlockingQueue<>();
     this.networkClient = new Client(messageQueue);
     this.controller = Controller.create(isGui, networkClient);
@@ -23,6 +26,10 @@ public class ClientApp {
   }
 
   public void run() {
+    // Launch the message handler thread
+    new Thread(messageHandler, "message-handler").start();
+
+    // Run the controller loop in this thread
     controller.run();
   }
 }

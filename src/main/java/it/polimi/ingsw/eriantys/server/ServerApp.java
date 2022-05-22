@@ -16,7 +16,7 @@ public class ServerApp {
   ServerApp(int port) {
     this.port = port;
     // Create a shared queue between the network server and the game server
-    // Messages sent by clients will be added to this queue
+    // Received messages will be added to this queue
     // The game server will poll the queue for messages to process
     BlockingQueue<MessageQueueEntry> messageQueue = new LinkedBlockingQueue<>();
     this.networkServer = new Server(port, messageQueue);
@@ -25,7 +25,7 @@ public class ServerApp {
 
   public void run() {
     try {
-      // Initialize then network server and launch the accepting thread
+      // Initialize the network server and launch the accepting thread
       networkServer.init();
       new Thread(networkServer, "accept").start();
 

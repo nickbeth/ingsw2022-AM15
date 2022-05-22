@@ -270,6 +270,8 @@ abstract public class Controller implements Runnable {
   public boolean connect(String address, int port) {
     try {
       networkClient.connect(address, port);
+      // Launch the network listening thread
+      new Thread(networkClient, "socket").start();
     } catch (IOException e) {
       return false;
     }
