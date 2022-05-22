@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.ConnectionController" prefHeight="400.0" prefWidth="600.0">
+    <TextField fx:id="serverIp" promptText="insert server ip" layoutX="115.0" layoutY="30.0" />
+    <TextField fx:id="serverPort" promptText="insert server port" layoutX="115.0" layoutY="60.0" />
+    <Button fx:id="backButton" layoutX="115" layoutY="90" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="20.0" prefWidth="73.0" text="back" />
+    <Button fx:id="confirm" layoutX="200" layoutY="90" mnemonicParsing="false" onAction="#confirmButtonAction" prefHeight="20.0" prefWidth="73.0" text="confirm" />
+</AnchorPane>

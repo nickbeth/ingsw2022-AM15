@@ -6,15 +6,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class MainMenuController implements FXMLController {
+public class MainMenuController extends FXMLController {
   @FXML private Button playButton;
   @FXML private Button rulesButton;
   @FXML private Button quitButton;
-  private Gui gui;
 
   @FXML
   private void playButtonAction(ActionEvent actionEvent) {
-    System.out.println("start");
+      gui.setScene(SceneEnum.CONNECTION);
   }
 
   @FXML
@@ -27,9 +26,4 @@ public class MainMenuController implements FXMLController {
     gui.closeApplication();
   }
 
-
-  @Override
-  public void setGui(Gui gui) {
-    this.gui = gui;
-  }
 }

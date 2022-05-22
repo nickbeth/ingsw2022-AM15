@@ -24,6 +24,8 @@ public class Gui extends Application {
   public void start(Stage primaryStage) {
     stage = primaryStage;
     initializeScenes();
+    //pressing on the red X ti close a stage will call the closeApplication method
+    stage.setOnCloseRequest(e -> closeApplication());
     stage.setScene(sceneMap.get(SceneEnum.MENU));
     stage.show();
   }
@@ -49,9 +51,11 @@ public class Gui extends Application {
         Logger.warn(scene + " scene path not found");
       }
     }
-
   }
 
+  /**
+   * closes the current stage
+   */
   public void closeApplication(){
     stage.close();
   }
