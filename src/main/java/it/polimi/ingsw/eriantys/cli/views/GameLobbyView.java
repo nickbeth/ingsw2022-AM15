@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.*;
-import static it.polimi.ingsw.eriantys.cli.utils.Util.PADDING;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING;
 
 public class GameLobbyView extends View {
   private final GameInfo gameInfo;

@@ -4,7 +4,7 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.fusesource.jansi.Ansi;
 
-public class Util {
+public class PrintUtils {
   public static final char TOWER_CHAR = 'T';
   public static final char STUDENT_CHAR = '*';
   public static final String PROF_CHAR = "O";

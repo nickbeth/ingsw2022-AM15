@@ -7,7 +7,7 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import java.io.PrintStream;
 import java.text.MessageFormat;
 
-import static it.polimi.ingsw.eriantys.cli.utils.Util.*;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
 
 public class StudentsView extends View {
   private Students students;

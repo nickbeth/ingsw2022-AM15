@@ -2,9 +2,8 @@ package it.polimi.ingsw.eriantys.cli.views;
 
 import it.polimi.ingsw.eriantys.cli.View;
 import it.polimi.ingsw.eriantys.model.entities.Island;
-import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
-import static it.polimi.ingsw.eriantys.cli.utils.Util.*;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
 import java.io.PrintStream;
 
 public class IslandView extends View {

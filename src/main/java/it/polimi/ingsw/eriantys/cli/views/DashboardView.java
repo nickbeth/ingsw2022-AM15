@@ -12,7 +12,7 @@ import org.fusesource.jansi.Ansi;
 import java.io.PrintStream;
 import java.util.LinkedList;
 
-import static it.polimi.ingsw.eriantys.cli.utils.Util.*;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
 
 /**
  * A class that draws a {@link Dashboard} to the given PrintStream.
