@@ -9,19 +9,20 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 public class CliController extends Controller implements Runnable {
+  PrintStream out = System.out;
+
   public CliController(Client networkClient) {
     super(networkClient);
   }
 
   @Override
   public void showError(String error) {
-    System.out.println(Ansi.ansi().fgRed().a(error).reset());
+    out.println(Ansi.ansi().fgRed().a(error).reset());
   }
 
   @Override
   public void run() {
     Scanner in = new Scanner(System.in);
-    PrintStream out = System.out;
     Menu currentMenu = new MenuConnect(this);
     while (true) {
       currentMenu.show(in, out);
