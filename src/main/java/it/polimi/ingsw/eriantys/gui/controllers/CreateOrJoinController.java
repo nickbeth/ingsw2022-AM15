@@ -9,7 +9,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class CreateOrJoinController extends FXMLController {
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+public class CreateOrJoinController extends FXMLController implements PropertyChangeListener {
   @FXML
   private Label errorMessage;
   @FXML
@@ -74,5 +77,10 @@ public class CreateOrJoinController extends FXMLController {
   private void backButton(ActionEvent actionEvent) {
     //TODO: handle disconnection from server with the press of the back button
     gui.setScene(SceneEnum.CONNECTION);
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    gui.setScene(SceneEnum.LOBBY);
   }
 }

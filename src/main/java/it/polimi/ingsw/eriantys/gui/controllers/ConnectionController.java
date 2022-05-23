@@ -9,6 +9,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.tinylog.Logger;
 
+import java.beans.PropertyChangeEvent;
+
 public class ConnectionController extends FXMLController {
   @FXML
   private Button backButton;
@@ -47,6 +49,9 @@ public class ConnectionController extends FXMLController {
       errorMessage.setText("Invalid port, try again.");
       errorMessage.setOpacity(1);
     }
+  }
 
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
   }
 }

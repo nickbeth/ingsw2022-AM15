@@ -35,6 +35,10 @@ public class ObservableActionInvoker extends ActionInvoker {
     support.removePropertyChangeListener(listener);
   }
 
+  public void removeAllListener() {
+    //TODO: remove all listeners
+  }
+
   /**
    * Applies the given {@link GameAction} to the game state and notifies all subscribed listeners.
    *
