@@ -8,7 +8,7 @@ import org.fusesource.jansi.Ansi;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class CliController extends Controller implements Runnable {
+public class CliController extends Controller {
   PrintStream out = System.out;
 
   public CliController(Client networkClient) {

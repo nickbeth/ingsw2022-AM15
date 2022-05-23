@@ -15,5 +15,4 @@ public class RulesController extends FXMLController {
   public void backButtonAction(ActionEvent actionEvent) {
     gui.setScene(SceneEnum.MENU);
   }
-
 }

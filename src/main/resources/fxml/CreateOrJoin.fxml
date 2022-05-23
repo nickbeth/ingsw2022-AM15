@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import it.polimi.ingsw.eriantys.model.enums.GameMode?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.CreateOrJoinController">
+    <children>
+        <Group fx:id="createGameGroup" layoutX="-63.0" layoutY="32.0" visible="false">
+           <children>
+               <Button layoutX="506.0" layoutY="130.0" mnemonicParsing="false" onAction="#continueCreateGame" text="continue" />
+               <ChoiceBox fx:id="playerNumberChoice" layoutX="272.0" layoutY="130.0" prefHeight="25.0" prefWidth="97.0">
+                   <String fx:value="2" />
+                   <String fx:value="3" />
+                   <String fx:value="4" />
+               </ChoiceBox>
+               <ChoiceBox fx:id="gameModeChoice" layoutX="391.0" layoutY="130.0" prefHeight="25.0" prefWidth="93.0">
+                   <GameMode fx:value="NORMAL" />
+                   <GameMode fx:value="EXPERT" />
+               </ChoiceBox>
+               <Label layoutX="272.0" layoutY="113.0" text="number of players" />
+               <Label layoutX="391.0" layoutY="113.0" text="game mode" />
+           </children>
+        </Group>
+        <Group fx:id="joinGameGroup" layoutX="-63.0" layoutY="26.0" visible="false">
+           <children>
+               <TextField fx:id="gameUidField" layoutX="272.0" layoutY="175.0" prefHeight="25.0" prefWidth="97.0" text="Game UID" />
+               <Button layoutX="392.0" layoutY="175.0" mnemonicParsing="false" onAction="#continueJoinGame" text="continue" />
+           </children>
+        </Group>
+        <Button layoutX="91.0" layoutY="163.0" mnemonicParsing="false" onAction="#createGame" prefHeight="25.0" prefWidth="93.0" text="Create Game" />
+        <Button layoutX="91.0" layoutY="200.0" mnemonicParsing="false" onAction="#joinGame" prefHeight="25.0" prefWidth="93.0" text="Join Game" />
+    </children>
+</AnchorPane>

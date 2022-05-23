@@ -1,7 +1,9 @@
 package it.polimi.ingsw.eriantys.gui;
 
+import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.controllers.FXMLController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,8 +16,21 @@ import java.util.EnumMap;
 
 
 public class Gui extends Application {
+  private static Controller controller;
   private Stage stage;
   private EnumMap<SceneEnum, Scene> sceneMap = new EnumMap<>(SceneEnum.class);
+
+  public static void showError(String error){
+    //TODO new Stage pop up window for errors
+  }
+
+  public static void setController(Controller contr) {
+    controller = contr;
+  }
+
+  public Controller getController() {
+    return controller;
+  }
 
   /**
    *
@@ -28,10 +43,6 @@ public class Gui extends Application {
     stage.setOnCloseRequest(e -> closeApplication());
     stage.setScene(sceneMap.get(SceneEnum.MENU));
     stage.show();
-  }
-
-  public static void main(String[] args) {
-    launch();
   }
 
   /**
@@ -56,6 +67,7 @@ public class Gui extends Application {
   /**
    * closes the current stage
    */
+  //TODO: should stop client process
   public void closeApplication(){
     stage.close();
   }
