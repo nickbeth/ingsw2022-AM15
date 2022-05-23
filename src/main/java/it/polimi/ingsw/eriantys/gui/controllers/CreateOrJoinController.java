@@ -1,57 +1,78 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
-import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class CreateOrJoinController extends FXMLController {
   @FXML
-  private ChoiceBox playerNumberChoice;
+  private Label errorMessage;
   @FXML
-  private ChoiceBox gameModeChoice;
+  private ChoiceBox<Integer> playerNumberChoice;
+  @FXML
+  private ChoiceBox<GameMode> gameModeChoice;
   @FXML
   private Group joinGameGroup;
   @FXML
   private Group createGameGroup;
   @FXML
-  public TextField gameUidField;
+  private TextField gameUidField;
 
 
   @FXML
   private void continueCreateGame(ActionEvent actionEvent) {
-    String playerNumberStr = (String) playerNumberChoice.getValue();
-    int playerNumber;
-    GameMode gameMode = (GameMode) gameModeChoice.getValue();
-    try {
-      playerNumber = Integer.parseInt(playerNumberStr);
-      gui.getController().sendCreateGame(playerNumber, gameMode);
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
+    Integer playerNumber = playerNumberChoice.getValue();
+    GameMode gameMode = gameModeChoice.getValue();
+
+    if (gameMode == null) {
+      errorMessage.setText("please select a game mode to create the game");
+      errorMessage.setVisible(true);
     }
+    else if (playerNumber == null) {
+      errorMessage.setText("please select a number of players to create the game");
+      errorMessage.setVisible(true);
+    }
+    else
+      gui.getController().sendCreateGame(playerNumber, gameMode);
   }
 
   @FXML
   private void continueJoinGame(ActionEvent actionEvent) {
+    String gameCode = gameUidField.getText();
+    if(!gameCode.isEmpty())
+      gui.getController().sendJoinGame(gameCode);
+    else {
+      errorMessage.setText("please insert a gameCode to start the game");
+      errorMessage.setVisible(true);
+    }
   }
 
   @FXML
   private void createGame(ActionEvent actionEvent) {
+    errorMessage.setVisible(false);
+    errorMessage.setLayoutX(209);
+    errorMessage.setLayoutY(128);
     createGameGroup.setVisible(true);
     joinGameGroup.setVisible(false);
   }
 
   @FXML
   private void joinGame(ActionEvent actionEvent) {
+    errorMessage.setVisible(false);
+    errorMessage.setLayoutX(209);
+    errorMessage.setLayoutY(180);
     createGameGroup.setVisible(false);
     joinGameGroup.setVisible(true);
   }
 
   @FXML
-  public void initialize() {
+  private void backButton(ActionEvent actionEvent) {
+    //TODO: handle disconnection from server with the press of the back button
+    gui.setScene(SceneEnum.CONNECTION);
   }
 }

@@ -67,7 +67,6 @@ public class Gui extends Application {
   /**
    * closes the current stage
    */
-  //TODO: should stop client process
   public void closeApplication(){
     stage.close();
   }
