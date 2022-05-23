@@ -84,6 +84,8 @@ public class GameServer implements Runnable {
       case START_GAME -> handleStartGame(client, message);
 
       case PLAY_ACTION -> handlePlayAction(client, message);
+
+      case INTERNAL_SOCKET_ERROR -> handleSocketError(client, message);
     }
   }
 
@@ -100,25 +102,19 @@ public class GameServer implements Runnable {
       return;
     }
 
-    if (activeNicknames.contains(nickname)) {
+    // Check if a player with this nickname already exists, and add it if it doesn't
+    if (!activeNicknames.add(nickname)) {
       String errorMessage = String.format("Nickname '%s' is already in use", nickname);
       client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
-    activeNicknames.add(nickname);
     client.attach(new ClientAttachment(nickname));
     client.send(new Message.Builder().type(MessageType.NICKNAME_OK).nickname(nickname).build());
   }
 
   private void handleCreateGame(Client client, Message message) {
     String gameCode = generateGameCode();
-    if (activeNicknames.contains(message.nickname())) {
-      String errorMessage = String.format("Nickname '%s' is already in use", message.nickname());
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
-      return;
-    }
-
     GameEntry gameEntry = new GameEntry(message.gameInfo());
     gameEntry.addPlayer(message.nickname(), client);
 
@@ -149,13 +145,6 @@ public class GameServer implements Runnable {
 
     if (gameEntry.isFull()) {
       String errorMessage = String.format("Game with code '%s' is full", gameCode);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
-      return;
-    }
-
-    // Check if a player with this nickname already exists, and add it if it doesn't
-    if (!activeNicknames.add(message.nickname())) {
-      String errorMessage = String.format("Nickname '%s' is already in use", message.nickname());
       client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
@@ -232,6 +221,15 @@ public class GameServer implements Runnable {
     }
 
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEDATA).gameCode(gameCode).action(action).build());
+  }
+
+  public void handleSocketError(Client client, Message message) {
+    // Check that this message was created internally and is not coming from the network
+    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
+      return;
+
+    activeNicknames.remove(((ClientAttachment) client.attachment()).nickname());
+    client.close();
   }
 
   /**

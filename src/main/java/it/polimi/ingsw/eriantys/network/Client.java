@@ -9,7 +9,6 @@ import java.io.ObjectOutputStream;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -21,6 +20,7 @@ import java.util.concurrent.BlockingQueue;
  */
 public class Client implements Runnable {
   public static final int DEFAULT_PORT = Server.DEFAULT_PORT;
+  public static final String SOCKET_ERROR_HASH = "7a91c9d6";
 
   private Socket socket;
   private ObjectOutputStream out;
@@ -55,11 +55,7 @@ public class Client implements Runnable {
    * @param port    The server port
    */
   public void connect(String address, int port) throws IOException {
-    try {
-      socket = new Socket(address, port);
-    } catch (UnknownHostException e) {
-      System.out.println("Impossible to connect to the server. Check ip and port.");
-    }
+    socket = new Socket(address, port);
     out = new ObjectOutputStream(socket.getOutputStream());
     in = new ObjectInputStream(socket.getInputStream());
     Logger.info("Connected to: {}", socket.getRemoteSocketAddress());
@@ -91,8 +87,13 @@ public class Client implements Runnable {
   /**
    * Closes this socket.
    */
-  public void close() throws IOException {
-    socket.close();
+  public void close() {
+    if (socket != null) {
+      try {
+        socket.close();
+      } catch (IOException ignored) {
+      }
+    }
   }
 
   /**
@@ -116,6 +117,10 @@ public class Client implements Runnable {
       Logger.debug("Client '{}' disconnected", this);
     } catch (IOException e) {
       Logger.error("An error occurred on socket '{}': {}", this, e);
+      // We need a way to notify message handlers of socket errors
+      // We submit a special message to the queue so that it can be handled
+      messageQueue.add(new MessageQueueEntry(this, new Message.Builder()
+              .type(MessageType.INTERNAL_SOCKET_ERROR).nickname(SOCKET_ERROR_HASH).build()));
     }
     Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
   }

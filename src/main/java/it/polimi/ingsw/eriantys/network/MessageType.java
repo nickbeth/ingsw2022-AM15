@@ -31,4 +31,7 @@ public enum MessageType {
   GAMEDATA,
 
   ERROR,
+
+  // Used internally for local network-related events, these must never be sent over the network
+  INTERNAL_SOCKET_ERROR,
 }
