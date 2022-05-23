@@ -21,6 +21,14 @@ public class GameInfo implements Serializable {
   private int maxPlayerCount;
   private LobbyState lobbyState = LobbyState.WAITING;
 
+  public GameInfo() {
+  }
+
+  public GameInfo(int numberOfPlayers, GameMode mode){
+    this.maxPlayerCount = numberOfPlayers;
+    this.mode = mode;
+  }
+
   /**
    * Map of player names to their chosen tower color.
    */

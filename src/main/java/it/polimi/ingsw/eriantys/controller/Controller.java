@@ -8,6 +8,7 @@ import it.polimi.ingsw.eriantys.model.entities.StudentBag;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
+import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
@@ -46,7 +47,7 @@ abstract public class Controller implements Runnable {
    * Send a START_GAME message to the server. <br>
    * Send the message with InitiateGameEntities action. <br>
    */
-  public boolean startGame() {
+  public boolean sendStartGame() {
     // Send message for creating server game
     // Initialize the game entities
 
@@ -248,16 +249,19 @@ abstract public class Controller implements Runnable {
             .build());
   }
 
-  public void sendCreateGame(GameInfo gameInfo) {
+  public void sendCreateGame(int numberOfPlayers, GameMode gameMode) {
+    gameInfo = new GameInfo(numberOfPlayers, gameMode);
     networkClient.send(new Message.Builder(CREATE_GAME)
             .gameInfo(gameInfo)
             .nickname(nickname)
             .build());
   }
 
-  public void sendJoinGame(GameInfo gameInfo) {
+
+  public void sendJoinGame(String gameCode) {
     networkClient.send(new Message.Builder(JOIN_GAME)
             .gameInfo(gameInfo)
+            .gameCode(gameCode)
             .nickname(nickname)
             .build());
   }
@@ -308,5 +312,9 @@ abstract public class Controller implements Runnable {
 
   public String getGameCode() {
     return gameCode;
+  }
+
+  public void setGameCode(String gameCode) {
+    this.gameCode = gameCode;
   }
 }

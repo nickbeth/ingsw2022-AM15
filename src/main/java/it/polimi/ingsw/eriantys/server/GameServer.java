@@ -115,6 +115,11 @@ public class GameServer implements Runnable {
 
   private void handleCreateGame(Client client, Message message) {
     String gameCode = generateGameCode();
+    if (activeNicknames.contains(message.nickname())) {
+      String errorMessage = String.format("Nickname '%s' is already in use", message.nickname());
+      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
     GameEntry gameEntry = new GameEntry(message.gameInfo());
     gameEntry.addPlayer(message.nickname(), client);
 

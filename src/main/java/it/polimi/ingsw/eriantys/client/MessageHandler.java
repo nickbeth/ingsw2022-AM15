@@ -63,6 +63,7 @@ public class MessageHandler implements Runnable {
 
   private void handleGameInfo(Client client, Message message) {
     controller.setGameInfo(message.gameInfo());
+    controller.setGameCode(message.gameCode());
   }
 
   private void handleGameData(Client client, Message message) {

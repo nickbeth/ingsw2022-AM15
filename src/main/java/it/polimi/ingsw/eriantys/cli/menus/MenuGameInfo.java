@@ -64,7 +64,7 @@ public class MenuGameInfo extends Menu {
         case "S", "s" -> {
           if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
             break;
-          if (!controller.startGame()) {
+          if (!controller.sendStartGame()) {
             out.println("There are not enough players with a chosen tower color to start");
             return;
           }
