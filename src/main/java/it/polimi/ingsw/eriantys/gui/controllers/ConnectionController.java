@@ -7,11 +7,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import org.tinylog.Logger;
 
 import java.beans.PropertyChangeEvent;
 
 public class ConnectionController extends FXMLController {
+  @FXML
+  private TextField nicknameField;
   @FXML
   private Button backButton;
   @FXML
@@ -37,6 +38,8 @@ public class ConnectionController extends FXMLController {
     String ipStr = serverIpField.getText();
     String portStr = serverPortField.getText();
     int port = Client.DEFAULT_PORT;
+    //TODO: manage nickname in the right way
+    gui.getController().setNickname(nicknameField.getText());
     try {
       if (!portStr.isEmpty())
         port = Integer.parseInt(portStr);
@@ -54,4 +57,5 @@ public class ConnectionController extends FXMLController {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
   }
+
 }

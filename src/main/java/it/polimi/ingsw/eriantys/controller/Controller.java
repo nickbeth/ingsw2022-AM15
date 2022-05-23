@@ -35,9 +35,10 @@ abstract public class Controller implements Runnable {
   protected ObservableActionInvoker actionInvoker;
   protected GameInfo gameInfo;
   protected GameState gameState;
-  protected String nickname;
-  protected String gameCode;
 
+  protected String nickname;
+
+  protected String gameCode;
   public Controller(Client networkClient) {
     this.networkClient = networkClient;
     this.actionInvoker = new ObservableActionInvoker(gameState);
@@ -249,6 +250,10 @@ abstract public class Controller implements Runnable {
     networkClient.send(new Message.Builder(NICKNAME_REQUEST)
             .nickname(nickname)
             .build());
+  }
+
+  public void setNickname(String nickname) {
+    this.nickname = nickname;
   }
 
   public void sendCreateGame(int numberOfPlayers, GameMode gameMode) {

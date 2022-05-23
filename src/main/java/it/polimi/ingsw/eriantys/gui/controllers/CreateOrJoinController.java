@@ -101,4 +101,5 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   public void propertyChange(PropertyChangeEvent evt) {
     gui.setScene(SceneEnum.LOBBY);
   }
+
 }

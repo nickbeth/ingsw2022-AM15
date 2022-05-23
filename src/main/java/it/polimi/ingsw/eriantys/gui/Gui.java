@@ -69,7 +69,6 @@ public class Gui extends Application {
         sceneMap.put(scene, new Scene(root));
       } catch (IOException e) {
         e.printStackTrace();
-        Logger.warn(scene + " scene path not found");
       }
     }
   }
@@ -82,14 +81,16 @@ public class Gui extends Application {
   }
 
   /**
-   * sets a new scene and updates the listener list in action invoker
+   * sets a new scene, updates the next controller, and updates the listener list in action invoker.
    * @param scene
    */
   public void setScene(SceneEnum scene){
     prevScene = currScene;
     currScene = scene;
+    FXMLController nextController = controllerMap.get(currScene);
+    nextController.updateAll();
     controller.getActionInvoker().removeListener(controllerMap.get(prevScene));
-    controller.getActionInvoker().addListener(controllerMap.get(currScene));
+    controller.getActionInvoker().addListener(nextController);
     stage.setScene(sceneMap.get(currScene));
     stage.show();
   }

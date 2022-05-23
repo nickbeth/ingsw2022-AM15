@@ -41,5 +41,4 @@ public class MainMenuController extends FXMLController {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
   }
-
 }

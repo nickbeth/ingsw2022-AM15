@@ -9,4 +9,11 @@ public abstract class FXMLController implements PropertyChangeListener {
   public void setGui(Gui gui){
     this.gui = gui;
   }
+
+  /**
+   * Method that updates all entities in a certain scene.<br>
+   * The implementation of this method provided by the FXMLController class does nothing.
+   */
+  public void updateAll() {
+  }
 }

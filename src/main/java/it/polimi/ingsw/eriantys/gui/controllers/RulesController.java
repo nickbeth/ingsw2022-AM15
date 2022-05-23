@@ -1,17 +1,16 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
-import it.polimi.ingsw.eriantys.gui.Gui;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import org.tinylog.Logger;
 
 import java.beans.PropertyChangeEvent;
 
 public class RulesController extends FXMLController {
   @FXML
   private Button backButton;
+
   /**
    * Sets scene to Menu
    */
@@ -23,4 +22,5 @@ public class RulesController extends FXMLController {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
   }
+
 }
