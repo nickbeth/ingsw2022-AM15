@@ -120,7 +120,7 @@ public class Client implements Runnable {
       // We need a way to notify message handlers of socket errors
       // We submit a special message to the queue so that it can be handled
       messageQueue.add(new MessageQueueEntry(this, new Message.Builder()
-              .type(MessageType.INTERNAL_SOCKET_ERROR).nickname(SOCKET_ERROR_HASH).build()));
+              .type(MessageType.INTERNAL_SOCKET_ERROR).nickname(SOCKET_ERROR_HASH).error(e.getMessage()).build()));
     }
     Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
   }

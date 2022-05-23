@@ -49,6 +49,8 @@ public class MessageHandler implements Runnable {
       case GAMEDATA -> handleGameData(client, message);
 
       case ERROR -> handleError(client, message);
+
+      case INTERNAL_SOCKET_ERROR -> handleSocketError(client, message);
     }
   }
 
@@ -70,5 +72,18 @@ public class MessageHandler implements Runnable {
 
   private void handleError(Client client, Message message) {
     controller.showError(message.error());
+  }
+
+  private void handleSocketError(Client client, Message message) {
+    // Check that this message was created internally and is not coming from the network
+    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
+      return;
+
+    String errorMessage = "Lost connection to the server";
+    if (message.error() != null)
+      errorMessage += ": " + message.error();
+
+    controller.showError(errorMessage);
+    client.close();
   }
 }
