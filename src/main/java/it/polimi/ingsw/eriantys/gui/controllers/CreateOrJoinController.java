@@ -27,6 +27,10 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   private TextField gameUidField;
 
 
+  /**
+   * Sends a createGame Message <br>
+   * - If the choice boxes are empty displays an error message.
+   */
   @FXML
   private void continueCreateGame(ActionEvent actionEvent) {
     Integer playerNumber = playerNumberChoice.getValue();
@@ -35,19 +39,21 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
     if (gameMode == null) {
       errorMessage.setText("please select a game mode to create the game");
       errorMessage.setVisible(true);
-    }
-    else if (playerNumber == null) {
+    } else if (playerNumber == null) {
       errorMessage.setText("please select a number of players to create the game");
       errorMessage.setVisible(true);
-    }
-    else
+    } else
       gui.getController().sendCreateGame(playerNumber, gameMode);
   }
 
+  /**
+   * Sends a joinGame Message <br>
+   * - If the gameCode field is empty displays an error message.
+   */
   @FXML
   private void continueJoinGame(ActionEvent actionEvent) {
     String gameCode = gameUidField.getText();
-    if(!gameCode.isEmpty())
+    if (!gameCode.isEmpty())
       gui.getController().sendJoinGame(gameCode);
     else {
       errorMessage.setText("please insert a gameCode to start the game");
@@ -55,6 +61,9 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
     }
   }
 
+  /**
+   * Displays createGame controls, hides joinGame controls
+   */
   @FXML
   private void createGame(ActionEvent actionEvent) {
     errorMessage.setVisible(false);
@@ -64,6 +73,9 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
     joinGameGroup.setVisible(false);
   }
 
+  /**
+   * Displays joinGame controls, hides createGame controls
+   */
   @FXML
   private void joinGame(ActionEvent actionEvent) {
     errorMessage.setVisible(false);
@@ -73,12 +85,18 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
     joinGameGroup.setVisible(true);
   }
 
+  /**
+   * Returns to Connection scene, handles disconnection from server
+   */
   @FXML
   private void backButton(ActionEvent actionEvent) {
     //TODO: handle disconnection from server with the press of the back button
     gui.setScene(SceneEnum.CONNECTION);
   }
 
+  /**
+   * Sets scene to lobby scene
+   */
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     gui.setScene(SceneEnum.LOBBY);

@@ -14,17 +14,25 @@ public class MainMenuController extends FXMLController {
   private Button rulesButton;
   @FXML
   private Button quitButton;
-
+  /**
+   * Sets scene to Connection
+   */
   @FXML
   private void playButtonAction(ActionEvent actionEvent) {
     gui.setScene(SceneEnum.CONNECTION);
   }
 
+  /**
+   * Sets scene to Rules
+   */
   @FXML
   private void rulesButtonAction(ActionEvent actionEvent) {
     gui.setScene(SceneEnum.RULES);
   }
 
+  /**
+   * closes the application
+   */
   @FXML
   private void quitButtonAction(ActionEvent actionEvent) {
     gui.closeApplication();
@@ -33,4 +41,5 @@ public class MainMenuController extends FXMLController {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
   }
+
 }

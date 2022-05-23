@@ -37,13 +37,14 @@ public class Gui extends Application {
   }
 
   /**
-   *
+   * the start method is called at the beggining of the application life cycle,
+   * this method calls {@link #initializeScenes()},setups the stage and sets the first scene
    */
   @Override
   public void start(Stage primaryStage) {
     stage = primaryStage;
     initializeScenes();
-    //pressing on the red X ti close a stage will call the closeApplication method
+    //pressing on the red X to close a stage will call the closeApplication method
     stage.setOnCloseRequest(e -> closeApplication());
     currScene = SceneEnum.MENU;
     stage.setScene(sceneMap.get(currScene));
@@ -92,6 +93,5 @@ public class Gui extends Application {
     stage.setScene(sceneMap.get(currScene));
     stage.show();
   }
-
 
 }

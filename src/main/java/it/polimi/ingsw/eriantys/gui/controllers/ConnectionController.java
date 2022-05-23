@@ -29,8 +29,8 @@ public class ConnectionController extends FXMLController {
   }
 
   /**
-   *
-   * @param actionEvent
+   * Tries to create a connection to the game server <br>
+   * - if the parameters are invalid it displays text in the errorMessage label
    */
   @FXML
   private void confirmButtonAction(ActionEvent actionEvent) {

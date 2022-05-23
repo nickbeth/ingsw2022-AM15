@@ -12,7 +12,9 @@ import java.beans.PropertyChangeEvent;
 public class RulesController extends FXMLController {
   @FXML
   private Button backButton;
-
+  /**
+   * Sets scene to Menu
+   */
   @FXML
   public void backButtonAction(ActionEvent actionEvent) {
     gui.setScene(SceneEnum.MENU);
