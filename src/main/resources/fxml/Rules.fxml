@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.control.Button?>
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.RulesController" prefHeight="400.0" prefWidth="600.0">
-    <ImageView fitHeight="600.0" fitWidth="600.0" layoutX="40" layoutY="40" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../assets/rules/Eriantys_rules-1.png" />
+
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.RulesController">
+    <ImageView fx:id="view" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+            <Image fx:id="currImg" url="@../assets/rules/Eriantys_rules-1.png" />
     </ImageView>
-    <Button fx:id="backButton" layoutX="10" layoutY="10" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="20.0" prefWidth="73.0" text="Back" />
+    <Button fx:id="backButton" layoutX="512.0" layoutY="14.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="20.0" prefWidth="73.0" text="Back" />
+    <Button fx:id="nextPage" layoutX="512.0" layoutY="560.0" mnemonicParsing="false" onAction="#goNextPage" prefHeight="20.0" prefWidth="73.0" text="Next" />
+    <Button fx:id="previousPage" layoutX="40.0" layoutY="560.0" mnemonicParsing="false" onAction="#goPreviousPage" prefHeight="20.0" prefWidth="73.0" text="Previous" visible="false" />
 </AnchorPane>
