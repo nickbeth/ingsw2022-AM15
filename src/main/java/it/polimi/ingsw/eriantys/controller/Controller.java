@@ -40,14 +40,16 @@ abstract public class Controller implements Runnable {
 
   public Controller(Client networkClient) {
     this.networkClient = networkClient;
+    this.actionInvoker = new ObservableActionInvoker(gameState);
   }
 
   /**
-   * Creates the gameState in the client invoker. <br>
-   * Send a START_GAME message to the server. <br>
-   * Send the message with InitiateGameEntities action. <br>
+   * Creates the clients gameState. <br>
+   * Sends a START_GAME message to the server, containing the initiateGameEntities action. <br>
    */
   public boolean sendStartGame() {
+    // Creates client gameState
+    gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
     // Send message for creating server game
     // Initialize the game entities
 

@@ -39,6 +39,9 @@ public class ObservableActionInvoker extends ActionInvoker {
     //TODO: remove all listeners
   }
 
+  public void firePropertyChange() {
+    support.firePropertyChange(null);
+  }
   /**
    * Applies the given {@link GameAction} to the game state and notifies all subscribed listeners.
    *

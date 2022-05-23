@@ -62,6 +62,7 @@ public class MessageHandler implements Runnable {
   }
 
   private void handleGameInfo(Client client, Message message) {
+    controller.getActionInvoker().firePropertyChange();
     controller.setGameInfo(message.gameInfo());
     controller.setGameCode(message.gameCode());
   }

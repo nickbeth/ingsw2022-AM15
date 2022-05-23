@@ -12,5 +12,6 @@
         <Button fx:id="backButton" layoutX="226.0" layoutY="212.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="20.0" prefWidth="73.0" text="back" />
         <Button fx:id="confirm" layoutX="301.0" layoutY="212.0" mnemonicParsing="false" onAction="#confirmButtonAction" prefHeight="20.0" prefWidth="73.0" text="confirm" />
         <Label fx:id="errorMessage" alignment="CENTER" layoutX="197.0" layoutY="245.0" opacity="0.0" prefHeight="17.0" prefWidth="209.0" text="Label" textFill="RED" />
+      <TextField layoutX="227.0" layoutY="106.0" prefHeight="25.0" prefWidth="94.0" promptText="nickname"/>
     </children>
 </AnchorPane>

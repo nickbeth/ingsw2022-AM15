@@ -19,6 +19,8 @@ import java.util.EnumMap;
 public class Gui extends Application {
   private static Controller controller;
   private Stage stage;
+  private SceneEnum prevScene;
+  private SceneEnum currScene;
   private EnumMap<SceneEnum, Scene> sceneMap = new EnumMap<>(SceneEnum.class);
   private EnumMap<SceneEnum, FXMLController> controllerMap = new EnumMap<>(SceneEnum.class);
 
@@ -43,7 +45,10 @@ public class Gui extends Application {
     initializeScenes();
     //pressing on the red X ti close a stage will call the closeApplication method
     stage.setOnCloseRequest(e -> closeApplication());
-    setScene(SceneEnum.MENU);
+    currScene = SceneEnum.MENU;
+    stage.setScene(sceneMap.get(currScene));
+    controller.getActionInvoker().addListener(controllerMap.get(currScene));
+    stage.show();
   }
 
   /**
@@ -80,9 +85,11 @@ public class Gui extends Application {
    * @param scene
    */
   public void setScene(SceneEnum scene){
-    controller.getActionInvoker().removeAllListener();
-    controller.getActionInvoker().addListener(controllerMap.get(scene));
-    stage.setScene(sceneMap.get(scene));
+    prevScene = currScene;
+    currScene = scene;
+    controller.getActionInvoker().removeListener(controllerMap.get(prevScene));
+    controller.getActionInvoker().addListener(controllerMap.get(currScene));
+    stage.setScene(sceneMap.get(currScene));
     stage.show();
   }
 
