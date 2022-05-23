@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
 import it.polimi.ingsw.eriantys.cli.Menu;
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.network.Client;
 
 import java.io.PrintStream;
@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Asks the user for server's address and port
  */
 public class MenuConnect extends Menu {
-  public MenuConnect(Controller controller) {
+  public MenuConnect(CliController controller) {
     this.controller = controller;
   }
 

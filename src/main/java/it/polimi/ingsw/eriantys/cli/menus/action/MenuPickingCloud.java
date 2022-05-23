@@ -3,14 +3,14 @@ package it.polimi.ingsw.eriantys.cli.menus.action;
 import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.cli.views.CloudsView;
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
 public class MenuPickingCloud extends Menu {
-  public MenuPickingCloud(Controller controller) {
+  public MenuPickingCloud(CliController controller) {
     this.controller = controller;
   }
 

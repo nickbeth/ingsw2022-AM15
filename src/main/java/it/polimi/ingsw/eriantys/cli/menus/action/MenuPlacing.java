@@ -5,7 +5,7 @@ import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.cli.views.CharacterCardView;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.io.PrintStream;
@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class MenuPlacing extends Menu {
   private int studentMoved = 0;
 
-  public MenuPlacing(Controller controller) {
+  public MenuPlacing(CliController controller) {
     this.controller = controller;
   }
 

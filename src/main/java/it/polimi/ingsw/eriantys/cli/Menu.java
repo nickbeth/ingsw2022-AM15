@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.cli;
 
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -10,7 +10,7 @@ import java.util.Scanner;
  * Every menu shows a list of options and performs an operation based on the choice that has been made.
  */
 public abstract class Menu {
-  protected Controller controller;
+  protected CliController controller;
 
   /**
    * Shows the list of options this menu can handle.

@@ -1,13 +1,13 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
 import it.polimi.ingsw.eriantys.cli.Menu;
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
 public class MenuChooseNickname extends Menu {
-  public MenuChooseNickname(Controller controller) {
+  public MenuChooseNickname(CliController controller) {
     this.controller = controller;
   }
 

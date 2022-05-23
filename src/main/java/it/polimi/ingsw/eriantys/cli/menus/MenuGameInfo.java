@@ -3,7 +3,7 @@ package it.polimi.ingsw.eriantys.cli.menus;
 import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.cli.views.GameLobbyView;
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
@@ -14,7 +14,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuGameInfo extends Menu {
-  public MenuGameInfo(Controller controller) {
+  public MenuGameInfo(CliController controller) {
     this.controller = controller;
   }
 

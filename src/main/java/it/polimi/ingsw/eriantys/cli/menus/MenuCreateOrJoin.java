@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
 import it.polimi.ingsw.eriantys.cli.Menu;
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -10,7 +10,7 @@ import java.util.Scanner;
  * Asks the user for server's address and port
  */
 public class MenuCreateOrJoin extends Menu {
-  public MenuCreateOrJoin(Controller controller) {
+  public MenuCreateOrJoin(CliController controller) {
     this.controller = controller;
   }
 

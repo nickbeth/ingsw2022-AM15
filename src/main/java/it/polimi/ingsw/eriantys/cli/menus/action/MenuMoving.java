@@ -2,7 +2,7 @@ package it.polimi.ingsw.eriantys.cli.menus.action;
 
 import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.io.PrintStream;
@@ -10,7 +10,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuMoving extends Menu {
-  public MenuMoving(Controller controller) {
+  public MenuMoving(CliController controller) {
     this.controller = controller;
   }
 

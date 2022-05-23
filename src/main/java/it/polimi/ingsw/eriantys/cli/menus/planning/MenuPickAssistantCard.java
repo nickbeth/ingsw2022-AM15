@@ -3,14 +3,14 @@ package it.polimi.ingsw.eriantys.cli.menus.planning;
 import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.action.MenuPlacing;
 import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 
 import java.io.PrintStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuPickAssistantCard extends Menu {
-  public MenuPickAssistantCard(Controller controller) {
+  public MenuPickAssistantCard(CliController controller) {
     this.controller = controller;
   }
 

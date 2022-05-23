@@ -3,7 +3,7 @@ package it.polimi.ingsw.eriantys.cli.menus.action;
 import it.polimi.ingsw.eriantys.cli.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
@@ -14,7 +14,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuEffect extends Menu {
-  public MenuEffect(Controller controller) {
+  public MenuEffect(CliController controller) {
     this.controller = controller;
   }
 
