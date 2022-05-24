@@ -13,7 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.Map;
 import java.util.Objects;
 
-import static it.polimi.ingsw.eriantys.controller.EventEnum.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
 
 public class LobbyController extends FXMLController {
 

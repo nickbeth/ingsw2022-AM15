@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 
 import java.beans.PropertyChangeEvent;
 
-import static it.polimi.ingsw.eriantys.controller.EventEnum.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
 
 public class ConnectionController extends FXMLController {
   @FXML
@@ -38,7 +38,7 @@ public class ConnectionController extends FXMLController {
   @FXML
   private void confirmButtonAction(ActionEvent actionEvent) {
     String ipStr = serverIpField.getText();
-    //String ipStr = "192.168.75.197";
+//    String ipStr = "192.168.75.197";
     String portStr = serverPortField.getText();
     int port = Client.DEFAULT_PORT;
     try {

@@ -8,14 +8,14 @@ import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.EventEnum.NICKNAME_OK_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.NICKNAME_OK;
 
 
 public class MenuChooseNickname extends Menu {
   public MenuChooseNickname(CliController controller) {
     this.controller = controller;
     Logger.trace(controller.getListenerHolder().getPropertyChangeListeners().length);
-    controller.addListener(this, NICKNAME_OK_EVENT.tag);
+    controller.addListener(this, NICKNAME_OK.tag);
     Logger.trace(controller.getListenerHolder().getPropertyChangeListeners().length);
   }
   
@@ -51,7 +51,7 @@ public class MenuChooseNickname extends Menu {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     Logger.trace("Response arrived");
-    controller.removeListener(this);
+    controller.removeListener(this, NICKNAME_OK.tag);
     greenLight = true;
   }
 }

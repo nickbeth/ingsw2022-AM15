@@ -1,14 +1,13 @@
 package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
-import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuChooseNickname;
 import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.network.Client;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.EventEnum.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
 
 
 /**

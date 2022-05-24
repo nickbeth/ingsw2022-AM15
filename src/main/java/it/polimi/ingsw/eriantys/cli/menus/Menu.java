@@ -51,7 +51,7 @@ public abstract class Menu implements PropertyChangeListener {
   
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    Logger.trace("Response arrived");
+    Logger.trace("Response arrived" + evt.getPropertyName());
     greenLight = true;
     controller.removeListener(this);
   }

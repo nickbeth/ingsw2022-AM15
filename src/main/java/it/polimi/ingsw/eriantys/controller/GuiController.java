@@ -17,7 +17,7 @@ public class GuiController extends Controller {
   }
   
   @Override
-  public void fireChanges(EventEnum event) {
+  public void firePropertyChange(EventType event) {
     Platform.runLater(() -> listenerHolder.firePropertyChange(event.tag, null, null));
   }
   

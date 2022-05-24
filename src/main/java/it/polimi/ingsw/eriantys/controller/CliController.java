@@ -22,8 +22,8 @@ public class CliController extends Controller {
   }
   
   @Override
-  public void fireChanges(EventEnum event) {
-  
+  public void firePropertyChange(EventType event) {
+    listenerHolder.firePropertyChange(event.tag, null, null);
   }
   
   @Override
@@ -34,8 +34,5 @@ public class CliController extends Controller {
       currentMenu = currentMenu.next();
     }
   }
-  
-  
-  
   
 }

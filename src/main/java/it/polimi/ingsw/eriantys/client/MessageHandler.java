@@ -9,7 +9,7 @@ import org.tinylog.Logger;
 
 import java.util.concurrent.BlockingQueue;
 
-import static it.polimi.ingsw.eriantys.controller.EventEnum.*;
+import static it.polimi.ingsw.eriantys.controller.EventType.*;
 
 public class MessageHandler implements Runnable {
   Controller controller;
@@ -25,7 +25,8 @@ public class MessageHandler implements Runnable {
     while (true) {
       try {
         MessageQueueEntry entry = messageQueue.take();
-        Logger.trace("Handling response: {}", entry);
+        if (!entry.message().type().equals(MessageType.PING))
+          Logger.trace("Handling response: {}", entry);
         handleMessage(entry);
       } catch (InterruptedException e) {
         // We should never be interrupted
@@ -59,7 +60,7 @@ public class MessageHandler implements Runnable {
   
   private void handleNicknameOk(Client client, Message message) {
     controller.setNickname(message.nickname());
-    controller.fireChanges(NICKNAME_OK_EVENT);
+    controller.firePropertyChange(NICKNAME_OK);
   }
   
   private void handlePing(Client client, Message message) {
@@ -67,42 +68,46 @@ public class MessageHandler implements Runnable {
             .nickname(controller.getNickname())
             .gameCode(controller.getGameCode())
             .build());
-    controller.fireChanges(NICKNAME_OK_EVENT);
+    controller.firePropertyChange(NICKNAME_OK);
   }
   
   private void handleGameInfo(Client client, Message message) {
     controller.setGameInfo(message.gameInfo());
     controller.setGameCode(message.gameCode());
-    controller.fireChanges(GAMEINFO_EVENT);
+    controller.firePropertyChange(GAMEINFO_EVENT);
   }
   
   private void handleStartGame(Client client, Message message) {
     controller.setGameInfo(message.gameInfo());
     controller.initGame();
     controller.executeAction(message.gameAction());
-    controller.fireChanges(GAMEDATA_EVENT);
+    controller.firePropertyChange(GAMEDATA_EVENT);
   }
   
   private void handleGameData(Client client, Message message) {
     controller.executeAction(message.gameAction());
     // Notifies listeners that the game state was modified
-    controller.fireChanges(GAMEDATA_EVENT);
+    controller.firePropertyChange(GAMEDATA_EVENT);
   }
   
   private void handleError(Client client, Message message) {
     controller.showError(message.error());
+    controller.firePropertyChange(NETWORK_ERROR);
   }
   
   private void handleSocketError(Client client, Message message) {
     // Check that this message was created internally and is not coming from the network
-    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
+    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH)) {
       return;
+    }
     
     String errorMessage = "Lost connection to the server";
-    if (message.error() != null)
+    if (message.error() != null) {
       errorMessage += ": " + message.error();
+    }
     
     controller.showError(errorMessage);
     client.close();
+    controller.firePropertyChange(SOCKET_ERROR);
   }
 }

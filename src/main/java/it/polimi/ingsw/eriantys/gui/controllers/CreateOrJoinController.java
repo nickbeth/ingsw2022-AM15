@@ -12,7 +12,8 @@ import javafx.scene.control.TextField;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import static it.polimi.ingsw.eriantys.controller.EventEnum.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
+
 
 public class CreateOrJoinController extends FXMLController implements PropertyChangeListener {
   @FXML

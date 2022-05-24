@@ -3,12 +3,14 @@ package it.polimi.ingsw.eriantys.cli.menus.lobby;
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import org.tinylog.Logger;
 
 import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.EventEnum.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.NETWORK_ERROR;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.EXPERT;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.NORMAL;
 
@@ -16,11 +18,12 @@ import static it.polimi.ingsw.eriantys.model.enums.GameMode.NORMAL;
  * Asks the user for server's address and port
  */
 public class MenuCreateOrJoin extends Menu {
-  private boolean gameCodeExists;
+  private boolean gameCodeExists = false;
   
   public MenuCreateOrJoin(CliController controller) {
     this.controller = controller;
     controller.addListener(this, GAMEINFO_EVENT.tag);
+    controller.addListener(this, NETWORK_ERROR.tag);
   }
   
   @Override
@@ -71,30 +74,30 @@ public class MenuCreateOrJoin extends Menu {
   }
   
   private void showCreateOptions(Scanner in, PrintStream out) {
-    boolean valid;
-    GameMode mode = null;
-    int playersCount;
+    boolean invalid;
+    GameMode mode;
+    String playersCount;
     
     // Get GameMode
     do {
-      valid = false;
-      out.print("Enter the game mode: " +
+      out.println("Enter the game mode: " +
               "\n1 - " + NORMAL +
               "\n2 - " + EXPERT);
-      short choice = in.nextShort();
-      valid = choice == 1 || choice == 2;
-      mode = choice == 1 ? NORMAL : EXPERT;
-      if (!valid) out.println("Enter a valid choice.");
-    } while (valid);
+      String choice = in.nextLine();
+      invalid = !choice.equals("1") && !choice.equals("2");
+      mode = choice.equals("1") ? NORMAL : EXPERT;
+      if (invalid) out.println("Enter a valid choice.");
+    } while (invalid);
+    
     // Get playersCount
     do {
       out.print("Enter the number of players: ");
-      playersCount = in.nextShort();
-      valid = playersCount >= 2 && playersCount <= 4;
-      if (!valid) out.println("Enter a valid choice.");
-    } while (valid);
+      playersCount = in.nextLine();
+      invalid = Integer.parseInt(playersCount) < 2 || Integer.parseInt(playersCount) > 4;
+      if (invalid) out.println("Enter a valid choice.");
+    } while (invalid);
     
-    controller.sender().sendCreateGame(playersCount, mode);
+    controller.sender().sendCreateGame(Integer.parseInt(playersCount), mode);
   }
   
   private void showJoinOptions(Scanner in, PrintStream out) {
@@ -105,7 +108,14 @@ public class MenuCreateOrJoin extends Menu {
   
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    super.propertyChange(evt);
+    Logger.trace("Response arrived " + evt.getPropertyName());
+    greenLight = true;
+    
     gameCodeExists = evt.getPropertyName().equals(GAMEINFO_EVENT.tag);
+    Logger.trace("Gamecode: " + gameCodeExists);
+    if (gameCodeExists) {
+      controller.removeListener(this, GAMEINFO_EVENT.tag);
+      controller.removeListener(this, NETWORK_ERROR.tag);
+    }
   }
 }

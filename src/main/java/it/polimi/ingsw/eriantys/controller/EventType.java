@@ -1,13 +1,15 @@
 package it.polimi.ingsw.eriantys.controller;
 
-public enum EventEnum {
+public enum EventType {
   GAMEINFO_EVENT("gameinfo"),
   GAMEDATA_EVENT("gamedata"),
-  NICKNAME_OK_EVENT("ok");
+  NICKNAME_OK("nickname_ok"),
+  SOCKET_ERROR("socket_error"),
+  NETWORK_ERROR("network_error");
 
   public String tag;
 
-  EventEnum(String tag) {
+  EventType(String tag) {
     this.tag = tag;
   }
 
