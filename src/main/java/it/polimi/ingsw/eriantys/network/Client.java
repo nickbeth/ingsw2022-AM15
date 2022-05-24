@@ -69,6 +69,7 @@ public class Client implements Runnable {
   public synchronized void send(Message msg) {
     try {
       out.writeObject(msg);
+      out.reset();
       out.flush();
     } catch (IOException e) {
       Logger.warn("An error occurred while sending message {}: {}", msg.getClass().getSimpleName(), e);
