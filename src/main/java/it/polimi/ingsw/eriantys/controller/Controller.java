@@ -34,7 +34,6 @@ abstract public class Controller implements Runnable {
   }
 
   protected Client networkClient;
-  protected ObservableActionInvoker actionInvoker;
   protected GameInfo gameInfo;
   protected GameState gameState;
 
@@ -303,8 +302,22 @@ abstract public class Controller implements Runnable {
 
     for (var playerEntry : gameInfo.getPlayersMap().entrySet())
       gameState.addPlayer(playerEntry.getKey(), playerEntry.getValue());
+  }
 
-    actionInvoker = new ObservableActionInvoker(gameState, listenerHolder);
+  /**
+   * Applies the given {@link GameAction} to the game state.
+   *
+   * @param action The {@link GameAction} to apply to the game state
+   * @return {@code true} if action was valid and was applied successfully, {@code false} otherwise
+   */
+  public boolean executeAction(GameAction action) {
+    synchronized (gameState) {
+      if (action.isValid(gameState)) {
+        action.apply(gameState);
+        return true;
+      }
+    }
+    return false;
   }
 
   abstract public void showError(String error);
@@ -338,17 +351,12 @@ abstract public class Controller implements Runnable {
     listenerHolder.removePropertyChangeListener(tag, listener);
   }
 
-  public ObservableActionInvoker getActionInvoker() {
-    return actionInvoker;
-  }
-
   public GameInfo getGameInfo() {
     return gameInfo;
   }
 
   public void setGameInfo(GameInfo gameInfo) {
     this.gameInfo = gameInfo;
-    listenerHolder.firePropertyChange(GAMEINFO_EVENT_TAG, null, gameInfo);
   }
 
   public GameState getGameState() {

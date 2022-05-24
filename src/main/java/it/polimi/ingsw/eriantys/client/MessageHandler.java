@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.client;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.controller.ObservableActionInvoker;
 import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
 import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
@@ -75,12 +74,11 @@ public class MessageHandler implements Runnable {
   private void handleStartGame(Client client, Message message) {
     controller.setGameInfo(message.gameInfo());
     controller.initGame();
-    controller.getActionInvoker().executeAction(message.gameAction());
+    controller.executeAction(message.gameAction());
   }
 
   private void handleGameData(Client client, Message message) {
-    ObservableActionInvoker actionInvoker = controller.getActionInvoker();
-    actionInvoker.executeAction(message.gameAction());
+    controller.executeAction(message.gameAction());
   }
 
   private void handleError(Client client, Message message) {

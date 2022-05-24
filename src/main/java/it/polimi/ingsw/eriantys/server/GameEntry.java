@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.server;
 
-import it.polimi.ingsw.eriantys.controller.ActionInvoker;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
@@ -14,17 +13,27 @@ public class GameEntry {
   private final GameInfo gameInfo;
   private final HashMap<String, Client> players;
   private final GameState gameState;
-  private final ActionInvoker actionInvoker;
 
   public GameEntry(GameInfo gameInfo) {
     this.players = new HashMap<>();
     this.gameInfo = gameInfo;
     this.gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
-    this.actionInvoker = new ActionInvoker(gameState);
   }
 
+  /**
+   * Applies the given {@link GameAction} to the game state.
+   *
+   * @param action The {@link GameAction} to apply to the game state
+   * @return {@code true} if action was valid and was applied successfully, {@code false} otherwise
+   */
   public boolean executeAction(GameAction action) {
-    return actionInvoker.executeAction(action);
+    synchronized (gameState) {
+      if (action.isValid(gameState)) {
+        action.apply(gameState);
+        return true;
+      }
+    }
+    return false;
   }
 
   public Client getClient(String nickname) {
