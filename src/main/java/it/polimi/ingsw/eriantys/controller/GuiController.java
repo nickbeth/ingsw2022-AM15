@@ -7,28 +7,36 @@ import it.polimi.ingsw.eriantys.network.Client;
 import javafx.application.Application;
 import javafx.application.Platform;
 
+import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEDATA_EVENT;
+import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
+
 public class GuiController extends Controller {
   private Gui gui;
-
+  
   public GuiController(Client networkClient) {
     super(networkClient);
   }
-
+  
   public void setGui(Gui gui) {
     this.gui = gui;
   }
-
+  
   @Override
   public void showError(String error) {
     gui.showError(error);
   }
-
+  
+  @Override
+  public void fireChanges(EventEnum event) {
+    Platform.runLater(() -> listenerHolder.firePropertyChange(event.tag, null, null));
+  }
+  
   @Override
   public void run() {
     Gui.setController(this);
     Application.launch(Gui.class);
   }
-
+  
   /**
    * Applies the given {@link GameAction} to the game state  and fires a property change.
    *
@@ -37,17 +45,6 @@ public class GuiController extends Controller {
    */
   @Override
   public boolean executeAction(GameAction action) {
-    if (super.executeAction(action)) {
-      // Notifies listeners that the game state was modified
-      Platform.runLater(() -> listenerHolder.firePropertyChange(GAMEDATA_EVENT_TAG, null, null));
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public void setGameInfo(GameInfo gameInfo) {
-    super.setGameInfo(gameInfo);
-    Platform.runLater(() -> listenerHolder.firePropertyChange(GAMEINFO_EVENT_TAG, null, gameInfo));
+    return super.executeAction(action);
   }
 }

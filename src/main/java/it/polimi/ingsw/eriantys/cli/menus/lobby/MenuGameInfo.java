@@ -1,6 +1,6 @@
-package it.polimi.ingsw.eriantys.cli.menus;
+package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
-import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.cli.views.GameLobbyView;
 import it.polimi.ingsw.eriantys.controller.CliController;
@@ -13,9 +13,12 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
+
 public class MenuGameInfo extends Menu {
   public MenuGameInfo(CliController controller) {
     this.controller = controller;
+    controller.addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
@@ -31,6 +34,7 @@ public class MenuGameInfo extends Menu {
     boolean done = false;
 
     do {
+      greenLight = false;
       showOptions(out);
       switch (in.nextLine()) {
         //choose a tower color for the lobby
@@ -55,19 +59,21 @@ public class MenuGameInfo extends Menu {
             out.println("Invalid number");
             return;
           }
-          if (!controller.sendSelectTower(towerColor)) {
+          if (!controller.sender().sendSelectTower(towerColor)) {
             out.println("Maximum of " + towerColor + " players already reached");
             return;
           }
+          waitForGreenLight();
         }
         //starts and initiates a game
         case "S", "s" -> {
           if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
             break;
-          if (!controller.sendStartGame()) {
+          if (!controller.sender().sendStartGame()) {
             out.println("There are not enough players with a chosen tower color to start");
             return;
           }
+          waitForGreenLight();
           done = true;
         }
         default -> out.println("Choose a valid option");

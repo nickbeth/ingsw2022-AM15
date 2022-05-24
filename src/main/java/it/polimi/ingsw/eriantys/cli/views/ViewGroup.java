@@ -1,4 +1,6 @@
-package it.polimi.ingsw.eriantys.cli;
+package it.polimi.ingsw.eriantys.cli.views;
+
+import it.polimi.ingsw.eriantys.cli.views.View;
 
 import java.io.PrintStream;
 import java.util.LinkedList;

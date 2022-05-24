@@ -1,10 +1,11 @@
 package it.polimi.ingsw.eriantys.cli.menus.planning;
 
-import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.action.MenuPlacing;
 import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
 import it.polimi.ingsw.eriantys.controller.CliController;
 
+import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -13,7 +14,7 @@ public class MenuPickAssistantCard extends Menu {
   public MenuPickAssistantCard(CliController controller) {
     this.controller = controller;
   }
-
+  
   @Override
   protected void showOptions(PrintStream out) {
     showViewOptions();
@@ -21,11 +22,11 @@ public class MenuPickAssistantCard extends Menu {
       System.out.println("A - Choose assistant card");
     }
   }
-
+  
   @Override
   public void show(Scanner in, PrintStream out) {
     boolean done = false;
-
+    
     do {
       showOptions(out);
       switch (in.nextLine()) {
@@ -38,7 +39,7 @@ public class MenuPickAssistantCard extends Menu {
           } catch (InputMismatchException e) {
             System.out.println("Please insert a number");
           }
-          if (!controller.sendPickAssistantCard(index)) {
+          if (!controller.sender().sendPickAssistantCard(index)) {
             System.out.println("Invalid input parameters.");
           }
         }
@@ -46,9 +47,14 @@ public class MenuPickAssistantCard extends Menu {
       }
     } while (!done);
   }
-
+  
   @Override
   public Menu next() {
     return new MenuPlacing(controller);
+  }
+  
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+  
   }
 }

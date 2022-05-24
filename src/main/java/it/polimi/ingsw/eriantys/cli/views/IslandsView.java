@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
-import it.polimi.ingsw.eriantys.cli.View;
 import it.polimi.ingsw.eriantys.model.entities.Island;
 
 import java.io.PrintStream;

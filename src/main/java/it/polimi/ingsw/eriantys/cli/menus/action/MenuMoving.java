@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.menus.action;
 
-import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
@@ -48,7 +48,7 @@ public class MenuMoving extends Menu {
             out.println("Input must be a number");
           }
           //sends action
-          if (!controller.sendMoveMotherNature(amount)) {
+          if (!controller.sender().sendMoveMotherNature(amount)) {
             out.println("Invalid input parameters");
             return;
           }

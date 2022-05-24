@@ -1,11 +1,15 @@
-package it.polimi.ingsw.eriantys.cli.menus;
+package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
-import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuChooseNickname;
 import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.network.Client;
 
 import java.io.PrintStream;
 import java.util.Scanner;
+
+import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
+
 
 /**
  * Asks the user for server's address and port
@@ -13,12 +17,18 @@ import java.util.Scanner;
 public class MenuConnect extends Menu {
   public MenuConnect(CliController controller) {
     this.controller = controller;
+    controller.addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   protected void showOptions(PrintStream out) {
   }
-
+  
+  /**
+   * Gets the socket from user
+   * @param in  The input stream the user input will be read from
+   * @param out The output stream the output will be sent to
+   */
   @Override
   public void show(Scanner in, PrintStream out) {
     String input, address = null;

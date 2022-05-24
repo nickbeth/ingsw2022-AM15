@@ -13,6 +13,8 @@ import javafx.scene.control.TextField;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
+
 public class CreateOrJoinController extends FXMLController implements PropertyChangeListener {
   @FXML
   private Label errorMessage;
@@ -44,7 +46,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
       errorMessage.setText("please select a number of players to create the game");
       errorMessage.setVisible(true);
     } else
-      gui.getController().sendCreateGame(playerNumber, gameMode);
+      gui.getController().sender().sendCreateGame(playerNumber, gameMode);
   }
 
   /**
@@ -55,7 +57,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   private void continueJoinGame(ActionEvent actionEvent) {
     String gameCode = gameUidField.getText();
     if (!gameCode.isEmpty())
-      gui.getController().sendJoinGame(gameCode);
+      gui.getController().sender().sendJoinGame(gameCode);
     else {
       errorMessage.setText("please insert a gameCode to start the game");
       errorMessage.setVisible(true);
@@ -106,12 +108,12 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   @Override
   public void start() {
     super.start();
-    gui.getController().addListener(this, Controller.GAMEINFO_EVENT_TAG);
+    gui.getController().addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    gui.getController().removeListener(this, Controller.GAMEINFO_EVENT_TAG);
+    gui.getController().removeListener(this, GAMEINFO_EVENT.tag);
   }
 }

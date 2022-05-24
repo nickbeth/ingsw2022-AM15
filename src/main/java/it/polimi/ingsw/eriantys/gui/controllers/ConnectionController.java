@@ -11,6 +11,8 @@ import javafx.scene.control.TextField;
 
 import java.beans.PropertyChangeEvent;
 
+import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
+
 public class ConnectionController extends FXMLController {
   @FXML
   private TextField nicknameField;
@@ -36,8 +38,8 @@ public class ConnectionController extends FXMLController {
    */
   @FXML
   private void confirmButtonAction(ActionEvent actionEvent) {
-    //String ipStr = serverIpField.getText();
-    String ipStr = "192.168.75.197";
+    String ipStr = serverIpField.getText();
+//    String ipStr = "192.168.75.197";
     String portStr = serverPortField.getText();
     int port = Client.DEFAULT_PORT;
     try {
@@ -54,19 +56,19 @@ public class ConnectionController extends FXMLController {
       errorMessage.setOpacity(1);
     }
     //TODO: manage nickname in the right way
-    gui.getController().sendNickname(nicknameField.getText());
+    gui.getController().sender().sendNickname(nicknameField.getText());
   }
 
   @Override
   public void start() {
     super.start();
-    gui.getController().addListener(this, Controller.GAMEINFO_EVENT_TAG);
+    gui.getController().addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    gui.getController().removeListener(this, Controller.GAMEINFO_EVENT_TAG);
+    gui.getController().removeListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.menus.action;
 
-import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.cli.views.CharacterCardView;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
@@ -83,7 +83,7 @@ public class MenuPlacing extends Menu {
             studentMoved -= paramBuilder.getStudentsToMove().getCount();
           }
           // Send actions
-          if (!controller.sendMoveStudentsToIsland(paramBuilder.getStudentsToMove(), islandIndex)) {
+          if (!controller.sender().sendMoveStudentsToIsland(paramBuilder.getStudentsToMove(), islandIndex)) {
             out.println("Invalid input parameters");
           }
         }
@@ -111,7 +111,7 @@ public class MenuPlacing extends Menu {
           studentMoved += paramBuilder.getStudentsToMove().getCount();
 
           // Send actions
-          if (!controller.sendMoveStudentsToDiningHall(paramBuilder.getStudentsToMove())) {
+          if (!controller.sender().sendMoveStudentsToDiningHall(paramBuilder.getStudentsToMove())) {
             studentMoved -= paramBuilder.getStudentsToMove().getCount();
             out.println("Invalid input parameters");
           }
@@ -130,7 +130,7 @@ public class MenuPlacing extends Menu {
             out.println("Input must be a number");
             return;
           }
-          if (!controller.sendChooseCharacterCard(ccIndex)) {
+          if (!controller.sender().sendChooseCharacterCard(ccIndex)) {
             out.println("Invalid input parameters");
             return;
           }

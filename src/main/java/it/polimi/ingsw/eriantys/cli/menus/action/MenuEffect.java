@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.menus.action;
 
-import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.CliController;
@@ -82,7 +82,7 @@ public class MenuEffect extends Menu {
         }
       }
 
-      if (controller.sendActivateEffect(cc))
+      if (controller.sender().sendActivateEffect(cc))
         done = true;
       else
         out.println("Invalid input parameters");

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.cli;
+package it.polimi.ingsw.eriantys.cli.views;
 
 import java.io.PrintStream;
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.menus.action;
 
-import it.polimi.ingsw.eriantys.cli.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.cli.views.CloudsView;
 import it.polimi.ingsw.eriantys.controller.CliController;
@@ -35,7 +35,7 @@ public class MenuPickingCloud extends Menu {
           out.println("Choose cloud index: ");
           (new CloudsView(controller.getGameState().getPlayingField().getClouds())).draw(out);
 
-          if (!controller.sendPickCloud(0)) {
+          if (!controller.sender().sendPickCloud(0)) {
             out.println("Invalid input parameters");
             return;
           }

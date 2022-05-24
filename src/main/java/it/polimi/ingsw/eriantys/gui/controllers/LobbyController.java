@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
-import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import javafx.event.ActionEvent;
@@ -10,6 +9,8 @@ import javafx.scene.control.ListView;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Map;
+
+import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
 
 public class LobbyController extends FXMLController {
 
@@ -55,12 +56,12 @@ public class LobbyController extends FXMLController {
   @Override
   public void start() {
     super.start();
-    gui.getController().addListener(this, Controller.GAMEINFO_EVENT_TAG);
+    gui.getController().addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    gui.getController().removeListener(this, Controller.GAMEINFO_EVENT_TAG);
+    gui.getController().removeListener(this, GAMEINFO_EVENT.tag);
   }
 }
