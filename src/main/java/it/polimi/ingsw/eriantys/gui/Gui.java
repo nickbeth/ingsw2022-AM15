@@ -1,15 +1,12 @@
 package it.polimi.ingsw.eriantys.gui;
 
-import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.GuiController;
 import it.polimi.ingsw.eriantys.gui.controllers.FXMLController;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,23 +14,25 @@ import java.util.EnumMap;
 
 
 public class Gui extends Application {
-  private static Controller controller;
+  private static GuiController controller;
   private Stage stage;
   private SceneEnum prevScene;
   private SceneEnum currScene;
   private EnumMap<SceneEnum, Scene> sceneMap = new EnumMap<>(SceneEnum.class);
   private EnumMap<SceneEnum, FXMLController> controllerMap = new EnumMap<>(SceneEnum.class);
 
-  public static void showError(String error){
-    //TODO new Stage pop up window for errors
-  }
-
-  public static void setController(Controller contr) {
+  public static void setController(GuiController contr) {
     controller = contr;
   }
 
-  public Controller getController() {
+  public GuiController getController() {
     return controller;
+  }
+
+  @Override
+  public void init() throws Exception {
+    super.init();
+    controller.setGui(this);
   }
 
   /**
@@ -76,15 +75,16 @@ public class Gui extends Application {
   /**
    * closes the current stage
    */
-  public void closeApplication(){
+  public void closeApplication() {
     stage.close();
   }
 
   /**
    * sets a new scene, updates the next controller, and updates the listener list in action invoker.
+   *
    * @param scene
    */
-  public void setScene(SceneEnum scene){
+  public void setScene(SceneEnum scene) {
     prevScene = currScene;
     currScene = scene;
     FXMLController nextController = controllerMap.get(currScene);
@@ -95,4 +95,7 @@ public class Gui extends Application {
     stage.show();
   }
 
+  public void showError(String error) {
+    //TODO new Stage pop up window for errors
+  }
 }
