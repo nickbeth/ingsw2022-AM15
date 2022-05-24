@@ -38,7 +38,7 @@ public class ConnectionController extends FXMLController {
   @FXML
   private void confirmButtonAction(ActionEvent actionEvent) {
     String ipStr = serverIpField.getText();
-//    String ipStr = "192.168.75.197";
+    //String ipStr = "192.168.75.197";
     String portStr = serverPortField.getText();
     int port = Client.DEFAULT_PORT;
     try {

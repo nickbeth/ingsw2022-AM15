@@ -200,6 +200,7 @@ abstract public class Controller implements Runnable {
               .action(action)
               .gameInfo(gameInfo)
               .nickname(nickname)
+              .gameCode(gameCode)
               .build());
       
       return true;
@@ -217,6 +218,7 @@ abstract public class Controller implements Runnable {
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
+              .gameCode(gameCode)
               .build());
       return true;
     }
@@ -235,6 +237,7 @@ abstract public class Controller implements Runnable {
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
+              .gameCode(gameCode)
               .build());
       return true;
     }
@@ -259,6 +262,7 @@ abstract public class Controller implements Runnable {
       networkClient.send(new Message.Builder(GAMEDATA)
               .action(new RefillClouds(cloudsStudents))
               .gameInfo(gameInfo)
+              .gameCode(gameCode)
               .build());
     }
     
@@ -274,6 +278,7 @@ abstract public class Controller implements Runnable {
       networkClient.send(new Message.Builder(GAMEDATA)
               .action(action)
               .gameInfo(gameInfo)
+              .gameCode(gameCode)
               .build());
       return true;
     }
@@ -292,6 +297,7 @@ abstract public class Controller implements Runnable {
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
+              .gameCode(gameCode)
               .build());
       return true;
     }
@@ -310,6 +316,7 @@ abstract public class Controller implements Runnable {
       networkClient.send(new Message.Builder(GAMEDATA)
               .action(action)
               .nickname(nickname)
+              .gameCode(gameCode)
               .build());
       return true;
     }
@@ -328,6 +335,7 @@ abstract public class Controller implements Runnable {
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
+              .gameCode(gameCode)
               .build());
       return true;
     }
@@ -348,6 +356,7 @@ abstract public class Controller implements Runnable {
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
+              .gameCode(gameCode)
               .build());
       return true;
     }
@@ -362,6 +371,7 @@ abstract public class Controller implements Runnable {
       gameInfo = new GameInfo(numberOfPlayers, gameMode);
       networkClient.send(new Message.Builder(CREATE_GAME)
               .gameInfo(gameInfo)
+              .gameCode(gameCode)
               .nickname(nickname)
               .build());
     }
@@ -381,6 +391,7 @@ abstract public class Controller implements Runnable {
       gameInfo.addPlayer(nickname, color);
       networkClient.send(new Message.Builder(SELECT_TOWER)
               .gameInfo(gameInfo)
+              .gameCode(gameCode)
               .nickname(nickname)
               .build());
       return true;

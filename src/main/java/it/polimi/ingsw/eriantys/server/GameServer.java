@@ -161,7 +161,7 @@ public class GameServer implements Runnable {
     GameEntry gameEntry = activeGames.get(gameCode);
 
     TowerColor chosenTowerColor = message.gameInfo().getPlayerColor(message.nickname());
-    if (gameEntry.getGameInfo().isTowerColorValid(message.nickname(), chosenTowerColor)) {
+    if (!gameEntry.getGameInfo().isTowerColorValid(message.nickname(), chosenTowerColor)) {
       String errorMessage = String.format("Tower color '%s' is not available", chosenTowerColor);
       client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;

@@ -12,7 +12,7 @@
       <Label layoutX="166.0" layoutY="31.0" text=" player game" />
       <Label fx:id="maxPlayerCount" layoutX="151.0" layoutY="31.0" text="2" />
       <Button layoutX="109.0" layoutY="200.0" mnemonicParsing="false" onAction="#changeColorAction" text="change color" />
-      <ChoiceBox layoutX="14.0" layoutY="200.0" prefHeight="25.0" prefWidth="87.0" />
+      <ChoiceBox fx:id="towerColorChoice" layoutX="14.0" layoutY="200.0" prefHeight="25.0" prefWidth="87.0" />
       <Label layoutX="448.0" layoutY="31.0" text="Game Code:" />
       <Label fx:id="gameCode" layoutX="521.0" layoutY="31.0" text="CODE" />
       <ListView fx:id="playerList" layoutX="58.0" layoutY="63.0" prefHeight="134.0" prefWidth="135.0" />

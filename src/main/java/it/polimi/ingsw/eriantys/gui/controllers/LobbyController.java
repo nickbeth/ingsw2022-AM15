@@ -30,20 +30,25 @@ public class LobbyController extends FXMLController {
 
   @FXML
   private void startGameAction(ActionEvent actionEvent) {
+    gui.getController().sender().sendStartGame();
   }
 
   @FXML
   public void changeColorAction(ActionEvent actionEvent) {
+    gui.getController().sender().sendSelectTower(towerColorChoice.getValue());
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+    if(Objects.equals(evt.getPropertyName(), GAMEINFO_EVENT.tag))
+      gui.setScene(SceneEnum.MENU); //provvisorio
     updateAll();
   }
 
   @Override
   public void updateAll() {
     playerList.getItems().clear();
+    towerColorChoice.getItems().clear();
     GameInfo gameInfo = gui.getController().getGameInfo();
     Map<String, TowerColor> playerMap = gameInfo.getPlayersMap();
     gameCode.setText(gui.getController().getGameCode());
@@ -56,6 +61,11 @@ public class LobbyController extends FXMLController {
         colorStr = color.toString();
       playerList.getItems().add(player + " " + colorStr);
     }
+    for (TowerColor color : TowerColor.values()) {
+      if (gameInfo.isTowerColorValid(gui.getController().getNickname(), color))
+        towerColorChoice.getItems().add(color);
+    }
+    towerColorChoice.getItems().add(null);
   }
 
   @Override
