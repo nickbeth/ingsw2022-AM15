@@ -43,23 +43,6 @@ abstract public class Controller implements Runnable {
   
   protected PropertyChangeSupport listenerHolder;
   
-  public enum EventEnum {
-    GAMEINFO_EVENT("gameinfo"),
-    GAMEDATA_EVENT("gamedata"),
-    NICKNAME_OK_EVENT("ok");
-    
-    public String tag;
-    
-    EventEnum(String tag) {
-      this.tag = tag;
-    }
-    
-    @Override
-    public String toString() {
-      return tag;
-    }
-  }
-  
   public Controller(Client networkClient) {
     this.networkClient = networkClient;
     sender = new Sender();

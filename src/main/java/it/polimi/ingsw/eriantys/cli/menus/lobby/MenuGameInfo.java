@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventEnum.GAMEINFO_EVENT;
 
 public class MenuGameInfo extends Menu {
   public MenuGameInfo(CliController controller) {

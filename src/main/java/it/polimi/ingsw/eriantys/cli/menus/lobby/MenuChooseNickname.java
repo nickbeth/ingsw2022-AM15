@@ -8,7 +8,7 @@ import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.NICKNAME_OK_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventEnum.NICKNAME_OK_EVENT;
 
 
 public class MenuChooseNickname extends Menu {

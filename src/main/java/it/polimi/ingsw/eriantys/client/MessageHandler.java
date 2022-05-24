@@ -9,7 +9,7 @@ import org.tinylog.Logger;
 
 import java.util.concurrent.BlockingQueue;
 
-import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.*;
+import static it.polimi.ingsw.eriantys.controller.EventEnum.*;
 
 public class MessageHandler implements Runnable {
   Controller controller;

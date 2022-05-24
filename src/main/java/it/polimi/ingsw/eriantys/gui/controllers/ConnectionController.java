@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
-import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.network.Client;
 import javafx.event.ActionEvent;
@@ -11,7 +10,7 @@ import javafx.scene.control.TextField;
 
 import java.beans.PropertyChangeEvent;
 
-import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventEnum.GAMEINFO_EVENT;
 
 public class ConnectionController extends FXMLController {
   @FXML

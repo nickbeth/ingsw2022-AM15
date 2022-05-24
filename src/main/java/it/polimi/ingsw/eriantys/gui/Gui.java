@@ -29,11 +29,6 @@ public class Gui extends Application {
     return controller;
   }
 
-  @Override
-  public void init() throws Exception {
-    super.init();
-    controller.setGui(this);
-  }
 
   /**
    * the start method is called at the beggining of the application life cycle,

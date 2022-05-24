@@ -1,21 +1,26 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
+import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Map;
+import java.util.Objects;
 
-import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventEnum.GAMEINFO_EVENT;
 
 public class LobbyController extends FXMLController {
 
   @FXML
-  private ListView playerList;
+  private ChoiceBox<TowerColor> towerColorChoice;
+  @FXML
+  private ListView<String> playerList;
   @FXML
   private Label gameCode;
   @FXML

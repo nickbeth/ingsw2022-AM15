@@ -8,7 +8,7 @@ import it.polimi.ingsw.eriantys.network.Client;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.Controller.EventEnum.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventEnum.GAMEINFO_EVENT;
 
 
 /**
