@@ -16,5 +16,6 @@
       <Label layoutX="448.0" layoutY="31.0" text="Game Code:" />
       <Label fx:id="gameCode" layoutX="521.0" layoutY="31.0" text="CODE" />
       <ListView fx:id="playerList" layoutX="58.0" layoutY="63.0" prefHeight="134.0" prefWidth="135.0" />
+      <Label fx:id="errorMessage" layoutX="193.0" layoutY="364.0" prefHeight="18.0" prefWidth="315.0" text="very big sad error" textFill="RED" visible="false" />
    </children>
 </AnchorPane>

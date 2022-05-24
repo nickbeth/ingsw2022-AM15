@@ -159,7 +159,8 @@ abstract public class Controller implements Runnable {
     public boolean sendStartGame() {
       // Send message for creating server game
       // Initialize the game entities
-      
+
+      RuleBook rules = RuleBook.makeRules(gameInfo.getMode(), gameInfo.getMaxPlayerCount());
       if (!gameInfo.start())
         return false;
       // Initiate character cards
@@ -180,7 +181,7 @@ abstract public class Controller implements Runnable {
       List<Students> entrances = new ArrayList<>();
       for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
         entrances.add(new Students());
-        for (int j = 0; j < gameState.getRuleBook().entranceSize; j++) {
+        for (int j = 0; j < rules.entranceSize; j++) {
           entrances.get(i).addStudent(bag.takeRandomStudent());
         }
       }
@@ -189,7 +190,7 @@ abstract public class Controller implements Runnable {
       List<Students> cloudsStudents = new ArrayList<>();
       for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
         cloudsStudents.add(new Students());
-        for (int j = 0; j < gameState.getRuleBook().playableStudentCount; j++) {
+        for (int j = 0; j < rules.playableStudentCount; j++) {
           entrances.get(i).addStudent(bag.takeRandomStudent());
         }
       }

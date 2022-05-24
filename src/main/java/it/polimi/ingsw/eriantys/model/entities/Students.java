@@ -3,11 +3,12 @@ package it.polimi.ingsw.eriantys.model.entities;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import org.tinylog.Logger;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.LinkedList;
 
-public class Students extends Slot {
+public class Students extends Slot implements Serializable {
   protected EnumMap<HouseColor, Integer> students = new EnumMap<>(HouseColor.class);
 
   /**

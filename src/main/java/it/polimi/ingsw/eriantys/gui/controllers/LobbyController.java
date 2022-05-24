@@ -13,10 +13,12 @@ import java.beans.PropertyChangeEvent;
 import java.util.Map;
 import java.util.Objects;
 
+import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
 import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
 
 public class LobbyController extends FXMLController {
-
+  @FXML
+  private Label errorMessage;
   @FXML
   private ChoiceBox<TowerColor> towerColorChoice;
   @FXML
@@ -30,7 +32,10 @@ public class LobbyController extends FXMLController {
 
   @FXML
   private void startGameAction(ActionEvent actionEvent) {
-    gui.getController().sender().sendStartGame();
+    if(!gui.getController().sender().sendStartGame()) {
+      errorMessage.setText("not enough players with a chosen color to start");
+      errorMessage.setVisible(true);
+    }
   }
 
   @FXML
@@ -40,9 +45,10 @@ public class LobbyController extends FXMLController {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if(Objects.equals(evt.getPropertyName(), GAMEINFO_EVENT.tag))
+    if(Objects.equals(evt.getPropertyName(), GAMEDATA_EVENT.tag))
       gui.setScene(SceneEnum.MENU); //provvisorio
-    updateAll();
+    else
+      updateAll();
   }
 
   @Override
