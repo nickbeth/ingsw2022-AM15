@@ -8,6 +8,7 @@ import javafx.scene.Group;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.tinylog.Logger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -99,6 +100,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
    */
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+    Logger.debug("pro change");
     gui.setScene(SceneEnum.LOBBY);
   }
 

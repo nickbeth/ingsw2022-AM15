@@ -13,6 +13,8 @@ import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,16 +34,23 @@ abstract public class Controller implements Runnable {
   }
 
   protected Client networkClient;
-  protected ObservableActionInvoker actionInvoker;
+  protected ActionInvoker actionInvoker;
   protected GameInfo gameInfo;
   protected GameState gameState;
 
   protected String nickname;
-
   protected String gameCode;
+
+  protected PropertyChangeSupport listenerHolder;
+
   public Controller(Client networkClient) {
     this.networkClient = networkClient;
     this.actionInvoker = new ObservableActionInvoker(gameState);
+  }
+
+  @Override
+  public void run() {
+    listenerHolder = new PropertyChangeSupport(this);
   }
 
   /**
@@ -297,7 +306,18 @@ abstract public class Controller implements Runnable {
 
   abstract public void showError(String error);
 
-  public ObservableActionInvoker getActionInvoker() {
+  public void addListener(PropertyChangeListener listener, String tag) {
+    listenerHolder.addPropertyChangeListener(tag, listener);
+  }
+
+  public void removeListener(PropertyChangeListener listener) {
+    listenerHolder.removePropertyChangeListener(listener);
+  }
+  public void removeListener(PropertyChangeListener listener, String tag) {
+    listenerHolder.removePropertyChangeListener(tag, listener);
+  }
+
+  public ActionInvoker getActionInvoker() {
     return actionInvoker;
   }
 

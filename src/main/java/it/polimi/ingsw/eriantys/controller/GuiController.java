@@ -4,6 +4,9 @@ import it.polimi.ingsw.eriantys.gui.Gui;
 import it.polimi.ingsw.eriantys.network.Client;
 import javafx.application.Application;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 public class GuiController extends Controller {
   private Gui gui;
 
@@ -22,7 +25,9 @@ public class GuiController extends Controller {
 
   @Override
   public void run() {
+    super.run();
     Gui.setController(this);
     Application.launch(Gui.class);
   }
+
 }

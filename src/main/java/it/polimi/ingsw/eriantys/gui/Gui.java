@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URL;
@@ -47,7 +48,6 @@ public class Gui extends Application {
     stage.setOnCloseRequest(e -> closeApplication());
     currScene = SceneEnum.MENU;
     stage.setScene(sceneMap.get(currScene));
-    controller.getActionInvoker().addListener(controllerMap.get(currScene));
     stage.show();
   }
 
@@ -89,8 +89,9 @@ public class Gui extends Application {
     currScene = scene;
     FXMLController nextController = controllerMap.get(currScene);
     nextController.updateAll();
-    controller.getActionInvoker().removeListener(controllerMap.get(prevScene));
-    controller.getActionInvoker().addListener(nextController);
+    Logger.debug(nextController.getClass().getSimpleName());
+    /*controller.getActionInvoker().removeListener(controllerMap.get(prevScene));
+    controller.getActionInvoker().addListener(nextController);*/
     stage.setScene(sceneMap.get(currScene));
     stage.show();
   }

@@ -40,7 +40,7 @@ public class ObservableActionInvoker extends ActionInvoker {
   }
 
   public void firePropertyChange() {
-    support.firePropertyChange(null);
+    support.firePropertyChange("ciao",1,1);
   }
   /**
    * Applies the given {@link GameAction} to the game state and notifies all subscribed listeners.
