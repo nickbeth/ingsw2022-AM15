@@ -27,7 +27,9 @@ public class ClientApp {
 
   public void run() {
     // Launch the message handler thread
-    new Thread(messageHandler, "message-handler").start();
+    Thread messageHandlerThread = new Thread(messageHandler, "message-handler");
+    messageHandlerThread.setDaemon(true);
+    messageHandlerThread.start();
 
     // Run the controller loop in this thread
     controller.run();

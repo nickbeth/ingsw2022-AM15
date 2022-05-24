@@ -32,45 +32,47 @@ abstract public class Controller implements Runnable {
     else
       return new CliController(networkClient);
   }
-  
+
   protected GameInfo gameInfo;
   protected Sender sender;
   protected Client networkClient;
   protected GameState gameState;
-  
+
   protected String nickname;
   protected String gameCode;
-  
+
   protected PropertyChangeSupport listenerHolder;
-  
+
   public Controller(Client networkClient) {
     this.networkClient = networkClient;
     sender = new Sender();
     listenerHolder = new PropertyChangeSupport(this);
   }
-  
+
   public void setNickname(String nickname) {
     this.nickname = nickname;
   }
-  
+
   public boolean connect(String address, int port) {
     try {
       networkClient.connect(address, port);
       // Launch the network listening thread
-      new Thread(networkClient, "socket").start();
+      Thread socketThread = new Thread(networkClient, "socket");
+      socketThread.setDaemon(true);
+      socketThread.start();
     } catch (IOException e) {
       return false;
     }
     return true;
   }
-  
+
   public void initGame() {
     gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
-    
+
     for (var playerEntry : gameInfo.getPlayersMap().entrySet())
       gameState.addPlayer(playerEntry.getKey(), playerEntry.getValue());
   }
-  
+
   /**
    * Applies the given {@link GameAction} to the game state.
    *
@@ -86,9 +88,9 @@ abstract public class Controller implements Runnable {
     }
     return false;
   }
-  
+
   abstract public void showError(String error);
-  
+
   /**
    * Add a listener for events with the given tag.
    *
@@ -98,9 +100,9 @@ abstract public class Controller implements Runnable {
   public void addListener(PropertyChangeListener listener, String tag) {
     listenerHolder.addPropertyChangeListener(tag, listener);
   }
-  
+
   public abstract void firePropertyChange(EventType event);
-  
+
   /**
    * Removes the given listener.
    *
@@ -109,7 +111,7 @@ abstract public class Controller implements Runnable {
   public void removeListener(PropertyChangeListener listener) {
     listenerHolder.removePropertyChangeListener(listener);
   }
-  
+
   /**
    * Removes the given listener for events with the given tag.
    *
@@ -119,39 +121,39 @@ abstract public class Controller implements Runnable {
   public void removeListener(PropertyChangeListener listener, String tag) {
     listenerHolder.removePropertyChangeListener(tag, listener);
   }
-  
+
   public PropertyChangeSupport getListenerHolder() {
     return listenerHolder;
   }
-  
+
   public GameInfo getGameInfo() {
     return gameInfo;
   }
-  
+
   public void setGameInfo(GameInfo gameInfo) {
     this.gameInfo = gameInfo;
   }
-  
+
   public GameState getGameState() {
     return gameState;
   }
-  
+
   public String getNickname() {
     return nickname;
   }
-  
+
   public String getGameCode() {
     return gameCode;
   }
-  
+
   public void setGameCode(String gameCode) {
     this.gameCode = gameCode;
   }
-  
+
   public Sender sender() {
     return sender;
   }
-  
+
   public class Sender {
     /**
      * Sends a START_GAME message to the server, containing the initiateGameEntities action. <br>
@@ -165,7 +167,7 @@ abstract public class Controller implements Runnable {
         return false;
       // Initiate character cards
       List<CharacterCardEnum> characterCardEnums = new ArrayList<>(Arrays.asList(CharacterCardEnum.values()));
-      
+
       // Initiate students on island
       StudentBag bag = new StudentBag();
       bag.initStudents(RuleBook.STUDENT_PER_COLOR_SETUP);
@@ -175,7 +177,7 @@ abstract public class Controller implements Runnable {
         if (i != 0 && i != 6)
           studentsOnIslands.get(i).addStudent(bag.takeRandomStudent());
       }
-      
+
       // Initiate entrances.
       bag.initStudents(RuleBook.STUDENT_PER_COLOR - RuleBook.STUDENT_PER_COLOR_SETUP);
       List<Students> entrances = new ArrayList<>();
@@ -185,7 +187,7 @@ abstract public class Controller implements Runnable {
           entrances.get(i).addStudent(bag.takeRandomStudent());
         }
       }
-      
+
       // Initiate clouds.
       List<Students> cloudsStudents = new ArrayList<>();
       for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
@@ -196,32 +198,32 @@ abstract public class Controller implements Runnable {
       }
       // Action Creation
       GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
-      
+
       networkClient.send(new Message.Builder(START_GAME)
               .action(action)
               .gameInfo(gameInfo)
               .nickname(nickname)
               .build());
-      
+
       return true;
     }
-    
+
     /**
      * Send a message to the server with MoveMotherNature action
      */
     public boolean sendPickAssistantCard(int assistantCardIndex) {
       GameAction action = new PickAssistantCard(assistantCardIndex);
-      
+
       if (!action.isValid(gameState))
         return false;
-      
+
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
               .build());
       return true;
     }
-    
+
     /**
      * Send a message to the server with sendPickCloud action
      *
@@ -229,17 +231,17 @@ abstract public class Controller implements Runnable {
      */
     public boolean sendPickCloud(int cloudIndex) {
       GameAction action = new PickCloud(cloudIndex);
-      
+
       if (!action.isValid(gameState))
         return false;
-      
+
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
               .build());
       return true;
     }
-    
+
     /**
      * Send a message to the server with RefillCloud action
      */
@@ -247,7 +249,7 @@ abstract public class Controller implements Runnable {
       List<Students> cloudsStudents = new ArrayList<>();
       Students temp = new Students();
       StudentBag currentBag = gameState.getPlayingField().getStudentBag();
-      
+
       // Populate clouds with random students from bag
       for (int cloudIter = 0; cloudIter < gameState.getRuleBook().cloudCount; cloudIter++) {
         for (int cloudSizeIter = 0; cloudSizeIter < gameState.getRuleBook().playableStudentCount; cloudSizeIter++) {
@@ -256,29 +258,29 @@ abstract public class Controller implements Runnable {
         cloudsStudents.add(new Students(temp));
         temp = new Students(); // clear temp
       }
-      
+
       networkClient.send(new Message.Builder(GAMEDATA)
               .action(new RefillClouds(cloudsStudents))
               .gameInfo(gameInfo)
               .build());
     }
-    
+
     /**
      * Send a message to the server with ActivateEffect action
      */
     public boolean sendActivateEffect(CharacterCard cc) {
       GameAction action = new ActivateCCEffect(cc);
-      
+
       if (!action.isValid(gameState))
         return false;
-      
+
       networkClient.send(new Message.Builder(GAMEDATA)
               .action(action)
               .gameInfo(gameInfo)
               .build());
       return true;
     }
-    
+
     /**
      * Send a message to the server with ChooseCharacterCard action
      *
@@ -286,17 +288,17 @@ abstract public class Controller implements Runnable {
      */
     public boolean sendChooseCharacterCard(int ccIndex) {
       GameAction action = new ChooseCharacterCard(ccIndex);
-      
+
       if (!action.isValid(gameState))
         return false;
-      
+
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
               .build());
       return true;
     }
-    
+
     /**
      * Send a message to the server with MoveMotherNature action
      *
@@ -304,17 +306,17 @@ abstract public class Controller implements Runnable {
      */
     public boolean sendMoveMotherNature(int amount) {
       GameAction action = new MoveMotherNature(amount);
-      
+
       if (!action.isValid(gameState))
         return false;
-      
+
       networkClient.send(new Message.Builder(GAMEDATA)
               .action(action)
               .nickname(nickname)
               .build());
       return true;
     }
-    
+
     /**
      * Send a message to the server with MoveStudentsToDiningHall action
      *
@@ -322,17 +324,17 @@ abstract public class Controller implements Runnable {
      */
     public boolean sendMoveStudentsToDiningHall(Students students) {
       GameAction action = new MoveStudentsToDiningHall(students);
-      
+
       if (!action.isValid(gameState))
         return false;
-      
+
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
               .build());
       return true;
     }
-    
+
     /**
      * Send a message to the server with MoveStudentsToIsland action
      *
@@ -342,23 +344,23 @@ abstract public class Controller implements Runnable {
      */
     public boolean sendMoveStudentsToIsland(Students students, int islandIndex) {
       GameAction action = new MoveStudentsToIsland(students, islandIndex);
-      
+
       if (!action.isValid(gameState))
         return false;
-      
+
       networkClient.send(new Message.Builder(PLAY_ACTION)
               .action(action)
               .nickname(nickname)
               .build());
       return true;
     }
-    
+
     public void sendNickname(String nickname) {
       networkClient.send(new Message.Builder(NICKNAME_REQUEST)
               .nickname(nickname)
               .build());
     }
-    
+
     public void sendCreateGame(int numberOfPlayers, GameMode gameMode) {
       gameInfo = new GameInfo(numberOfPlayers, gameMode);
       networkClient.send(new Message.Builder(CREATE_GAME)
@@ -366,8 +368,7 @@ abstract public class Controller implements Runnable {
               .nickname(nickname)
               .build());
     }
-    
-    
+
     public void sendJoinGame(String gameCode) {
       networkClient.send(new Message.Builder(JOIN_GAME)
               .gameInfo(gameInfo)
@@ -375,7 +376,7 @@ abstract public class Controller implements Runnable {
               .nickname(nickname)
               .build());
     }
-    
+
     public boolean sendSelectTower(TowerColor color) {
       if (!gameInfo.isTowerColorValid(nickname, color))
         return false;
@@ -386,6 +387,5 @@ abstract public class Controller implements Runnable {
               .build());
       return true;
     }
-    
   }
 }
