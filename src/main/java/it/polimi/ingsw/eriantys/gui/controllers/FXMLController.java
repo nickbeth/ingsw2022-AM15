@@ -16,4 +16,10 @@ public abstract class FXMLController implements PropertyChangeListener {
    */
   public void updateAll() {
   }
+
+  public void start() {
+  }
+
+  public void finish() {
+  }
 }

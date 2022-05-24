@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
+import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.network.Client;
 import javafx.event.ActionEvent;
@@ -35,7 +36,8 @@ public class ConnectionController extends FXMLController {
    */
   @FXML
   private void confirmButtonAction(ActionEvent actionEvent) {
-    String ipStr = serverIpField.getText();
+    //String ipStr = serverIpField.getText();
+    String ipStr = "192.168.75.197";
     String portStr = serverPortField.getText();
     int port = Client.DEFAULT_PORT;
     try {
@@ -53,6 +55,18 @@ public class ConnectionController extends FXMLController {
     }
     //TODO: manage nickname in the right way
     gui.getController().sendNickname(nicknameField.getText());
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    gui.getController().addListener(this, Controller.GAMEINFO_EVENT_TAG);
+  }
+
+  @Override
+  public void finish() {
+    super.finish();
+    gui.getController().removeListener(this, Controller.GAMEINFO_EVENT_TAG);
   }
 
   @Override

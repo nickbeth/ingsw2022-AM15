@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URL;
@@ -79,24 +78,23 @@ public class Gui extends Application {
     stage.close();
   }
 
+  public void showError(String error) {
+    //TODO new Stage pop up window for errors
+  }
+
   /**
    * sets a new scene, updates the next controller, and updates the listener list in action invoker.
-   *
    * @param scene
+   * @param eventTag
    */
   public void setScene(SceneEnum scene) {
     prevScene = currScene;
     currScene = scene;
+    controllerMap.get(prevScene).finish();
     FXMLController nextController = controllerMap.get(currScene);
+    nextController.start();
     nextController.updateAll();
-    Logger.debug(nextController.getClass().getSimpleName());
-    /*controller.getActionInvoker().removeListener(controllerMap.get(prevScene));
-    controller.getActionInvoker().addListener(nextController);*/
     stage.setScene(sceneMap.get(currScene));
     stage.show();
-  }
-
-  public void showError(String error) {
-    //TODO new Stage pop up window for errors
   }
 }
