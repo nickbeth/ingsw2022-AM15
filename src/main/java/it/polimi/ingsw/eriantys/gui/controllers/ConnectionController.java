@@ -38,11 +38,10 @@ public class ConnectionController extends FXMLController {
     String ipStr = serverIpField.getText();
     String portStr = serverPortField.getText();
     int port = Client.DEFAULT_PORT;
-    //TODO: manage nickname in the right way
-    gui.getController().setNickname(nicknameField.getText());
     try {
-      if (!portStr.isEmpty())
+      if (!portStr.isEmpty()) {
         port = Integer.parseInt(portStr);
+      }
       if (!gui.getController().connect(ipStr, port)) {
         errorMessage.setText("Failed to connect to the server");
         errorMessage.setOpacity(1);
@@ -52,6 +51,8 @@ public class ConnectionController extends FXMLController {
       errorMessage.setText("Invalid port, try again.");
       errorMessage.setOpacity(1);
     }
+    //TODO: manage nickname in the right way
+    gui.getController().sendNickname(nicknameField.getText());
   }
 
   @Override

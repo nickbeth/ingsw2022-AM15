@@ -45,6 +45,7 @@ public class MessageHandler implements Runnable {
     switch (message.type()) {
       case PING -> handlePing(client, message);
 
+      case NICKNAME_OK -> handleNicknameOk(client, message);
       case GAMEINFO -> handleGameInfo(client, message);
       case GAMEDATA -> handleGameData(client, message);
 
@@ -52,6 +53,10 @@ public class MessageHandler implements Runnable {
 
       case INTERNAL_SOCKET_ERROR -> handleSocketError(client, message);
     }
+  }
+
+  private void handleNicknameOk(Client client, Message message) {
+    controller.setNickname(message.nickname());
   }
 
   private void handlePing(Client client, Message message) {
