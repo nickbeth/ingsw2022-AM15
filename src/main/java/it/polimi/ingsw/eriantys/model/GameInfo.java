@@ -97,11 +97,11 @@ public class GameInfo implements Serializable {
     this.mode = mode;
   }
 
-  public Map<String, TowerColor> getJoinedPlayers() {
+  public Map<String, TowerColor> getPlayersMap() {
     return joinedPlayers;
   }
 
-  public Set<String> getPlayers() {
+  public Set<String> getJoinedPlayers() {
     return joinedPlayers.keySet();
   }
 

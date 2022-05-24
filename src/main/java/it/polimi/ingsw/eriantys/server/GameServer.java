@@ -187,7 +187,7 @@ public class GameServer implements Runnable {
       client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
-    // Check if the game is ready and start the game
+    // Check if the game is ready and set the game as started
     if (!gameEntry.getGameInfo().start()) {
       String errorMessage = String.format("Game with code '%s' is not ready to be started", gameCode);
       client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());

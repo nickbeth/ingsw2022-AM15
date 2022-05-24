@@ -66,7 +66,7 @@ public class GameLobbyView extends View {
             .append(HORIZONTAL_DASH.toString().repeat(computedLength))
             .append(VERTICAL_AND_LEFT.glyph)
             .append(System.lineSeparator());
-    gameInfo.getJoinedPlayers().forEach((key, value) -> {
+    gameInfo.getPlayersMap().forEach((key, value) -> {
       o.append(VERTICAL.glyph)
               .append(PADDING)
               .append(key)
@@ -87,7 +87,7 @@ public class GameLobbyView extends View {
   }
 
   private int horizontalLength() {
-    Optional<String> name = gameInfo.getPlayers().stream().max(Comparator.comparingInt(String::length));
+    Optional<String> name = gameInfo.getJoinedPlayers().stream().max(Comparator.comparingInt(String::length));
     int length;
     if (name.isPresent()) {
       length = name.get().length();

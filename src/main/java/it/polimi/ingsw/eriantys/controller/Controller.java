@@ -51,12 +51,9 @@ abstract public class Controller implements Runnable {
   }
 
   /**
-   * Creates the clients gameState. <br>
    * Sends a START_GAME message to the server, containing the initiateGameEntities action. <br>
    */
   public boolean sendStartGame() {
-    // Creates client gameState
-    gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
     // Send message for creating server game
     // Initialize the game entities
 
@@ -299,6 +296,15 @@ abstract public class Controller implements Runnable {
       return false;
     }
     return true;
+  }
+
+  public void initGame() {
+    gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
+
+    for (var playerEntry : gameInfo.getPlayersMap().entrySet())
+      gameState.addPlayer(playerEntry.getKey(), playerEntry.getValue());
+
+    actionInvoker = new ObservableActionInvoker(gameState, listenerHolder);
   }
 
   abstract public void showError(String error);
