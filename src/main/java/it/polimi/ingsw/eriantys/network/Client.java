@@ -113,9 +113,6 @@ public class Client implements Runnable {
           Logger.error("Received invalid message: {}", e);
         }
       }
-    } catch (EOFException e) {
-      // Client disconnected while we were waiting on receive
-      Logger.debug("Client '{}' disconnected", this);
     } catch (IOException e) {
       Logger.error("An error occurred on socket '{}': {}", this, e);
       // We need a way to notify message handlers of socket errors
