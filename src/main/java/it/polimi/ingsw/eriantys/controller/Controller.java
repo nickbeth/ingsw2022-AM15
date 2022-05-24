@@ -34,7 +34,7 @@ abstract public class Controller implements Runnable {
   }
 
   protected Client networkClient;
-  protected ActionInvoker actionInvoker;
+  protected ObservableActionInvoker actionInvoker;
   protected GameInfo gameInfo;
   protected GameState gameState;
 
@@ -42,14 +42,11 @@ abstract public class Controller implements Runnable {
   protected String gameCode;
 
   protected PropertyChangeSupport listenerHolder;
+  public static final String GAMEINFO_EVENT_TAG = "gameinfo";
+  public static final String GAMEDATA_EVENT_TAG = "gamedata";
 
   public Controller(Client networkClient) {
     this.networkClient = networkClient;
-    this.actionInvoker = new ObservableActionInvoker(gameState);
-  }
-
-  @Override
-  public void run() {
     listenerHolder = new PropertyChangeSupport(this);
   }
 
@@ -306,18 +303,36 @@ abstract public class Controller implements Runnable {
 
   abstract public void showError(String error);
 
+  /**
+   * Add a listener for events with the given tag.
+   *
+   * @param listener The listener to be subscribed
+   * @param tag      The event tag
+   */
   public void addListener(PropertyChangeListener listener, String tag) {
     listenerHolder.addPropertyChangeListener(tag, listener);
   }
 
+  /**
+   * Removes the given listener.
+   *
+   * @param listener Listener to be unsubscribed
+   */
   public void removeListener(PropertyChangeListener listener) {
     listenerHolder.removePropertyChangeListener(listener);
   }
+
+  /**
+   * Removes the given listener for events with the given tag.
+   *
+   * @param listener The listener to be unsubscribed
+   * @param tag      The event tag
+   */
   public void removeListener(PropertyChangeListener listener, String tag) {
     listenerHolder.removePropertyChangeListener(tag, listener);
   }
 
-  public ActionInvoker getActionInvoker() {
+  public ObservableActionInvoker getActionInvoker() {
     return actionInvoker;
   }
 
@@ -327,6 +342,7 @@ abstract public class Controller implements Runnable {
 
   public void setGameInfo(GameInfo gameInfo) {
     this.gameInfo = gameInfo;
+    listenerHolder.firePropertyChange(GAMEINFO_EVENT_TAG, null, gameInfo);
   }
 
   public GameState getGameState() {

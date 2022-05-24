@@ -22,7 +22,6 @@ public class CliController extends Controller {
 
   @Override
   public void run() {
-    super.run();
     Scanner in = new Scanner(System.in);
     Menu currentMenu = new MenuConnect(this);
     while (true) {

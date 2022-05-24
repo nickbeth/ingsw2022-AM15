@@ -3,47 +3,23 @@ package it.polimi.ingsw.eriantys.controller;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+
+import static it.polimi.ingsw.eriantys.controller.Controller.GAMEDATA_EVENT_TAG;
 
 public class ObservableActionInvoker extends ActionInvoker {
   /**
    * Stores the listeners that subscribed for notification when an action is applied.
    */
-  private final PropertyChangeSupport support;
+  private final PropertyChangeSupport listenerHolder;
 
-  public ObservableActionInvoker(GameState gameState) {
+  public ObservableActionInvoker(GameState gameState, PropertyChangeSupport listenerHolder) {
     super(gameState);
-    this.support = new PropertyChangeSupport(this);
+    this.listenerHolder = listenerHolder;
   }
 
   /**
-   * Subscribe a listener for notification when an action is applied.
-   *
-   * @param listener The listener to be subscribed
-   */
-  public void addListener(PropertyChangeListener listener) {
-    support.addPropertyChangeListener(listener);
-  }
-
-  /**
-   * Removes the given listener.
-   *
-   * @param listener Listener to be unsubscribed
-   */
-  public void removeListener(PropertyChangeListener listener) {
-    support.removePropertyChangeListener(listener);
-  }
-
-  public void removeAllListener() {
-    //TODO: remove all listeners
-  }
-
-  public void firePropertyChange() {
-    support.firePropertyChange("ciao",1,1);
-  }
-  /**
-   * Applies the given {@link GameAction} to the game state and notifies all subscribed listeners.
+   * Applies the given {@link GameAction} to the game state and fires a property change.
    *
    * @param action The {@link GameAction} to apply to the game state
    * @return {@code true} if action was valid and was applied successfully, {@code false} otherwise
@@ -52,8 +28,8 @@ public class ObservableActionInvoker extends ActionInvoker {
   public boolean executeAction(GameAction action) {
     if (!super.executeAction(action))
       return false;
-    // Notifies listeners that an action was applied
-    support.firePropertyChange(null);
+    // Notifies listeners that the game state was modified
+    listenerHolder.firePropertyChange(GAMEDATA_EVENT_TAG, null, null);
     return true;
   }
 }
