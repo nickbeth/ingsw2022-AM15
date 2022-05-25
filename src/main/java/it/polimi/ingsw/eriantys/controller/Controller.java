@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.controller;
 
+import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
@@ -39,7 +40,7 @@ abstract public class Controller implements Runnable {
   protected GameState gameState;
 
   protected String nickname;
-  protected String gameCode;
+  protected GameCode gameCode;
 
   protected PropertyChangeSupport listenerHolder;
 
@@ -142,11 +143,11 @@ abstract public class Controller implements Runnable {
     return nickname;
   }
 
-  public String getGameCode() {
+  public GameCode getGameCode() {
     return gameCode;
   }
 
-  public void setGameCode(String gameCode) {
+  public void setGameCode(GameCode gameCode) {
     this.gameCode = gameCode;
   }
 
@@ -200,10 +201,10 @@ abstract public class Controller implements Runnable {
       GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
 
       networkClient.send(new Message.Builder(START_GAME)
-              .action(action)
-              .gameInfo(gameInfo)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .gameInfo(gameInfo)
+          .nickname(nickname)
+          .build());
 
       return true;
     }
@@ -218,9 +219,9 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -236,9 +237,9 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -260,9 +261,9 @@ abstract public class Controller implements Runnable {
       }
 
       networkClient.send(new Message.Builder(GAMEDATA)
-              .action(new RefillClouds(cloudsStudents))
-              .gameInfo(gameInfo)
-              .build());
+          .action(new RefillClouds(cloudsStudents))
+          .gameInfo(gameInfo)
+          .build());
     }
 
     /**
@@ -275,9 +276,9 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(GAMEDATA)
-              .action(action)
-              .gameInfo(gameInfo)
-              .build());
+          .action(action)
+          .gameInfo(gameInfo)
+          .build());
       return true;
     }
 
@@ -293,9 +294,9 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -311,9 +312,9 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(GAMEDATA)
-              .action(action)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -329,9 +330,9 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -349,32 +350,32 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
     public void sendNickname(String nickname) {
       networkClient.send(new Message.Builder(NICKNAME_REQUEST)
-              .nickname(nickname)
-              .build());
+          .nickname(nickname)
+          .build());
     }
 
     public void sendCreateGame(int numberOfPlayers, GameMode gameMode) {
       gameInfo = new GameInfo(numberOfPlayers, gameMode);
       networkClient.send(new Message.Builder(CREATE_GAME)
-              .gameInfo(gameInfo)
-              .nickname(nickname)
-              .build());
+          .gameInfo(gameInfo)
+          .nickname(nickname)
+          .build());
     }
 
-    public void sendJoinGame(String gameCode) {
+    public void sendJoinGame(GameCode gameCode) {
       networkClient.send(new Message.Builder(JOIN_GAME)
-              .gameInfo(gameInfo)
-              .gameCode(gameCode)
-              .nickname(nickname)
-              .build());
+          .gameInfo(gameInfo)
+          .gameCode(gameCode)
+          .nickname(nickname)
+          .build());
     }
 
     public boolean sendSelectTower(TowerColor color) {
@@ -382,9 +383,9 @@ abstract public class Controller implements Runnable {
         return false;
       gameInfo.addPlayer(nickname, color);
       networkClient.send(new Message.Builder(SELECT_TOWER)
-              .gameInfo(gameInfo)
-              .nickname(nickname)
-              .build());
+          .gameInfo(gameInfo)
+          .nickname(nickname)
+          .build());
       return true;
     }
   }

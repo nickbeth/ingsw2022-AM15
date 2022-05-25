@@ -1,5 +1,7 @@
 package it.polimi.ingsw.eriantys.server;
 
+import it.polimi.ingsw.eriantys.model.GameCode;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -8,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ClientAttachment {
   private final String nickname;
-  private String gameCode;
+  private GameCode gameCode;
   private final AtomicInteger missedHeartbeatCount;
 
   public ClientAttachment(String nickname) {
@@ -20,11 +22,11 @@ public class ClientAttachment {
     return nickname;
   }
 
-  public String gameCode() {
+  public GameCode gameCode() {
     return gameCode;
   }
 
-  public void setGameCode(String gameCode) {
+  public void setGameCode(GameCode gameCode) {
     this.gameCode = gameCode;
   }
 

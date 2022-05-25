@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
+import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,10 +56,10 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
    */
   @FXML
   private void continueJoinGame(ActionEvent actionEvent) {
-    String gameCode = gameUidField.getText();
-    if (!gameCode.isEmpty())
+    try {
+      GameCode gameCode = GameCode.parseCode(gameUidField.getText());
       gui.getController().sender().sendJoinGame(gameCode);
-    else {
+    } catch (GameCode.GameCodeException e) {
       errorMessage.setText("please insert a gameCode to start the game");
       errorMessage.setVisible(true);
     }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.network;
 
+import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 
@@ -18,7 +19,7 @@ public class Message implements Serializable {
   public static class Builder {
     private MessageType type;
     private String nickname;
-    private String gameCode;
+    private GameCode gameCode;
     private String error;
     private GameAction gameAction;
     private GameInfo gameInfo;
@@ -55,7 +56,7 @@ public class Message implements Serializable {
      *
      * @return The builder instance
      */
-    public Builder gameCode(String gameCode) {
+    public Builder gameCode(GameCode gameCode) {
       this.gameCode = gameCode;
       return this;
     }
@@ -113,12 +114,12 @@ public class Message implements Serializable {
 
   private final MessageType type;
   private final String nickname;
-  private final String gameCode;
+  private final GameCode gameCode;
   private final String error;
   private final GameAction gameAction;
   private final GameInfo gameInfo;
 
-  private Message(MessageType type, String nickname, String gameCode, String error, GameAction gameAction, GameInfo gameInfo) {
+  private Message(MessageType type, String nickname, GameCode gameCode, String error, GameAction gameAction, GameInfo gameInfo) {
     this.type = type;
     this.nickname = nickname;
     this.gameCode = gameCode;
@@ -135,7 +136,7 @@ public class Message implements Serializable {
     return nickname;
   }
 
-  public String gameCode() {
+  public GameCode gameCode() {
     return gameCode;
   }
 

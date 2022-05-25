@@ -57,7 +57,7 @@ public class LobbyController extends FXMLController {
     towerColorChoice.getItems().clear();
     GameInfo gameInfo = gui.getController().getGameInfo();
     Map<String, TowerColor> playerMap = gameInfo.getPlayersMap();
-    gameCode.setText(gui.getController().getGameCode());
+    gameCode.setText(gui.getController().getGameCode().toString());
     gameMode.setText(gameInfo.getMode().toString());
     maxPlayerCount.setText(String.valueOf(gameInfo.getMaxPlayerCount()));
     for (String player : playerMap.keySet()) {
