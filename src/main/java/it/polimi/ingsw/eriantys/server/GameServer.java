@@ -128,7 +128,6 @@ public class GameServer implements Runnable {
     gameEntry.addPlayer(message.nickname(), client);
 
     activeGames.put(gameCode, gameEntry);
-    activeNicknames.add(message.nickname());
     ((ClientAttachment) client.attachment()).setGameCode(gameCode);
     Logger.info("Player '{}' created a new game: {}", message.nickname(), gameCode);
     send(client, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
@@ -196,7 +195,7 @@ public class GameServer implements Runnable {
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
-    if (!gameEntry.executeAction(action)) {
+    if (!(action instanceof InitiateGameEntities) || !gameEntry.executeAction(action)) {
       String errorMessage = "Game with code '" + gameCode + "' tried to start a game with an invalid action: " + action.getClass().getSimpleName();
       Logger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
