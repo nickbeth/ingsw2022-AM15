@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.cli.menus.action;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
+import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
@@ -15,6 +16,7 @@ import java.util.Scanner;
 
 public class MenuEffect extends Menu {
   public MenuEffect(CliController controller) {
+    this.nextMenu = null;
     this.controller = controller;
   }
 
@@ -70,8 +72,8 @@ public class MenuEffect extends Menu {
       if (cc instanceof IslandInputCards) {
         // View islands
         (new IslandsView(controller.getGameState().getPlayingField().getIslands(),
-                controller.getGameState().getPlayingField().getMotherNaturePosition()))
-                .draw(out);
+            controller.getGameState().getPlayingField().getMotherNaturePosition()))
+            .draw(out);
         out.println("Insert island index: ");
 
         try {
@@ -87,10 +89,5 @@ public class MenuEffect extends Menu {
       else
         out.println("Invalid input parameters");
     } while (!done);
-  }
-
-  @Override
-  public Menu next() {
-    return null;
   }
 }

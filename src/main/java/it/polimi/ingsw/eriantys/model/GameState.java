@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.model;
 
+import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
@@ -31,7 +32,7 @@ public class GameState {
   /**
    * Adds a player to the player List and planOrder List
    *
-   * @param nickname The player's nickname
+   * @param nickname   The player's nickname
    * @param towerColor The chosen tower color
    */
   public void addPlayer(String nickname, TowerColor towerColor) {
@@ -75,6 +76,13 @@ public class GameState {
    */
   public Player getCurrentPlayer() {
     return currentPlayer;
+  }
+
+  public List<Dashboard> getDashboards() {
+    List<Dashboard> dashes = new ArrayList<>();
+    players.forEach(p ->
+        dashes.add(p.getDashboard()));
+    return dashes;
   }
 
   /**

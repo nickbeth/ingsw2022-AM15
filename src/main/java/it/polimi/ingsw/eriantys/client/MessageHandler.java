@@ -95,7 +95,7 @@ public class MessageHandler implements Runnable {
 
   private void handleError(Client client, Message message) {
     controller.showError(message.error());
-    controller.firePropertyChange(NETWORK_ERROR);
+    controller.firePropertyChange(ERROR);
   }
 
   private void handleSocketError(Client client, Message message) {

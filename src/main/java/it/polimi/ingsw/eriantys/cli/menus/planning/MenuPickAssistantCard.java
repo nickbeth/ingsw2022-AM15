@@ -12,21 +12,22 @@ import java.util.Scanner;
 
 public class MenuPickAssistantCard extends Menu {
   public MenuPickAssistantCard(CliController controller) {
+    this.nextMenu = new MenuPlacing(controller);
     this.controller = controller;
   }
-  
+
   @Override
   protected void showOptions(PrintStream out) {
-    showViewOptions();
+    showViewOptions(out);
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       System.out.println("A - Choose assistant card");
     }
   }
-  
+
   @Override
   public void show(Scanner in, PrintStream out) {
     boolean done = false;
-    
+
     do {
       showOptions(out);
       switch (in.nextLine()) {
@@ -47,14 +48,9 @@ public class MenuPickAssistantCard extends Menu {
       }
     } while (!done);
   }
-  
-  @Override
-  public Menu next() {
-    return new MenuPlacing(controller);
-  }
-  
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-  
+
   }
 }

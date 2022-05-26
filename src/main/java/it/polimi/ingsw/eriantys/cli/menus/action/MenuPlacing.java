@@ -17,19 +17,20 @@ public class MenuPlacing extends Menu {
   private int studentMoved = 0;
 
   public MenuPlacing(CliController controller) {
+    this.nextMenu = new MenuMoving(controller);
     this.controller = controller;
   }
 
   @Override
   protected void showOptions(PrintStream out) {
-    showViewOptions();
+    showViewOptions(out);
     int studentsLeft = controller.getGameState().getRuleBook().playableStudentCount - studentMoved;
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       if (controller.getGameState().getTurnPhase() == TurnPhase.PLACING) {
         out.println(
-                MessageFormat.format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
+            MessageFormat.format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
         out.println(
-                MessageFormat.format("W - Move a student from entrance to dining ({0} left)", studentsLeft));
+            MessageFormat.format("W - Move a student from entrance to dining ({0} left)", studentsLeft));
         out.println("E - Play a character card");
       }
     }
@@ -53,7 +54,7 @@ public class MenuPlacing extends Menu {
 
           // Shows entrance
           (new DashboardView(controller.getGameState().getRuleBook(), controller.getGameState().getCurrentPlayer().getDashboard(),
-                  controller.getGameState().getPlayingField().getProfessorHolder())).draw(out);
+              controller.getGameState().getPlayingField().getProfessorHolder())).draw(out);
 
           // Takes the color
           (new MenuStudentColor()).show(in, out, paramBuilder);
@@ -76,7 +77,7 @@ public class MenuPlacing extends Menu {
             // Shows islands
             out.println("Choose an island: ");
             (new IslandsView(controller.getGameState().getPlayingField().getIslands(),
-                    controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(out);
+                controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(out);
             islandIndex = in.nextInt();
           } catch (InputMismatchException e) {
             out.println("Number required");
@@ -141,10 +142,5 @@ public class MenuPlacing extends Menu {
         default -> out.println("Choose a valid option");
       }
     } while (!done);
-  }
-
-  @Override
-  public Menu next() {
-    return new MenuMoving(controller);
   }
 }

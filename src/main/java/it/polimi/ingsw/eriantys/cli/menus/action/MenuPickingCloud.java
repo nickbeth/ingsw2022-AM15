@@ -11,12 +11,13 @@ import java.util.Scanner;
 
 public class MenuPickingCloud extends Menu {
   public MenuPickingCloud(CliController controller) {
+//    this.nextMenu = new MenuPickAssistantCard(controller);
     this.controller = controller;
   }
 
   @Override
   protected void showOptions(PrintStream out) {
-    showViewOptions();
+    showViewOptions(out);
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       out.println("Q - Pick cloud");
     }
@@ -28,6 +29,7 @@ public class MenuPickingCloud extends Menu {
 
     do {
       showOptions(out);
+      out.print("Make a choice: ");
       switch (in.nextLine()) {
         case "Q", "q" -> {
           if (!controller.getGameState().getTurnPhase().equals(TurnPhase.PICKING))
@@ -45,11 +47,4 @@ public class MenuPickingCloud extends Menu {
       }
     } while (!done);
   }
-
-  //todo pensare bene al next menu
-  @Override
-  public Menu next() {
-    return new MenuPickAssistantCard(controller);
-  }
-
 }

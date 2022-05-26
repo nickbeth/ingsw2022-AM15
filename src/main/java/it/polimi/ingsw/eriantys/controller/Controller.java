@@ -370,6 +370,7 @@ abstract public class Controller implements Runnable {
           .build());
     }
 
+
     public void sendJoinGame(GameCode gameCode) {
       networkClient.send(new Message.Builder(JOIN_GAME)
           .gameInfo(gameInfo)
@@ -388,5 +389,6 @@ abstract public class Controller implements Runnable {
           .build());
       return true;
     }
+
   }
 }

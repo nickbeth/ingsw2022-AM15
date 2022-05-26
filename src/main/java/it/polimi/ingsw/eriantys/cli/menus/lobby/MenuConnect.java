@@ -7,49 +7,46 @@ import it.polimi.ingsw.eriantys.network.Client;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
-
-
 /**
  * Asks the user for server's address and port
  */
 public class MenuConnect extends Menu {
   public MenuConnect(CliController controller) {
     this.controller = controller;
-    controller.addListener(this, GAMEINFO_EVENT.tag);
+    this.nextMenu = new MenuChooseNickname(controller);
   }
 
   @Override
   protected void showOptions(PrintStream out) {
+    out.println("\nChoose server:");
+    out.println("1 - Manually configure socket");
+    out.println("ANY_KEY - Use default options (localhost:1234)");
   }
-  
+
   /**
    * Gets the socket from user
+   *
    * @param in  The input stream the user input will be read from
    * @param out The output stream the output will be sent to
    */
   @Override
   public void show(Scanner in, PrintStream out) {
-    String input, address = null;
-    int port = Client.DEFAULT_PORT;
+    String address;
+    int port;
     boolean done = false;
 
     do {
-      out.print("Enter the IP address of the server (default: localhost): ");
-      input = in.nextLine();
-      if (!input.isBlank())
-        address = input;
+      address = "localhost";
+      port = Client.DEFAULT_PORT;
 
-      out.print("Enter the port the server is running on (default: 1234): ");
-      while (true) {
-        input = in.nextLine();
-        try {
-          if (!input.isEmpty())
-            port = Integer.parseInt(input);
-          break;
-        } catch (NumberFormatException e) {
-          out.println("Invalid port, try again");
-        }
+      showOptions(out);
+      out.print("Make a choice: ");
+      if (in.nextLine().equals("1")) {
+        out.print("Enter the IP address of the server: ");
+        address = getNonBlankString(in, out);
+
+        out.print("Enter the port the server is running on: ");
+        port = getNumber(in, out);
       }
 
       if (controller.connect(address, port)) {
@@ -58,10 +55,5 @@ public class MenuConnect extends Menu {
         out.println("Failed to connect to the server");
       }
     } while (!done);
-  }
-
-  @Override
-  public Menu next() {
-    return new MenuChooseNickname(controller);
   }
 }

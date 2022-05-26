@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.network;
 
+import it.polimi.ingsw.eriantys.client.MessageHandler;
 import org.tinylog.Logger;
 
 import java.io.EOFException;
@@ -10,6 +11,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Handler;
 
 /**
  * A wrapper around java.io.Socket for sending and receiving Message objects.
@@ -118,7 +120,7 @@ public class Client implements Runnable {
       // We need a way to notify message handlers of socket errors
       // We submit a special message to the queue so that it can be handled
       messageQueue.add(new MessageQueueEntry(this, new Message.Builder()
-              .type(MessageType.INTERNAL_SOCKET_ERROR).nickname(SOCKET_ERROR_HASH).error(e.getMessage()).build()));
+          .type(MessageType.INTERNAL_SOCKET_ERROR).nickname(SOCKET_ERROR_HASH).error(e.getMessage()).build()));
     }
     Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
   }

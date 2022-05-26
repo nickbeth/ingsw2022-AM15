@@ -11,12 +11,13 @@ import java.util.Scanner;
 
 public class MenuMoving extends Menu {
   public MenuMoving(CliController controller) {
+    this.nextMenu = new MenuPickingCloud(controller);
     this.controller = controller;
   }
 
   @Override
   protected void showOptions(PrintStream out) {
-    showViewOptions();
+    showViewOptions(out);
     if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
       out.println("T - Move mother nature");
     }
@@ -41,7 +42,7 @@ public class MenuMoving extends Menu {
             // Shows islands
             out.println("Playing Field: ");
             (new IslandsView(controller.getGameState().getPlayingField().getIslands(),
-                    controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(out);
+                controller.getGameState().getPlayingField().getMotherNaturePosition())).draw(out);
             out.println("Insert the amount of mother nature movements: ");
             amount = in.nextInt();
           } catch (InputMismatchException e) {
@@ -57,11 +58,4 @@ public class MenuMoving extends Menu {
       }
     } while (!done);
   }
-
-  //todo pensare bene al next menu
-  @Override
-  public Menu next() {
-    return new MenuPickingCloud(controller);
-  }
-
 }

@@ -5,7 +5,8 @@ public enum EventType {
   GAMEDATA_EVENT("gamedata"),
   NICKNAME_OK("nickname_ok"),
   SOCKET_ERROR("socket_error"),
-  NETWORK_ERROR("network_error");
+  ERROR("network_error");
+
 
   public String tag;
 

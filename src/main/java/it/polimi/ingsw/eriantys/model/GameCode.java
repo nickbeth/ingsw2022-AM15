@@ -38,11 +38,16 @@ public class GameCode implements Serializable {
     if (codeChars.length != GAME_CODE_LENGTH) {
       throw new GameCodeException("Invalid code length: " + codeChars.length);
     }
+    StringBuilder s = new StringBuilder();
+    boolean invalid = false;
     for (char c : codeChars) {
       if (GAME_CODE_CHARS.indexOf(c) == -1) {
-        throw new GameCodeException("Invalid character: " + c);
+        invalid = true;
+        s.append(c);
       }
     }
+    if (invalid) throw new GameCodeException("Invalid character: " + s);
+
     return new GameCode(codeChars);
   }
 

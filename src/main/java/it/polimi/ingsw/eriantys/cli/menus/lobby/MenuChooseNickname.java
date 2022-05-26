@@ -8,50 +8,59 @@ import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+import static it.polimi.ingsw.eriantys.controller.EventType.ERROR;
 import static it.polimi.ingsw.eriantys.controller.EventType.NICKNAME_OK;
 
 
 public class MenuChooseNickname extends Menu {
+  private boolean isNicknameOk = false;
+
   public MenuChooseNickname(CliController controller) {
     this.controller = controller;
-    Logger.trace(controller.getListenerHolder().getPropertyChangeListeners().length);
+    this.nextMenu = new MenuCreateOrJoin(controller);
     controller.addListener(this, NICKNAME_OK.tag);
-    Logger.trace(controller.getListenerHolder().getPropertyChangeListeners().length);
+    controller.addListener(this, ERROR.tag);
   }
-  
+
   @Override
   protected void showOptions(PrintStream out) {
-    out.print("Enter your nickname: ");
+    out.println("\n1 - Enter your nickname: ");
+    out.println("0 - Back");
   }
-  
+
   @Override
   public void show(Scanner in, PrintStream out) {
-    String input;
-    boolean done = false;
-    
+    String nickname;
+
     do {
-      greenLight = false;
       showOptions(out);
-      input = in.nextLine();
-      if (input.isBlank()) {
-        out.println("A nickname cannot be empty or blank");
-      } else {
-        done = true;
-        controller.sender().sendNickname(input);
-        waitForGreenLight();
+      out.print("Make a choice: ");
+      switch (in.nextLine()) {
+        case "1" -> {
+          isNicknameOk = false;
+          greenLight = false;
+          out.print("Insert nickname: ");
+          nickname = getNonBlankString(in, out);
+          controller.sender().sendNickname(nickname);
+          waitForGreenLight();
+        }
+        case "0" -> {
+          nextMenu = new MenuConnect(controller);
+          return;
+        }
+        default -> out.println("Choose a valid option");
       }
-    } while (!done);
+    } while (!isNicknameOk);
   }
-  
-  @Override
-  public Menu next() {
-    return new MenuCreateOrJoin(controller);
-  }
-  
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     Logger.trace("Response arrived");
-    controller.removeListener(this, NICKNAME_OK.tag);
+    if (evt.getPropertyName().equals(NICKNAME_OK.tag)) {
+      isNicknameOk = true;
+      controller.removeListener(this, NICKNAME_OK.tag);
+      controller.removeListener(this, ERROR.tag);
+    }
     greenLight = true;
   }
 }

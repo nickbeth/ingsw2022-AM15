@@ -17,8 +17,9 @@ public class ViewGroup extends View {
    *
    * @param view The view to add to this group.
    */
-  public void addView(View view) {
+  public ViewGroup addView(View view) {
     viewList.add(view);
+    return this;
   }
 
   /**
