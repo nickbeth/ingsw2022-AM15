@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.model;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -80,5 +81,22 @@ public class GameCode implements Serializable {
   @Override
   public String toString() {
     return Arrays.toString(code);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this)
+      return true;
+
+    if (obj == null || obj.getClass() != getClass())
+      return false;
+
+    GameCode c = (GameCode) obj;
+    return Arrays.equals(code, c.code);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(Arrays.toString(code));
   }
 }
