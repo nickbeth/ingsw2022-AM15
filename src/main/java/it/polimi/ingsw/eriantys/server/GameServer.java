@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.server;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
+import it.polimi.ingsw.eriantys.model.actions.InitiateGameEntities;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
@@ -44,8 +45,7 @@ public class GameServer implements Runnable {
     while (true) {
       try {
         MessageQueueEntry entry = messageQueue.take();
-        if (!entry.message().type().equals(MessageType.PING))
-          Logger.trace("Handling response: {}", entry);
+        Logger.trace("Handling entry: {}", entry);
         handleMessage(entry);
       } catch (InterruptedException e) {
         // We should never be interrupted
@@ -72,9 +72,14 @@ public class GameServer implements Runnable {
       return;
     }
 
-    switch (message.type()) {
-      case PONG -> handlePong(client, message);
+    // Handle PONG messages separately to avoid spamming debug logs
+    if (message.type() == MessageType.PONG) {
+      handlePong(client, message);
+      return;
+    }
 
+    Logger.debug("Handling entry: {}", entry);
+    switch (message.type()) {
       case NICKNAME_REQUEST -> handleNicknameRequest(client, message);
 
       case CREATE_GAME -> handleCreateGame(client, message);
@@ -96,21 +101,25 @@ public class GameServer implements Runnable {
 
   private void handleNicknameRequest(Client client, Message message) {
     String nickname = message.nickname();
+
     if (nickname == null || nickname.isBlank()) {
-      String errorMessage = String.format("Nickname '%s' is invalid", nickname);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Nickname '" + nickname + " is invalid";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     // Check if a player with this nickname already exists, and add it if it doesn't
     if (!activeNicknames.add(nickname)) {
-      String errorMessage = String.format("Nickname '%s' is already in use", nickname);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Nickname '" + nickname + "' is already in use";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     client.attach(new ClientAttachment(nickname));
-    client.send(new Message.Builder().type(MessageType.NICKNAME_OK).nickname(nickname).build());
+    Logger.info("Nickname '{}' registered for client '{}'", nickname, client);
+    send(client, new Message.Builder().type(MessageType.NICKNAME_OK).nickname(nickname).build());
   }
 
   private void handleCreateGame(Client client, Message message) {
@@ -121,8 +130,8 @@ public class GameServer implements Runnable {
     activeGames.put(gameCode, gameEntry);
     activeNicknames.add(message.nickname());
     ((ClientAttachment) client.attachment()).setGameCode(gameCode);
-
-    client.send(new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+    Logger.info("Player '{}' created a new game: {}", message.nickname(), gameCode);
+    send(client, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
     initHeartbeat(client);
   }
 
@@ -131,27 +140,30 @@ public class GameServer implements Runnable {
     GameEntry gameEntry = activeGames.get(gameCode);
 
     if (gameEntry == null) {
-      String errorMessage = String.format("Game with code '%s' does not exist", gameCode);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Game with code '" + gameCode + "' does not exist";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     // TODO: handle player reconnections
     if (gameEntry.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING) {
-      String errorMessage = String.format("Game with code '%s' has already started", gameCode);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Game with code '" + gameCode + "' has already started";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     if (gameEntry.isFull()) {
-      String errorMessage = String.format("Game with code '%s' is full", gameCode);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Game with code '" + gameCode + "' is full";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     gameEntry.addPlayer(message.nickname(), client);
     ((ClientAttachment) client.attachment()).setGameCode(gameCode);
-
+    Logger.info("Player '{}' joined game: {}", gameCode, message.nickname());
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
     initHeartbeat(client);
   }
@@ -162,12 +174,14 @@ public class GameServer implements Runnable {
 
     TowerColor chosenTowerColor = message.gameInfo().getPlayerColor(message.nickname());
     if (!gameEntry.getGameInfo().isTowerColorValid(message.nickname(), chosenTowerColor)) {
-      String errorMessage = String.format("Tower color '%s' is not available", chosenTowerColor);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Tower color '" + chosenTowerColor + "' is not available";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     gameEntry.setPlayerColor(message.nickname(), chosenTowerColor);
+    Logger.info("'{}' set to tower color: {}", message.nickname(), chosenTowerColor);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
 
@@ -177,22 +191,26 @@ public class GameServer implements Runnable {
     GameAction action = message.gameAction();
 
     if (message.gameAction() == null) {
-      String errorMessage = String.format("Game with code '%s' received a malformed initialization action", gameCode);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Game with code '" + gameCode + "' received a malformed initialization action";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
     if (!gameEntry.executeAction(action)) {
-      String errorMessage = String.format("Game with code '%s' tried to apply an invalid action: %s", gameCode, action.getClass().getSimpleName());
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Game with code '" + gameCode + "' tried to start a game with an invalid action: " + action.getClass().getSimpleName();
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
     // Check if the game is ready and set the game as started
     if (!gameEntry.getGameInfo().start()) {
-      String errorMessage = String.format("Game with code '%s' is not ready to be started", gameCode);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Game with code '" + gameCode + "' is not ready to be started";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
+    Logger.info("Game '{}' has started", gameCode);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.START_GAME).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).action(action).build());
   }
 
@@ -202,23 +220,27 @@ public class GameServer implements Runnable {
     GameAction action = message.gameAction();
 
     if (!Objects.equals(message.nickname(), gameEntry.getCurrentPlayer())) {
-      String errorMessage = String.format("Game with code '%s' received an action from an invalid player '%s'", gameCode, message.nickname());
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Game with code '" + gameCode + "' received an action from an invalid player " + message.nickname();
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     if (message.gameAction() == null) {
-      String errorMessage = String.format("Game with code '%s' received a malformed action", gameCode);
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Game with code '" + gameCode + "' received a malformed action";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     if (!gameEntry.executeAction(action)) {
-      String errorMessage = String.format("Game with code '%s' tried to apply an invalid action: %s", gameCode, action.getClass().getSimpleName());
-      client.send(new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      String errorMessage = "Game with code '" + gameCode + "' tried to apply an invalid action: " + action.getClass().getSimpleName();
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
+    Logger.info("Player '{}' played action: {}", message.nickname(), action.getClass().getSimpleName());
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEDATA).gameCode(gameCode).action(action).build());
   }
 
@@ -233,12 +255,24 @@ public class GameServer implements Runnable {
   }
 
   /**
+   * Sends a message to the given client and logs the message.
+   *
+   * @param client  The client to send the message to
+   * @param message The message to send
+   */
+  private void send(Client client, Message message) {
+    Logger.debug("Sending message: {}", message);
+    client.send(message);
+  }
+
+  /**
    * Sends a message to all clients in the given lobby.
    *
    * @param gameEntry The lobby to broadcast to
    * @param message   The message to broadcast
    */
   private void broadcastMessage(GameEntry gameEntry, Message message) {
+    Logger.debug("Broadcasting message to {} clients: '{}'", gameEntry.getClients().size(), message);
     gameEntry.getClients().forEach(client -> client.send(message));
   }
 
