@@ -32,6 +32,7 @@ public class LobbyController extends FXMLController {
 
   @FXML
   private void startGameAction(ActionEvent actionEvent) {
+
     if(!gui.getController().sender().sendStartGame()) {
       errorMessage.setText("not enough players with a chosen color to start");
       errorMessage.setVisible(true);
@@ -45,8 +46,8 @@ public class LobbyController extends FXMLController {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if(Objects.equals(evt.getPropertyName(), GAMEDATA_EVENT.tag))
-      gui.setScene(SceneEnum.MENU); //provvisorio
+    if(evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
+      gui.setScene(SceneEnum.PLANNING); //provvisorio
     else
       updateAll();
   }
@@ -77,6 +78,7 @@ public class LobbyController extends FXMLController {
   @Override
   public void start() {
     super.start();
+    gui.getController().addListener(this, GAMEDATA_EVENT.tag);
     gui.getController().addListener(this, GAMEINFO_EVENT.tag);
   }
 
@@ -84,5 +86,6 @@ public class LobbyController extends FXMLController {
   public void finish() {
     super.finish();
     gui.getController().removeListener(this, GAMEINFO_EVENT.tag);
+    gui.getController().removeListener(this, GAMEDATA_EVENT.tag);
   }
 }

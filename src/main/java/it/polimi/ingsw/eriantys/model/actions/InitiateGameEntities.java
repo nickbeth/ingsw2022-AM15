@@ -69,13 +69,16 @@ public class InitiateGameEntities implements GameAction {
   @Override
   public boolean isValid(GameState gameState) {
     RuleBook ruleBook = gameState.getRuleBook();
-    return entrances.size() == ruleBook.cloudCount &&
+    boolean isValid = true;
+    if(gameState.getRuleBook().gameMode == GameMode.EXPERT)
+      isValid = cardsEnum.size() == PLAYABLE_CC_AMOUNT;
+    isValid = isValid &&
+            entrances.size() == ruleBook.cloudCount &&
             entrances.stream().allMatch((students) -> students.getCount() == ruleBook.entranceSize) &&
             islands.size() == ISLAND_COUNT &&
-            islands.stream().allMatch((students) -> students.getCount() == INITIAL_ISLAND_STUDENTS) &&
+            islands.stream().allMatch((students) -> (((islands.indexOf(students) == 0 || islands.indexOf(students) == 6 )&& students.getCount() == 0) || students.getCount() == INITIAL_ISLAND_STUDENTS)) &&
             clouds.size() == ruleBook.cloudCount &&
-            clouds.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount) &&
-            cardsEnum.size() == PLAYABLE_CC_AMOUNT;
-
+            clouds.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount);
+    return isValid;
   }
 }

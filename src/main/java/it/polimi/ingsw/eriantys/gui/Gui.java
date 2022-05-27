@@ -42,6 +42,7 @@ public class Gui extends Application {
     stage.setOnCloseRequest(e -> closeApplication());
     currScene = SceneEnum.MENU;
     stage.setScene(sceneMap.get(currScene));
+    stage.setResizable(false);
     stage.show();
   }
 

@@ -5,8 +5,8 @@ public enum SceneEnum {
   RULES("Rules.fxml"),
   CONNECTION("Connection.fxml"),
   CREATE_OR_JOIN("CreateOrJoin.fxml"),
-  LOBBY("Lobby.fxml");
-
+  LOBBY("Lobby.fxml"),
+  PLANNING("PlanningScene.fxml");
 
   public final String path;
 
