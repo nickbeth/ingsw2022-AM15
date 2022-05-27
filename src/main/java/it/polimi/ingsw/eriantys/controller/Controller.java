@@ -127,10 +127,6 @@ abstract public class Controller implements Runnable {
     listenerHolder.removePropertyChangeListener(tag, listener);
   }
 
-  public PropertyChangeSupport getListenerHolder() {
-    return listenerHolder;
-  }
-
   public GameInfo getGameInfo() {
     return gameInfo;
   }
@@ -164,12 +160,10 @@ abstract public class Controller implements Runnable {
      * Sends a START_GAME message to the server, containing the initiateGameEntities action. <br>
      */
     public boolean sendStartGame() {
-      // Send message for creating server game
-      // Initialize the game entities
-
-      RuleBook rules = RuleBook.makeRules(gameInfo.getMode(), gameInfo.getMaxPlayerCount());
       if (!gameInfo.start())
         return false;
+
+      RuleBook rules = RuleBook.makeRules(gameInfo.getMode(), gameInfo.getMaxPlayerCount());
       // Initiate character cards
       List<CharacterCardEnum> characterCardEnums = new ArrayList<>(Arrays.asList(CharacterCardEnum.values()));
 
@@ -205,11 +199,11 @@ abstract public class Controller implements Runnable {
       GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
 
       networkClient.send(new Message.Builder(START_GAME)
-              .action(action)
-              .gameCode(gameCode)
-              .gameInfo(gameInfo)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .gameCode(gameCode)
+          .gameInfo(gameInfo)
+          .nickname(nickname)
+          .build());
 
       return true;
     }
@@ -224,10 +218,10 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .gameCode(gameCode)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .gameCode(gameCode)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -243,10 +237,10 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .gameCode(gameCode)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .gameCode(gameCode)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -268,10 +262,10 @@ abstract public class Controller implements Runnable {
       }
 
       networkClient.send(new Message.Builder(GAMEDATA)
-              .action(new RefillClouds(cloudsStudents))
-              .gameCode(gameCode)
-              .gameInfo(gameInfo)
-              .build());
+          .action(new RefillClouds(cloudsStudents))
+          .gameCode(gameCode)
+          .gameInfo(gameInfo)
+          .build());
     }
 
     /**
@@ -284,10 +278,10 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(GAMEDATA)
-              .action(action)
-              .gameCode(gameCode)
-              .gameInfo(gameInfo)
-              .build());
+          .action(action)
+          .gameCode(gameCode)
+          .gameInfo(gameInfo)
+          .build());
       return true;
     }
 
@@ -303,10 +297,10 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .gameCode(gameCode)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .gameCode(gameCode)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -322,10 +316,10 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(GAMEDATA)
-              .action(action)
-              .gameCode(gameCode)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .gameCode(gameCode)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -341,10 +335,10 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .gameCode(gameCode)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .gameCode(gameCode)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
@@ -362,34 +356,34 @@ abstract public class Controller implements Runnable {
         return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
-              .action(action)
-              .gameCode(gameCode)
-              .nickname(nickname)
-              .build());
+          .action(action)
+          .gameCode(gameCode)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
     public void sendNickname(String nickname) {
       networkClient.send(new Message.Builder(NICKNAME_REQUEST)
-              .nickname(nickname)
-              .build());
+          .nickname(nickname)
+          .build());
     }
 
     public void sendCreateGame(int numberOfPlayers, GameMode gameMode) {
       gameInfo = new GameInfo(numberOfPlayers, gameMode);
       networkClient.send(new Message.Builder(CREATE_GAME)
-              .gameInfo(gameInfo)
-              .nickname(nickname)
-              .build());
+          .gameInfo(gameInfo)
+          .nickname(nickname)
+          .build());
     }
 
 
     public void sendJoinGame(GameCode gameCode) {
       networkClient.send(new Message.Builder(JOIN_GAME)
-              .gameInfo(gameInfo)
-              .gameCode(gameCode)
-              .nickname(nickname)
-              .build());
+          .gameInfo(gameInfo)
+          .gameCode(gameCode)
+          .nickname(nickname)
+          .build());
     }
 
     public boolean sendSelectTower(TowerColor color) {
@@ -397,10 +391,10 @@ abstract public class Controller implements Runnable {
         return false;
       gameInfo.addPlayer(nickname, color);
       networkClient.send(new Message.Builder(SELECT_TOWER)
-              .gameInfo(gameInfo)
-              .gameCode(gameCode)
-              .nickname(nickname)
-              .build());
+          .gameInfo(gameInfo)
+          .gameCode(gameCode)
+          .nickname(nickname)
+          .build());
       return true;
     }
 
