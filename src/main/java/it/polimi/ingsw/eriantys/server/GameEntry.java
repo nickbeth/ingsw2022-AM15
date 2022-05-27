@@ -8,6 +8,7 @@ import it.polimi.ingsw.eriantys.network.Client;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GameEntry {
   private final GameInfo gameInfo;
@@ -32,8 +33,8 @@ public class GameEntry {
         action.apply(gameState);
         return true;
       }
+      return false;
     }
-    return false;
   }
 
   public Client getClient(String nickname) {
@@ -55,6 +56,12 @@ public class GameEntry {
 
   public void setPlayerColor(String nickname, TowerColor towerColor) {
     gameInfo.addPlayer(nickname, towerColor);
+  }
+
+  public void initPlayers() {
+    for (Map.Entry<String, TowerColor> entry : gameInfo.getPlayersMap().entrySet()) {
+      gameState.addPlayer(entry.getKey(), entry.getValue());
+    }
   }
 
   public void disconnectPlayer(String nickname) {

@@ -194,7 +194,7 @@ abstract public class Controller implements Runnable {
       for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
         cloudsStudents.add(new Students());
         for (int j = 0; j < rules.playableStudentCount; j++) {
-          entrances.get(i).addStudent(bag.takeRandomStudent());
+          cloudsStudents.get(i).addStudent(bag.takeRandomStudent());
         }
       }
       // Action Creation
