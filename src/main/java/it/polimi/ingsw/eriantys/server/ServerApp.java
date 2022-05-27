@@ -27,7 +27,9 @@ public class ServerApp {
     try {
       // Initialize the network server and launch the accepting thread
       networkServer.init();
-      new Thread(networkServer, "accept").start();
+      Thread acceptThread = new Thread(networkServer, "accept");
+      acceptThread.setDaemon(true);
+      acceptThread.start();
 
       // Run the game server loop in this thread
       gameServer.run();

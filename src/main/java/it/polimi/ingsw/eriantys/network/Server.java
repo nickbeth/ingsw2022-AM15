@@ -70,7 +70,10 @@ public class Server implements Runnable {
         Client newClient = accept();
         // Reset the error count after every successful accept
         errorCount = 0;
-        new Thread(newClient, "sock-" + threadSeqNumber++).start();
+        // Launch the network listening thread for the new client
+        Thread socketThread = new Thread(newClient, "sock-" + threadSeqNumber++);
+        socketThread.setDaemon(true);
+        socketThread.start();
       } catch (IOException e) {
         Logger.error("An error occurred while accepting: {}", e);
         if (++errorCount > ACCEPT_RESTART_THRESHOLD) {
