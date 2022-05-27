@@ -9,13 +9,17 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.TilePane?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1080.0" styleClass="gameStage" stylesheets="@../css/mainstyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.PlanningSceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" styleClass="gameStage" stylesheets="@../css/mainstyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.PlanningSceneController">
    <children>
-      <Button layoutX="12.0" layoutY="676.0" mnemonicParsing="false" onAction="#quitGameAction" text="Quit game" AnchorPane.bottomAnchor="18.399999999999977" />
-      <Button fx:id="playCardButton" layoutX="11.0" layoutY="633.0" mnemonicParsing="false" onAction="#showAssistCards" text="play Assistant Card" />
-      <StackPane fx:id="assistCardPanel" layoutX="153.0" layoutY="229.0" prefHeight="478.0" prefWidth="935.0" stylesheets="@../css/popupstyle.css">
+      <Button layoutX="12.0" layoutY="14.0" mnemonicParsing="false" onAction="#quitGameAction" text="Quit game" AnchorPane.bottomAnchor="680.4" />
+      <Button fx:id="playCardButton" layoutX="12.0" layoutY="679.0" mnemonicParsing="false" onAction="#showAssistCards" text="play Assistant Card" />
+      <StackPane fx:id="assistCardPanel" layoutY="250.0" prefHeight="460.0" prefWidth="1070.0" stylesheets="@../css/popupstyle.css" visible="false">
          <children>
             <Region layoutX="6.0" layoutY="4.0" styleClass="assistcards" />
+            <TilePane fx:id="assistCards" alignment="CENTER" layoutX="14.0" layoutY="12.0">
+               <StackPane.margin>
+                  <Insets left="50.0" right="50.0" />
+               </StackPane.margin></TilePane>
             <ImageView fitHeight="34.0" fitWidth="27.0" layoutX="914.0" layoutY="4.0" onMouseClicked="#hideAssistCards" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_RIGHT">
                <image>
                   <Image url="@../assets/utils/cross-icon.png" />
@@ -24,7 +28,6 @@
                   <Insets />
                </StackPane.margin>
             </ImageView>
-            <TilePane fx:id="assistCards" layoutX="14.0" layoutY="12.0" />
          </children>
       </StackPane>
    </children>

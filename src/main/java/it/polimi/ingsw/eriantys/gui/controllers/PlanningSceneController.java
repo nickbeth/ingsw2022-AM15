@@ -56,8 +56,6 @@ public class PlanningSceneController extends FXMLController {
 
   private void updateAssistCards() {
     ArrayList<AssistantCard> cards = gui.getController().getGameState().getPlayer(gui.getController().getNickname()).getCards();
-    assistCards.setHgap(20);
-    assistCards.setVgap(20);
     cards.forEach(card -> {
       ImageView img = new ImageView();
       URL imgPath = getClass().getResource("/assets/assistcards/Animali_1_"+ card.value + ".png");
