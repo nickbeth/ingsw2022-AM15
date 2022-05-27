@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Group?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.TilePane?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1080.0" styleClass="gameStage" stylesheets="@../css/mainstyle.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.PlanningSceneController">
    <children>
       <Button layoutX="12.0" layoutY="676.0" mnemonicParsing="false" onAction="#quitGameAction" text="Quit game" AnchorPane.bottomAnchor="18.399999999999977" />
       <Button fx:id="playCardButton" layoutX="11.0" layoutY="633.0" mnemonicParsing="false" onAction="#showAssistCards" text="play Assistant Card" />
-      <Group fx:id="assistantCards" layoutX="153.0" layoutY="229.0" stylesheets="@../css/popupstyle.css" visible="false">
+      <StackPane fx:id="assistCardPanel" layoutX="153.0" layoutY="229.0" prefHeight="478.0" prefWidth="935.0" stylesheets="@../css/popupstyle.css">
          <children>
-            <Region layoutX="6.0" layoutY="4.0" prefHeight="478.0" prefWidth="935.0" styleClass="assistcards" />
-            <ImageView fitHeight="72.0" fitWidth="33.0" layoutX="902.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+            <Region layoutX="6.0" layoutY="4.0" styleClass="assistcards" />
+            <ImageView fitHeight="34.0" fitWidth="27.0" layoutX="914.0" layoutY="4.0" onMouseClicked="#hideAssistCards" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_RIGHT">
                <image>
                   <Image url="@../assets/utils/cross-icon.png" />
                </image>
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
             </ImageView>
+            <TilePane fx:id="assistCards" layoutX="14.0" layoutY="12.0" />
          </children>
-      </Group>
+      </StackPane>
    </children>
 </AnchorPane>
