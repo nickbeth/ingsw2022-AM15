@@ -16,17 +16,18 @@ public class Player {
   private final Dashboard dashboard;
   private final ArrayList<AssistantCard> cards;
   private final TowerColor team;
-  private Optional<AssistantCard> chosenCard = Optional.empty();;
+  private AssistantCard chosenCard;
 
   private int maxMovement;
   private int coins;
 
   public Player(RuleBook ruleBook, String nickname, TowerColor color, Students entranceStudents) {
     this.nickname = nickname;
-    team = color;
-    coins = RuleBook.INITIAL_COINS;
-    dashboard = new Dashboard(entranceStudents, ruleBook.dashboardTowerCount, color);
-    cards = getFullDeck();
+    this.team = color;
+    this.coins = RuleBook.INITIAL_COINS;
+    this.dashboard = new Dashboard(entranceStudents, ruleBook.dashboardTowerCount, color);
+    this.cards = getFullDeck();
+    this.chosenCard = null;
     this.connected = true;
   }
 
@@ -35,7 +36,7 @@ public class Player {
   }
 
   public Optional<AssistantCard> getChosenCard() {
-    return chosenCard;
+    return Optional.ofNullable(chosenCard);
   }
 
   public int getMaxMovement() {
@@ -51,7 +52,7 @@ public class Player {
   }
 
   public int getTurnPriority() {
-    return chosenCard.isPresent() ? chosenCard.get().value : 0 ;
+    return chosenCard != null ? chosenCard.value : 0;
   }
 
   public void addCoin() {
@@ -74,12 +75,12 @@ public class Player {
     return dashboard;
   }
 
-  public boolean isConnected() {
-    return connected;
+  public void unsetChosenCard() {
+    chosenCard = null;
   }
 
-  public void unsetChosenCard() {
-    chosenCard = Optional.empty();
+  public boolean isConnected() {
+    return connected;
   }
 
   public void setConnected(boolean connected) {
@@ -93,7 +94,7 @@ public class Player {
    */
   public void setPlayedCard(int assistantCardIndex) {
     maxMovement = cards.get(assistantCardIndex).movement;
-    chosenCard = Optional.ofNullable(cards.get(assistantCardIndex));
+    chosenCard = cards.get(assistantCardIndex);
     cards.remove(assistantCardIndex);
   }
 
