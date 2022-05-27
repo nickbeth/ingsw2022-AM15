@@ -1,57 +1,67 @@
 package it.polimi.ingsw.eriantys.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * This class represents a code that is used to join a game.
+ */
 public class GameCode implements Serializable {
-  private static final int GAME_CODE_LENGTH = 4;
-  private static final String GAME_CODE_CHARS = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+  static final int GAME_CODE_LENGTH = 4;
+  static final String GAME_CODE_CHARS = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
 
   /**
-   * Stores all used room codes to avoid duplicates.
+   * Generates a new game code.
+   *
+   * @return The newly generated game code.
    */
-  private static final Set<char[]> usedGameCodes = new HashSet<>();
-
-  private static char[] generate() {
+  public static GameCode generate() {
     ThreadLocalRandom rnd = ThreadLocalRandom.current();
-    char[] code = new char[GAME_CODE_LENGTH];
-    String finalCode;
-    boolean unique;
-    // Keep track of used room codes to avoid duplicates
-    do {
-      for (int i = 0; i < code.length; i++) {
-        code[i] = GAME_CODE_CHARS.charAt(rnd.nextInt(GAME_CODE_CHARS.length()));
-      }
+    StringBuilder code = new StringBuilder(GAME_CODE_LENGTH);
 
-      unique = !usedGameCodes.contains(code);
-    } while (!unique);
+    for (int i = 0; i < GAME_CODE_LENGTH; i++) {
+      code.append(GAME_CODE_CHARS.charAt(rnd.nextInt(GAME_CODE_CHARS.length())));
+    }
 
-    usedGameCodes.add(code);
-    //return code;
-    //this is here to facilitate gui and cli tests
-    return new char[]{'A', 'A', 'A', 'A'};
+    return new GameCode(code.toString());
   }
 
-  public static GameCode parseCode(String code) throws GameCodeException {
-    char[] codeChars = code.toCharArray();
-    if (codeChars.length != GAME_CODE_LENGTH) {
-      throw new GameCodeException("Invalid code length: " + codeChars.length);
+  /**
+   * Returns a new, unique game code, compared against the given set of game codes.
+   *
+   * @param codeSet The set of game codes to perform comparisons with
+   * @return The newly generated, unique game code
+   */
+  public static GameCode generateUnique(Set<GameCode> codeSet) {
+    GameCode code = generate();
+    while (codeSet.contains(code)) {
+      code = generate();
     }
-    StringBuilder s = new StringBuilder();
-    boolean invalid = false;
-    for (char c : codeChars) {
+    return code;
+  }
+
+  /**
+   * Parses the given string as a game code. The string must be {@link #GAME_CODE_LENGTH} characters long,
+   * and must contain only characters from {@link #GAME_CODE_CHARS}.
+   *
+   * @param code The {@code String} containing the {@code GameCode} representation to be parsed
+   * @return The game code represented by the given string
+   * @throws GameCodeException If the string does not contain a parsable game code
+   */
+  public static GameCode parseCode(String code) throws GameCodeException {
+    if (code.length() != GAME_CODE_LENGTH) {
+      throw new GameCodeException("Invalid code length: " + code.length());
+    }
+
+    for (int i = 0; i < code.length(); i++) {
+      char c = code.charAt(i);
       if (GAME_CODE_CHARS.indexOf(c) == -1) {
-        invalid = true;
-        s.append(c);
+        throw new GameCodeException("Invalid character '" + c + "' in code '" + code + "'");
       }
     }
-    if (invalid) throw new GameCodeException("Invalid character: " + s);
 
-    return new GameCode(codeChars);
+    return new GameCode(code);
   }
 
   public static class GameCodeException extends IllegalArgumentException {
@@ -64,25 +74,15 @@ public class GameCode implements Serializable {
     }
   }
 
-  public final char[] code;
+  public final String code;
 
-  /**
-   * Creates a newly generated game code.
-   */
-  public GameCode() {
-    this.code = generate();
-  }
-
-  /**
-   * Creates a game code backed by the given char array.
-   */
-  private GameCode(char[] code) {
+  GameCode(String code) {
     this.code = code;
   }
 
   @Override
   public String toString() {
-    return Arrays.toString(code);
+    return code;
   }
 
   @Override
@@ -94,11 +94,11 @@ public class GameCode implements Serializable {
       return false;
 
     GameCode c = (GameCode) obj;
-    return Arrays.equals(code, c.code);
+    return code.equals(c.code);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(Arrays.toString(code));
+    return code.hashCode();
   }
 }

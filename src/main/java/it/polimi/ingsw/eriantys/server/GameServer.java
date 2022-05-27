@@ -2,7 +2,6 @@ package it.polimi.ingsw.eriantys.server;
 
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
-import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.actions.InitiateGameEntities;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -124,7 +123,7 @@ public class GameServer implements Runnable {
   }
 
   private void handleCreateGame(Client client, Message message) {
-    GameCode gameCode = new GameCode();
+    GameCode gameCode = GameCode.generateUnique(activeGames.keySet());
     GameEntry gameEntry = new GameEntry(message.gameInfo());
     gameEntry.addPlayer(message.nickname(), client);
 
