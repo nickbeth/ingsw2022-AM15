@@ -92,6 +92,10 @@ abstract public class Controller implements Runnable {
 
   abstract public void showError(String error);
 
+  public void setPlayerConnected(boolean connected, String nickname) {
+    gameState.getPlayer(nickname).setConnected(connected);
+  }
+
   /**
    * Add a listener for events with the given tag.
    *

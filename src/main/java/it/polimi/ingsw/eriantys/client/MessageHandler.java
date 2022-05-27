@@ -56,6 +56,9 @@ public class MessageHandler implements Runnable {
       case START_GAME -> handleStartGame(client, message);
       case GAMEDATA -> handleGameData(client, message);
 
+      case PLAYER_DISCONNECTED -> handlePlayerDisconnected(client, message);
+      case PLAYER_RECONNECTED -> handlePlayerReconnected(client, message);
+
       case ERROR -> handleError(client, message);
 
       case INTERNAL_SOCKET_ERROR -> handleSocketError(client, message);
@@ -91,6 +94,16 @@ public class MessageHandler implements Runnable {
     controller.executeAction(message.gameAction());
     // Notifies listeners that the game state was modified
     controller.firePropertyChange(GAMEDATA_EVENT);
+  }
+
+  private void handlePlayerDisconnected(Client client, Message message) {
+    controller.setPlayerConnected(false, message.nickname());
+    controller.firePropertyChange(PLAYER_CONNECTION_CHANGED);
+  }
+
+  private void handlePlayerReconnected(Client client, Message message) {
+    controller.setPlayerConnected(true, message.nickname());
+    controller.firePropertyChange(PLAYER_CONNECTION_CHANGED);
   }
 
   private void handleError(Client client, Message message) {

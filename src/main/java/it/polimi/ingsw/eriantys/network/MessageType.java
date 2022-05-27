@@ -30,6 +30,10 @@ public enum MessageType {
   // Game data
   GAMEDATA,
 
+  // Player disconnection management
+  PLAYER_DISCONNECTED,
+  PLAYER_RECONNECTED,
+
   ERROR,
 
   // Used internally for local network-related events, these must never be sent over the network

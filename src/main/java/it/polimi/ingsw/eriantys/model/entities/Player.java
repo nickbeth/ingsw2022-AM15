@@ -27,6 +27,7 @@ public class Player {
     coins = RuleBook.INITIAL_COINS;
     dashboard = new Dashboard(entranceStudents, ruleBook.dashboardTowerCount, color);
     cards = getFullDeck();
+    this.connected = true;
   }
 
   public String getNickname() {
