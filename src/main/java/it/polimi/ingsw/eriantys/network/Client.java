@@ -1,9 +1,7 @@
 package it.polimi.ingsw.eriantys.network;
 
-import it.polimi.ingsw.eriantys.client.MessageHandler;
 import org.tinylog.Logger;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,7 +9,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Handler;
 
 /**
  * A wrapper around java.io.Socket for sending and receiving Message objects.
