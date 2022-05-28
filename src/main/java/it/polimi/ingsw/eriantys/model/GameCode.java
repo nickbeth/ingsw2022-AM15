@@ -24,8 +24,7 @@ public class GameCode implements Serializable {
       code.append(GAME_CODE_CHARS.charAt(rnd.nextInt(GAME_CODE_CHARS.length())));
     }
 
-    //return new GameCode(code.toString());
-    return new GameCode("AAAA");
+    return new GameCode(code.toString());
   }
 
   /**

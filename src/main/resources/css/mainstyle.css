@@ -1,3 +1,24 @@
 .gameStage{
     -fx-background-color: #ffffff;
 }
+
+.grid-players{
+  -fx-vgap: 10;
+  -fx-hgap: 10;
+}
+
+.image-wizard{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.63), 10.0, 0, 3.0, 4.0);
+}
+
+.label-nicknames{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.30), 5.0, 0, 3.0, 4.0);
+    -fx-graphic-text-gap: 5;
+    -fx-font-weight: bold;
+}
+
+.label-cardamount{
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.63), 10.0, 0, 3.0, 4.0);
+}
+

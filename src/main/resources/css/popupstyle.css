@@ -1,4 +1,4 @@
-.assistcards{
+.region-assistcards{
 	-fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 55% ,#fcffe2 48%, #ffffff 100%);
 	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.63), 10.0, 0, 3.0, 4.0);
 }
