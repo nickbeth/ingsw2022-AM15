@@ -5,6 +5,7 @@ import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * This class contains all data that will be sent over the network for communication.
@@ -153,13 +154,30 @@ public class Message implements Serializable {
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+
+    if (obj == null || getClass() != obj.getClass())
+      return false;
+
+    Message message = (Message) obj;
+    return type == message.type &&
+        Objects.equals(nickname, message.nickname) &&
+        Objects.equals(gameCode, message.gameCode) &&
+        Objects.equals(error, message.error) &&
+        Objects.equals(gameAction, message.gameAction) &&
+        Objects.equals(gameInfo, message.gameInfo);
+  }
+
+  @Override
   public String toString() {
     return "Message[type=" + type +
-            ", nickname=" + nickname +
-            ", gameCode=" + gameCode +
-            ", error=" + error +
-            ", action=" + (gameAction != null ? gameAction().getClass().getSimpleName() : null) +
-            ", gameInfo=" + gameInfo +
-            "]";
+        ", nickname=" + nickname +
+        ", gameCode=" + gameCode +
+        ", error=" + error +
+        ", action=" + (gameAction != null ? gameAction().getClass().getSimpleName() : null) +
+        ", gameInfo=" + gameInfo +
+        "]";
   }
 }
