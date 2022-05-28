@@ -16,6 +16,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameServer implements Runnable {
   private static final int HEARTBEAT_INTERVAL_SECONDS = 2;
@@ -28,6 +29,7 @@ public class GameServer implements Runnable {
   private final Set<String> activeNicknames;
   private final Map<String, GameCode> disconnectedPlayers;
 
+  private final AtomicBoolean exit = new AtomicBoolean(false);
   public GameServer(BlockingQueue<MessageQueueEntry> messageQueue) {
     this.messageQueue = messageQueue;
     this.heartbeatService = Executors.newScheduledThreadPool(1);
@@ -42,14 +44,12 @@ public class GameServer implements Runnable {
    */
   @Override
   public void run() {
-    while (true) {
+    while (!exit.get()) {
       try {
         MessageQueueEntry entry = messageQueue.take();
         Logger.trace("Handling entry: {}", entry);
         handleMessage(entry);
-      } catch (InterruptedException e) {
-        // We should never be interrupted
-        throw new AssertionError(e);
+      } catch (InterruptedException ignored) {
       }
     }
   }
@@ -322,5 +322,14 @@ public class GameServer implements Runnable {
         heartbeatService.schedule(this, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
       }
     }, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
+  }
+
+  /**
+   * Sets the server exit flag.
+   * After this has been called, the server should be considered stopped.
+   * No guarantees are made that this call will stop the server immediately.
+   */
+  public void exit() {
+    exit.set(true);
   }
 }

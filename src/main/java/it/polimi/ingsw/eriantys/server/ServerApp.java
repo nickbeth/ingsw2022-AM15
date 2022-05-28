@@ -12,6 +12,7 @@ public class ServerApp {
   private final int port;
   private final Server networkServer;
   private final GameServer gameServer;
+  private Thread appThread;
 
   ServerApp(int port) {
     this.port = port;
@@ -24,6 +25,7 @@ public class ServerApp {
   }
 
   public void run() {
+    Logger.info("Server booting");
     try {
       // Initialize the network server and launch the accepting thread
       networkServer.init();
@@ -32,9 +34,18 @@ public class ServerApp {
       acceptThread.start();
 
       // Run the game server loop in this thread
+      appThread = Thread.currentThread();
       gameServer.run();
     } catch (IOException e) {
       Logger.error("Server failed to initialize: {}", e);
+    }
+    Logger.info("Server stopped");
+  }
+
+  public void exit() {
+    gameServer.exit();
+    if (appThread != null) {
+      appThread.interrupt();
     }
   }
 }
