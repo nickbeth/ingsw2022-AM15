@@ -50,6 +50,11 @@ public class GameCode implements Serializable {
    * @throws GameCodeException If the string does not contain a parsable game code
    */
   public static GameCode parseCode(String code) throws GameCodeException {
+    validateGameCode(code);
+    return new GameCode(code);
+  }
+
+  public static void validateGameCode(String code) throws GameCodeException {
     if (code.length() != GAME_CODE_LENGTH) {
       throw new GameCodeException("Invalid code length: " + code.length());
     }
@@ -60,8 +65,6 @@ public class GameCode implements Serializable {
         throw new GameCodeException("Invalid character '" + c + "' in code '" + code + "'");
       }
     }
-
-    return new GameCode(code);
   }
 
   public static class GameCodeException extends IllegalArgumentException {
