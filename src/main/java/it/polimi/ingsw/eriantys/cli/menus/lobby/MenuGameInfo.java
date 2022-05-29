@@ -4,7 +4,6 @@ import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
 import it.polimi.ingsw.eriantys.cli.views.GameLobbyView;
 import it.polimi.ingsw.eriantys.controller.CliController;
-import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
 import java.beans.PropertyChangeEvent;
@@ -42,14 +41,14 @@ public class MenuGameInfo extends Menu {
       switch (in.nextLine()) {
         //choose a tower color for the lobby
         case "1" -> {
-          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
+          if (controller.getGameInfo().isStarted())
             break;
           controller.sender().sendSelectTower(getTowerColor(in, out));
           waitForGreenLight();
         }
         //starts and initiates a game
         case "2" -> {
-          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
+          if (controller.getGameInfo().isStarted())
             break;
           if (!controller.sender().sendStartGame()) {
             out.println("There are not enough players with a chosen tower color to start");

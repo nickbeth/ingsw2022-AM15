@@ -82,6 +82,10 @@ public class GameEntry {
     return players.size() == gameInfo.getMaxPlayerCount();
   }
 
+  public boolean isStarted() {
+    return gameInfo.isStarted();
+  }
+
   public GameInfo getGameInfo() {
     return gameInfo;
   }

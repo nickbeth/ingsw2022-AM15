@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.server;
 
 import it.polimi.ingsw.eriantys.model.GameCode;
-import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.actions.InitiateGameEntities;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -176,7 +175,7 @@ public class GameServer implements Runnable {
       return;
     }
 
-    if (gameEntry.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING) {
+    if (gameEntry.getGameInfo().isStarted()) {
       String errorMessage = "Game with code '" + gameCode + "' has already started";
       Logger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
