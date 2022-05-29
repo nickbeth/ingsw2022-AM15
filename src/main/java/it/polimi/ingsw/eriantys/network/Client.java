@@ -71,7 +71,7 @@ public class Client implements Runnable {
       out.reset();
       out.flush();
     } catch (IOException e) {
-      Logger.warn("An error occurred while sending message {}: {}", msg.getClass().getSimpleName(), e);
+      Logger.error("Couldn't send message: {}", e.getMessage());
     }
   }
 
@@ -113,7 +113,7 @@ public class Client implements Runnable {
         }
       }
     } catch (IOException e) {
-      Logger.error("An error occurred on socket '{}': {}", this, e);
+      Logger.error("An error occurred on socket '{}': {}", this, e.getMessage());
       // We need a way to notify message handlers of socket errors
       // We submit a special message to the queue so that it can be handled
       messageQueue.add(new MessageQueueEntry(this, new Message.Builder()

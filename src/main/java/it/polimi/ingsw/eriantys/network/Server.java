@@ -41,7 +41,7 @@ public class Server implements Runnable {
       }
     }
     serverSocket = new ServerSocket(port);
-    Logger.info("Server socket up on {}", serverSocket.getLocalSocketAddress());
+    Logger.info("Server socket up on '{}'", serverSocket.getLocalSocketAddress());
   }
 
   /**
