@@ -1,6 +1,4 @@
-package it.polimi.ingsw.eriantys.cli.menus.action;
-
-import it.polimi.ingsw.eriantys.cli.menus.ParamBuilder;
+package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import java.io.PrintStream;
 import java.util.Scanner;

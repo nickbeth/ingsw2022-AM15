@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.controller.CliController;
 import org.tinylog.Logger;
 
@@ -15,11 +16,9 @@ import static it.polimi.ingsw.eriantys.controller.EventType.NICKNAME_OK;
 public class MenuChooseNickname extends Menu {
   private boolean isNicknameOk = false;
 
-  public MenuChooseNickname(CliController controller) {
-    this.controller = controller;
-    this.nextMenu = new MenuCreateOrJoin(controller);
-    controller.addListener(this, NICKNAME_OK.tag);
-    controller.addListener(this, ERROR.tag);
+  public MenuChooseNickname() {
+    eventsToBeListening.add(NICKNAME_OK);
+    eventsToBeListening.add(ERROR);
   }
 
   @Override
@@ -29,37 +28,42 @@ public class MenuChooseNickname extends Menu {
   }
 
   @Override
-  public void show(Scanner in, PrintStream out) {
+  public MenuEnum show(Scanner in, PrintStream out) {
     String nickname;
 
-    do {
+    while (true) {
+
       showOptions(out);
       out.print("Make a choice: ");
+
       switch (in.nextLine()) {
         case "1" -> {
           isNicknameOk = false;
-          greenLight = false;
+
           out.print("Insert nickname: ");
           nickname = getNonBlankString(in, out);
           controller.sender().sendNickname(nickname);
+
           waitForGreenLight();
+          if (isNicknameOk)
+            return MenuEnum.CREATE_OR_JOIN;
         }
+        // Go back
         case "0" -> {
-          nextMenu = new MenuConnect(controller);
-          return;
+          waitForGreenLight();
+          return MenuEnum.CONNECTION;
         }
         default -> out.println("Choose a valid option");
       }
-    } while (!isNicknameOk);
+    }
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     Logger.trace("Response arrived");
+    super.propertyChange(evt);
     if (evt.getPropertyName().equals(NICKNAME_OK.tag)) {
       isNicknameOk = true;
-      controller.removeListener(this, NICKNAME_OK.tag);
-      controller.removeListener(this, ERROR.tag);
     }
     greenLight = true;
   }

@@ -1,7 +1,7 @@
 ↳ MenuConnect
 ↳ MenuChooseNickname -  # OK_TAG
 ↳ MenuCreateOrJoin   -  # INFO_TAG
-↳ MenuGameInfo       -  # INFO_TAG
+↳ MenuLobby          -  # INFO_TAG
 ↳ ------------------------
 ↳ MenuPickAssistantCard  ↰
 ↳ MenuPlacing            ↑

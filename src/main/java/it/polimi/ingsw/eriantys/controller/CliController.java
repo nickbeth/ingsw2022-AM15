@@ -1,12 +1,17 @@
 package it.polimi.ingsw.eriantys.controller;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.MenuIterator;
+import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuChooseNickname;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuConnect;
+import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuCreateOrJoin;
+import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuLobby;
 import it.polimi.ingsw.eriantys.network.Client;
 import org.fusesource.jansi.Ansi;
-import org.tinylog.Logger;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CliController extends Controller {
@@ -16,7 +21,6 @@ public class CliController extends Controller {
   public CliController(Client networkClient) {
     super(networkClient);
   }
-
 
   @Override
   public void showError(String error) {
@@ -30,11 +34,11 @@ public class CliController extends Controller {
 
   @Override
   public void run() {
-    Menu currentMenu = new MenuConnect(this);
+    MenuIterator menus = new MenuIterator();
     while (true) {
-      currentMenu.show(in, out);
-      currentMenu = currentMenu.next();
+      menus.menuAction(in, out);
+      menus.next();
     }
   }
-
 }
+

@@ -4,7 +4,7 @@ import static it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterC
 
 public enum CharacterCardEnum {
   IGNORE_COLOR
-          ("", NO_INPUT, 3, true, false),
+          ("", COLOR_INPUT, 3, true, false),
   IGNORE_TOWERS
           ("", NO_INPUT, 3, false, false),
   ADD_TO_INFLUENCE

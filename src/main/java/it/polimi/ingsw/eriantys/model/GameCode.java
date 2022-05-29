@@ -79,7 +79,7 @@ public class GameCode implements Serializable {
 
   public final String code;
 
-  GameCode(String code) {
+  public GameCode(String code) {
     this.code = code;
   }
 

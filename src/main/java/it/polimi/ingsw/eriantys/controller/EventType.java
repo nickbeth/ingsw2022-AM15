@@ -1,12 +1,13 @@
 package it.polimi.ingsw.eriantys.controller;
 
 public enum EventType {
-  GAMEINFO_EVENT("gameinfo"),
+  ERROR("network_error"),
   GAMEDATA_EVENT("gamedata"),
+  GAMEINFO_EVENT("gameinfo"),
+  INTERNAL_SOCKET_ERROR("internal_socket_error"),
   NICKNAME_OK("nickname_ok"),
   PLAYER_CONNECTION_CHANGED("player_connection_changed"),
-  SOCKET_ERROR("socket_error"),
-  ERROR("network_error");
+  GAME_ENDED("game_ended");
 
   public String tag;
 

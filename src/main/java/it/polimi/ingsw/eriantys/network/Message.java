@@ -21,9 +21,9 @@ public class Message implements Serializable {
     private MessageType type;
     private String nickname;
     private GameCode gameCode;
+    private GameInfo gameInfo;
     private String error;
     private GameAction gameAction;
-    private GameInfo gameInfo;
 
     public Builder() {
     }

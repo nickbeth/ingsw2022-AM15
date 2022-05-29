@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.cli;
 
 import it.polimi.ingsw.eriantys.cli.views.*;
+import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.*;
@@ -18,8 +19,9 @@ import java.util.EnumMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class ViewsTest {
-  private static Students students = new Students();
+  private static final Students students = new Students();
 
   @BeforeAll
   static void setUp() {
@@ -109,12 +111,14 @@ public class ViewsTest {
 
   @Test
   public void printGameLobby() {
-    GameInfo lobby = new GameInfo(4, GameMode.EXPERT);
+    GameInfo lobby = new GameInfo(3, GameMode.EXPERT);
+    lobby.setMode(GameMode.EXPERT);
+    lobby.setMaxPlayerCount(3);
     lobby.addPlayer("gino", TowerColor.BLACK);
-    lobby.addPlayer("maria", TowerColor.WHITE);
+    lobby.addPlayer("minchia un nome lunghissimo", TowerColor.WHITE);
     lobby.addPlayer("franco");
 
-    (new GameLobbyView(lobby)).draw(System.out);
+    (new GameLobbyView(lobby, new GameCode("cia3"))).draw(System.out);
   }
 
   @Test

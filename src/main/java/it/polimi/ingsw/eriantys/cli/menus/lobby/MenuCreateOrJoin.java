@@ -1,8 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
-import it.polimi.ingsw.eriantys.cli.menus.planning.MenuPickAssistantCard;
-import it.polimi.ingsw.eriantys.controller.CliController;
+import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import org.tinylog.Logger;
@@ -11,8 +10,8 @@ import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
 import static it.polimi.ingsw.eriantys.controller.EventType.ERROR;
+import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.EXPERT;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.NORMAL;
 
@@ -22,11 +21,9 @@ import static it.polimi.ingsw.eriantys.model.enums.GameMode.NORMAL;
 public class MenuCreateOrJoin extends Menu {
   private boolean errorEncountered = false;
 
-  public MenuCreateOrJoin(CliController controller) {
-    this.nextMenu = new MenuGameInfo(controller);
-    this.controller = controller;
-    controller.addListener(this, GAMEINFO_EVENT.tag);
-    controller.addListener(this, ERROR.tag);
+  public MenuCreateOrJoin() {
+    eventsToBeListening.add(GAMEINFO_EVENT);
+    eventsToBeListening.add(ERROR);
   }
 
   @Override
@@ -37,54 +34,53 @@ public class MenuCreateOrJoin extends Menu {
   }
 
   @Override
-  public void show(Scanner in, PrintStream out) {
-    boolean done;
+  public MenuEnum show(Scanner in, PrintStream out) {
 
-    do {
-      done = false;
-      greenLight = false;
+    while (true) {
+      errorEncountered = true;
+
       showOptions(out);
       out.print("Make a choice: ");
+
       switch (in.nextLine()) {
         // Create a new game
         case "1" -> {
           chooseGameSettings(in, out);
           waitForGreenLight();
-          if (errorEncountered) {
-            out.println("Gamecode already exists");
-            break;
+          if (!errorEncountered) {
+            return MenuEnum.LOBBY;
           }
-          done = true;
+          out.println("Gamecode already exists");
         }
+
         // Join to a game
         case "2" -> {
-          errorEncountered = true;
-
           // Gets the game code
           while (true) {
             try {
               out.print("Enter the game code: ");
-              controller.sender().sendJoinGame(GameCode.parseCode(in.nextLine()));
+              GameCode code = GameCode.parseCode(getNonBlankString(in, out));
+              controller.sender().sendJoinGame(code);
               break;
             } catch (GameCode.GameCodeException e) {
               out.println("Not a valid gameCode. Error message: " + e.getMessage());
             }
           }
+
           waitForGreenLight();
-          if (errorEncountered) {
-            out.println("Gamecode does not exist");
-            break;
+          if (!errorEncountered) {
+            return MenuEnum.LOBBY;
           }
-          done = true;
+          out.println("Gamecode does not exist");
         }
+
+        // Back button
         case "0" -> {
-          nextMenu = new MenuChooseNickname(controller);
-          return;
+          return MenuEnum.NICKNAME;
         }
         default -> out.println("Invalid choice");
       }
     }
-    while (!done);
   }
 
   private void chooseGameSettings(Scanner in, PrintStream out) {
@@ -118,12 +114,10 @@ public class MenuCreateOrJoin extends Menu {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     Logger.trace("Response arrived " + evt.getPropertyName());
-    greenLight = true;
-
+    super.propertyChange(evt);
     if (evt.getPropertyName().equals(GAMEINFO_EVENT.tag)) {
       errorEncountered = false;
-      controller.removeListener(this, GAMEINFO_EVENT.tag);
-      controller.removeListener(this, ERROR.tag);
     }
+    greenLight = true;
   }
 }

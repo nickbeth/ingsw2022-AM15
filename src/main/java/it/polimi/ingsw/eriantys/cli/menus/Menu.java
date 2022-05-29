@@ -1,7 +1,9 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
 import it.polimi.ingsw.eriantys.cli.views.*;
-import it.polimi.ingsw.eriantys.controller.CliController;
+import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.controller.EventType;
+import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
@@ -15,25 +17,31 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
+
+import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
+import static java.lang.System.out;
 
 /**
  * Base class for all menus.
  * Every menu shows a list of options and performs an operation based on the choice that has been made.
  */
 public abstract class Menu implements PropertyChangeListener {
-  protected CliController controller;
-  protected Menu nextMenu;
+  // Events that single menus want to listen to. Every menus listent to 'INTERNAL_SOCKET_ERROR'
+  protected List<EventType> eventsToBeListening = new ArrayList<>(
+      List.of(INTERNAL_SOCKET_ERROR)
+  );
+  protected Controller controller = Controller.getController();
   // Attribute used to block interaction until he receives a message
-  protected boolean greenLight = false;
+  protected volatile boolean greenLight = false;
+
 
   /**
    * Blocking method until a message from server arrives
    */
   protected void waitForGreenLight() {
+    greenLight = false;
     while (!greenLight) {
       Thread.onSpinWait();
     }
@@ -44,65 +52,24 @@ public abstract class Menu implements PropertyChangeListener {
    */
   protected abstract void showOptions(PrintStream out);
 
-  final protected void showViewOptions(PrintStream out) {
-    out.println("1 - View all");
-    out.println("2 - View islands");
-    out.println("3 - View dashboards");
-    if (controller.getGameState().getRuleBook().gameMode.equals(GameMode.EXPERT))
-      out.println("4 - CharacterCards");
-    out.println("*** others ***");
-  }
-
-  final protected void showViewOptions(String choice, PrintStream out) {
-    GameState game = controller.getGameState();
-    RuleBook rule = game.getRuleBook();
-    List<CharacterCard> ccs = game.getPlayingField().getCharacterCards();
-    ProfessorHolder professorHolder = game.getPlayingField().getProfessorHolder();
-    List<Island> islands = game.getPlayingField().getIslands();
-    List<Dashboard> dashboards = game.getDashboards();
-    int motherPosition = game.getPlayingField().getMotherNaturePosition();
-
-    ViewGroup dashboardsView = new ViewGroup();
-    dashboards.forEach(d ->
-        dashboardsView.addView((new DashboardView(rule, d, professorHolder))));
-    View islandsView = new IslandsView(islands, motherPosition);
-
-    switch (choice) {
-      case "1" -> (new ViewGroup()).addView(islandsView).addView(dashboardsView).draw(out);
-      case "2" -> islandsView.draw(out);
-      case "3" -> dashboardsView.draw(out);
-      case "4" -> {
-        if (controller.getGameState().getRuleBook().gameMode.equals(GameMode.EXPERT))
-          (new CharacterCardView(ccs)).draw(out);
-      }
-      // Simply goes on
-      default -> {}
-    }
-  }
-
-
   /**
    * Shows a list of options and handles the selected choice.
    *
    * @param in  The input stream the user input will be read from
    * @param out The output stream the output will be sent to
+   * @return The next MenuEnum based on the decision made in this method
    */
-  public abstract void show(Scanner in, PrintStream out);
-
-  /**
-   * Returns the next menu to be shown after the current one.
-   *
-   * @return The next menu
-   */
-  final public Menu next() {
-    return nextMenu;
-  }
+  public abstract MenuEnum show(Scanner in, PrintStream out);
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    Logger.trace("Response arrived" + evt.getPropertyName());
-    greenLight = true;
-    controller.removeListener(this);
+    if (evt.getPropertyName().equals(INTERNAL_SOCKET_ERROR.tag)) {
+      Logger.error("Internal socket error occured, server might be down");
+    }
+  }
+
+  public List<EventType> getEventsToBeListening() {
+    return eventsToBeListening;
   }
 
   final protected int getNumber(Scanner in, PrintStream out) {
@@ -121,10 +88,16 @@ public abstract class Menu implements PropertyChangeListener {
     String string;
     while (true) {
       string = in.nextLine();
-      if (!string.isBlank())
+      if (!string.isBlank() && !string.contains(" "))
         return string;
       else
-        out.print("Cannot be Empty, insert again: ");
+        out.print("Cannot neither be empty or contains spaces, insert again: ");
     }
+  }
+
+  final protected void clearConsole(){
+    // Clear screen
+    out.print("\033[H\033[2J");
+    out.flush();
   }
 }

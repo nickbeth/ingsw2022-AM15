@@ -27,11 +27,21 @@ import static it.polimi.ingsw.eriantys.network.MessageType.*;
  * The Controller manages the creation and the sending of messages to the Server
  */
 abstract public class Controller implements Runnable {
+  private static Controller controller;
+
   public static Controller create(boolean isGui, Client networkClient) {
-    if (isGui)
-      return new GuiController(networkClient);
-    else
-      return new CliController(networkClient);
+    if (controller == null) {
+      if (isGui) {
+        controller = new GuiController(networkClient);
+      } else {
+        controller = new CliController(networkClient);
+      }
+    }
+    return controller;
+  }
+
+  public static Controller getController() {
+    return controller;
   }
 
   protected GameInfo gameInfo;

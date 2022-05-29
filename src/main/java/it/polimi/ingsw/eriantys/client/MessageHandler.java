@@ -124,6 +124,6 @@ public class MessageHandler implements Runnable {
 
     controller.showError(errorMessage);
     client.close();
-    controller.firePropertyChange(SOCKET_ERROR);
+    controller.firePropertyChange(INTERNAL_SOCKET_ERROR);
   }
 }

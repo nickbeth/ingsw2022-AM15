@@ -1,8 +1,5 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
-import org.tinylog.Logger;
-
-
 public class Cloud {
   private Students students;
 
@@ -16,7 +13,6 @@ public class Cloud {
 
   public void setStudents(Students s) {
     students.setStudents(s);
-    Logger.debug("Students cloud set");
   }
 
   public boolean isEmpty(){
