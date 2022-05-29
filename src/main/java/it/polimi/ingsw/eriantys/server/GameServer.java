@@ -145,11 +145,20 @@ public class GameServer implements Runnable {
   private void handleCreateGame(Client client, Message message) {
     String nickname = message.nickname();
     GameCode gameCode = GameCode.generateUnique(activeGames.keySet());
+
+    var attachment = (ClientAttachment) client.attachment();
+    if (attachment == null) {
+      String errorMessage = "Nickname '" + nickname + "' should register first before creating a game";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    attachment.setGameCode(gameCode);
     GameEntry gameEntry = new GameEntry(message.gameInfo());
     gameEntry.addPlayer(nickname, client);
-
     activeGames.put(gameCode, gameEntry);
-    ((ClientAttachment) client.attachment()).setGameCode(gameCode);
+
     Logger.info("Player '{}' created a new game: {}", nickname, gameCode);
     send(client, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
     initHeartbeat(client);
@@ -181,8 +190,17 @@ public class GameServer implements Runnable {
       return;
     }
 
+    var attachment = (ClientAttachment) client.attachment();
+    if (attachment == null) {
+      String errorMessage = "Nickname '" + nickname + "' should register first before joining a game";
+      Logger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    attachment.setGameCode(gameCode);
     gameEntry.addPlayer(nickname, client);
-    ((ClientAttachment) client.attachment()).setGameCode(gameCode);
+
     Logger.info("Player '{}' joined game: {}", nickname, gameCode);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
     initHeartbeat(client);
