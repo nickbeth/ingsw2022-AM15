@@ -48,4 +48,12 @@ public class ServerApp {
       appThread.interrupt();
     }
   }
+
+  public void exitAndJoin() {
+    try {
+      exit();
+      appThread.join();
+    } catch (InterruptedException ignored) {
+    }
+  }
 }
