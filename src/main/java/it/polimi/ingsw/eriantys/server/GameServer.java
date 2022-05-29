@@ -29,6 +29,7 @@ public class GameServer implements Runnable {
   private final Map<String, GameCode> disconnectedPlayers;
 
   private final AtomicBoolean exit = new AtomicBoolean(false);
+
   public GameServer(BlockingQueue<MessageQueueEntry> messageQueue) {
     this.messageQueue = messageQueue;
     this.heartbeatService = Executors.newScheduledThreadPool(1);
@@ -88,8 +89,6 @@ public class GameServer implements Runnable {
       case START_GAME -> handleStartGame(client, message);
 
       case PLAY_ACTION -> handlePlayAction(client, message);
-
-      case INTERNAL_SOCKET_ERROR -> handleSocketError(client, message);
     }
   }
 
