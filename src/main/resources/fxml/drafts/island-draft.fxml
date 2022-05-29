@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.Bozzaisola">
+   <children>
+      <AnchorPane>
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../assets/realm/island-2.png" />
+               </image>
+            </ImageView>
+            <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+               <graphic>
+                  <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../assets/realm/student-BLUE.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+               <graphic>
+                  <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../assets/realm/student-GREEN.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+               <graphic>
+                  <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../assets/realm/student-PINK.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+               <graphic>
+                  <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../assets/realm/student-RED.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+               <graphic>
+                  <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../assets/realm/student-YELLOW.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+               <graphic>
+                  <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../assets/realm/tower-BLACK.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+               <image>
+                  <Image url="@../../assets/realm/lock-icon.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

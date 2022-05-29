@@ -54,7 +54,7 @@ public class ConnectionController extends FXMLController {
       errorMessage.setText("Invalid port, try again.");
       errorMessage.setOpacity(1);
     }
-    //TODO: manage nickname in the right way
+    //TODO: manage nickname Ok message when an error returns
     gui.getController().sender().sendNickname(nicknameField.getText());
   }
 
