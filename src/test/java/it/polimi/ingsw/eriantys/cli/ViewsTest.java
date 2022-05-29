@@ -109,9 +109,7 @@ public class ViewsTest {
 
   @Test
   public void printGameLobby() {
-    GameInfo lobby = new GameInfo();
-    lobby.setMode(GameMode.EXPERT);
-    lobby.setMaxPlayerCount(3);
+    GameInfo lobby = new GameInfo(4, GameMode.EXPERT);
     lobby.addPlayer("gino", TowerColor.BLACK);
     lobby.addPlayer("maria", TowerColor.WHITE);
     lobby.addPlayer("franco");

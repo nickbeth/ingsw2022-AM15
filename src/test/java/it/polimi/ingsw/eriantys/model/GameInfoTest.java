@@ -4,14 +4,11 @@ import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameInfoTest {
   private GameInfo makeValidInfo() {
-    GameInfo info = new GameInfo();
-    info.setMode(GameMode.NORMAL);
-    info.setMaxPlayerCount(4);
+    GameInfo info = new GameInfo(4, GameMode.NORMAL);
     info.addPlayer("playerone", TowerColor.BLACK);
     info.addPlayer("playerdoe", TowerColor.BLACK);
     info.addPlayer("playerdree", TowerColor.GRAY);
@@ -20,9 +17,7 @@ class GameInfoTest {
   }
 
   private GameInfo makeInvalidInfo() {
-    GameInfo info = new GameInfo();
-    info.setMode(GameMode.NORMAL);
-    info.setMaxPlayerCount(4);
+    GameInfo info = new GameInfo(4, GameMode.NORMAL);
     info.addPlayer("playerone", TowerColor.BLACK);
     info.addPlayer("playerdoe", TowerColor.WHITE);
     info.addPlayer("playerdree", TowerColor.GRAY);
@@ -31,9 +26,7 @@ class GameInfoTest {
   }
 
   private GameInfo makePartialInfo() {
-    GameInfo info = new GameInfo();
-    info.setMode(GameMode.NORMAL);
-    info.setMaxPlayerCount(4);
+    GameInfo info = new GameInfo(4, GameMode.NORMAL);
     info.addPlayer("playerone", TowerColor.WHITE);
     info.addPlayer("playerdoe", TowerColor.WHITE);
     info.addPlayer("playerdree", null);
@@ -42,9 +35,7 @@ class GameInfoTest {
   }
 
   private GameInfo makeNullInfo() {
-    GameInfo info = new GameInfo();
-    info.setMode(GameMode.NORMAL);
-    info.setMaxPlayerCount(3);
+    GameInfo info = new GameInfo(3, GameMode.NORMAL);
     info.addPlayer("playerone", TowerColor.WHITE);
     info.addPlayer("playerdoe", TowerColor.BLACK);
     info.addPlayer("playerdree", null);
@@ -74,5 +65,24 @@ class GameInfoTest {
     assertFalse(info.isTowerColorValid("playerdree", TowerColor.BLACK));
     assertFalse(info.isTowerColorValid("playerdree", TowerColor.WHITE));
     assertTrue(info.isTowerColorValid("playerdree", TowerColor.GRAY));
+  }
+
+  @Test
+  void equals() {
+    GameInfo info1 = makeValidInfo();
+    GameInfo info2 = makeValidInfo();
+    assertEquals(info1, info2);
+
+    info1 = makeInvalidInfo();
+    info2 = makeInvalidInfo();
+    assertEquals(info1, info2);
+
+    info1 = makeNullInfo();
+    info2 = makeNullInfo();
+    assertEquals(info1, info2);
+
+    info1 = makePartialInfo();
+    info2 = makePartialInfo();
+    assertEquals(info1, info2);
   }
 }

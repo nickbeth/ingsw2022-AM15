@@ -6,6 +6,7 @@ import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class GameInfo implements Serializable {
@@ -17,22 +18,18 @@ public class GameInfo implements Serializable {
     STARTED, // Game has started
   }
 
-  private GameMode mode;
-  private int maxPlayerCount;
+  private final GameMode mode;
+  private final int maxPlayerCount;
   private LobbyState lobbyState = LobbyState.WAITING;
-
-  public GameInfo() {
-  }
-
-  public GameInfo(int numberOfPlayers, GameMode mode){
-    this.maxPlayerCount = numberOfPlayers;
-    this.mode = mode;
-  }
-
   /**
    * Map of player names to their chosen tower color.
    */
   private final Map<String, TowerColor> joinedPlayers = new HashMap<>();
+
+  public GameInfo(int numberOfPlayers, GameMode mode) {
+    this.maxPlayerCount = numberOfPlayers;
+    this.mode = mode;
+  }
 
   /**
    * Checks if the game is ready to start. <br>
@@ -81,20 +78,12 @@ public class GameInfo implements Serializable {
     return maxPlayerCount;
   }
 
-  public void setMaxPlayerCount(int maxPlayerCount) {
-    this.maxPlayerCount = maxPlayerCount;
-  }
-
   public LobbyState getLobbyState() {
     return lobbyState;
   }
 
   public GameMode getMode() {
     return mode;
-  }
-
-  public void setMode(GameMode mode) {
-    this.mode = mode;
   }
 
   public Map<String, TowerColor> getPlayersMap() {
@@ -115,5 +104,25 @@ public class GameInfo implements Serializable {
 
   public TowerColor getPlayerColor(String nickname) {
     return joinedPlayers.get(nickname);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    GameInfo gameInfo = (GameInfo) o;
+    return maxPlayerCount == gameInfo.maxPlayerCount &&
+        mode == gameInfo.mode &&
+        lobbyState == gameInfo.lobbyState &&
+        joinedPlayers.equals(gameInfo.joinedPlayers);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(mode, maxPlayerCount, lobbyState, joinedPlayers);
   }
 }
