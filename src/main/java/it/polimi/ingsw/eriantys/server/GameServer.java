@@ -327,10 +327,26 @@ public class GameServer implements Runnable {
           if (gameEntry == null)
             return;
 
-          gameEntry.disconnectPlayer(attachment.nickname());
-          disconnectedPlayers.put(attachment.nickname(), attachment.gameCode());
-          Logger.info("Player '{}' playing game '{}' marked as disconnected", attachment.nickname(), attachment.gameCode());
-          broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(attachment.nickname()).build());
+          if (!gameEntry.isStarted()) {
+            // If the game is not started, remove the client from the lobby
+            // If there's only one client in the lobby, remove the game
+            activeNicknames.remove(attachment.nickname());
+            if (gameEntry.getClients().size() == 1) {
+              activeGames.remove(attachment.gameCode());
+              Logger.info("Player '{}' left game '{}' while being alone, the game was deleted", attachment.nickname(), attachment.gameCode());
+            } else {
+              gameEntry.removePlayer(attachment.nickname());
+              Logger.info("Player '{}' left game '{}'", attachment.nickname(), attachment.gameCode());
+            }
+          } else {
+            // If the game is started, set the client as disconnected
+            gameEntry.disconnectPlayer(attachment.nickname());
+            disconnectedPlayers.put(attachment.nickname(), attachment.gameCode());
+            Logger.info("Player '{}' playing game '{}' marked as disconnected", attachment.nickname(), attachment.gameCode());
+            broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(attachment.nickname()).build());
+          }
+          client.attach(null);
+          client.close();
           return;
         }
 

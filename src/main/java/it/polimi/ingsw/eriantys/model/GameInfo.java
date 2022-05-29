@@ -102,6 +102,10 @@ public class GameInfo implements Serializable {
     joinedPlayers.put(nickname, null);
   }
 
+  public void removePlayer(String nickname) {
+    joinedPlayers.remove(nickname);
+  }
+
   public TowerColor getPlayerColor(String nickname) {
     return joinedPlayers.get(nickname);
   }

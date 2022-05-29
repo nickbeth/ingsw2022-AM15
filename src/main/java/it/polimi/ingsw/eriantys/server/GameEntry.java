@@ -54,6 +54,11 @@ public class GameEntry {
     gameInfo.addPlayer(nickname);
   }
 
+  public void removePlayer(String nickname) {
+    players.remove(nickname);
+    gameInfo.removePlayer(nickname);
+  }
+
   public void setPlayerColor(String nickname, TowerColor towerColor) {
     gameInfo.addPlayer(nickname, towerColor);
   }
