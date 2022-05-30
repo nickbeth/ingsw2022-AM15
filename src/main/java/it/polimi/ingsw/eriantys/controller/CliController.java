@@ -28,6 +28,11 @@ public class CliController extends Controller {
   }
 
   @Override
+  public void showNetworkError(String error) {
+    out.println(Ansi.ansi().fgRed().a(error).reset());
+  }
+
+  @Override
   public void firePropertyChange(EventType event) {
     listenerHolder.firePropertyChange(event.tag, null, null);
   }

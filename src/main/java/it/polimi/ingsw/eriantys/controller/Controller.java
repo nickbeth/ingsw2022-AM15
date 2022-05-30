@@ -106,6 +106,12 @@ abstract public class Controller implements Runnable {
 
   abstract public void showError(String error);
 
+  /**
+   * base implementation does nothing
+   */
+  public void showNetworkError(String error){
+  }
+
   public void setPlayerConnected(boolean connected, String nickname) {
     gameState.getPlayer(nickname).setConnected(connected);
   }

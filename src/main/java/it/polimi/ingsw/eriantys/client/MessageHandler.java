@@ -113,16 +113,14 @@ public class MessageHandler implements Runnable {
 
   private void handleSocketError(Client client, Message message) {
     // Check that this message was created internally and is not coming from the network
-    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH)) {
+    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
       return;
-    }
 
     String errorMessage = "Lost connection to the server";
-    if (message.error() != null) {
+    if (message.error() != null)
       errorMessage += ": " + message.error();
-    }
 
-    controller.showError(errorMessage);
+    controller.showNetworkError(errorMessage);
     client.close();
     controller.firePropertyChange(INTERNAL_SOCKET_ERROR);
   }
