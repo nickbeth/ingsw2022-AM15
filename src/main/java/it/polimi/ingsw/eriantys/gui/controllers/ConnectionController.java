@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
+import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.network.Client;
 import javafx.event.ActionEvent;
@@ -45,7 +46,7 @@ public class ConnectionController extends FXMLController {
       if (!portStr.isEmpty()) {
         port = Integer.parseInt(portStr);
       }
-      if (!gui.getController().connect(ipStr, port)) {
+      if (!Controller.getController().connect(ipStr, port)) {
         errorMessage.setText("Failed to connect to the server");
         errorMessage.setOpacity(1);
       } else gui.setScene(SceneEnum.CREATE_OR_JOIN);
@@ -55,19 +56,19 @@ public class ConnectionController extends FXMLController {
       errorMessage.setOpacity(1);
     }
     //TODO: manage nickname Ok message when an error returns
-    gui.getController().sender().sendNickname(nicknameField.getText());
+    Controller.getController().sender().sendNickname(nicknameField.getText());
   }
 
   @Override
   public void start() {
     super.start();
-    gui.getController().addListener(this, GAMEINFO_EVENT.tag);
+    Controller.getController().addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    gui.getController().removeListener(this, GAMEINFO_EVENT.tag);
+    Controller.getController().removeListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override

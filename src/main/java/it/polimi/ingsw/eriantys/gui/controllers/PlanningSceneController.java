@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
+import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.controllers.utils.IslandPattern;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
@@ -80,7 +81,7 @@ public class PlanningSceneController extends FXMLController {
 
   @FXML
   private void selDashboardTwo(MouseEvent mouseEvent) {
-    Dashboard dashboard = gui.getController().getGameState().getPlayers().get(1).getDashboard();
+    Dashboard dashboard = Controller.getController().getGameState().getPlayers().get(1).getDashboard();
 
   }
 
@@ -124,7 +125,7 @@ public class PlanningSceneController extends FXMLController {
 
 
   private void updateDashboard() {
-    Player player = gui.getController().getGameState().getPlayer(gui.getController().getNickname());
+    Player player = Controller.getController().getGameState().getPlayer(Controller.getController().getNickname());
     //updating dining hall
     studentHallGrid.getChildren().clear();
     Students diningHall = player.getDashboard().getDiningHall();
@@ -181,7 +182,7 @@ public class PlanningSceneController extends FXMLController {
 
     //updating professore table
     profTableGrid.getChildren().clear();
-    ProfessorHolder profHold = gui.getController().getGameState().getPlayingField().getProfessorHolder();
+    ProfessorHolder profHold = Controller.getController().getGameState().getPlayingField().getProfessorHolder();
     if (profHold.hasProfessor(player.getColorTeam(), HouseColor.GREEN)) {
       ImageView professor = new ImageView(new Image(professorColorToPath.get(HouseColor.GREEN)));
       professor.setFitWidth(20);
@@ -255,11 +256,11 @@ public class PlanningSceneController extends FXMLController {
 
   private void updatePlayerGrid() {
     otherPlayersGrid.getStyleClass().add("grid-players");
-    List<Player> players = gui.getController().getGameState().getPlayers();
+    List<Player> players = Controller.getController().getGameState().getPlayers();
     int i = 0;
     int pIndex = 0;
     for (Player player : players) {
-      if (!player.getNickname().equals(gui.getController().getNickname())) {
+      if (!player.getNickname().equals(Controller.getController().getNickname())) {
         ImageView wizardIcon = new ImageView(new Image("/assets/wizards/wizard-" + pIndex + ".jpg"));
         wizardIcon.setFitWidth(40);
         wizardIcon.setPreserveRatio(true);
@@ -297,7 +298,7 @@ public class PlanningSceneController extends FXMLController {
   //TODO: redo with tilepane or girdpane
   private void updateAssistCards() {
     assistCards.getChildren().clear();
-    ArrayList<AssistantCard> cards = gui.getController().getGameState().getPlayer(gui.getController().getNickname()).getCards();
+    ArrayList<AssistantCard> cards = Controller.getController().getGameState().getPlayer(Controller.getController().getNickname()).getCards();
     cards.forEach(card -> {
       ImageView img = new ImageView();
       URL imgPath = getClass().getResource("/assets/assistcards/Animali_1_" + card.value + ".png");
@@ -314,7 +315,7 @@ public class PlanningSceneController extends FXMLController {
   }
 
   private void createIslandsGrid() {
-    List<Island> islands = gui.getController().getGameState().getPlayingField().getIslands();
+    List<Island> islands = Controller.getController().getGameState().getPlayingField().getIslands();
     IslandPattern pattern = IslandPattern.getPattern(islands.size());
     int[][] matrix = pattern.matrix;
     for (int i = 0; i < matrix.length; i++) {
@@ -397,7 +398,7 @@ public class PlanningSceneController extends FXMLController {
   }
 
   private void createCloudGrid() {
-    gui.getController().getGameState().getPlayingField().getClouds().forEach(
+    Controller.getController().getGameState().getPlayingField().getClouds().forEach(
             cloud -> {
               cloudBox.getChildren().add(createCloud(cloud));
             });
@@ -457,7 +458,7 @@ public class PlanningSceneController extends FXMLController {
   @Override
   public void start() {
     super.start();
-    gui.getController().addListener(this, GAMEDATA_EVENT.tag);
+    Controller.getController().addListener(this, GAMEDATA_EVENT.tag);
 
     //initializing path maps
     for (TowerColor color : TowerColor.values()) {
@@ -476,6 +477,6 @@ public class PlanningSceneController extends FXMLController {
   @Override
   public void finish() {
     super.finish();
-    gui.getController().removeListener(this, GAMEDATA_EVENT.tag);
+    Controller.getController().removeListener(this, GAMEDATA_EVENT.tag);
   }
 }

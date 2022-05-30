@@ -23,7 +23,6 @@ public class GuiController extends Controller {
   
   @Override
   public void run() {
-    Gui.setController(this);
     Application.launch(Gui.class);
   }
   

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
+import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
@@ -47,7 +48,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
       errorMessage.setText("please select a number of players to create the game");
       errorMessage.setVisible(true);
     } else
-      gui.getController().sender().sendCreateGame(playerNumber, gameMode);
+      Controller.getController().sender().sendCreateGame(playerNumber, gameMode);
   }
 
   /**
@@ -58,7 +59,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   private void continueJoinGame(ActionEvent actionEvent) {
     try {
       GameCode gameCode = GameCode.parseCode(gameUidField.getText());
-      gui.getController().sender().sendJoinGame(gameCode);
+      Controller.getController().sender().sendJoinGame(gameCode);
     } catch (GameCode.GameCodeException e) {
       errorMessage.setText("please insert a gameCode to start the game");
       errorMessage.setVisible(true);
@@ -109,12 +110,12 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   @Override
   public void start() {
     super.start();
-    gui.getController().addListener(this, GAMEINFO_EVENT.tag);
+    Controller.getController().addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    gui.getController().removeListener(this, GAMEINFO_EVENT.tag);
+    Controller.getController().removeListener(this, GAMEINFO_EVENT.tag);
   }
 }

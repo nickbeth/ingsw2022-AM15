@@ -14,21 +14,11 @@ import java.util.EnumMap;
 
 
 public class Gui extends Application {
-  private static GuiController controller;
   private Stage stage;
   private SceneEnum prevScene;
   private SceneEnum currScene;
   private EnumMap<SceneEnum, Scene> sceneMap = new EnumMap<>(SceneEnum.class);
   private EnumMap<SceneEnum, FXMLController> controllerMap = new EnumMap<>(SceneEnum.class);
-
-  public static void setController(GuiController contr) {
-    controller = contr;
-  }
-
-  public GuiController getController() {
-    return controller;
-  }
-
 
   /**
    * the start method is called at the beggining of the application life cycle,
