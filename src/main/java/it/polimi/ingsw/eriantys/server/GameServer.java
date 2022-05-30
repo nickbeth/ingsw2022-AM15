@@ -89,6 +89,8 @@ public class GameServer implements Runnable {
       case START_GAME -> handleStartGame(client, message);
 
       case PLAY_ACTION -> handlePlayAction(client, message);
+
+      case INTERNAL_SOCKET_ERROR -> handleSocketError(client, message);
     }
   }
 
@@ -287,9 +289,15 @@ public class GameServer implements Runnable {
     // Check that this message was created internally and is not coming from the network
     if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
       return;
+
+    // Here we only handle cases where a client disconnected after choosing a nickname but before joining a lobby
+    // If that's not the case, ignore and the heartbeat will take care of it
     ClientAttachment attachment = (ClientAttachment) client.attachment();
-    if (attachment != null)
-      activeNicknames.remove(attachment.nickname());
+    if (attachment == null || attachment.gameCode() != null)
+      return;
+
+    Logger.info("Player '{}' disconnected while not being in a game", attachment.nickname());
+    activeNicknames.remove(attachment.nickname());
     client.close();
   }
 

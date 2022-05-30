@@ -15,6 +15,7 @@ public class ClientAttachment {
 
   public ClientAttachment(String nickname) {
     this.nickname = nickname;
+    this.gameCode = null;
     this.missedHeartbeatCount = new AtomicInteger(0);
   }
 
