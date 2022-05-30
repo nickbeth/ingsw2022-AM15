@@ -9,6 +9,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A wrapper around java.io.Socket for sending and receiving Message objects.
@@ -26,6 +27,7 @@ public class Client implements Runnable {
   private ObjectInputStream in;
 
   private final BlockingQueue<MessageQueueEntry> messageQueue;
+  private final AtomicBoolean closed = new AtomicBoolean(false);
 
   /**
    * Default constructor, creates and empty client
@@ -57,6 +59,7 @@ public class Client implements Runnable {
     socket = new Socket(address, port);
     out = new ObjectOutputStream(socket.getOutputStream());
     in = new ObjectInputStream(socket.getInputStream());
+    closed.set(false);
     Logger.info("Connected to: {}", socket.getRemoteSocketAddress());
   }
 
@@ -66,12 +69,14 @@ public class Client implements Runnable {
    * @param msg The message to send
    */
   public synchronized void send(Message msg) {
-    try {
-      out.writeObject(msg);
-      out.reset();
-      out.flush();
-    } catch (IOException e) {
-      Logger.error("Couldn't send message: {}", e.getMessage());
+    if (!closed.get()) {
+      try {
+        out.writeObject(msg);
+        out.reset();
+        out.flush();
+      } catch (IOException e) {
+        Logger.error("Couldn't send message: {}", e.getMessage());
+      }
     }
   }
 
@@ -91,6 +96,7 @@ public class Client implements Runnable {
     if (socket != null) {
       try {
         socket.close();
+        closed.set(true);
       } catch (IOException ignored) {
       }
     }
@@ -104,8 +110,7 @@ public class Client implements Runnable {
   public void run() {
     Logger.debug("Starting thread '{}'", Thread.currentThread().getName());
     try {
-      //noinspection InfiniteLoopStatement
-      while (true) {
+      while (!closed.get()) {
         try {
           messageQueue.add(new MessageQueueEntry(this, receive()));
         } catch (ClassNotFoundException e) {
