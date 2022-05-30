@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -94,12 +95,12 @@
                </rowConstraints>
            </GridPane>
        </AnchorPane>
-       <VBox fx:id="cloudBox" prefHeight="600.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="313.0">
+       <VBox fx:id="cloudBox" prefHeight="600.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="470.0">
        </VBox>
-       <GridPane fx:id="otherPlayersGrid" alignment="TOP_CENTER" layoutX="1085.0" layoutY="14.0" prefHeight="194.0" prefWidth="300.0" AnchorPane.rightAnchor="380.0" AnchorPane.topAnchor="0.0">
+       <GridPane fx:id="otherPlayersGrid" alignment="TOP_CENTER" layoutX="1085.0" layoutY="14.0" prefHeight="194.0" prefWidth="212.0" AnchorPane.rightAnchor="313.0" AnchorPane.topAnchor="0.0">
            <columnConstraints>
-               <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
-               <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.0" minWidth="49.0" prefWidth="146.0" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="151.0" minWidth="50.0" prefWidth="66.0" />
            </columnConstraints>
            <rowConstraints>
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -121,6 +122,9 @@
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
          </children>
       </StackPane>
