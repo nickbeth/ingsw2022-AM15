@@ -40,16 +40,16 @@ public class MenuLobby extends Menu {
 
         // Choose a tower color for the lobby
         case "1" -> {
-          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
-            break;
+//          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
+//            break;
           controller.sender().sendSelectTower(getTowerColor(in, out));
           waitForGreenLight();
         }
 
         // Starts and initiates a game
         case "2" -> {
-          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
-            break;
+//          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
+//            break;
           if (!controller.sender().sendStartGame()) {
             out.println("There are not enough players with a chosen tower color to start");
             break;

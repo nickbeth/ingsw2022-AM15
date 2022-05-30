@@ -112,8 +112,6 @@ public class ViewsTest {
   @Test
   public void printGameLobby() {
     GameInfo lobby = new GameInfo(3, GameMode.EXPERT);
-    lobby.setMode(GameMode.EXPERT);
-    lobby.setMaxPlayerCount(3);
     lobby.addPlayer("gino", TowerColor.BLACK);
     lobby.addPlayer("minchia un nome lunghissimo", TowerColor.WHITE);
     lobby.addPlayer("franco");
