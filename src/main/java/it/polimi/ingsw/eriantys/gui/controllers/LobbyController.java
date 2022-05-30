@@ -12,7 +12,6 @@ import javafx.scene.control.ListView;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Map;
-import java.util.Objects;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
 import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
@@ -45,6 +44,12 @@ public class LobbyController extends FXMLController {
     Controller.getController().sender().sendSelectTower(towerColorChoice.getValue());
   }
 
+  @FXML
+  private void quitLobbyAction(ActionEvent actionEvent) {
+    Controller.getController().disconnect();
+    gui.setScene(SceneEnum.MENU);
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if(evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
@@ -52,7 +57,6 @@ public class LobbyController extends FXMLController {
     else
       updateAll();
   }
-
   @Override
   public void updateAll() {
     playerList.getItems().clear();

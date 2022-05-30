@@ -1,11 +1,11 @@
 package it.polimi.ingsw.eriantys.gui;
 
-import it.polimi.ingsw.eriantys.controller.GuiController;
 import it.polimi.ingsw.eriantys.gui.controllers.FXMLController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -64,8 +64,14 @@ public class Gui extends Application {
     stage.close();
   }
 
-  public void showError(String error) {
-    //TODO new Stage pop up window for errors
+  /**
+   * Displays an alert with the text of the received error.
+   * @param error
+   */
+  public static void showError(String error) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setContentText(error);
+    alert.showAndWait();
   }
 
   /**

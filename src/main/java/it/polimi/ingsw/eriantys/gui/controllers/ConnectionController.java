@@ -5,6 +5,7 @@ import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.network.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,6 +13,7 @@ import javafx.scene.control.TextField;
 import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.NICKNAME_OK;
 
 public class ConnectionController extends FXMLController {
   @FXML
@@ -49,30 +51,30 @@ public class ConnectionController extends FXMLController {
       if (!Controller.getController().connect(ipStr, port)) {
         errorMessage.setText("Failed to connect to the server");
         errorMessage.setOpacity(1);
-      } else gui.setScene(SceneEnum.CREATE_OR_JOIN);
+      }
 
     } catch (NumberFormatException e) {
       errorMessage.setText("Invalid port, try again.");
       errorMessage.setOpacity(1);
     }
-    //TODO: manage nickname Ok message when an error returns
     Controller.getController().sender().sendNickname(nicknameField.getText());
   }
 
   @Override
   public void start() {
     super.start();
-    Controller.getController().addListener(this, GAMEINFO_EVENT.tag);
+    Controller.getController().addListener(this, NICKNAME_OK.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    Controller.getController().removeListener(this, GAMEINFO_EVENT.tag);
+    Controller.getController().removeListener(this, NICKNAME_OK.tag);
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+    gui.setScene(SceneEnum.CREATE_OR_JOIN);
   }
 
 }

@@ -13,17 +13,17 @@ public class GuiController extends Controller {
 
   @Override
   public void showError(String error) {
-    //TODO: handle error messages in gui with listener
+    Platform.runLater(() -> Gui.showError(error));
   }
-  
+
   @Override
   public void firePropertyChange(EventType event) {
     Platform.runLater(() -> listenerHolder.firePropertyChange(event.tag, null, null));
   }
-  
+
   @Override
   public void run() {
     Application.launch(Gui.class);
   }
-  
+
 }

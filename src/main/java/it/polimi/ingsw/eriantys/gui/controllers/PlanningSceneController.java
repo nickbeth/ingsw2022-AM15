@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.gui.controllers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.gui.controllers.utils.IslandPattern;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
@@ -102,6 +103,8 @@ public class PlanningSceneController extends FXMLController {
 
   @FXML
   private void quitGameAction(ActionEvent actionEvent) {
+    Controller.getController().disconnect();
+    gui.setScene(SceneEnum.MENU);
   }
 
   @FXML
@@ -261,11 +264,19 @@ public class PlanningSceneController extends FXMLController {
     int pIndex = 0;
     for (Player player : players) {
       if (!player.getNickname().equals(Controller.getController().getNickname())) {
+        StackPane icon = new StackPane();
         ImageView wizardIcon = new ImageView(new Image("/assets/wizards/wizard-" + pIndex + ".jpg"));
         wizardIcon.setFitWidth(40);
         wizardIcon.setPreserveRatio(true);
         wizardIcon.getStyleClass().add("image-wizard");
-        Label nickname = new Label(player.getNickname(), wizardIcon);
+        icon.getChildren().add(wizardIcon);
+        if (!player.isConnected()){
+          ImageView discIcon = new ImageView(new Image("/assets/misc/disconnected-icon.png"));
+          discIcon.setFitWidth(10);
+          discIcon.setPreserveRatio(true);
+          icon.getChildren().add(discIcon);
+        }
+        Label nickname = new Label(player.getNickname(), icon);
         nickname.getStyleClass().add("label-nicknames");
         nickname.setCursor(Cursor.HAND);
         nickname.setContentDisplay(ContentDisplay.RIGHT);

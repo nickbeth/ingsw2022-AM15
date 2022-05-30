@@ -77,6 +77,10 @@ abstract public class Controller implements Runnable {
     return true;
   }
 
+  public void disconnect(){
+    networkClient.close();
+  }
+
   public void initGame() {
     gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
 

@@ -95,6 +95,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
    */
   @FXML
   private void backButton(ActionEvent actionEvent) {
+    Controller.getController().disconnect();
     //TODO: handle disconnection from server with the press of the back button
     gui.setScene(SceneEnum.CONNECTION);
   }
