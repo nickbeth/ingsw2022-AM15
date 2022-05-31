@@ -57,7 +57,7 @@ public class GameLobbyView extends View {
         .append(PADDING)
         .append("Players:")
         .append(PADDING)
-        .append((char) gameInfo.getMaxPlayerCount())
+        .append(Integer.toString(gameInfo.getMaxPlayerCount()))
         .append(PADDING.repeat(computedLength - 11))
         .append(VERTICAL.glyph)
         .append(System.lineSeparator())
@@ -85,8 +85,8 @@ public class GameLobbyView extends View {
       if (value != null)
         o.append(value.toString())
             .append(PADDING.repeat(computedLength - value.toString().length() - key.length() - 5));
-      else o.append("empty")
-          .append(PADDING.repeat(computedLength - key.length() - 10));
+      else o.append("____")
+          .append(PADDING.repeat(computedLength - key.length() - 9));
       o.append(VERTICAL.glyph).append(System.lineSeparator());
     });
     o.append(UP_AND_RIGHT.glyph)

@@ -16,6 +16,7 @@ Game Info)
 ┌─────────────────┐
 │ Game info       │
 ├-----------------┤
+| Code: AB21      |
 │ Mode: EXPERT    │
 │ Players: 4      │
 ╞═════════════════╡
@@ -23,7 +24,7 @@ Game Info)
 ├-----------------┤
 │ Gino -> BLACK   │
 │ Franco -> GRAY  │
-│ Mario -> WHITE  │
+│ Mario -> ____   │
 └─────────────────┘
 
 Cloud)
