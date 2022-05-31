@@ -346,7 +346,7 @@ public class GameServer implements Runnable {
     public void run() {
       var attachment = (ClientAttachment) client.attachment();
       // Send another ping and re-schedule if threshold was not reached
-      if (attachment.increaseMissedHeartbeatCount() < HEARTBEAT_DISCONNECTION_THRESHOLD) {
+      if (attachment.increaseMissedHeartbeatCount() <= HEARTBEAT_DISCONNECTION_THRESHOLD) {
         client.send(new Message.Builder().type(MessageType.PING).build());
         heartbeatService.schedule(this, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
         return;
