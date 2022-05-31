@@ -25,7 +25,9 @@ public class CloudsHandler extends SectionHandler {
 
   @Override
   protected void refresh() {
-    super.refresh();
+    //TODO: check in wich gamePhase refillClouds Action gets called
+    //TODO: write an actual refresh method that doesn't use create() maybe by creating a CloudHandler abstraction.
+    create();
   }
 
   @Override

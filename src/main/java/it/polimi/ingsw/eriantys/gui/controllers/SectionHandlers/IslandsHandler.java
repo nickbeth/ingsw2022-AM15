@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.controllers.utils.IslandPattern;
 import it.polimi.ingsw.eriantys.model.entities.Island;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import javafx.scene.control.Label;
@@ -26,7 +27,11 @@ public class IslandsHandler extends SectionHandler {
 
   @Override
   protected void refresh() {
-    super.refresh();
+    //TODO: write an actual refresh method that doesn't use create() maybe by creating a IslandHandler abstraction.
+    GamePhase gamePhase = Controller.getController().getGameState().getGamePhase();
+    if (gamePhase == GamePhase.ACTION) {
+      create();
+    }
   }
 
   @Override

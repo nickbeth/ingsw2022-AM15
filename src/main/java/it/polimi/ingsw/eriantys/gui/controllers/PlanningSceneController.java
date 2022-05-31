@@ -22,7 +22,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.*;
 
 public class PlanningSceneController extends FXMLController {
   @FXML
@@ -44,19 +44,12 @@ public class PlanningSceneController extends FXMLController {
   @FXML
   private GridPane otherPlayersGrid;
   @FXML
-  private StackPane playerTwo;
-  @FXML
-  private StackPane playerFour;
-  @FXML
-  private StackPane playerThree;
-  @FXML
   private TilePane assistCards;
   @FXML
   private StackPane assistCardPanel;
   @FXML
   private Button playCardButton;
 
-  private final AnchorPane[][] islands = new AnchorPane[5][4];
   PlayerGridHandler playerGridHandler;
   DashboardHandler mainDashboardHandler;
   CloudsHandler cloudBoxHandler;
@@ -75,44 +68,21 @@ public class PlanningSceneController extends FXMLController {
     assistCardTilesHandler = new AssistCardHandler(assistCards);
   }
 
-  @FXML
-  private void showAssistCards(ActionEvent actionEvent) {
-    assistCardTilesHandler.update();
-    assistCardPanel.setVisible(true);
-    otherPlayersGrid.getClip();
-  }
-
-  @FXML
-  private void hideAssistCards(MouseEvent mouseEvent) {
-    assistCardPanel.setVisible(false);
-  }
-
-  @FXML
-  private void selDashboardTwo(MouseEvent mouseEvent) {
-    Dashboard dashboard = Controller.getController().getGameState().getPlayers().get(1).getDashboard();
-  }
-
-  @FXML
-  private void selDashboardThree(MouseEvent mouseEvent) {
-    ImageView source = (ImageView) mouseEvent.getSource();
-  }
-
-  @FXML
-  private void selDashboardFour(MouseEvent mouseEvent) {
-    ImageView source = (ImageView) mouseEvent.getSource();
-  }
-
-  private void showDashboard(Dashboard dashboard) {
-  }
-
-  @FXML
-  private void quitGameAction(ActionEvent actionEvent) {
-    Controller.getController().disconnect();
-    gui.setScene(SceneEnum.MENU);
+  @Override
+  public void finish() {
+    super.finish();
+    Controller.getController().removeListener(this, GAMEDATA_EVENT.tag);
+    Controller.getController().removeListener(this, INTERNAL_SOCKET_ERROR.tag);
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+    if(evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
+      updateAll();
+    else {
+      quitGameAction();
+      gui.showSocketError();
+    }
   }
 
   @Override
@@ -124,9 +94,22 @@ public class PlanningSceneController extends FXMLController {
     cloudBoxHandler.update();
   }
 
-  @Override
-  public void finish() {
-    super.finish();
-    Controller.getController().removeListener(this, GAMEDATA_EVENT.tag);
+  @FXML
+  private void quitGameAction() {
+    Controller.getController().disconnect();
+    gui.setScene(SceneEnum.MENU);
   }
+
+  @FXML
+  private void showAssistCards() {
+    assistCardTilesHandler.update();
+    assistCardPanel.setVisible(true);
+    otherPlayersGrid.getClip();
+  }
+
+  @FXML
+  private void hideAssistCards() {
+    assistCardPanel.setVisible(false);
+  }
+
 }

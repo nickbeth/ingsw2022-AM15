@@ -2,12 +2,11 @@ package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.TilePane;
-import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,7 +20,10 @@ public class AssistCardHandler extends SectionHandler {
 
   @Override
   protected void refresh() {
-    super.refresh();
+    GamePhase gamePhase = Controller.getController().getGameState().getGamePhase();
+    if (gamePhase == GamePhase.PLANNING) {
+      create();
+    }
   }
 
   @Override
@@ -35,14 +37,17 @@ public class AssistCardHandler extends SectionHandler {
       img.setFitWidth(160);
       img.setId(card.toString());
       img.setPreserveRatio(true);
-      img.setCursor(Cursor.HAND);
-      img.setOnMouseClicked(this::playAssistCardAction);
+      if (Controller.getController().getGameState().getGamePhase() == GamePhase.PLANNING) {
+        img.setCursor(Cursor.HAND);
+        img.setOnMouseClicked(e -> playAssistCardAction(card));
+      }
       assistCards.getChildren().add(img);
     });
   }
 
-  private void playAssistCardAction(MouseEvent mouseEvent) {
-    ImageView img = (ImageView) mouseEvent.getSource();
-    Logger.debug("Played assistant card " + img.getId());
+  private void playAssistCardAction(AssistantCard card) {
+    int index = Controller.getController().getGameState()
+            .getPlayer(Controller.getController().getNickname()).getCards().indexOf(card);
+    Controller.getController().sender().sendPickAssistantCard(index);
   }
 }

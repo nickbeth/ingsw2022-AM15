@@ -4,8 +4,10 @@ import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.image.Image;
@@ -35,8 +37,11 @@ public class DashboardHandler extends SectionHandler {
   }
 
   @Override
-  public void update() {
-    super.update();
+  protected void refresh() {
+    GamePhase gamePhase = Controller.getController().getGameState().getGamePhase();
+    if (gamePhase == GamePhase.ACTION) {
+      create();
+    }
   }
 
   @Override
@@ -50,6 +55,7 @@ public class DashboardHandler extends SectionHandler {
     createEntrance(player);
     //populating tower tiles
     createTowers(player);
+    super.create();
   }
 
   private void createDiningHall(Player player) {

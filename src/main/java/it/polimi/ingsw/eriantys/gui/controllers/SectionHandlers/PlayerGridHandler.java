@@ -27,11 +27,9 @@ public class PlayerGridHandler extends SectionHandler {
     this.playerGrid = playerGrid;
   }
 
-  public void update() {
-    if (created) refresh();
-    else create();
-  }
-
+  /**
+   * Refreshes disconnect icon visibility, and numbers on card and tower counters
+   */
   protected void refresh() {
     discIcons.forEach((img, player) -> {
       img.setVisible(!player.isConnected());

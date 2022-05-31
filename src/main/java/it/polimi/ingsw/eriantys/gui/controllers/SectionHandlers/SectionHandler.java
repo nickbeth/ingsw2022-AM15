@@ -3,11 +3,20 @@ package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 public abstract class SectionHandler {
   protected boolean created = false;
 
+  /**
+   * If {@link #created} is false calls {@link #create()} method.<br>
+   * Then calls {@link #refresh()} method.
+   */
   public void update() {
-    if (created) refresh();
-    else create();
+    if (!created) {
+      create();
+    }
+    refresh();
   }
 
+  /**
+   * Base implementation does nothing
+   */
   protected void refresh() {
   }
 
