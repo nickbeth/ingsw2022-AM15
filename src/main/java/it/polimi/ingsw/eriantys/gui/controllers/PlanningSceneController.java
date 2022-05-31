@@ -67,6 +67,7 @@ public class PlanningSceneController extends FXMLController {
   public void start() {
     super.start();
     Controller.getController().addListener(this, GAMEDATA_EVENT.tag);
+    Controller.getController().addListener(this, INTERNAL_SOCKET_ERROR.tag);
     mainDashboardHandler = new DashboardHandler(studentHallGrid, entranceGrid, profTableGrid, dashboardTowers);
     playerGridHandler = new PlayerGridHandler(otherPlayersGrid);
     cloudBoxHandler = new CloudsHandler(cloudBox);

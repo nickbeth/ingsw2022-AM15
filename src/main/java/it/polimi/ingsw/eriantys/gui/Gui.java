@@ -75,6 +75,16 @@ public class Gui extends Application {
   }
 
   /**
+   * Displays an alert notifying a socket error
+   * @param error
+   */
+  public void showSocketError() {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setContentText("a connection error has occured: disconnected from server");
+    alert.showAndWait();
+  }
+
+  /**
    * sets a new scene, updates the next controller, and updates the listener list in action invoker.
    * @param scene
    * @param eventTag
