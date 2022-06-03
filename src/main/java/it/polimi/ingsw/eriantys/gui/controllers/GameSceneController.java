@@ -24,7 +24,7 @@ import java.util.EnumMap;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 
-public class PlanningSceneController extends FXMLController {
+public class GameSceneController extends FXMLController {
   @FXML
   private TilePane dashboardTowers;
   @FXML
@@ -61,7 +61,7 @@ public class PlanningSceneController extends FXMLController {
     super.start();
     Controller.getController().addListener(this, GAMEDATA_EVENT.tag);
     Controller.getController().addListener(this, INTERNAL_SOCKET_ERROR.tag);
-    mainDashboardHandler = new DashboardHandler(studentHallGrid, entranceGrid, profTableGrid, dashboardTowers);
+    mainDashboardHandler = new DashboardHandler(Controller.getController().getNickname(), studentHallGrid, entranceGrid, profTableGrid, dashboardTowers);
     playerGridHandler = new PlayerGridHandler(otherPlayersGrid);
     cloudBoxHandler = new CloudsHandler(cloudBox);
     islandsGridHandler = new IslandsHandler(islandsGrid);

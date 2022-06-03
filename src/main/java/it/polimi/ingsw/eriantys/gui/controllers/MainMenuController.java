@@ -14,6 +14,7 @@ public class MainMenuController extends FXMLController {
   private Button rulesButton;
   @FXML
   private Button quitButton;
+
   /**
    * Sets scene to Connection
    */
