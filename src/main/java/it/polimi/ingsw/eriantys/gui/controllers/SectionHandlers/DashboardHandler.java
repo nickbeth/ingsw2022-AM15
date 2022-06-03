@@ -1,13 +1,13 @@
 package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.image.Image;
@@ -15,21 +15,32 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 
 public class DashboardHandler extends SectionHandler {
+  private final String nickname;
   private final GridPane studentHallGrid;
   private final GridPane entranceGrid;
   private final GridPane professorGrid;
   private final TilePane towerTiles;
+  GameState gameState = Controller.getController().getGameState();
 
   private final EnumMap<TowerColor, String> towerColorToPath = new EnumMap<TowerColor, String>(TowerColor.class);
   private final EnumMap<HouseColor, String> studentColorToPath = new EnumMap<>(HouseColor.class);
   private final EnumMap<HouseColor, String> professorColorToPath = new EnumMap<>(HouseColor.class);
 
+  List<ImageView> blueStudents = new ArrayList<>();
+  List<ImageView> redStudents = new ArrayList<>();
+  List<ImageView> yellowStudents = new ArrayList<>();
+  List<ImageView> greenStudents = new ArrayList<>();
+  List<ImageView> pinkStudents = new ArrayList<>();
 
-  public DashboardHandler(GridPane studentHallGrid, GridPane entranceGrid, GridPane professorGrid, TilePane towerTiles) {
+
+  public DashboardHandler(String nickname, GridPane studentHallGrid, GridPane entranceGrid, GridPane professorGrid, TilePane towerTiles) {
     initMaps();
+    this.nickname = nickname;
     this.studentHallGrid = studentHallGrid;
     this.entranceGrid = entranceGrid;
     this.professorGrid = professorGrid;
@@ -38,17 +49,21 @@ public class DashboardHandler extends SectionHandler {
 
   @Override
   protected void refresh() {
-    GamePhase gamePhase = Controller.getController().getGameState().getGamePhase();
+    GamePhase gamePhase = gameState.getGamePhase();
+    Students entrance = gameState.getPlayer(nickname).getDashboard().getEntrance();
+    ProfessorHolder professors = gameState.getPlayingField().getProfessorHolder();
     if (gamePhase == GamePhase.ACTION) {
-      create();
+      refreshDiningHall();
+      refreshTowers();
+
     }
   }
 
   @Override
   protected void create() {
-    Player player = Controller.getController().getGameState().getPlayer(Controller.getController().getNickname());
+    Player player = gameState.getPlayer(Controller.getController().getNickname());
     //populating dining hall
-    createDiningHall(player);
+    refreshDiningHall();
     //populating professor table grid
     createProfTable(player);
     //pupulating entrance grid
@@ -58,104 +73,98 @@ public class DashboardHandler extends SectionHandler {
     super.create();
   }
 
-  private void createDiningHall(Player player) {
-    studentHallGrid.getChildren().clear();
-    Students diningHall = player.getDashboard().getDiningHall();
+  private void refreshTowers() {
+    Player player = gameState.getPlayer(nickname);
+    int tileCount = towerTiles.getChildren().size();
+    int towerCount = gameState.getPlayer(nickname).getDashboard().getTowers().count;
+    if (towerCount > tileCount) {
+      for (int i = 0; i < towerCount - tileCount; i++) {
+        ImageView tower = new ImageView(new Image(towerColorToPath.get(player.getColorTeam())));
+        tower.setFitWidth(20);
+        tower.setPreserveRatio(true);
+        towerTiles.getChildren().add(tower);
+      }
+    } else
+      towerTiles.getChildren().remove(0);
+  }
 
-    //updating GREEN table
-    for (int i = 0; i < diningHall.getCount(HouseColor.GREEN); i++) {
-      ImageView student = new ImageView(new Image(studentColorToPath.get(HouseColor.GREEN)));
-      student.setFitWidth(20);
-      student.setPreserveRatio(true);
-      GridPane.setHalignment(student, HPos.CENTER);
-      GridPane.setValignment(student, VPos.CENTER);
-      studentHallGrid.add(student, 0, 9 - i);
+  private void refreshDiningHall() {
+    Students hall = Controller.getController().getGameState().getPlayer(nickname).getDashboard().getDiningHall();
+    for (int i = 0; i < hall.getCount(HouseColor.GREEN) - greenStudents.size(); i++) {
+      ImageView student = createStudent(HouseColor.GREEN);
+      greenStudents.add(student);
+      studentHallGrid.add(student, 0, 9 - greenStudents.indexOf(student));
     }
 
-    //updating RED table
-    for (int i = 0; i < diningHall.getCount(HouseColor.RED); i++) {
-      ImageView student = new ImageView(new Image(studentColorToPath.get(HouseColor.RED)));
-      student.setFitWidth(20);
-      student.setPreserveRatio(true);
-      GridPane.setHalignment(student, HPos.CENTER);
-      GridPane.setValignment(student, VPos.CENTER);
-      studentHallGrid.add(student, 1, 9 - i);
+    for (int i = 0; i < hall.getCount(HouseColor.RED) - redStudents.size(); i++) {
+      ImageView student = createStudent(HouseColor.RED);
+      greenStudents.add(student);
+      studentHallGrid.add(student, 0, 9 - redStudents.indexOf(student));
     }
 
-    //updating YELLOW table
-    for (int i = 0; i < diningHall.getCount(HouseColor.YELLOW); i++) {
-      ImageView student = new ImageView(new Image(studentColorToPath.get(HouseColor.YELLOW)));
-      student.setFitWidth(20);
-      student.setPreserveRatio(true);
-      GridPane.setHalignment(student, HPos.CENTER);
-      GridPane.setValignment(student, VPos.CENTER);
-      studentHallGrid.add(student, 0, 9 - i);
+    for (int i = 0; i < hall.getCount(HouseColor.YELLOW) - yellowStudents.size(); i++) {
+      ImageView student = createStudent(HouseColor.YELLOW);
+      yellowStudents.add(student);
+      studentHallGrid.add(student, 0, 9 - yellowStudents.indexOf(student));
     }
 
-    //updating PINK table
-    for (int i = 0; i < diningHall.getCount(HouseColor.PINK); i++) {
-      ImageView student = new ImageView(new Image(studentColorToPath.get(HouseColor.PINK)));
-      student.setFitWidth(20);
-      student.setPreserveRatio(true);
-      GridPane.setHalignment(student, HPos.CENTER);
-      GridPane.setValignment(student, VPos.CENTER);
-      studentHallGrid.add(student, 0, 9 - i);
+    for (int i = 0; i < hall.getCount(HouseColor.PINK) - pinkStudents.size(); i++) {
+      ImageView student = createStudent(HouseColor.PINK);
+      pinkStudents.add(student);
+      studentHallGrid.add(student, 0, 9 - pinkStudents.indexOf(student));
     }
 
-    //updating BLUE table
-    for (int i = 0; i < diningHall.getCount(HouseColor.BLUE); i++) {
-      ImageView student = new ImageView(new Image(studentColorToPath.get(HouseColor.BLUE)));
-      student.setFitWidth(20);
-      student.setPreserveRatio(true);
-      GridPane.setHalignment(student, HPos.CENTER);
-      GridPane.setValignment(student, VPos.CENTER);
-      studentHallGrid.add(student, 0, 9 - i);
+    for (int i = 0; i < hall.getCount(HouseColor.BLUE) - blueStudents.size(); i++) {
+      ImageView student = createStudent(HouseColor.BLUE);
+      blueStudents.add(student);
+      studentHallGrid.add(student, 0, 9 - blueStudents.indexOf(student));
     }
   }
+
+  private void refreshProfTable() {
+    Player player = gameState.getPlayer(nickname);
+    //professorGrid.add();
+  }
+
+
+  private ImageView createStudent(HouseColor color) {
+    ImageView student = new ImageView(new Image(studentColorToPath.get(HouseColor.BLUE)));
+    student.setFitWidth(20);
+    student.setPreserveRatio(true);
+    GridPane.setHalignment(student, HPos.CENTER);
+    GridPane.setValignment(student, VPos.CENTER);
+    return student;
+  }
+
 
   private void createProfTable(Player player) {
     professorGrid.getChildren().clear();
     ProfessorHolder profHold = Controller.getController().getGameState().getPlayingField().getProfessorHolder();
     if (profHold.hasProfessor(player.getColorTeam(), HouseColor.GREEN)) {
-      ImageView professor = new ImageView(new Image(professorColorToPath.get(HouseColor.GREEN)));
-      professor.setFitWidth(20);
-      professor.setPreserveRatio(true);
-      GridPane.setHalignment(professor, HPos.CENTER);
-      GridPane.setValignment(professor, VPos.CENTER);
-      professorGrid.add(professor, 0, 0);
+      professorGrid.add(createProfessor(HouseColor.GREEN), 0, 0);
     }
     if (profHold.hasProfessor(player.getColorTeam(), HouseColor.RED)) {
-      ImageView professor = new ImageView(new Image(professorColorToPath.get(HouseColor.RED)));
-      professor.setFitWidth(20);
-      professor.setPreserveRatio(true);
-      GridPane.setHalignment(professor, HPos.CENTER);
-      GridPane.setValignment(professor, VPos.CENTER);
-      professorGrid.add(professor, 1, 0);
+      professorGrid.add(createProfessor(HouseColor.RED), 1, 0);
     }
     if (profHold.hasProfessor(player.getColorTeam(), HouseColor.YELLOW)) {
-      ImageView professor = new ImageView(new Image(professorColorToPath.get(HouseColor.YELLOW)));
-      professor.setFitWidth(20);
-      professor.setPreserveRatio(true);
-      GridPane.setHalignment(professor, HPos.CENTER);
-      GridPane.setValignment(professor, VPos.CENTER);
-      professorGrid.add(professor, 2, 0);
+      professorGrid.add(createProfessor(HouseColor.YELLOW), 2, 0);
     }
     if (profHold.hasProfessor(player.getColorTeam(), HouseColor.PINK)) {
-      ImageView professor = new ImageView(new Image(professorColorToPath.get(HouseColor.PINK)));
-      professor.setFitWidth(20);
-      professor.setPreserveRatio(true);
-      GridPane.setHalignment(professor, HPos.CENTER);
-      GridPane.setValignment(professor, VPos.CENTER);
-      professorGrid.add(professor, 3, 0);
+      professorGrid.add(createProfessor(HouseColor.PINK), 3, 0);
     }
     if (profHold.hasProfessor(player.getColorTeam(), HouseColor.BLUE)) {
-      ImageView professor = new ImageView(new Image(professorColorToPath.get(HouseColor.BLUE)));
-      professor.setFitWidth(20);
-      professor.setPreserveRatio(true);
-      GridPane.setHalignment(professor, HPos.CENTER);
-      GridPane.setValignment(professor, VPos.CENTER);
-      professorGrid.add(professor, 4, 0);
+      professorGrid.add(createProfessor(HouseColor.BLUE), 4, 0);
     }
+  }
+
+  private ImageView createProfessor(HouseColor color) {
+    ImageView professor = new ImageView(new Image(professorColorToPath.get(color)));
+    professor.setFitWidth(20);
+    professor.setPreserveRatio(true);
+    GridPane.setHalignment(professor, HPos.CENTER);
+    GridPane.setValignment(professor, VPos.CENTER);
+
+    return professor;
   }
 
   private void createEntrance(Player player) {
