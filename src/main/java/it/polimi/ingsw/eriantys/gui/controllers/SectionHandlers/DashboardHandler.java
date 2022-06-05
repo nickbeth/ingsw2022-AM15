@@ -37,6 +37,7 @@ public class DashboardHandler extends SectionHandler {
   List<ImageView> greenStudents = new ArrayList<>();
   List<ImageView> pinkStudents = new ArrayList<>();
 
+  ImageView[] professors = new ImageView[HouseColor.values().length];
 
   public DashboardHandler(String nickname, GridPane studentHallGrid, GridPane entranceGrid, GridPane professorGrid, TilePane towerTiles) {
     initMaps();
@@ -55,21 +56,21 @@ public class DashboardHandler extends SectionHandler {
     if (gamePhase == GamePhase.ACTION) {
       refreshDiningHall();
       refreshTowers();
-
+      refreshProfTable();
+      createEntrance();
     }
   }
 
   @Override
   protected void create() {
-    Player player = gameState.getPlayer(Controller.get().getNickname());
     //populating dining hall
     refreshDiningHall();
     //populating professor table grid
-    createProfTable(player);
+    refreshProfTable();
     //pupulating entrance grid
-    createEntrance(player);
+    createEntrance();
     //populating tower tiles
-    createTowers(player);
+    createTowers();
     super.create();
   }
 
@@ -88,8 +89,11 @@ public class DashboardHandler extends SectionHandler {
       towerTiles.getChildren().remove(0);
   }
 
+  /**
+   * For each table if the amount of students of the model is more than what is shown it adds new images.
+   */
   private void refreshDiningHall() {
-    Students hall = Controller.get().getGameState().getPlayer(nickname).getDashboard().getDiningHall();
+    Students hall = gameState.getPlayer(nickname).getDashboard().getDiningHall();
     for (int i = 0; i < hall.getCount(HouseColor.GREEN) - greenStudents.size(); i++) {
       ImageView student = createStudent(HouseColor.GREEN);
       greenStudents.add(student);
@@ -121,12 +125,9 @@ public class DashboardHandler extends SectionHandler {
     }
   }
 
-  private void refreshProfTable() {
-    Player player = gameState.getPlayer(nickname);
-    //professorGrid.add();
-  }
-
-
+  /**
+   * Creates a student ImageView containing de icon of given color
+   */
   private ImageView createStudent(HouseColor color) {
     ImageView student = new ImageView(new Image(studentColorToPath.get(HouseColor.BLUE)));
     student.setFitWidth(20);
@@ -136,27 +137,27 @@ public class DashboardHandler extends SectionHandler {
     return student;
   }
 
-
-  private void createProfTable(Player player) {
-    professorGrid.getChildren().clear();
-    ProfessorHolder profHold = Controller.get().getGameState().getPlayingField().getProfessorHolder();
-    if (profHold.hasProfessor(player.getColorTeam(), HouseColor.GREEN)) {
-      professorGrid.add(createProfessor(HouseColor.GREEN), 0, 0);
-    }
-    if (profHold.hasProfessor(player.getColorTeam(), HouseColor.RED)) {
-      professorGrid.add(createProfessor(HouseColor.RED), 1, 0);
-    }
-    if (profHold.hasProfessor(player.getColorTeam(), HouseColor.YELLOW)) {
-      professorGrid.add(createProfessor(HouseColor.YELLOW), 2, 0);
-    }
-    if (profHold.hasProfessor(player.getColorTeam(), HouseColor.PINK)) {
-      professorGrid.add(createProfessor(HouseColor.PINK), 3, 0);
-    }
-    if (profHold.hasProfessor(player.getColorTeam(), HouseColor.BLUE)) {
-      professorGrid.add(createProfessor(HouseColor.BLUE), 4, 0);
+  /**
+   * For each professor checks if the player is the holder, if not check if the prof imgview is displayed and removes it
+   */
+  private void refreshProfTable() {
+    TowerColor team = gameState.getPlayer(nickname).getColorTeam();
+    ProfessorHolder profHold = gameState.getPlayingField().getProfessorHolder();
+    for (HouseColor color : HouseColor.values()) {
+      if (profHold.hasProfessor(team, color) && professors[color.ordinal()] == null) {
+        ImageView prof = createProfessor(color);
+        professors[color.ordinal()] = prof;
+        professorGrid.add(prof, color.ordinal(), 0);
+      } else {
+        professorGrid.getChildren().remove(professors[color.ordinal()]);
+        professors[color.ordinal()] = null;
+      }
     }
   }
 
+  /**
+   * Creates a professor ImageView containing de icon of given color
+   */
   private ImageView createProfessor(HouseColor color) {
     ImageView professor = new ImageView(new Image(professorColorToPath.get(color)));
     professor.setFitWidth(20);
@@ -167,18 +168,20 @@ public class DashboardHandler extends SectionHandler {
     return professor;
   }
 
-  private void createEntrance(Player player) {
+  private void refereshEntrance() {
+    //TODO: method to refresh entrances without recreating
+  }
+
+
+  private void createEntrance() {
     entranceGrid.getChildren().clear();
+    Player player = gameState.getPlayer(nickname);
     Students entrance = player.getDashboard().getEntrance();
     int count = 0;
     for (HouseColor color : HouseColor.values()) {
       for (int i = 0; i < entrance.getCount(color); i++) {
         count++;
-        ImageView student = new ImageView(new Image(studentColorToPath.get(color)));
-        student.setFitWidth(20);
-        student.setPreserveRatio(true);
-        GridPane.setHalignment(student, HPos.CENTER);
-        GridPane.setValignment(student, VPos.CENTER);
+        ImageView student = createStudent(color);
         if (count < 5) {
           entranceGrid.add(student, count, 0);
         } else {
@@ -188,7 +191,8 @@ public class DashboardHandler extends SectionHandler {
     }
   }
 
-  private void createTowers(Player player) {
+  private void createTowers() {
+    Player player = gameState.getPlayer(nickname);
     towerTiles.getChildren().clear();
     for (int i = 0; i < player.getDashboard().getTowers().count; i++) {
       ImageView tower = new ImageView(new Image(towerColorToPath.get(player.getColorTeam())));
