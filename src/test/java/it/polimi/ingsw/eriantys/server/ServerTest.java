@@ -92,8 +92,8 @@ public class ServerTest {
 
     client1.send(createGameReq);
     Message reply = messageQueue1.take().message();
-    assertEquals(reply.getGameInfo(), gameInfo);
-    assertDoesNotThrow(() -> validateGameCode(reply.getGameCode().toString()));
+    assertEquals(reply.gameInfo(), gameInfo);
+    assertDoesNotThrow(() -> validateGameCode(reply.gameCode().toString()));
   }
 
   @Test
@@ -116,8 +116,8 @@ public class ServerTest {
 
     client2.send(createGameReq);
     Message reply = messageQueue2.take().message();
-    assertEquals(reply.getType(), MessageType.GAMEINFO);
-    assertEquals(reply.getGameInfo(), gameInfo);
-    assertDoesNotThrow(() -> validateGameCode(reply.getGameCode().toString()));
+    assertEquals(reply.type(), MessageType.GAMEINFO);
+    assertEquals(reply.gameInfo(), gameInfo);
+    assertDoesNotThrow(() -> validateGameCode(reply.gameCode().toString()));
   }
 }

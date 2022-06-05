@@ -64,23 +64,23 @@ public class GameServer implements Runnable {
       return;
     }
 
-    if (message.getType() == null) {
+    if (message.type() == null) {
       serverLogger.warn("Received a message with an invalid message type: {}", message);
       return;
     }
-    if (message.getNickname() == null) {
+    if (message.nickname() == null) {
       serverLogger.warn("Received a message with an empty nickname: {}", message);
       return;
     }
 
     // Handle PONG messages separately to avoid spamming debug logs
-    if (message.getType() == MessageType.PONG) {
+    if (message.type() == MessageType.PONG) {
       handlePong(client, message);
       return;
     }
 
     serverLogger.debug("Handling entry: {}", entry);
-    switch (message.getType()) {
+    switch (message.type()) {
       case NICKNAME_REQUEST -> handleNicknameRequest(client, message);
 
       case CREATE_GAME -> handleCreateGame(client, message);
@@ -101,7 +101,7 @@ public class GameServer implements Runnable {
   }
 
   private void handleNicknameRequest(Client client, Message message) {
-    String nickname = message.getNickname();
+    String nickname = message.nickname();
 
     if (nickname == null || nickname.isBlank()) {
       String errorMessage = "Nickname '" + nickname + " is invalid";
@@ -126,7 +126,7 @@ public class GameServer implements Runnable {
   }
 
   private void handleRejoinGame(Client client, Message message) {
-    String nickname = message.getNickname();
+    String nickname = message.nickname();
 
     GameCode gameCode = disconnectedPlayers.get(nickname);
     if (gameCode != null) {
@@ -144,7 +144,7 @@ public class GameServer implements Runnable {
   }
 
   private void handleCreateGame(Client client, Message message) {
-    String nickname = message.getNickname();
+    String nickname = message.nickname();
     GameCode gameCode = GameCode.generateUnique(activeGames.keySet());
 
     var attachment = (ClientAttachment) client.attachment();
@@ -156,7 +156,7 @@ public class GameServer implements Runnable {
     }
 
     attachment.setGameCode(gameCode);
-    GameEntry gameEntry = new GameEntry(message.getGameInfo());
+    GameEntry gameEntry = new GameEntry(message.gameInfo());
     gameEntry.addPlayer(nickname, client);
     activeGames.put(gameCode, gameEntry);
 
@@ -166,8 +166,8 @@ public class GameServer implements Runnable {
   }
 
   private void handleJoinGame(Client client, Message message) {
-    String nickname = message.getNickname();
-    GameCode gameCode = message.getGameCode();
+    String nickname = message.nickname();
+    GameCode gameCode = message.gameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
 
     if (gameEntry == null) {
@@ -208,11 +208,11 @@ public class GameServer implements Runnable {
   }
 
   private void handleSelectTower(Client client, Message message) {
-    String nickname = message.getNickname();
-    GameCode gameCode = message.getGameCode();
+    String nickname = message.nickname();
+    GameCode gameCode = message.gameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
 
-    TowerColor chosenTowerColor = message.getGameInfo().getPlayerColor(nickname);
+    TowerColor chosenTowerColor = message.gameInfo().getPlayerColor(nickname);
     if (!gameEntry.getGameInfo().isTowerColorValid(nickname, chosenTowerColor)) {
       String errorMessage = "Tower color '" + chosenTowerColor + "' is not available";
       serverLogger.info(errorMessage);
@@ -226,12 +226,12 @@ public class GameServer implements Runnable {
   }
 
   private void handleStartGame(Client client, Message message) {
-    GameCode gameCode = message.getGameCode();
+    GameCode gameCode = message.gameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
     gameEntry.initPlayers();
-    GameAction action = message.getGameAction();
+    GameAction action = message.gameAction();
 
-    if (message.getGameAction() == null) {
+    if (message.gameAction() == null) {
       String errorMessage = "Game with code '" + gameCode + "' received a malformed initialization action";
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
@@ -256,10 +256,10 @@ public class GameServer implements Runnable {
   }
 
   private void handlePlayAction(Client client, Message message) {
-    String nickname = message.getNickname();
-    GameCode gameCode = message.getGameCode();
+    String nickname = message.nickname();
+    GameCode gameCode = message.gameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
-    GameAction action = message.getGameAction();
+    GameAction action = message.gameAction();
 
     if (!Objects.equals(nickname, gameEntry.getCurrentPlayer())) {
       String errorMessage = "Game with code '" + gameCode + "' received an action from an invalid player " + nickname;
@@ -268,7 +268,7 @@ public class GameServer implements Runnable {
       return;
     }
 
-    if (message.getGameAction() == null) {
+    if (message.gameAction() == null) {
       String errorMessage = "Game with code '" + gameCode + "' received a malformed action";
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
@@ -288,7 +288,7 @@ public class GameServer implements Runnable {
 
   public void handleSocketError(Client client, Message message) {
     // Check that this message was created internally and is not coming from the network
-    if (!message.getNickname().equals(Client.SOCKET_ERROR_HASH))
+    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
       return;
 
     // Here we only handle cases where a client disconnected after choosing a nickname but before joining a lobby

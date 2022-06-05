@@ -23,7 +23,6 @@ public class Message implements Serializable {
     private GameCode gameCode;
     private GameInfo gameInfo;
     private String error;
-    private String text;
     private GameAction gameAction;
 
     public Builder() {
@@ -40,11 +39,6 @@ public class Message implements Serializable {
      */
     public Builder type(MessageType type) {
       this.type = type;
-      return this;
-    }
-
-    public Builder text(String text) {
-      this.text = text;
       return this;
     }
 
@@ -103,7 +97,6 @@ public class Message implements Serializable {
      */
     public Builder reset() {
       this.type = null;
-      this.text = null;
       this.nickname = null;
       this.gameCode = null;
       this.error = null;
@@ -116,7 +109,7 @@ public class Message implements Serializable {
      * Builds a new message based on the given parameters.
      */
     public Message build() {
-      return new Message(type, nickname, gameCode, error, gameAction, gameInfo, text);
+      return new Message(type, nickname, gameCode, error, gameAction, gameInfo);
     }
   }
 
@@ -126,43 +119,37 @@ public class Message implements Serializable {
   private final String error;
   private final GameAction gameAction;
   private final GameInfo gameInfo;
-  private String text;
 
-  private Message(MessageType type, String nickname, GameCode gameCode, String error, GameAction gameAction, GameInfo gameInfo, String text) {
+  private Message(MessageType type, String nickname, GameCode gameCode, String error, GameAction gameAction, GameInfo gameInfo) {
     this.type = type;
     this.nickname = nickname;
     this.gameCode = gameCode;
     this.error = error;
     this.gameAction = gameAction;
     this.gameInfo = gameInfo;
-    this.text = text;
   }
 
-  public MessageType getType() {
+  public MessageType type() {
     return type;
   }
 
-  public String getText() {
-    return text;
-  }
-
-  public String getNickname() {
+  public String nickname() {
     return nickname;
   }
 
-  public GameCode getGameCode() {
+  public GameCode gameCode() {
     return gameCode;
   }
 
-  public String getError() {
+  public String error() {
     return error;
   }
 
-  public GameAction getGameAction() {
+  public GameAction gameAction() {
     return gameAction;
   }
 
-  public GameInfo getGameInfo() {
+  public GameInfo gameInfo() {
     return gameInfo;
   }
 
@@ -189,7 +176,7 @@ public class Message implements Serializable {
         ", nickname=" + nickname +
         ", gameCode=" + gameCode +
         ", error=" + error +
-        ", action=" + (gameAction != null ? getGameAction().getClass().getSimpleName() : null) +
+        ", action=" + (gameAction != null ? gameAction().getClass().getSimpleName() : null) +
         ", gameInfo=" + gameInfo +
         "]";
   }

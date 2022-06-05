@@ -38,19 +38,19 @@ public class MessageHandler implements Runnable {
     Client client = entry.client();
     Message message = entry.message();
 
-    if (message.getType() == null) {
+    if (message.type() == null) {
       clientLogger.warn("Received a message with an invalid message type: {}", message);
       return;
     }
 
     // Handle PING messages separately to avoid spamming debug logs
-    if (message.getType() == MessageType.PING) {
+    if (message.type() == MessageType.PING) {
       handlePing(client, message);
       return;
     }
 
     clientLogger.debug("Handling entry: {}", entry);
-    switch (message.getType()) {
+    switch (message.type()) {
       case NICKNAME_OK -> handleNicknameOk(client, message);
       case GAMEINFO -> handleGameInfo(client, message);
       case START_GAME -> handleStartGame(client, message);
@@ -73,53 +73,53 @@ public class MessageHandler implements Runnable {
   }
 
   private void handleNicknameOk(Client client, Message message) {
-    controller.setNickname(message.getNickname());
+    controller.setNickname(message.nickname());
     controller.fireChange(NICKNAME_OK, null, null);
   }
 
   private void handleGameInfo(Client client, Message message) {
-    controller.setGameInfo(message.getGameInfo());
-    controller.setGameCode(message.getGameCode());
-    controller.fireChange(GAMEINFO_EVENT, null, message.getGameInfo());
+    controller.setGameInfo(message.gameInfo());
+    controller.setGameCode(message.gameCode());
+    controller.fireChange(GAMEINFO_EVENT, null, message.gameInfo());
   }
 
   private void handleStartGame(Client client, Message message) {
-    controller.setGameInfo(message.getGameInfo());
+    controller.setGameInfo(message.gameInfo());
     controller.initGame();
-    controller.executeAction(message.getGameAction());
-    controller.fireChange(START_GAME, null, message.getGameAction());
+    controller.executeAction(message.gameAction());
+    controller.fireChange(START_GAME, null, message.gameAction());
   }
 
   private void handleGameData(Client client, Message message) {
-    controller.executeAction(message.getGameAction());
+    controller.executeAction(message.gameAction());
 
     // Notifies listeners that the game state was modified
-    controller.fireChange(GAMEDATA_EVENT, null, message.getGameAction());
+    controller.fireChange(GAMEDATA_EVENT, null, message.gameAction());
   }
 
   private void handlePlayerDisconnected(Client client, Message message) {
-    controller.setPlayerConnected(false, message.getNickname());
+    controller.setPlayerConnected(false, message.nickname());
     controller.fireChange(PLAYER_CONNECTION_CHANGED, null, null);
   }
 
   private void handlePlayerReconnected(Client client, Message message) {
-    controller.setPlayerConnected(true, message.getNickname());
+    controller.setPlayerConnected(true, message.nickname());
     controller.fireChange(PLAYER_CONNECTION_CHANGED, null, null);
   }
 
   private void handleError(Client client, Message message) {
-    controller.showError(message.getError());
+    controller.showError(message.error());
     controller.fireChange(ERROR, null, null);
   }
 
   private void handleSocketError(Client client, Message message) {
     // Check that this message was created internally and is not coming from the network
-    if (!message.getNickname().equals(Client.SOCKET_ERROR_HASH))
+    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
       return;
 
     String errorMessage = "Lost connection to the server";
-    if (message.getError() != null)
-      errorMessage += ": " + message.getError();
+    if (message.error() != null)
+      errorMessage += ": " + message.error();
 
     controller.showNetworkError(errorMessage);
     client.close();

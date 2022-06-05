@@ -115,7 +115,7 @@ public class Client implements Runnable {
         try {
           messageQueue.add(new MessageQueueEntry(this, receive()));
         } catch (ClassNotFoundException e) {
-          clientLogger.error("Received invalid message: {}", e);
+          clientLogger.error("Received invalid message: ", e);
         }
       }
     } catch (IOException e) {

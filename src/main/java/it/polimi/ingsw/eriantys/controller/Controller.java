@@ -17,9 +17,7 @@ import it.polimi.ingsw.eriantys.network.Message;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -230,14 +228,13 @@ abstract public class Controller implements Runnable {
 
       Message msg = new Message.Builder(START_GAME)
           .action(action)
-          .text(nickname + " is starting the game.")
           .gameCode(gameCode)
           .gameInfo(gameInfo)
           .nickname(nickname)
           .build();
       networkClient.send(msg);
 
-      clientLogger.info("Sending message {} to the server", msg.getType());
+      clientLogger.info("Sending message {} to the server", msg.type());
       return true;
     }
 
@@ -252,7 +249,6 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
-          .text(nickname + " picked an assistant card")
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
@@ -272,7 +268,6 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
-          .text(MessageFormat.format("{0} picked {1} cloud", nickname, cloudIndex))
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
@@ -352,7 +347,6 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(GAMEDATA)
           .action(action)
-          .text(String.format("%s moved mother nature by %d islands", nickname, amount))
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
@@ -372,7 +366,6 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
-          .text(String.format("%s moved his students to the dining hall", nickname))
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
@@ -394,7 +387,6 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
-          .text(String.format("%s moved his students to %d island", nickname, islandIndex))
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
