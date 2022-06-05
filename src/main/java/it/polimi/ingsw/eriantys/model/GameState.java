@@ -11,16 +11,16 @@ import java.util.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class GameState {
-  private final List<Player> players = new ArrayList<>(); // Players in the game
-  private final List<Player> turnOrder = new ArrayList<>(); // List of players sorted by their turn order
-  private final List<Player> planOrder = new ArrayList<>(); // List of players sorted by their turn order
+  private List<Player> players = new ArrayList<>(); // Players in the game
+  private List<Player> turnOrder = new ArrayList<>(); // List of players sorted by their turn order
+  private List<Player> planOrder = new ArrayList<>(); // List of players sorted by their turn order
   private Player currentPlayer;
-  private GamePhase gamePhase; // Current phase of the game
 
+  private GamePhase gamePhase; // Current phase of the game
   private TurnPhase turnPhase; // Current turn phase
 
-  private final RuleBook ruleBook; // Set of rules used in this game
-  private final PlayingField playingField; // Playing field of this game
+  private RuleBook ruleBook; // Set of rules used in this game
+  private PlayingField playingField; // Playing field of this game
 
   public GameState(int playerCount, GameMode mode) {
     ruleBook = RuleBook.makeRules(mode, playerCount);
@@ -260,5 +260,41 @@ public class GameState {
 
   public boolean isTurnOf(String nickname) {
     return currentPlayer.getNickname().equals(nickname);
+  }
+
+  public void setPlayers(List<Player> players) {
+    this.players = players;
+  }
+
+  public void setTurnOrder(List<Player> turnOrder) {
+    this.turnOrder = turnOrder;
+  }
+
+  public void setPlanOrder(List<Player> planOrder) {
+    this.planOrder = planOrder;
+  }
+
+  public List<Player> getTurnOrder() {
+    return turnOrder;
+  }
+
+  public List<Player> getPlanOrder() {
+    return planOrder;
+  }
+
+  public void setCurrentPlayer(Player currentPlayer) {
+    this.currentPlayer = currentPlayer;
+  }
+
+  public void setGamePhase(GamePhase gamePhase) {
+    this.gamePhase = gamePhase;
+  }
+
+  public void setRuleBook(RuleBook ruleBook) {
+    this.ruleBook = ruleBook;
+  }
+
+  public void setPlayingField(PlayingField playingField) {
+    this.playingField = playingField;
   }
 }

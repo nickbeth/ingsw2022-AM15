@@ -35,22 +35,26 @@ public class InitiateGameEntities extends GameAction {
    */
   @Override
   public void apply(GameState gameState) {
+
     // Initiate players entrances
     List<Player> players = gameState.getPlayers();
     for (int i = 0; i < entrances.size(); i++) {
       players.get(i).getDashboard().getEntrance().setStudents(entrances.get(i));
       gameState.getPlayingField().getStudentBag().removeStudents(entrances.get(i));
     }
+
     // Initiate islands' students
     for (int i = 0; i < islands.size(); i++) {
       gameState.getPlayingField().getIsland(i).getStudents().setStudents(islands.get(i));
       gameState.getPlayingField().getStudentBag().removeStudents(islands.get(i));
     }
+
     // Initiate clouds' students
     GameService.refillClouds(
             gameState.getPlayingField().getStudentBag(),
             gameState.getPlayingField().getClouds(),
             clouds);
+
     // Initiate characterCards
     if(gameState.getRuleBook().gameMode == GameMode.EXPERT) {
 
@@ -70,8 +74,10 @@ public class InitiateGameEntities extends GameAction {
   public boolean isValid(GameState gameState) {
     RuleBook ruleBook = gameState.getRuleBook();
     boolean isValid = true;
+
     if(gameState.getRuleBook().gameMode == GameMode.EXPERT)
       isValid = cardsEnum.size() == PLAYABLE_CC_AMOUNT;
+
     isValid = isValid &&
             entrances.size() == ruleBook.cloudCount &&
             entrances.stream().allMatch((students) -> students.getCount() == ruleBook.entranceSize) &&

@@ -21,8 +21,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.model.RuleBook.PLAYABLE_CC_AMOUNT;
 import static it.polimi.ingsw.eriantys.network.MessageType.*;
 
 /**
@@ -188,7 +190,12 @@ abstract public class Controller implements Runnable {
 
       RuleBook rules = RuleBook.makeRules(gameInfo.getMode(), gameInfo.getMaxPlayerCount());
       // Initiate character cards
-      List<CharacterCardEnum> characterCardEnums = new ArrayList<>(Arrays.asList(CharacterCardEnum.values()));
+      Random rand = new Random();
+      List<CharacterCardEnum> chosenCharacterCards = new ArrayList<>();
+      for (int i = 0; i < PLAYABLE_CC_AMOUNT; i++) {
+        int randomCCIndex = rand.nextInt(0, CharacterCardEnum.values().length);
+        chosenCharacterCards.add(CharacterCardEnum.values()[randomCCIndex]);
+      }
 
       // Initiate students on island
       StudentBag bag = new StudentBag();
@@ -219,7 +226,7 @@ abstract public class Controller implements Runnable {
         }
       }
       // Action Creation
-      GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
+      GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, chosenCharacterCards);
 
       Message msg = new Message.Builder(START_GAME)
           .action(action)
