@@ -1,9 +1,9 @@
 package it.polimi.ingsw.eriantys.model.enums;
 
 public enum HouseColor {
-  RED,
   GREEN,
-  BLUE,
+  RED,
   YELLOW,
-  PINK
+  PINK,
+  BLUE
 }
