@@ -423,6 +423,13 @@ abstract public class Controller implements Runnable {
           .build());
     }
 
+    public void sendQuitGame() {
+      networkClient.send(new Message.Builder(QUIT_GAME)
+          .nickname(nickname)
+          .gameCode(gameCode)
+          .build());
+    }
+
     public boolean sendSelectTower(TowerColor color) {
       if (!gameInfo.isTowerColorValid(nickname, color))
         return false;

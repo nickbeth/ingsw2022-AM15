@@ -21,17 +21,20 @@ public enum MessageType {
   CREATE_GAME,
   JOIN_GAME,
   SELECT_TOWER,
+  // Only sent by clients while still in the lobby
+  QUIT_GAME,
   // Lobby data
   GAMEINFO,
 
   // Game actions
   START_GAME,
+  // START_GAME in the case of player reconnection
+  START_GAME_RECONNECTED,
   PLAY_ACTION,
-  INIT_RECONNECTED, // start game in case of reconnection
   // Game data
   GAMEDATA,
 
-  // Player disconnection management,
+  // Player disconnection management
   PLAYER_DISCONNECTED,
   PLAYER_RECONNECTED,
 

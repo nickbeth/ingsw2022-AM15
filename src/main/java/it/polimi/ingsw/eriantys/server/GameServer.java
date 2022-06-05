@@ -85,6 +85,7 @@ public class GameServer implements Runnable {
 
       case CREATE_GAME -> handleCreateGame(client, message);
       case JOIN_GAME -> handleJoinGame(client, message);
+      case QUIT_GAME -> handleQuitGame(client, message);
       case SELECT_TOWER -> handleSelectTower(client, message);
 
       case START_GAME -> handleStartGame(client, message);
@@ -202,9 +203,44 @@ public class GameServer implements Runnable {
     attachment.setGameCode(gameCode);
     gameEntry.addPlayer(nickname, client);
 
-    serverLogger.info("Player '{}' joined game: {}", nickname, gameCode);
+    serverLogger.info("Player '{}' joined game '{}'", nickname, gameCode);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
     initHeartbeat(client);
+  }
+
+  private void handleQuitGame(Client client, Message message) {
+    String nickname = message.nickname();
+    GameCode gameCode = message.gameCode();
+    GameEntry gameEntry = activeGames.get(gameCode);
+
+    if (gameEntry.isStarted()) {
+      String errorMessage = "Cannot remove player '" + nickname + "' from game '" + gameCode + "' while it's started";
+      serverLogger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    // Cancel the heartbeat for this client
+    var attachment = (ClientAttachment) client.attachment();
+    // We acquire the lock to avoid cancelling the heartbeat while another thread is scheduling a new one,
+    // which would result in cancelling the wrong heartbeat schedule
+    attachment.acquireHeartbeatLock();
+    try {
+      attachment.cancelHeartbeatSchedule();
+    } finally {
+      attachment.releaseHeartbeatLock();
+    }
+    attachment.resetMissedHeartbeatCount();
+    attachment.setGameCode(null);
+
+    if (gameEntry.getClients().size() == 1) {
+      activeGames.remove(gameCode);
+      serverLogger.info("Player '{}' left game '{}' while being alone, the game was deleted", nickname, gameCode);
+    } else {
+      gameEntry.removePlayer(nickname);
+      serverLogger.info("Player '{}' left game '{}'", nickname, gameCode);
+      broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+    }
   }
 
   private void handleSelectTower(Client client, Message message) {
@@ -328,9 +364,13 @@ public class GameServer implements Runnable {
    * Initializes the heartbeat for the given client.
    *
    * @param client The client to initialize the heartbeat for
+   * @apiNote This method should only be called on a client that has a valid attachment.
    */
   private void initHeartbeat(Client client) {
-    heartbeatService.schedule(new HeartbeatRunnable(client), HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
+    var heartbeatSchedule = heartbeatService.schedule(new HeartbeatRunnable(client), HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
+    var attachment = (ClientAttachment) client.attachment();
+    // Save the heartbeat schedule in the attachment, so we can cancel it later
+    attachment.setHeartbeatSchedule(heartbeatSchedule);
   }
 
   /**
@@ -349,7 +389,19 @@ public class GameServer implements Runnable {
       // Send another ping and re-schedule if threshold was not reached
       if (attachment.increaseMissedHeartbeatCount() <= HEARTBEAT_DISCONNECTION_THRESHOLD) {
         client.send(new Message.Builder().type(MessageType.PING).build());
-        heartbeatService.schedule(this, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
+
+        // We acquire the lock to avoid scheduling a new heartbeat while another thread is cancelling the old one
+        attachment.acquireHeartbeatLock();
+        try {
+          // Re-schedule only if the heartbeat was not cancelled
+          // We want to avoid rescheduling the heartbeat if the last one was cancelled
+          if (!attachment.isHeartbeatCancelled()) {
+            var heartbeatSchedule = heartbeatService.schedule(this, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
+            attachment.setHeartbeatSchedule(heartbeatSchedule);
+          }
+        } finally {
+          attachment.releaseHeartbeatLock();
+        }
         return;
       }
 
@@ -366,10 +418,10 @@ public class GameServer implements Runnable {
         // If there's only one client in the lobby, remove the game
         if (gameEntry.getClients().size() == 1) {
           activeGames.remove(gameCode);
-          serverLogger.info("Player '{}' left game '{}' while being alone, the game was deleted", nickname, gameCode);
+          serverLogger.info("Player '{}' lost connection to game '{}' while being alone, the game was deleted", nickname, gameCode);
         } else {
           gameEntry.removePlayer(nickname);
-          serverLogger.info("Player '{}' left game '{}'", nickname, gameCode);
+          serverLogger.info("Player '{}' lost connection to game '{}'", nickname, gameCode);
           broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
         }
       } else {
