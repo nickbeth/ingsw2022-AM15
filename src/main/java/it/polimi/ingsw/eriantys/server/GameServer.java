@@ -8,7 +8,6 @@ import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
 import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
 import it.polimi.ingsw.eriantys.network.MessageType;
-import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
@@ -16,6 +15,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
 public class GameServer implements Runnable {
   private static final int HEARTBEAT_INTERVAL_SECONDS = 2;
@@ -47,7 +48,7 @@ public class GameServer implements Runnable {
     while (!exit.get()) {
       try {
         MessageQueueEntry entry = messageQueue.take();
-        Logger.trace("Handling entry: {}", entry);
+        serverLogger.trace("Handling entry: {}", entry);
         handleMessage(entry);
       } catch (InterruptedException ignored) {
       }
@@ -59,27 +60,27 @@ public class GameServer implements Runnable {
     Message message = entry.message();
 
     if (message == null) {
-      Logger.warn("Received a 'null' message");
+      serverLogger.warn("Received a 'null' message");
       return;
     }
 
-    if (message.type() == null) {
-      Logger.warn("Received a message with an invalid message type: {}", message);
+    if (message.getType() == null) {
+      serverLogger.warn("Received a message with an invalid message type: {}", message);
       return;
     }
-    if (message.nickname() == null) {
-      Logger.warn("Received a message with an empty nickname: {}", message);
+    if (message.getNickname() == null) {
+      serverLogger.warn("Received a message with an empty nickname: {}", message);
       return;
     }
 
     // Handle PONG messages separately to avoid spamming debug logs
-    if (message.type() == MessageType.PONG) {
+    if (message.getType() == MessageType.PONG) {
       handlePong(client, message);
       return;
     }
 
-    Logger.debug("Handling entry: {}", entry);
-    switch (message.type()) {
+    serverLogger.debug("Handling entry: {}", entry);
+    switch (message.getType()) {
       case NICKNAME_REQUEST -> handleNicknameRequest(client, message);
 
       case CREATE_GAME -> handleCreateGame(client, message);
@@ -100,11 +101,11 @@ public class GameServer implements Runnable {
   }
 
   private void handleNicknameRequest(Client client, Message message) {
-    String nickname = message.nickname();
+    String nickname = message.getNickname();
 
     if (nickname == null || nickname.isBlank()) {
       String errorMessage = "Nickname '" + nickname + " is invalid";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
@@ -112,20 +113,20 @@ public class GameServer implements Runnable {
     // Check if a player with this nickname already exists, and add it if it doesn't
     if (!activeNicknames.add(nickname)) {
       String errorMessage = "Nickname '" + nickname + "' is already in use";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     client.attach(new ClientAttachment(nickname));
-    Logger.info("Nickname '{}' registered for client '{}'", nickname, client);
+    serverLogger.info("Nickname '{}' registered for client '{}'", nickname, client);
     send(client, new Message.Builder().type(MessageType.NICKNAME_OK).nickname(nickname).build());
 
     handleRejoinGame(client, message);
   }
 
   private void handleRejoinGame(Client client, Message message) {
-    String nickname = message.nickname();
+    String nickname = message.getNickname();
 
     GameCode gameCode = disconnectedPlayers.get(nickname);
     if (gameCode != null) {
@@ -135,7 +136,7 @@ public class GameServer implements Runnable {
       ((ClientAttachment) client.attachment()).setGameCode(gameCode);
       disconnectedPlayers.remove(nickname);
 
-      Logger.info("Player '{}' reconnected to game '{}'", nickname, gameCode);
+      serverLogger.info("Player '{}' reconnected to game '{}'", nickname, gameCode);
       // TODO: send game state to the reconnected client
       broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_RECONNECTED).nickname(nickname).build());
       initHeartbeat(client);
@@ -143,49 +144,49 @@ public class GameServer implements Runnable {
   }
 
   private void handleCreateGame(Client client, Message message) {
-    String nickname = message.nickname();
+    String nickname = message.getNickname();
     GameCode gameCode = GameCode.generateUnique(activeGames.keySet());
 
     var attachment = (ClientAttachment) client.attachment();
     if (attachment == null) {
       String errorMessage = "Nickname '" + nickname + "' should register first before creating a game";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     attachment.setGameCode(gameCode);
-    GameEntry gameEntry = new GameEntry(message.gameInfo());
+    GameEntry gameEntry = new GameEntry(message.getGameInfo());
     gameEntry.addPlayer(nickname, client);
     activeGames.put(gameCode, gameEntry);
 
-    Logger.info("Player '{}' created a new game: {}", nickname, gameCode);
+    serverLogger.info("Player '{}' created a new game: {}", nickname, gameCode);
     send(client, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
     initHeartbeat(client);
   }
 
   private void handleJoinGame(Client client, Message message) {
-    String nickname = message.nickname();
-    GameCode gameCode = message.gameCode();
+    String nickname = message.getNickname();
+    GameCode gameCode = message.getGameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
 
     if (gameEntry == null) {
       String errorMessage = "Game with code '" + gameCode + "' does not exist";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     if (gameEntry.getGameInfo().isStarted()) {
       String errorMessage = "Game with code '" + gameCode + "' has already started";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     if (gameEntry.isFull()) {
       String errorMessage = "Game with code '" + gameCode + "' is full";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
@@ -193,7 +194,7 @@ public class GameServer implements Runnable {
     var attachment = (ClientAttachment) client.attachment();
     if (attachment == null) {
       String errorMessage = "Nickname '" + nickname + "' should register first before joining a game";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
@@ -201,93 +202,93 @@ public class GameServer implements Runnable {
     attachment.setGameCode(gameCode);
     gameEntry.addPlayer(nickname, client);
 
-    Logger.info("Player '{}' joined game: {}", nickname, gameCode);
+    serverLogger.info("Player '{}' joined game: {}", nickname, gameCode);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
     initHeartbeat(client);
   }
 
   private void handleSelectTower(Client client, Message message) {
-    String nickname = message.nickname();
-    GameCode gameCode = message.gameCode();
+    String nickname = message.getNickname();
+    GameCode gameCode = message.getGameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
 
-    TowerColor chosenTowerColor = message.gameInfo().getPlayerColor(nickname);
+    TowerColor chosenTowerColor = message.getGameInfo().getPlayerColor(nickname);
     if (!gameEntry.getGameInfo().isTowerColorValid(nickname, chosenTowerColor)) {
       String errorMessage = "Tower color '" + chosenTowerColor + "' is not available";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     gameEntry.setPlayerColor(nickname, chosenTowerColor);
-    Logger.info("'{}' set to tower color: {}", nickname, chosenTowerColor);
+    serverLogger.info("'{}' set to tower color: {}", nickname, chosenTowerColor);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
 
   private void handleStartGame(Client client, Message message) {
-    GameCode gameCode = message.gameCode();
+    GameCode gameCode = message.getGameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
     gameEntry.initPlayers();
-    GameAction action = message.gameAction();
+    GameAction action = message.getGameAction();
 
-    if (message.gameAction() == null) {
+    if (message.getGameAction() == null) {
       String errorMessage = "Game with code '" + gameCode + "' received a malformed initialization action";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
     if (!(action instanceof InitiateGameEntities) || !gameEntry.executeAction(action)) {
       String errorMessage = "Game with code '" + gameCode + "' tried to start a game with an invalid action: " + action.getClass().getSimpleName();
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
     // Check if the game is ready and set the game as started
     if (!gameEntry.getGameInfo().start()) {
       String errorMessage = "Game with code '" + gameCode + "' is not ready to be started";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
-    Logger.info("Game '{}' has started", gameCode);
+    serverLogger.info("Game '{}' has started", gameCode);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.START_GAME).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).action(action).build());
   }
 
   private void handlePlayAction(Client client, Message message) {
-    String nickname = message.nickname();
-    GameCode gameCode = message.gameCode();
+    String nickname = message.getNickname();
+    GameCode gameCode = message.getGameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
-    GameAction action = message.gameAction();
+    GameAction action = message.getGameAction();
 
     if (!Objects.equals(nickname, gameEntry.getCurrentPlayer())) {
       String errorMessage = "Game with code '" + gameCode + "' received an action from an invalid player " + nickname;
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
-    if (message.gameAction() == null) {
+    if (message.getGameAction() == null) {
       String errorMessage = "Game with code '" + gameCode + "' received a malformed action";
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
     if (!gameEntry.executeAction(action)) {
       String errorMessage = "Game with code '" + gameCode + "' tried to apply an invalid action: " + action.getClass().getSimpleName();
-      Logger.info(errorMessage);
+      serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
-    Logger.info("Player '{}' played action: {}", nickname, action.getClass().getSimpleName());
+    serverLogger.info("Player '{}' played action: {}", nickname, action.getClass().getSimpleName());
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEDATA).gameCode(gameCode).action(action).build());
   }
 
   public void handleSocketError(Client client, Message message) {
     // Check that this message was created internally and is not coming from the network
-    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
+    if (!message.getNickname().equals(Client.SOCKET_ERROR_HASH))
       return;
 
     // Here we only handle cases where a client disconnected after choosing a nickname but before joining a lobby
@@ -296,7 +297,7 @@ public class GameServer implements Runnable {
     if (attachment == null || attachment.gameCode() != null)
       return;
 
-    Logger.info("Player '{}' disconnected while not being in a game", attachment.nickname());
+    serverLogger.info("Player '{}' disconnected while not being in a game", attachment.nickname());
     activeNicknames.remove(attachment.nickname());
     client.close();
   }
@@ -308,7 +309,7 @@ public class GameServer implements Runnable {
    * @param message The message to send
    */
   private void send(Client client, Message message) {
-    Logger.debug("Sending message: {}", message);
+    serverLogger.debug("Sending message: {}", message);
     client.send(message);
   }
 
@@ -319,7 +320,7 @@ public class GameServer implements Runnable {
    * @param message   The message to broadcast
    */
   private void broadcastMessage(GameEntry gameEntry, Message message) {
-    Logger.debug("Broadcasting message to {} clients: '{}'", gameEntry.getClients().size(), message);
+    serverLogger.debug("Broadcasting message to {} clients: '{}'", gameEntry.getClients().size(), message);
     gameEntry.getClients().forEach(client -> client.send(message));
   }
 
@@ -365,17 +366,17 @@ public class GameServer implements Runnable {
         // If there's only one client in the lobby, remove the game
         if (gameEntry.getClients().size() == 1) {
           activeGames.remove(gameCode);
-          Logger.info("Player '{}' left game '{}' while being alone, the game was deleted", nickname, gameCode);
+          serverLogger.info("Player '{}' left game '{}' while being alone, the game was deleted", nickname, gameCode);
         } else {
           gameEntry.removePlayer(nickname);
-          Logger.info("Player '{}' left game '{}'", nickname, gameCode);
+          serverLogger.info("Player '{}' left game '{}'", nickname, gameCode);
           broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
         }
       } else {
         // If the game is started, set the client as disconnected
         gameEntry.disconnectPlayer(nickname);
         disconnectedPlayers.put(nickname, gameCode);
-        Logger.info("Player '{}' playing game '{}' marked as disconnected", nickname, gameCode);
+        serverLogger.info("Player '{}' playing game '{}' marked as disconnected", nickname, gameCode);
         broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
       }
       client.attach(null);

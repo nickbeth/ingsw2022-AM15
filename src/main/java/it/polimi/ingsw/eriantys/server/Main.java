@@ -1,7 +1,9 @@
 package it.polimi.ingsw.eriantys.server;
 
 import it.polimi.ingsw.eriantys.network.Server;
-import org.tinylog.Logger;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
+
 
 public class Main {
   public static void main(String[] args) {
@@ -20,7 +22,7 @@ public class Main {
             System.out.println("Port argument was specified without a valid port, default (" + port + ") will be used instead");
           }
         }
-        default -> Logger.info("Unknown command line argument: {}", args[i]);
+        default -> serverLogger.info("Unknown command line argument: {}", args[i]);
       }
     }
 

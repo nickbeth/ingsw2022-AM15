@@ -1,9 +1,10 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
-import org.tinylog.Logger;
 
 import java.util.*;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class StudentBag {
   private Students students;
@@ -51,7 +52,7 @@ public class StudentBag {
         }
       }
     } while (!students.isEmpty());
-    Logger.error("Missing students from bag. Game should've ended.");
+    modelLogger.error("Missing students from bag. Game should've ended.");
     return null;
   }
 
@@ -62,7 +63,7 @@ public class StudentBag {
     // try to remove the students all at once
 //    if (!this.students.tryRemoveStudents(s)) {
 //      // if it can't do that (no students left in the bag) try to remove them one by one
-//      Logger.warn("GAME SHOULD END. NO STUDENTS LEFT IN THE BAG");
+//      modelLogger.warn("GAME SHOULD END. NO STUDENTS LEFT IN THE BAG");
 //      for (HouseColor c : HouseColor.values()) {
 //        int count = s.getCount(c);
 //        while (count > 0) {

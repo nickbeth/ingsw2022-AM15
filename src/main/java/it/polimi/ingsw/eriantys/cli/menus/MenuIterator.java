@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
+import it.polimi.ingsw.eriantys.cli.InputHandler;
 import it.polimi.ingsw.eriantys.cli.menus.game.*;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuChooseNickname;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuConnect;
@@ -7,30 +8,28 @@ import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuCreateOrJoin;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuLobby;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.EventType;
-import it.polimi.ingsw.eriantys.gui.SceneEnum;
-import org.tinylog.Logger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.PrintStream;
-import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.Scanner;
 
+import static it.polimi.ingsw.eriantys.cli.InputHandler.getInputHandler;
 import static it.polimi.ingsw.eriantys.cli.menus.MenuIterator.MenuFactory.makeMenu;
 import static it.polimi.ingsw.eriantys.controller.Controller.getController;
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
-public class MenuIterator implements Iterator<Menu>, PropertyChangeListener {
-  private Menu currentMenu;
+public class MenuIterator implements PropertyChangeListener {
+  private final Controller controller = getController();
+  private InputHandler inputHandler = getInputHandler();
   private MenuEnum nextMenu;
-  private Controller controller = getController();
+  private Menu currentMenu;
 
   static class MenuFactory {
     /**
-     * Methods responsible of creating menus
+     * Methods responsible for creating menus
      *
-     * @param menuType
+     * @param menuType MenuEnum wanted to be created
      * @return The Menu corresponding to the given type
      */
     static Menu makeMenu(MenuEnum menuType) {
@@ -60,7 +59,7 @@ public class MenuIterator implements Iterator<Menu>, PropertyChangeListener {
           return new MenuPickingCloud();
         }
         default -> {
-          Logger.error(new IllegalArgumentException(), "Passed a not valid argument");
+          clientLogger.error("Passed a not valid argument");
           return null;
         }
       }
@@ -68,14 +67,26 @@ public class MenuIterator implements Iterator<Menu>, PropertyChangeListener {
   }
 
   public MenuIterator() {
-    controller.addListener(this, GAMEDATA_EVENT.tag);
+    // Setting events MenuIterator has to listen to
+    controller.addListener(this, EventType.START_GAME.tag);
+
+    // Set common event to listen to
+//    controller.addListener(this, GAMEDATA_EVENT.tag);
+
+    // Starting input handler
+    new Thread(inputHandler, "InputHandler").start();
+
     // Setting starting menu
     currentMenu = new MenuConnect();
   }
 
   public void menuAction(Scanner in, PrintStream out) {
     addListeners();
-    nextMenu = currentMenu.show(in, out);
+    try {
+      nextMenu = currentMenu.show();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
     removeListeners();
   }
 
@@ -91,22 +102,21 @@ public class MenuIterator implements Iterator<Menu>, PropertyChangeListener {
     );
   }
 
-  @Override
-  public Menu next() {
+  /**
+   * Move on the usage of the menus
+   *
+   * @return The next menu
+   */
+  public MenuEnum goNext() {
     currentMenu = makeMenu(nextMenu);
-    return currentMenu;
-  }
-
-  @Override
-  public boolean hasNext() {
-    return true;
+    return nextMenu;
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName().equals(EventType.GAME_ENDED.tag)) {
       System.out.println("GAME_ENDED");
-      new MenuEndGame().show(new Scanner(System.in), System.out);
+      new MenuEndGame().show();
     }
   }
 }

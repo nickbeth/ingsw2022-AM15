@@ -16,7 +16,7 @@ public class GuiController extends Controller {
     Platform.runLater(() -> Gui.showError(error));
   }
   @Override
-  public void firePropertyChange(EventType event) {
+  public void fireChange(EventType event, Object oldValue, Object newValue) {
     Platform.runLater(() -> listenerHolder.firePropertyChange(event.tag, null, null));
   }
 

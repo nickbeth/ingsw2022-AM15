@@ -1,11 +1,11 @@
 package it.polimi.ingsw.eriantys.network;
 
-import org.tinylog.Logger;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
 public class Server implements Runnable {
   public static final int DEFAULT_PORT = 1234;
@@ -41,7 +41,7 @@ public class Server implements Runnable {
       }
     }
     serverSocket = new ServerSocket(port);
-    Logger.info("Server socket up on '{}'", serverSocket.getLocalSocketAddress());
+    serverLogger.info("Server socket up on '{}'", serverSocket.getLocalSocketAddress());
   }
 
   /**
@@ -50,9 +50,9 @@ public class Server implements Runnable {
    * @return The accepted client
    */
   public Client accept() throws IOException {
-    Logger.debug("Listening for incoming connections");
+    serverLogger.debug("Listening for incoming connections");
     Socket clientSocket = serverSocket.accept();
-    Logger.debug("Accepted incoming client: {}", clientSocket.getRemoteSocketAddress());
+    serverLogger.debug("Accepted incoming client: {}", clientSocket.getRemoteSocketAddress());
     return new Client(clientSocket, messageQueue);
   }
 
@@ -62,7 +62,7 @@ public class Server implements Runnable {
    */
   @Override
   public void run() {
-    Logger.debug("Starting thread '{}'", Thread.currentThread().getName());
+    serverLogger.debug("Starting thread '{}'", Thread.currentThread().getName());
     int threadSeqNumber = 1;
     int errorCount = 0;
     while (true) {
@@ -75,18 +75,18 @@ public class Server implements Runnable {
         socketThread.setDaemon(true);
         socketThread.start();
       } catch (IOException e) {
-        Logger.error("An error occurred while accepting: {}", e);
+        serverLogger.error("An error occurred while accepting:", e);
         if (++errorCount > ACCEPT_RESTART_THRESHOLD) {
           try {
             init();
-            Logger.warn("The server encountered a fatal error and was restarted");
+            serverLogger.warn("The server encountered a fatal error and was restarted");
           } catch (IOException ex) {
-            Logger.error("The server encountered a fatal error and could not be restarted: {}", ex);
+            serverLogger.error("The server encountered a fatal error and could not be restarted:", ex);
             break;
           }
         }
       }
     }
-    Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
+    serverLogger.debug("Stopping thread '{}'", Thread.currentThread().getName());
   }
 }

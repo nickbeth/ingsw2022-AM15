@@ -3,11 +3,11 @@ package it.polimi.ingsw.eriantys.model.entities;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.junit.jupiter.api.Test;
-import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Optional;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static it.polimi.ingsw.eriantys.model.enums.TowerColor.BLACK;
 import static it.polimi.ingsw.eriantys.model.enums.TowerColor.WHITE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,7 +44,7 @@ class TeamsInfluenceTracerTest {
     ProfessorHolder professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
 
     assertEquals(Optional.empty(), tracer.getMostInfluential());
-    Logger.error("Error required for testing");
+    modelLogger.error("Error required for testing");
 
     temp.addStudent(HouseColor.PINK);
     temp.addStudent(HouseColor.PINK);

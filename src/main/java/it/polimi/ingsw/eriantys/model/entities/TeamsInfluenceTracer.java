@@ -2,9 +2,10 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import org.tinylog.Logger;
 
 import java.util.*;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) {
 
@@ -21,10 +22,10 @@ public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) 
   public Integer getInfluence(TowerColor team) {
     try {
       int influence = teamsInfluence.get(team);
-      Logger.debug(teamsInfluence.get(team));
+      modelLogger.debug(String.valueOf(teamsInfluence.get(team)));
       return influence;
     } catch (NullPointerException e) {
-      Logger.error("INFLUENCE HAS NOT BEEN SET YET");
+      modelLogger.error("INFLUENCE HAS NOT BEEN SET YET");
       return 0;
     }
   }
@@ -37,7 +38,7 @@ public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) 
    */
   public Optional<TowerColor> getMostInfluential() {
     // Get the most influential team
-    Logger.debug(this);
+    modelLogger.debug(this.toString());
     try {
       Map.Entry<TowerColor, Integer> maxEntry = Collections.max(teamsInfluence.entrySet(), Map.Entry.comparingByValue());
       // Check if 2 teams have the same influence value and return an empty Optional if so
@@ -45,14 +46,14 @@ public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) 
         // If there's another team with the same max influence
         if (maxEntry.getValue().equals(t.getValue()) && !maxEntry.getKey().equals(t.getKey())) {
           // Then there's no most influential team
-          Logger.debug("Most influential: " + Optional.empty());
+          modelLogger.debug("Most influential: " + Optional.empty());
           return Optional.empty();
         }
       }
-      Logger.debug("Most influential: " + maxEntry.getKey());
+      modelLogger.debug("Most influential: " + maxEntry.getKey());
       return Optional.of(maxEntry.getKey());
     } catch (NoSuchElementException e) {
-      Logger.error("INFLUENCES HAVE NOT BEEN SET YET");
+      modelLogger.error("INFLUENCES HAVE NOT BEEN SET YET");
       return Optional.empty();
     }
   }
@@ -81,7 +82,7 @@ public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) 
 
       setInfluence(team, influence);
     }
-//    Logger.debug(this);
+//    modelLogger.debug(this);
   }
 
   @Override

@@ -1,17 +1,10 @@
+
 package it.polimi.ingsw.eriantys.cli.menus;
 
-import it.polimi.ingsw.eriantys.cli.views.*;
+import it.polimi.ingsw.eriantys.cli.InputHandler;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.EventType;
-import it.polimi.ingsw.eriantys.gui.SceneEnum;
-import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.entities.Dashboard;
-import it.polimi.ingsw.eriantys.model.entities.Island;
-import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
-import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import org.tinylog.Logger;
+import org.fusesource.jansi.Ansi;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -20,22 +13,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static it.polimi.ingsw.eriantys.controller.EventType.INPUT_ENTERED;
 import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
-import static java.lang.System.out;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 /**
  * Base class for all menus.
  * Every menu shows a list of options and performs an operation based on the choice that has been made.
  */
 public abstract class Menu implements PropertyChangeListener {
-  // Events that single menus want to listen to. Every menus listent to 'INTERNAL_SOCKET_ERROR'
+  protected static PrintStream out = System.out;
+  protected static Scanner in = new Scanner(System.in);
+
+  // Events that single menus want to listen to. Every menu listens to 'INTERNAL_SOCKET_ERROR'
   protected List<EventType> eventsToBeListening = new ArrayList<>(
-      List.of(INTERNAL_SOCKET_ERROR)
+      List.of(INTERNAL_SOCKET_ERROR, INPUT_ENTERED)
   );
   protected Controller controller = Controller.getController();
+
   // Attribute used to block interaction until he receives a message
   protected volatile boolean greenLight = false;
+  protected volatile boolean inputGreenLight = false;
 
+  /**
+   * Blocking method until a keyboard input arrives
+   */
+  protected String getKeyboardInput() {
+    inputGreenLight = false;
+    while (!inputGreenLight) {
+      Thread.onSpinWait();
+    }
+    return InputHandler.getInputHandler().getLine();
+  }
 
   /**
    * Blocking method until a message from server arrives
@@ -50,21 +59,23 @@ public abstract class Menu implements PropertyChangeListener {
   /**
    * Shows the list of options this menu can handle.
    */
-  protected abstract void showOptions(PrintStream out);
+  protected abstract void showOptions();
 
   /**
    * Shows a list of options and handles the selected choice.
    *
-   * @param in  The input stream the user input will be read from
-   * @param out The output stream the output will be sent to
    * @return The next MenuEnum based on the decision made in this method
    */
-  public abstract MenuEnum show(Scanner in, PrintStream out);
+  public abstract MenuEnum show() throws InterruptedException;
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+    if (evt.getPropertyName().equals(INPUT_ENTERED.tag)) {
+      inputGreenLight = true;
+      return;
+    }
     if (evt.getPropertyName().equals(INTERNAL_SOCKET_ERROR.tag)) {
-      Logger.error("Internal socket error occured, server might be down");
+      clientLogger.error("Internal socket error occured, server might be down");
     }
   }
 
@@ -72,11 +83,12 @@ public abstract class Menu implements PropertyChangeListener {
     return eventsToBeListening;
   }
 
-  final protected int getNumber(Scanner in, PrintStream out) {
+  final protected int getNumber() {
     String number;
     while (true) {
       try {
-        number = in.nextLine();
+//        number = in.nextLine();
+        number = getKeyboardInput();
         return Integer.parseInt(number);
       } catch (NumberFormatException e) {
         out.print("Must insert a number, insert again: ");
@@ -84,10 +96,11 @@ public abstract class Menu implements PropertyChangeListener {
     }
   }
 
-  final protected String getNonBlankString(Scanner in, PrintStream out) {
+  final protected String getNonBlankString() {
     String string;
     while (true) {
-      string = in.nextLine();
+      string = getKeyboardInput();
+//      string = in.nextLine();
       if (!string.isBlank() && !string.contains(" "))
         return string;
       else
@@ -95,9 +108,10 @@ public abstract class Menu implements PropertyChangeListener {
     }
   }
 
-  final protected void clearConsole(){
+  final protected void clearConsole() {
     // Clear screen
     out.print("\033[H\033[2J");
+    out.println(Ansi.ansi().eraseScreen());
     out.flush();
   }
 }

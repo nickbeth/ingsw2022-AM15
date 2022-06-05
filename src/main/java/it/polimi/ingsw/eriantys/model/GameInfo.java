@@ -74,12 +74,12 @@ public class GameInfo implements Serializable {
     return false;
   }
 
-  public int getMaxPlayerCount() {
-    return maxPlayerCount;
-  }
-
   public boolean isStarted() {
     return lobbyState == LobbyState.STARTED;
+  }
+
+  public int getMaxPlayerCount() {
+    return maxPlayerCount;
   }
 
   public GameMode getMode() {

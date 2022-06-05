@@ -7,8 +7,6 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 
 import java.beans.PropertyChangeEvent;
-import java.io.PrintStream;
-import java.util.Scanner;
 
 public class MenuEffect extends MenuGame {
   public MenuEffect() {
@@ -16,7 +14,7 @@ public class MenuEffect extends MenuGame {
   }
 
   @Override
-  protected void showOptions(PrintStream out) {
+  protected void showOptions() {
     CharacterCard cc = controller.getGameState().getPlayingField().getPlayedCharacterCard();
 
     out.println("Description:");
@@ -24,7 +22,7 @@ public class MenuEffect extends MenuGame {
   }
 
   @Override
-  public MenuEnum show(Scanner in, PrintStream out) {
+  public MenuEnum show() {
     CharacterCard cc = controller.getGameState().getPlayingField().getPlayedCharacterCard();
     ParamBuilder paramBuilder = new ParamBuilder();
 
@@ -50,7 +48,7 @@ public class MenuEffect extends MenuGame {
             .draw(out);
         // Get island index input
         out.println("Insert island index: ");
-        int index = getNumber(in, out);
+        int index = getNumber();
         ((IslandInputCards) cc).setIslandIndex(index);
       }
 

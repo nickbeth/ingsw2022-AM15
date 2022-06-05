@@ -3,11 +3,9 @@ package it.polimi.ingsw.eriantys.model;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
-import it.polimi.ingsw.eriantys.model.entities.Towers;
 import it.polimi.ingsw.eriantys.model.enums.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

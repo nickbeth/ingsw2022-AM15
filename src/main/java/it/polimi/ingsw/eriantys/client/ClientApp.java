@@ -9,7 +9,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientApp {
   private final boolean isGui;
-
   private final Client networkClient;
   private final Controller controller;
   private final MessageHandler messageHandler;

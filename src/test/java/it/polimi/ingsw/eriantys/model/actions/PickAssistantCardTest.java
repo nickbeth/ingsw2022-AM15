@@ -8,18 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.tinylog.Logger;
 
-import javax.swing.text.html.Option;
-import java.nio.file.attribute.AclFileAttributeView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +63,7 @@ class PickAssistantCardTest {
     when(p4.getChosenCard()).thenReturn(c4);
     ArrayList<AssistantCard> hand;
 
-    Logger.debug("\nFirst test");
+    modelLogger.debug("\nFirst test");
     // CurrPlayer put a different card from others
     hand = new ArrayList<>();
     hand.add(c1.get());
@@ -75,7 +71,7 @@ class PickAssistantCardTest {
 
     assertTrue(new PickAssistantCard(0).isValid(game));
 
-    Logger.debug("\nSecond test");
+    modelLogger.debug("\nSecond test");
 
     // CurrPlayer put the same card but had no choice
     hand = new ArrayList<>();

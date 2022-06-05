@@ -2,10 +2,11 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-public class ActivateCCEffect implements GameAction {
+public class ActivateCCEffect extends GameAction {
   private CharacterCard cc;
 
   public ActivateCCEffect(CharacterCard cc) {
@@ -31,7 +32,7 @@ public class ActivateCCEffect implements GameAction {
   @Override
   public boolean isValid(GameState gameState) {
     return gameState.getPlayingField().getPlayedCharacterCard().isValid(gameState) &&
-            gameState.getTurnPhase() == TurnPhase.EFFECT &&
-            gameState.getGamePhase() == GamePhase.ACTION;
+        gameState.getTurnPhase() == TurnPhase.EFFECT &&
+        gameState.getGamePhase() == GamePhase.ACTION;
   }
 }

@@ -1,13 +1,13 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static it.polimi.ingsw.eriantys.model.enums.AssistantCard.getFullDeck;
 
 public class Player {
@@ -17,9 +17,9 @@ public class Player {
   private final ArrayList<AssistantCard> cards;
   private final TowerColor team;
   private AssistantCard chosenCard;
+  private int coins;
 
   private int maxMovement;
-  private int coins;
 
   public Player(RuleBook ruleBook, String nickname, TowerColor color, Students entranceStudents) {
     this.nickname = nickname;
@@ -59,16 +59,16 @@ public class Player {
     coins++;
   }
 
+  public int getCoins() {
+    return coins;
+  }
+
   public void removeCoins(int amount) {
     if (coins - amount < 0) {
-      Logger.warn("Not enough coin to remove");
+      modelLogger.warn("Not enough coin to remove");
     } else {
       coins -= amount;
     }
-  }
-
-  public int getCoins() {
-    return coins;
   }
 
   public Dashboard getDashboard() {

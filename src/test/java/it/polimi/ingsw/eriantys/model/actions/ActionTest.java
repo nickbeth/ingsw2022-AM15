@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
-import it.polimi.ingsw.eriantys.cli.views.IslandView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
@@ -13,13 +12,12 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
 import it.polimi.ingsw.eriantys.model.enums.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class ActionTest {
   GameState normalGame;
@@ -140,7 +138,7 @@ public class ActionTest {
     //setup islands students
     s.setStudents(new Students());
     s.addStudent(HouseColor.BLUE);
-    Logger.debug(s.getCount());
+    modelLogger.debug(String.valueOf(s.getCount()));
     for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
       islands.add(new Students(s));
     }
@@ -286,7 +284,7 @@ public class ActionTest {
     //setup islands students
     s.setStudents(new Students());
     s.addStudent(HouseColor.BLUE);
-    Logger.debug(s.getCount());
+    modelLogger.debug(String.valueOf(s.getCount()));
     for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
       islands.add(new Students(s));
     }
@@ -310,7 +308,7 @@ public class ActionTest {
     //doNothing().when(sCC).applyEffect(any());
     //doReturn(sCC).when(field).getPlayedCharacterCard();
     action.apply(gameState);
-    Logger.debug(field.getCharacterCards().get(0));
+    modelLogger.debug(String.valueOf(field.getCharacterCards().get(0)));
 
     gameState.getPlayingField().setPlayedCharacterCard(0);
     gameState.setTurnPhase(TurnPhase.EFFECT);
@@ -320,7 +318,7 @@ public class ActionTest {
     field.getIslands().forEach(is -> is.updateInfluences(field.getProfessorHolder()));
     field.getIsland(0).setTowerColor(TowerColor.WHITE);
     field.getIsland(0).setTowerCount(1);
-    //gameState.getPlayingField().getIslands().forEach(island -> Logger.debug(island.getTeamsInfluenceTracer()));
+    //gameState.getPlayingField().getIslands().forEach(island -> modelLogger.debug(island.getTeamsInfluenceTracer()));
 
     CharacterCard newCC = CharacterCardCreator.create(CharacterCardEnum.IGNORE_COLOR);
     ((ColorInputCards) newCC).setColor(HouseColor.RED);
@@ -332,7 +330,7 @@ public class ActionTest {
     (new IslandsView(gameState.getPlayingField().getIslands(), 0)).draw(System.out);
     assertTrue(actionDue.isValid(gameState));
     actionDue.apply(gameState);
-    Logger.debug(field.getPlayedCharacterCard().getCardEnum());
+    modelLogger.debug(String.valueOf(field.getPlayedCharacterCard().getCardEnum()));
     assertEquals(0 , gameState.getCurrentPlayer().getCoins());
     assertEquals(4, field.getPlayedCharacterCard().getCost());
     gameState.getCurrentPlayer().addCoin();

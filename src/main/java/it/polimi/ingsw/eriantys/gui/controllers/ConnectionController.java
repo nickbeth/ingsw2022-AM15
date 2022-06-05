@@ -5,16 +5,12 @@ import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.network.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import org.tinylog.Logger;
 
 import java.beans.PropertyChangeEvent;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
 import static it.polimi.ingsw.eriantys.controller.EventType.NICKNAME_OK;
 
 public class ConnectionController extends FXMLController {

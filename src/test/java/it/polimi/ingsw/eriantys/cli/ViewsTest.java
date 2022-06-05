@@ -3,7 +3,10 @@ package it.polimi.ingsw.eriantys.cli;
 import it.polimi.ingsw.eriantys.cli.views.*;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
+import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.actions.GameAction;
+import it.polimi.ingsw.eriantys.model.actions.InitiateGameEntities;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 
@@ -22,9 +26,48 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ViewsTest {
   private static final Students students = new Students();
+  private static final GameMode mode = GameMode.EXPERT;
+  private static final int playerCount = 4;
+  private static final RuleBook rules = RuleBook.makeRules(mode, playerCount);
+  private static final GameState gameState = new GameState(playerCount, mode);
 
   @BeforeAll
   static void setUp() {
+    // Initiate character cards
+    List<CharacterCardEnum> characterCardEnums = new ArrayList<>(Arrays.asList(CharacterCardEnum.values()));
+
+    // Initiate students on island
+    StudentBag bag = new StudentBag();
+    bag.initStudents(RuleBook.STUDENT_PER_COLOR_SETUP);
+    List<Students> studentsOnIslands = new ArrayList<>();
+    for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
+      studentsOnIslands.add(new Students());
+      if (i != 0 && i != 6)
+        studentsOnIslands.get(i).addStudent(bag.takeRandomStudent());
+    }
+
+    // Initiate entrances.
+    bag.initStudents(RuleBook.STUDENT_PER_COLOR - RuleBook.STUDENT_PER_COLOR_SETUP);
+    List<Students> entrances = new ArrayList<>();
+    for (int i = 0; i < playerCount; i++) {
+      entrances.add(new Students());
+      for (int j = 0; j < rules.entranceSize; j++) {
+        entrances.get(i).addStudent(bag.takeRandomStudent());
+      }
+    }
+
+    // Initiate clouds.
+    List<Students> cloudsStudents = new ArrayList<>();
+    for (int i = 0; i < rules.playableStudentCount; i++) {
+      cloudsStudents.add(new Students());
+      for (int j = 0; j < rules.playableStudentCount; j++) {
+        cloudsStudents.get(i).addStudent(bag.takeRandomStudent());
+      }
+    }
+    // Action Creation
+    GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
+//    action.apply(gameState);
+
     students.addStudents(HouseColor.PINK, 5);
     students.addStudents(HouseColor.RED, 1);
     students.addStudents(HouseColor.YELLOW, 8);
@@ -99,14 +142,26 @@ public class ViewsTest {
     List<Cloud> clouds = new ArrayList<>();
     Cloud cloud = new Cloud(students);
 
+    Students s = new Students();
+    s.addStudent(HouseColor.PINK);
+    s.addStudent(HouseColor.PINK);
+    s.addStudent(HouseColor.PINK);
+    Cloud cloudWith3Students = new Cloud(s);
+
     clouds.add(cloud);
-    clouds.add(cloud);
+    clouds.add(cloudWith3Students);
+
+    new CloudsView(clouds).draw(System.out);
+
     clouds.add(cloud);
     clouds.add(cloud);
 
-    View view = new CloudsView(clouds);
+    new CloudsView(clouds).draw(System.out);
 
-    view.draw(System.out);
+    clouds.add(cloudWith3Students);
+    clouds.add(cloud);
+
+    new CloudsView(clouds).draw(System.out);
   }
 
   @Test

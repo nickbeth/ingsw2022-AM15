@@ -27,10 +27,11 @@ public enum MessageType {
   // Game actions
   START_GAME,
   PLAY_ACTION,
+  INIT_RECONNECTED, // start game in case of reconnection
   // Game data
   GAMEDATA,
 
-  // Player disconnection management
+  // Player disconnection management,
   PLAYER_DISCONNECTED,
   PLAYER_RECONNECTED,
 

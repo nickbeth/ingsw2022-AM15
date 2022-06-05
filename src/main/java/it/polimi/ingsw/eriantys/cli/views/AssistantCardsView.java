@@ -14,7 +14,7 @@ public class AssistantCardsView extends View {
   @Override
   public void draw(PrintStream o) {
     for (int i = 0; i < player.getCards().size(); i++) {
-      o.println("1 - " + player.getCards().get(i));
+      o.println(i + " - " + player.getCards().get(i));
     }
   }
 }

@@ -3,12 +3,13 @@ package it.polimi.ingsw.eriantys.model.entities.character_cards;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public interface CardService {
   /**
@@ -26,7 +27,7 @@ public interface CardService {
 
     teamsInfluenceList.forEach((teamsInfluence) -> {
       int modifiedValue = teamsInfluence.getInfluence(currTeam) + amount;
-      Logger.debug("New value: " + modifiedValue);
+      modelLogger.debug("New value: " + modifiedValue);
       teamsInfluence.setInfluence(currTeam, modifiedValue);
     });
   }

@@ -9,7 +9,7 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.util.List;
 
-public class MoveMotherNature implements GameAction {
+public class MoveMotherNature extends GameAction {
   private int amount;
 
   public MoveMotherNature(int amount) {

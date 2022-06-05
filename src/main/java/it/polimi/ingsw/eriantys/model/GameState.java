@@ -5,10 +5,10 @@ import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.*;
-import org.tinylog.Logger;
 
-import java.beans.PropertyChangeListener;
 import java.util.*;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class GameState {
   private final List<Player> players = new ArrayList<>(); // Players in the game
@@ -114,12 +114,12 @@ public class GameState {
   public void advanceGamePhase() {
     switch (gamePhase) {
       case ACTION -> {
-        Logger.debug("\nACTION Phase advances to PLANNING");
+        modelLogger.debug("\nACTION Phase advances to PLANNING");
         gamePhase = GamePhase.PLANNING;
         prepareOrderForNextRound();
       }
       case PLANNING -> {
-        Logger.debug("\nPLANNING Phase advances to ACTION");
+        modelLogger.debug("\nPLANNING Phase advances to ACTION");
         gamePhase = GamePhase.ACTION;
         prepareOrderForActionPhase();
       }
@@ -207,7 +207,7 @@ public class GameState {
       } else if (Temp.getUnusedTowerCount(p) == towerCount) {
         // If equals number of tower checks held professor count
         if (Temp.getHeldProfessorCount(p, getPlayingField()) > heldProfessorCount) {
-          Logger.debug("ora vince lui");
+          modelLogger.debug("ora vince lui");
           winner = Optional.of(p.getColorTeam());
           heldProfessorCount = Temp.getHeldProfessorCount(p, getPlayingField());
         } else if (Temp.getHeldProfessorCount(p, getPlayingField()) == heldProfessorCount) {
@@ -239,23 +239,23 @@ public class GameState {
   private void prepareOrderForActionPhase() {
     turnOrder.clear();
     turnOrder.addAll(players);
-    Logger.debug("\nold turnOrder: " + turnOrder);
+    modelLogger.debug("\nold turnOrder: " + turnOrder);
     turnOrder.sort(Comparator.comparingInt(Player::getTurnPriority).reversed());
-    Logger.debug("\nnew turnOrder: " + turnOrder);
+    modelLogger.debug("\nnew turnOrder: " + turnOrder);
   }
 
   /**
    * Sorts planOrder players clockwise starting from the first of turnOrder
    */
   private void prepareOrderForNextRound() {
-    Logger.debug("\nold planOrder: " + planOrder);
+    modelLogger.debug("\nold planOrder: " + planOrder);
     planOrder.clear();
     //planOrder.add(turnOrder.get(0));
     int offset = players.indexOf(turnOrder.get(0));
     for (int i = 0; i < players.size(); i++) {
       planOrder.add(players.get((i + offset) % players.size()));
     }
-    Logger.debug("\nnew planOrder: " + planOrder);
+    modelLogger.debug("\nnew planOrder: " + planOrder);
   }
 
   public boolean isTurnOf(String nickname) {

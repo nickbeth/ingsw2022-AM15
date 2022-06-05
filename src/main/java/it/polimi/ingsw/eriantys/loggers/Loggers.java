@@ -1,10 +1,13 @@
 package it.polimi.ingsw.eriantys.loggers;
 
-import org.tinylog.Logger;
-import org.tinylog.TaggedLogger;
+import ch.qos.logback.classic.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Loggers {
-  public static TaggedLogger clientLogger = Logger.tag("clientWriter");
-  public static TaggedLogger serverLogger = Logger.tag("serverWriter");
-  public static TaggedLogger modelLogger = Logger.tag("serverWriter");
+  public static final Logger clientLogger
+      = (Logger) LoggerFactory.getLogger("client");
+  public static final Logger serverLogger
+      = (Logger) LoggerFactory.getLogger("server");
+  public static final Logger modelLogger
+      = (Logger) LoggerFactory.getLogger("model");
 }

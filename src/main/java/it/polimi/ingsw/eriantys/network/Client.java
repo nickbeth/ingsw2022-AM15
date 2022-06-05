@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.network;
 
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,6 +9,8 @@ import java.lang.invoke.VarHandle;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 /**
  * A wrapper around java.io.Socket for sending and receiving Message objects.
@@ -60,7 +61,7 @@ public class Client implements Runnable {
     out = new ObjectOutputStream(socket.getOutputStream());
     in = new ObjectInputStream(socket.getInputStream());
     closed.set(false);
-    Logger.info("Connected to: {}", socket.getRemoteSocketAddress());
+    clientLogger.info("Connected to: {}", socket.getRemoteSocketAddress());
   }
 
   /**
@@ -75,7 +76,7 @@ public class Client implements Runnable {
         out.reset();
         out.flush();
       } catch (IOException e) {
-        Logger.error("Couldn't send message: {}", e.getMessage());
+        clientLogger.error("Couldn't send message: {}", e.getMessage());
       }
     }
   }
@@ -108,23 +109,23 @@ public class Client implements Runnable {
    */
   @Override
   public void run() {
-    Logger.debug("Starting thread '{}'", Thread.currentThread().getName());
+    clientLogger.debug("Starting thread '{}'", Thread.currentThread().getName());
     try {
       while (!closed.get()) {
         try {
           messageQueue.add(new MessageQueueEntry(this, receive()));
         } catch (ClassNotFoundException e) {
-          Logger.error("Received invalid message: {}", e);
+          clientLogger.error("Received invalid message: {}", e);
         }
       }
     } catch (IOException e) {
-      Logger.error("An error occurred on socket '{}': {}", this, e.getMessage());
+      clientLogger.error("An error occurred on socket '{}': {}", this, e.getMessage());
       // We need a way to notify message handlers of socket errors
       // We submit a special message to the queue so that it can be handled
       messageQueue.add(new MessageQueueEntry(this, new Message.Builder()
           .type(MessageType.INTERNAL_SOCKET_ERROR).nickname(SOCKET_ERROR_HASH).error(e.getMessage()).build()));
     }
-    Logger.debug("Stopping thread '{}'", Thread.currentThread().getName());
+    clientLogger.debug("Stopping thread '{}'", Thread.currentThread().getName());
   }
 
   /**

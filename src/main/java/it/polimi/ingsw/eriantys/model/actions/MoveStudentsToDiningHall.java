@@ -8,7 +8,7 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-public class MoveStudentsToDiningHall implements GameAction {
+public class MoveStudentsToDiningHall extends GameAction {
   private final Students students;
 
   public MoveStudentsToDiningHall(Students students) {
@@ -25,9 +25,12 @@ public class MoveStudentsToDiningHall implements GameAction {
     Slot destination = gameState.getCurrentPlayer().getDashboard().getDiningHall();
     StudentsMovement move = new StudentsMovement(students, currEntrance, destination);
     GameService.placeStudents(move);
-    if(gameState.getCurrentPlayer().getDashboard().getEntrance().getCount()
-            <= gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount)
-    gameState.advanceTurnPhase();
+
+    int studentsInEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance().getCount();
+    int studentsToBeLeft = gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount;
+
+    if(studentsInEntrance <= studentsToBeLeft)
+      gameState.advanceTurnPhase();
   }
 
   /**

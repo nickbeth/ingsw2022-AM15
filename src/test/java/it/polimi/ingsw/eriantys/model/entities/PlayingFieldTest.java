@@ -7,12 +7,12 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayingFieldTest {
@@ -60,7 +60,7 @@ class PlayingFieldTest {
 
     GameService.refillClouds(p.getStudentBag(),p.getClouds(),studentsList);
 
-    Logger.debug("new students in cloud:\n" + p.getCloud(0).getStudents().toString());
+    modelLogger.debug("new students in cloud:\n" + p.getCloud(0).getStudents().toString());
     assertEquals(4, p.getCloud(0).getStudents().getCount(HouseColor.RED));
     assertEquals(4, p.getCloud(1).getStudents().getCount(HouseColor.BLUE));
     assertEquals(4, p.getCloud(2).getStudents().getCount(HouseColor.RED));
@@ -86,7 +86,7 @@ class PlayingFieldTest {
     p.getIsland(1).setTowerCount(1);
     p.getIsland(0).setTowerCount(1);
     p.moveMotherNature(1);
-    Logger.debug("\nmother nature pos: " + p.getMotherNaturePosition());
+    modelLogger.debug("\nmother nature pos: " + p.getMotherNaturePosition());
     for (int i = 0; i < p.getIslandsAmount(); i++)
       oldIslands.add(p.getIsland(i));
     p.mergeIslands(1);

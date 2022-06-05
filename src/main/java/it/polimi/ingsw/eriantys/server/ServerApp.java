@@ -2,11 +2,13 @@ package it.polimi.ingsw.eriantys.server;
 
 import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
 import it.polimi.ingsw.eriantys.network.Server;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
+
 
 public class ServerApp {
   private final int port;
@@ -25,7 +27,7 @@ public class ServerApp {
   }
 
   public void run() {
-    Logger.info("Server booting");
+    serverLogger.info("Server booting");
     try {
       // Initialize the network server and launch the accepting thread
       networkServer.init();
@@ -37,9 +39,9 @@ public class ServerApp {
       appThread = Thread.currentThread();
       gameServer.run();
     } catch (IOException e) {
-      Logger.error("Server failed to initialize: {}", e);
+      serverLogger.error("Server failed to initialize", e);
     }
-    Logger.info("Server stopped");
+    serverLogger.info("Server stopped");
   }
 
   public void exit() {

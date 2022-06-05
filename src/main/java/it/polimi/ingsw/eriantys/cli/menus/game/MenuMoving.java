@@ -2,15 +2,9 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
-import it.polimi.ingsw.eriantys.controller.CliController;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
-import java.io.PrintStream;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
-import static java.lang.System.out;
 
 public class MenuMoving extends MenuGame {
   public MenuMoving() {
@@ -18,45 +12,50 @@ public class MenuMoving extends MenuGame {
   }
 
   @Override
-  protected void showOptions(PrintStream out) {
+  protected void showOptions() {
     showViewOptions(out);
-    if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
+    if (isMyTurn()) {
       out.println("T - Move mother nature");
     }
   }
 
   @Override
-  public MenuEnum show(Scanner in, PrintStream out) {
+  public MenuEnum show() {
 
     while (true) {
-      showOptions(out);
+      showOptions();
 
-      String choice = getNonBlankString(in, out);
+      String choice = getNonBlankString();
 
-      handleViewOptions(choice, out);
-      switch (choice) {
-        // Move mother nature a certain amount
-        case "T", "t" -> {
-          // Check of the Turn phase
-          if (!game.getTurnPhase().equals(TurnPhase.MOVING))
-            break;
+      handleViewOptions(choice);
 
-          // Shows islands
-          out.println("Playing Field: ");
-          new IslandsView(islands, motherPosition).draw(out);
+      if (isMyTurn()) {
+        switch (choice) {
+          // Move mother nature a certain amount
+          case "T", "t" -> {
+            // Check of the Turn phase
+            if (!game.getTurnPhase().equals(TurnPhase.MOVING))
+              break;
 
-          // Gets the amount
-          out.println("Insert the amount of mother nature movements: ");
-          int amount = getNumber(in, out);
+            // Shows islands
+            out.println("Playing Field: ");
+            new IslandsView(islands, motherPosition).draw(out);
 
-          // Send action
-          if (!controller.sender().sendMoveMotherNature(amount)) {
-            waitForGreenLight();
-            return MenuEnum.PICKING_CLOUD;
+            // Gets the amount
+            out.println("Insert the amount of mother nature movements: ");
+            int amount = getNumber();
+
+            // Send action
+            if (controller.sender().sendMoveMotherNature(amount)) {
+              waitForGreenLight();
+              return MenuEnum.PICKING_CLOUD;
+            }
+            out.println("Invalid input parameters");
           }
-          out.println("Invalid input parameters");
+
+          default -> {
+          }
         }
-        default -> out.println("Choose a valid option");
       }
     }
   }

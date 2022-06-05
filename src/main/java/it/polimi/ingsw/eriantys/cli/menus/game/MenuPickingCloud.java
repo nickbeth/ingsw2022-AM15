@@ -5,32 +5,36 @@ import it.polimi.ingsw.eriantys.cli.views.CloudsView;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
-import java.io.PrintStream;
-import java.util.Scanner;
 
 import static it.polimi.ingsw.eriantys.controller.Controller.getController;
 
 public class MenuPickingCloud extends MenuGame {
   public MenuPickingCloud() {
 //    this.nextMenu = new MenuPickAssistantCard(controller);
-    controller = getController();
+    showOptions();
+    out.print("Make a choice: ");
+
   }
 
   @Override
-  protected void showOptions(PrintStream out) {
+  protected void showOptions() {
     showViewOptions(out);
-    if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
+    if (isMyTurn()) {
       out.println("Q - Pick cloud");
+    } else {
+      out.println("It's not your turn, you can see the state of the game tho.");
     }
   }
 
   @Override
-  public MenuEnum show(Scanner in, PrintStream out) {
+  public MenuEnum show() {
 
     while (true) {
-      showOptions(out);
-      out.print("Make a choice: ");
-      switch (in.nextLine()) {
+
+      String choice = getNonBlankString();
+
+      handleViewOptions(choice);
+      switch (choice) {
         case "Q", "q" -> {
           if (!game.getTurnPhase().equals(TurnPhase.PICKING))
             break;
@@ -40,7 +44,7 @@ public class MenuPickingCloud extends MenuGame {
 
           // Gets cloud index
           out.println("Choose cloud index: ");
-          int cloudIndex = getNumber(in, out);
+          int cloudIndex = getNumber();
 
           // Send action
           if (controller.sender().sendPickCloud(cloudIndex)) {

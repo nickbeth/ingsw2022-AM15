@@ -1,0 +1,32 @@
+<configuration>
+
+    <!--      CONSOLE APPENDER    -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{MM-dd HH:mm:ss} [%thread] %-5p %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--      FILE APPENDER    -->
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
+        <file>eriantys.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{MM-dd HH:mm:ss} [%thread] %-5p %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="client" level="error" additivity="false">
+        <appender-ref ref="stdout"/>
+    </logger>
+    <logger name="server" level="debug" additivity="false">
+        <appender-ref ref="stdout"/>
+    </logger>
+    <logger name="model" level="debug" additivity="false">
+        <appender-ref ref="file"/>
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="stdout" />
+    </root>
+</configuration>

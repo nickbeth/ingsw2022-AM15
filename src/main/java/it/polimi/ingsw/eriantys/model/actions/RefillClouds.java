@@ -7,7 +7,7 @@ import it.polimi.ingsw.eriantys.model.entities.Students;
 
 import java.util.List;
 
-public class RefillClouds implements GameAction {
+public class RefillClouds extends GameAction {
   private final List<Students> clouds;
 
   public RefillClouds(List<Students> s) {

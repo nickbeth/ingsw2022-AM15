@@ -1,10 +1,11 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Optional;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class Island extends Slot {
   private Students students = new Students();
@@ -21,18 +22,18 @@ public class Island extends Slot {
     towers.count = 0;
     towers.color = null;
     this.students.addStudents(students);
-//    Logger.debug("Island created");
+//    modelLogger.debug("Island created");
   }
 
   public Island() {
     towers.count = 0;
     towers.color = null;
-//    Logger.debug("Island created");
+//    modelLogger.debug("Island created");
   }
 
   public void addStudents(Students s) {
     students.addStudents(s);
-    Logger.debug("Students added on Island");
+    modelLogger.debug("Students added on Island");
   }
 
   public void setTowerColor(TowerColor towerColor) {

@@ -4,7 +4,6 @@ import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import org.tinylog.Logger;
 
 import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
@@ -12,6 +11,7 @@ import java.util.Scanner;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.ERROR;
 import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.EXPERT;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.NORMAL;
 
@@ -27,22 +27,35 @@ public class MenuCreateOrJoin extends Menu {
   }
 
   @Override
-  protected void showOptions(PrintStream out) {
-    out.println("1 - Create a new game");
+  protected void showOptions() {
+    out.println("\n1 - Create a new game");
     out.println("2 - Join an existing game");
+    out.println("ENTER - Default: NORMAL game with 2 players");
     out.println("0 - Back");
   }
 
   @Override
-  public MenuEnum show(Scanner in, PrintStream out) {
+  public MenuEnum show() throws InterruptedException {
+    String choice;
 
     while (true) {
       errorEncountered = true;
 
-      showOptions(out);
+      showOptions();
       out.print("Make a choice: ");
+      choice = getKeyboardInput();
+      clientLogger.debug("Handling choice");
+      switch (choice) {
 
-      switch (in.nextLine()) {
+        // Use default config
+        case "" -> {
+          controller.sender().sendCreateGame(2, NORMAL);
+          waitForGreenLight();
+          if (!errorEncountered) {
+            return MenuEnum.LOBBY;
+          }
+        }
+
         // Create a new game
         case "1" -> {
           chooseGameSettings(in, out);
@@ -59,7 +72,7 @@ public class MenuCreateOrJoin extends Menu {
           while (true) {
             try {
               out.print("Enter the game code: ");
-              GameCode code = GameCode.parseCode(getNonBlankString(in, out));
+              GameCode code = GameCode.parseCode(getNonBlankString());
               controller.sender().sendJoinGame(code);
               break;
             } catch (GameCode.GameCodeException e) {
@@ -91,7 +104,7 @@ public class MenuCreateOrJoin extends Menu {
     // Get GameMode
     do {
       out.printf("Modes: \n1 - %s \n2 - %s\nEnter the game mode: ", NORMAL, EXPERT);
-      String choice = getNonBlankString(in, out);
+      String choice = getNonBlankString();
       mode = choice.equals("1") ? NORMAL : EXPERT;
       invalid = !choice.equals("1") && !choice.equals("2");
 
@@ -102,7 +115,7 @@ public class MenuCreateOrJoin extends Menu {
 
     do {
       out.print("Enter the number of players (must be 2, 3 or 4): ");
-      playersCount = getNumber(in, out);
+      playersCount = getNumber();
       invalid = playersCount < 2 || playersCount > 4;
 
       if (invalid) out.println("Enter a valid choice.");
@@ -113,9 +126,9 @@ public class MenuCreateOrJoin extends Menu {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    Logger.trace("Response arrived " + evt.getPropertyName());
     super.propertyChange(evt);
     if (evt.getPropertyName().equals(GAMEINFO_EVENT.tag)) {
+      clientLogger.debug("Message from server. Valid option");
       errorEncountered = false;
     }
     greenLight = true;

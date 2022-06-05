@@ -4,46 +4,50 @@ import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
 
 import java.beans.PropertyChangeEvent;
-import java.io.PrintStream;
-import java.util.Scanner;
 
 public class MenuPickAssistantCard extends MenuGame {
   public MenuPickAssistantCard() {
     super();
+    showOptions();
   }
 
   @Override
-  protected void showOptions(PrintStream out) {
+  protected void showOptions() {
     showViewOptions(out);
-    if (controller.getNickname().equals(controller.getGameState().getCurrentPlayer().getNickname())) {
-      System.out.println("A - Choose assistant card");
+    if (isMyTurn()) {
+      out.println("Q - Choose assistant card");
+    } else {
+      out.println("It's not your turn, you can see the state of the game tho.");
     }
   }
 
   @Override
-  public MenuEnum show(Scanner in, PrintStream out) {
+  public MenuEnum show() {
 
     while (true) {
-      showOptions(out);
-      String choice = getNonBlankString(in, out);
 
-      handleViewOptions(choice, out);
-      switch (choice) {
+      String choice = getNonBlankString();
 
-        // Choose assistant card
-        case "A", "a" -> {
-          (new AssistantCardsView(controller.getGameState().getPlayer(controller.getNickname()))).draw(System.out);
+      handleViewOptions(choice);
 
-          System.out.print("Choose card index:");
-          int index = getNumber(in, out);
-          if (controller.sender().sendPickAssistantCard(index)) {
-            waitForGreenLight();
-            return MenuEnum.PLACING;
+      if (isMyTurn()) {
+        switch (choice) {
+
+          // Choose assistant card
+          case "Q", "q" -> {
+            (new AssistantCardsView(controller.getGameState().getPlayer(controller.getNickname()))).draw(out);
+
+            out.print("Choose card index:");
+            int index = getNumber();
+            if (controller.sender().sendPickAssistantCard(index)) {
+              waitForGreenLight();
+              return MenuEnum.PLACING;
+            }
+            out.println("Invalid input parameters.");
           }
-          System.out.println("Invalid input parameters.");
-          break;
+
+          default -> {}
         }
-        default -> System.out.println("Choose a valid option");
       }
     }
   }

@@ -2,8 +2,8 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import it.polimi.ingsw.eriantys.model.entities.*;
-import org.tinylog.Logger;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class Dashboard {
   private final Students entrance;
@@ -56,7 +56,7 @@ public class Dashboard {
     // towers.count = Max(0,towers.count - amount);
     if (towers.count < amount) {
       towers.count = 0;
-      Logger.warn("Cannot remove any more tower");
+      modelLogger.warn("Cannot remove any more tower");
     } else {
       towers.count -= amount;
     }

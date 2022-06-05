@@ -8,7 +8,7 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-public class MoveStudentsToIsland implements GameAction {
+public class MoveStudentsToIsland extends GameAction {
   private Students students;
   private int islandIndex;
 

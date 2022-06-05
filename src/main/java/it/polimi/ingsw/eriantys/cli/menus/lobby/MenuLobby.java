@@ -1,60 +1,67 @@
 package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
+import it.polimi.ingsw.eriantys.cli.InputHandler;
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.GameLobbyView;
-import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
-import java.awt.desktop.OpenURIEvent;
 import java.beans.PropertyChangeEvent;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class MenuLobby extends Menu {
+  private String choice;
+
   public MenuLobby() {
-    controller.addListener(this, GAMEINFO_EVENT.tag);
-    controller.addListener(this, PLAYER_CONNECTION_CHANGED.tag);
-    controller.addListener(this, ERROR.tag);
+    eventsToBeListening.add(GAMEINFO_EVENT);
+    eventsToBeListening.add(START_GAME);
+    eventsToBeListening.add(ERROR);
+    showOptions();
   }
 
   @Override
-  protected void showOptions(PrintStream out) {
+  protected void showOptions() {
+    out.println(controller.getNickname() + ".");
     (new GameLobbyView(controller.getGameInfo(), controller.getGameCode())).draw(out);
-    out.println("1 - Choose a tower color");
-    out.println("2 - Start game");
+    out.println("\n1 - Set WHITE");
+    out.println("2 - Set BLACK");
+    out.println("3 - Set GRAY");
+    out.println("4 - Start game");
     out.println("0 - Quit Lobby");
   }
 
   @Override
-  public MenuEnum show(Scanner in, PrintStream out) {
+  public MenuEnum show() throws InterruptedException {
 
     while (true) {
-      showOptions(out);
-      out.println("Make a choice: ");
-      switch (in.nextLine()) {
+      out.print("Make a choice: ");
+      choice = getKeyboardInput();
+      clientLogger.debug("Handling choice");
+
+      switch (choice) {
 
         // Choose a tower color for the lobby
-        case "1" -> {
-//          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
-//            break;
-          controller.sender().sendSelectTower(getTowerColor(in, out));
+        case "1", "2", "3" -> {
+          if (!controller.sender().sendSelectTower(getTowerColor(choice))) {
+            out.printf("Cannot choose %s.", getTowerColor(choice));
+            break;
+          }
           waitForGreenLight();
         }
 
         // Starts and initiates a game
-        case "2" -> {
-//          if (controller.getGameInfo().getLobbyState() != GameInfo.LobbyState.WAITING)
-//            break;
-          if (!controller.sender().sendStartGame()) {
-            out.println("There are not enough players with a chosen tower color to start");
-            break;
+        case "4" -> {
+          if (!controller.getGameInfo().isStarted()) {
+            if (!controller.sender().sendStartGame()) {
+              out.println("There are not enough players with a chosen tower color to start");
+              break;
+            }
+            waitForGreenLight();
           }
-          waitForGreenLight();
           return MenuEnum.PICK_ASSISTANT;
         }
 
@@ -68,39 +75,30 @@ public class MenuLobby extends Menu {
     }
   }
 
-  private TowerColor getTowerColor(Scanner in, PrintStream out) {
-    Map<Integer, TowerColor> towerColorMap = setupMap();
+  private TowerColor getTowerColor(String choice) {
+    Map<String, TowerColor> towerColorMap = new HashMap<>();
+    towerColorMap.put("1", TowerColor.WHITE);
+    towerColorMap.put("2", TowerColor.BLACK);
+    towerColorMap.put("3", TowerColor.GRAY);
 
-    out.println("Choose tower color.");
-    towerColorMap.keySet().forEach(key ->
-        out.println(key + " - " + towerColorMap.get(key)));
-    out.print("Make a choice: ");
-    while (true) {
-      try {
-        return towerColorMap.get(getNumber(in, out));
-      } catch (Exception e) {
-        out.println("Invalid choice, insert again: ");
-      }
-    }
-  }
-
-  private Map<Integer, TowerColor> setupMap() {
-    Map<Integer, TowerColor> towerColorMap = new HashMap<>();
-    towerColorMap.put(1, TowerColor.WHITE);
-    towerColorMap.put(2, TowerColor.BLACK);
-    towerColorMap.put(3, TowerColor.GRAY);
-    return towerColorMap;
+    return towerColorMap.get(choice);
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     super.propertyChange(evt);
-
     clearConsole();
 
+    if (evt.getPropertyName().equals(START_GAME.tag)) {
+      InputHandler.getInputHandler().setLine("4");
+      inputGreenLight = true;
+      greenLight = true;
+      return;
+    }
+
     if (evt.getPropertyName().equals(GAMEINFO_EVENT.tag)) {
-//      System.out.println("A new player joined");
-      new GameLobbyView(controller.getGameInfo(), controller.getGameCode()).draw(System.out);
+      showOptions();
+      out.print("Make a choice: ");
     }
     greenLight = true;
   }

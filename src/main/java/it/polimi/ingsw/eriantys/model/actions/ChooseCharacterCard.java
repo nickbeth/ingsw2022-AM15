@@ -2,10 +2,11 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-public class ChooseCharacterCard implements GameAction {
+public class ChooseCharacterCard extends GameAction {
   private int ccIndex;
 
   public ChooseCharacterCard(int ccIndex) {
@@ -32,8 +33,8 @@ public class ChooseCharacterCard implements GameAction {
   @Override
   public boolean isValid(GameState gameState) {
     return ccIndex >= 0 &&
-            ccIndex < 3 &&
-            gameState.getTurnPhase() == TurnPhase.PLACING &&
-            gameState.getGamePhase() == GamePhase.ACTION;
+        ccIndex < 3 &&
+        gameState.getTurnPhase() == TurnPhase.PLACING &&
+        gameState.getGamePhase() == GamePhase.ACTION;
   }
 }

@@ -1,17 +1,10 @@
 package it.polimi.ingsw.eriantys.controller;
 
-import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuIterator;
-import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuChooseNickname;
-import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuConnect;
-import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuCreateOrJoin;
-import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuLobby;
 import it.polimi.ingsw.eriantys.network.Client;
 import org.fusesource.jansi.Ansi;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class CliController extends Controller {
@@ -33,7 +26,7 @@ public class CliController extends Controller {
   }
 
   @Override
-  public void firePropertyChange(EventType event) {
+  public void fireChange(EventType event, Object oldValue, Object newValue) {
     listenerHolder.firePropertyChange(event.tag, null, null);
   }
 
@@ -42,7 +35,7 @@ public class CliController extends Controller {
     MenuIterator menus = new MenuIterator();
     while (true) {
       menus.menuAction(in, out);
-      menus.next();
+      menus.goNext();
     }
   }
 }

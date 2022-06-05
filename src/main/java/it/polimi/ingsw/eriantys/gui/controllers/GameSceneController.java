@@ -3,26 +3,14 @@ package it.polimi.ingsw.eriantys.gui.controllers;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers.*;
-import it.polimi.ingsw.eriantys.model.entities.*;
-import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
-import it.polimi.ingsw.eriantys.model.enums.HouseColor;
-import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import org.tinylog.Logger;
 
 import java.beans.PropertyChangeEvent;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.EnumMap;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.*;
+import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
 
 public class GameSceneController extends FXMLController {
   @FXML

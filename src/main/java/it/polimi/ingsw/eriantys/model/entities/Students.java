@@ -1,12 +1,13 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
-import org.tinylog.Logger;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.LinkedList;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class Students extends Slot implements Serializable {
   protected EnumMap<HouseColor, Integer> students = new EnumMap<>(HouseColor.class);
@@ -60,7 +61,7 @@ public class Students extends Slot implements Serializable {
    */
   public boolean tryRemoveStudent(HouseColor color) {
     if (students.get(color) == 0) {
-      Logger.warn("No students to remove. {} {}", color, students.get(color));
+      modelLogger.warn("No students to remove. {} {}", color, students.get(color));
       return false;
     } else {
       students.put(color, students.get(color) - 1);

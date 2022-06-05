@@ -17,10 +17,12 @@ import it.polimi.ingsw.eriantys.network.Message;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.network.MessageType.*;
 
 /**
@@ -77,7 +79,7 @@ abstract public class Controller implements Runnable {
     return true;
   }
 
-  public void disconnect(){
+  public void disconnect() {
     networkClient.close();
   }
 
@@ -109,7 +111,7 @@ abstract public class Controller implements Runnable {
   /**
    * base implementation does nothing
    */
-  public void showNetworkError(String error){
+  public void showNetworkError(String error) {
   }
 
   public void setPlayerConnected(boolean connected, String nickname) {
@@ -126,7 +128,7 @@ abstract public class Controller implements Runnable {
     listenerHolder.addPropertyChangeListener(tag, listener);
   }
 
-  public abstract void firePropertyChange(EventType event);
+  public abstract void fireChange(EventType event, Object oldValue, Object newValue);
 
   /**
    * Removes the given listener.
@@ -176,6 +178,7 @@ abstract public class Controller implements Runnable {
   }
 
   public class Sender {
+
     /**
      * Sends a START_GAME message to the server, containing the initiateGameEntities action. <br>
      */
@@ -218,13 +221,16 @@ abstract public class Controller implements Runnable {
       // Action Creation
       GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
 
-      networkClient.send(new Message.Builder(START_GAME)
+      Message msg = new Message.Builder(START_GAME)
           .action(action)
+          .text(nickname + " is starting the game.")
           .gameCode(gameCode)
           .gameInfo(gameInfo)
           .nickname(nickname)
-          .build());
+          .build();
+      networkClient.send(msg);
 
+      clientLogger.info("Sending message {} to the server", msg.getType());
       return true;
     }
 
@@ -239,6 +245,7 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
+          .text(nickname + " picked an assistant card")
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
@@ -258,6 +265,7 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
+          .text(MessageFormat.format("{0} picked {1} cloud", nickname, cloudIndex))
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
@@ -337,6 +345,7 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(GAMEDATA)
           .action(action)
+          .text(String.format("%s moved mother nature by %d islands", nickname, amount))
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
@@ -356,6 +365,7 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
+          .text(String.format("%s moved his students to the dining hall", nickname))
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
@@ -377,6 +387,7 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
+          .text(String.format("%s moved his students to %d island", nickname, islandIndex))
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
@@ -418,5 +429,10 @@ abstract public class Controller implements Runnable {
       return true;
     }
 
+
+  }
+
+  public PropertyChangeSupport getListenerHolder() {
+    return listenerHolder;
   }
 }

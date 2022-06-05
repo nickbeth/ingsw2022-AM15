@@ -1,9 +1,11 @@
 package it.polimi.ingsw.eriantys.client;
 
-import org.tinylog.Logger;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+
 
 public class Main {
   public static void main(String[] args) {
+
     System.out.println("Eriantys | 1.0 | AM15 | Client");
     boolean isGui = true;
 
@@ -11,7 +13,7 @@ public class Main {
     for (String arg : args) {
       switch (arg) {
         case "-c", "--cli" -> isGui = false;
-        default -> Logger.warn("Unknown command line argument: {}", arg);
+        default -> clientLogger.warn("Unknown command line argument: {}", arg);
       }
     }
 

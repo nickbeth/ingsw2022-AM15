@@ -9,14 +9,14 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static it.polimi.ingsw.eriantys.model.RuleBook.*;
 
-public class InitiateGameEntities implements GameAction {
+public class InitiateGameEntities extends GameAction {
   private final List<Students> entrances;
   private final List<Students> islands;
   private final List<Students> clouds;
@@ -56,7 +56,7 @@ public class InitiateGameEntities implements GameAction {
 
       List<CharacterCard> cards = new ArrayList<>();
       cardsEnum.forEach(card -> cards.add(CharacterCardCreator.create(card)));
-      Logger.info(cards.toString());
+      modelLogger.info(cards.toString());
       gameState.getPlayingField().setCharacterCards(cards);
 
     }
