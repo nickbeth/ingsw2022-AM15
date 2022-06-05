@@ -87,12 +87,6 @@ public abstract class MenuGame extends Menu {
     showOptions();
   }
 
-  final protected boolean isMyTurn() {
-    String myNickname = controller.getNickname();
-    String currPlayer = controller.getGameState().getCurrentPlayer().getNickname();
-    return myNickname.equals(currPlayer);
-  }
-
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     super.propertyChange(evt);
@@ -102,7 +96,7 @@ public abstract class MenuGame extends Menu {
       GameAction action = (GameAction) evt.getNewValue();
       clearConsole();
       out.println(action.getDescription());
-      if (isMyTurn())
+      if (controller.getGameState().isTurnOf(controller.getNickname()))
         out.println("It's now your turn");
       showOptions();
     }

@@ -14,7 +14,7 @@ public class MenuMoving extends MenuGame {
   @Override
   protected void showOptions() {
     showViewOptions(out);
-    if (isMyTurn()) {
+    if (controller.getGameState().isTurnOf(controller.getNickname())) {
       out.println("T - Move mother nature");
     }
   }
@@ -29,7 +29,7 @@ public class MenuMoving extends MenuGame {
 
       handleViewOptions(choice);
 
-      if (isMyTurn()) {
+      if (controller.getGameState().isTurnOf(controller.getNickname())) {
         switch (choice) {
           // Move mother nature a certain amount
           case "T", "t" -> {

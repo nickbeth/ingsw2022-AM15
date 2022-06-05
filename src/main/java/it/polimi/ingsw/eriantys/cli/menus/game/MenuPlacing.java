@@ -30,7 +30,7 @@ public class MenuPlacing extends MenuGame {
 
     clearConsole();
 
-    if (isMyTurn()) {
+    if (controller.getGameState().isTurnOf(controller.getNickname())) {
       out.println(MessageFormat
           .format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
       out.println(MessageFormat
@@ -52,7 +52,7 @@ public class MenuPlacing extends MenuGame {
 
       handleViewOptions(choice);
 
-      if (isMyTurn()) {
+      if (controller.getGameState().isTurnOf(controller.getNickname())) {
         switch (choice) {
 
           // Move Students from entrance to island
