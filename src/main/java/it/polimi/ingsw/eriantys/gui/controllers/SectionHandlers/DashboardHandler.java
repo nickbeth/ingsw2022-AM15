@@ -25,7 +25,7 @@ public class DashboardHandler extends SectionHandler {
   private final GridPane entranceGrid;
   private final GridPane professorGrid;
   private final TilePane towerTiles;
-  GameState gameState = Controller.getController().getGameState();
+  GameState gameState = Controller.get().getGameState();
 
   private final EnumMap<TowerColor, String> towerColorToPath = new EnumMap<TowerColor, String>(TowerColor.class);
   private final EnumMap<HouseColor, String> studentColorToPath = new EnumMap<>(HouseColor.class);
@@ -61,7 +61,7 @@ public class DashboardHandler extends SectionHandler {
 
   @Override
   protected void create() {
-    Player player = gameState.getPlayer(Controller.getController().getNickname());
+    Player player = gameState.getPlayer(Controller.get().getNickname());
     //populating dining hall
     refreshDiningHall();
     //populating professor table grid
@@ -89,7 +89,7 @@ public class DashboardHandler extends SectionHandler {
   }
 
   private void refreshDiningHall() {
-    Students hall = Controller.getController().getGameState().getPlayer(nickname).getDashboard().getDiningHall();
+    Students hall = Controller.get().getGameState().getPlayer(nickname).getDashboard().getDiningHall();
     for (int i = 0; i < hall.getCount(HouseColor.GREEN) - greenStudents.size(); i++) {
       ImageView student = createStudent(HouseColor.GREEN);
       greenStudents.add(student);
@@ -139,7 +139,7 @@ public class DashboardHandler extends SectionHandler {
 
   private void createProfTable(Player player) {
     professorGrid.getChildren().clear();
-    ProfessorHolder profHold = Controller.getController().getGameState().getPlayingField().getProfessorHolder();
+    ProfessorHolder profHold = Controller.get().getGameState().getPlayingField().getProfessorHolder();
     if (profHold.hasProfessor(player.getColorTeam(), HouseColor.GREEN)) {
       professorGrid.add(createProfessor(HouseColor.GREEN), 0, 0);
     }

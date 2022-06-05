@@ -29,7 +29,7 @@ public abstract class Menu implements PropertyChangeListener {
   protected List<EventType> eventsToBeListening = new ArrayList<>(
       List.of(INTERNAL_SOCKET_ERROR, INPUT_ENTERED)
   );
-  protected Controller controller = Controller.getController();
+  protected Controller controller = Controller.get();
 
   // Attribute used to block interaction until he receives a message
   protected volatile boolean greenLight = false;

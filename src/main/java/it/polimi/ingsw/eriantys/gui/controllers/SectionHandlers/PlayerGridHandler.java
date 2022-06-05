@@ -47,11 +47,11 @@ public class PlayerGridHandler extends SectionHandler {
   @Override
   protected void create() {
     playerGrid.getStyleClass().add("grid-players");
-    List<Player> players = Controller.getController().getGameState().getPlayers();
+    List<Player> players = Controller.get().getGameState().getPlayers();
     int i = 0;
     int pIndex = 0;
     for (Player player : players) {
-      if (!player.getNickname().equals(Controller.getController().getNickname())) {
+      if (!player.getNickname().equals(Controller.get().getNickname())) {
         StackPane icon = new StackPane();
         ImageView wizardIcon = new ImageView(new Image("/assets/wizards/wizard-" + pIndex + ".jpg"));
         wizardIcon.setFitWidth(40);

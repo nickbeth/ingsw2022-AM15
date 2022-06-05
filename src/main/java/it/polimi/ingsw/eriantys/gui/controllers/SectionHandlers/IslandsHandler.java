@@ -28,7 +28,7 @@ public class IslandsHandler extends SectionHandler {
   @Override
   protected void refresh() {
     //TODO: write an actual refresh method that doesn't use create() maybe by creating a IslandHandler abstraction.
-    GamePhase gamePhase = Controller.getController().getGameState().getGamePhase();
+    GamePhase gamePhase = Controller.get().getGameState().getGamePhase();
     if (gamePhase == GamePhase.ACTION) {
       create();
     }
@@ -36,7 +36,7 @@ public class IslandsHandler extends SectionHandler {
 
   @Override
   protected void create() {
-    List<Island> islands = Controller.getController().getGameState().getPlayingField().getIslands();
+    List<Island> islands = Controller.get().getGameState().getPlayingField().getIslands();
     IslandPattern pattern = IslandPattern.getPattern(islands.size());
     int[][] matrix = pattern.matrix;
     for (int i = 0; i < matrix.length; i++) {

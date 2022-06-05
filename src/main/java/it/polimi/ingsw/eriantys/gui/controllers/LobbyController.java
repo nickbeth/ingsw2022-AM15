@@ -33,7 +33,7 @@ public class LobbyController extends FXMLController {
   @FXML
   private void startGameAction(ActionEvent actionEvent) {
 
-    if(!Controller.getController().sender().sendStartGame()) {
+    if(!Controller.get().sender().sendStartGame()) {
       errorMessage.setText("not enough players with a chosen color to start");
       errorMessage.setVisible(true);
     }
@@ -41,12 +41,12 @@ public class LobbyController extends FXMLController {
 
   @FXML
   public void changeColorAction(ActionEvent actionEvent) {
-    Controller.getController().sender().sendSelectTower(towerColorChoice.getValue());
+    Controller.get().sender().sendSelectTower(towerColorChoice.getValue());
   }
 
   @FXML
   private void quitLobbyAction(ActionEvent actionEvent) {
-    Controller.getController().disconnect();
+    Controller.get().disconnect();
     gui.setScene(SceneEnum.MENU);
   }
 
@@ -61,9 +61,9 @@ public class LobbyController extends FXMLController {
   public void updateAll() {
     playerList.getItems().clear();
     towerColorChoice.getItems().clear();
-    GameInfo gameInfo = Controller.getController().getGameInfo();
+    GameInfo gameInfo = Controller.get().getGameInfo();
     Map<String, TowerColor> playerMap = gameInfo.getPlayersMap();
-    gameCode.setText(Controller.getController().getGameCode().toString());
+    gameCode.setText(Controller.get().getGameCode().toString());
     gameMode.setText(gameInfo.getMode().toString());
     maxPlayerCount.setText(String.valueOf(gameInfo.getMaxPlayerCount()));
     for (String player : playerMap.keySet()) {
@@ -74,7 +74,7 @@ public class LobbyController extends FXMLController {
       playerList.getItems().add(player + " " + colorStr);
     }
     for (TowerColor color : TowerColor.values()) {
-      if (gameInfo.isTowerColorValid(Controller.getController().getNickname(), color))
+      if (gameInfo.isTowerColorValid(Controller.get().getNickname(), color))
         towerColorChoice.getItems().add(color);
     }
     towerColorChoice.getItems().add(null);
@@ -83,14 +83,14 @@ public class LobbyController extends FXMLController {
   @Override
   public void start() {
     super.start();
-    Controller.getController().addListener(this, GAMEDATA_EVENT.tag);
-    Controller.getController().addListener(this, GAMEINFO_EVENT.tag);
+    Controller.get().addListener(this, GAMEDATA_EVENT.tag);
+    Controller.get().addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    Controller.getController().removeListener(this, GAMEINFO_EVENT.tag);
-    Controller.getController().removeListener(this, GAMEDATA_EVENT.tag);
+    Controller.get().removeListener(this, GAMEINFO_EVENT.tag);
+    Controller.get().removeListener(this, GAMEDATA_EVENT.tag);
   }
 }

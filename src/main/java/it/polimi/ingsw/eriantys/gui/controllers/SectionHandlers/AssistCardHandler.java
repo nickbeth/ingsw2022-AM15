@@ -20,7 +20,7 @@ public class AssistCardHandler extends SectionHandler {
 
   @Override
   protected void refresh() {
-    GamePhase gamePhase = Controller.getController().getGameState().getGamePhase();
+    GamePhase gamePhase = Controller.get().getGameState().getGamePhase();
     if (gamePhase == GamePhase.PLANNING) {
       create();
     }
@@ -29,7 +29,7 @@ public class AssistCardHandler extends SectionHandler {
   @Override
   protected void create() {
     assistCards.getChildren().clear();
-    ArrayList<AssistantCard> cards = Controller.getController().getGameState().getPlayer(Controller.getController().getNickname()).getCards();
+    ArrayList<AssistantCard> cards = Controller.get().getGameState().getPlayer(Controller.get().getNickname()).getCards();
     cards.forEach(card -> {
       ImageView img = new ImageView();
       URL imgPath = getClass().getResource("/assets/assistcards/Animali_1_" + card.value + ".png");
@@ -37,7 +37,7 @@ public class AssistCardHandler extends SectionHandler {
       img.setFitWidth(160);
       img.setId(card.toString());
       img.setPreserveRatio(true);
-      if (Controller.getController().getGameState().getGamePhase() == GamePhase.PLANNING) {
+      if (Controller.get().getGameState().getGamePhase() == GamePhase.PLANNING) {
         img.setCursor(Cursor.HAND);
         img.setOnMouseClicked(e -> playAssistCardAction(card));
       }
@@ -46,8 +46,8 @@ public class AssistCardHandler extends SectionHandler {
   }
 
   private void playAssistCardAction(AssistantCard card) {
-    int index = Controller.getController().getGameState()
-            .getPlayer(Controller.getController().getNickname()).getCards().indexOf(card);
-    Controller.getController().sender().sendPickAssistantCard(index);
+    int index = Controller.get().getGameState()
+            .getPlayer(Controller.get().getNickname()).getCards().indexOf(card);
+    Controller.get().sender().sendPickAssistantCard(index);
   }
 }

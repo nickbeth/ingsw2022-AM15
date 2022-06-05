@@ -48,7 +48,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
       errorMessage.setText("please select a number of players to create the game");
       errorMessage.setVisible(true);
     } else
-      Controller.getController().sender().sendCreateGame(playerNumber, gameMode);
+      Controller.get().sender().sendCreateGame(playerNumber, gameMode);
   }
 
   /**
@@ -59,7 +59,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   private void continueJoinGame(ActionEvent actionEvent) {
     try {
       GameCode gameCode = GameCode.parseCode(gameUidField.getText());
-      Controller.getController().sender().sendJoinGame(gameCode);
+      Controller.get().sender().sendJoinGame(gameCode);
     } catch (GameCode.GameCodeException e) {
       errorMessage.setText("please insert a gameCode to start the game");
       errorMessage.setVisible(true);
@@ -95,7 +95,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
    */
   @FXML
   private void backButton(ActionEvent actionEvent) {
-    Controller.getController().disconnect();
+    Controller.get().disconnect();
     //TODO: handle disconnection from server with the press of the back button
     gui.setScene(SceneEnum.CONNECTION);
   }
@@ -111,12 +111,12 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   @Override
   public void start() {
     super.start();
-    Controller.getController().addListener(this, GAMEINFO_EVENT.tag);
+    Controller.get().addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    Controller.getController().removeListener(this, GAMEINFO_EVENT.tag);
+    Controller.get().removeListener(this, GAMEINFO_EVENT.tag);
   }
 }

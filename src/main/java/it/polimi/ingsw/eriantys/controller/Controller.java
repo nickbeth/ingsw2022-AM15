@@ -26,24 +26,31 @@ import static it.polimi.ingsw.eriantys.model.RuleBook.PLAYABLE_CC_AMOUNT;
 import static it.polimi.ingsw.eriantys.network.MessageType.*;
 
 /**
- * The Controller manages the creation and the sending of messages to the Server
+ * The Controller manages the creation and the sending of messages to the Server.
+ * <br><br>
+ * This class is a singleton, an instance may be obtained by calling the {@link #get()} method.
  */
 abstract public class Controller implements Runnable {
-  private static Controller controller;
+  private static Controller instance;
 
   public static Controller create(boolean isGui, Client networkClient) {
-    if (controller == null) {
+    if (instance == null) {
       if (isGui) {
-        controller = new GuiController(networkClient);
+        instance = new GuiController(networkClient);
       } else {
-        controller = new CliController(networkClient);
+        instance = new CliController(networkClient);
       }
     }
-    return controller;
+    return instance;
   }
 
-  public static Controller getController() {
-    return controller;
+  /**
+   * Returns the global instance of the Controller.
+   *
+   * @return The controller instance
+   */
+  public static Controller get() {
+    return instance;
   }
 
   protected GameInfo gameInfo;

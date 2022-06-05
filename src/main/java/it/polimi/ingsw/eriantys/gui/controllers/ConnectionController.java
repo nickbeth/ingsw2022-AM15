@@ -46,7 +46,7 @@ public class ConnectionController extends FXMLController {
       if (!portStr.isEmpty()) {
         port = Integer.parseInt(portStr);
       }
-      if (!Controller.getController().connect(ipStr, port)) {
+      if (!Controller.get().connect(ipStr, port)) {
         errorMessage.setText("Failed to connect to the server");
         errorMessage.setOpacity(1);
       }
@@ -55,19 +55,19 @@ public class ConnectionController extends FXMLController {
       errorMessage.setText("Invalid port, try again.");
       errorMessage.setOpacity(1);
     }
-    Controller.getController().sender().sendNickname(nicknameField.getText());
+    Controller.get().sender().sendNickname(nicknameField.getText());
   }
 
   @Override
   public void start() {
     super.start();
-    Controller.getController().addListener(this, NICKNAME_OK.tag);
+    Controller.get().addListener(this, NICKNAME_OK.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    Controller.getController().removeListener(this, NICKNAME_OK.tag);
+    Controller.get().removeListener(this, NICKNAME_OK.tag);
   }
 
   @Override

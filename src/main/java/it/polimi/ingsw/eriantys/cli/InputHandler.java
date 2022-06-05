@@ -19,7 +19,7 @@ public class InputHandler implements Runnable {
 
   public static InputHandler getInputHandler() {
     if (inputHandler == null)
-      inputHandler = new InputHandler(Controller.getController().getListenerHolder());
+      inputHandler = new InputHandler(Controller.get().getListenerHolder());
     return inputHandler;
   }
 

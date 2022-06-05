@@ -32,7 +32,7 @@ public class CloudsHandler extends SectionHandler {
 
   @Override
   protected void create() {
-    Controller.getController().getGameState().getPlayingField().getClouds().forEach(
+    Controller.get().getGameState().getPlayingField().getClouds().forEach(
             cloud -> {
               cloudBox.getChildren().add(createCloud(cloud));
             });

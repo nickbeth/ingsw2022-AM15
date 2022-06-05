@@ -47,9 +47,9 @@ public class GameSceneController extends FXMLController {
   @Override
   public void start() {
     super.start();
-    Controller.getController().addListener(this, GAMEDATA_EVENT.tag);
-    Controller.getController().addListener(this, INTERNAL_SOCKET_ERROR.tag);
-    mainDashboardHandler = new DashboardHandler(Controller.getController().getNickname(), studentHallGrid, entranceGrid, profTableGrid, dashboardTowers);
+    Controller.get().addListener(this, GAMEDATA_EVENT.tag);
+    Controller.get().addListener(this, INTERNAL_SOCKET_ERROR.tag);
+    mainDashboardHandler = new DashboardHandler(Controller.get().getNickname(), studentHallGrid, entranceGrid, profTableGrid, dashboardTowers);
     playerGridHandler = new PlayerGridHandler(otherPlayersGrid);
     cloudBoxHandler = new CloudsHandler(cloudBox);
     islandsGridHandler = new IslandsHandler(islandsGrid);
@@ -59,8 +59,8 @@ public class GameSceneController extends FXMLController {
   @Override
   public void finish() {
     super.finish();
-    Controller.getController().removeListener(this, GAMEDATA_EVENT.tag);
-    Controller.getController().removeListener(this, INTERNAL_SOCKET_ERROR.tag);
+    Controller.get().removeListener(this, GAMEDATA_EVENT.tag);
+    Controller.get().removeListener(this, INTERNAL_SOCKET_ERROR.tag);
   }
 
   @Override
@@ -84,7 +84,7 @@ public class GameSceneController extends FXMLController {
 
   @FXML
   private void quitGameAction() {
-    Controller.getController().disconnect();
+    Controller.get().disconnect();
     gui.setScene(SceneEnum.MENU);
   }
 

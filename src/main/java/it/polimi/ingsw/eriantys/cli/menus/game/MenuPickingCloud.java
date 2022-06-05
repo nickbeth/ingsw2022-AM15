@@ -6,8 +6,6 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 
-import static it.polimi.ingsw.eriantys.controller.Controller.getController;
-
 public class MenuPickingCloud extends MenuGame {
   public MenuPickingCloud() {
 //    this.nextMenu = new MenuPickAssistantCard(controller);
