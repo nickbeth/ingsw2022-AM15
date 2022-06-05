@@ -19,6 +19,8 @@ public class MenuEffect extends MenuGame {
 
     out.println("Description:");
     out.println(cc.getCardEnum().getDescription());
+    out.println("Q - I changed my mind. Undo.");
+    out.println("ANY_KEY - Continue");
   }
 
   @Override
@@ -30,7 +32,11 @@ public class MenuEffect extends MenuGame {
     while (true) {
 
       // Show CC descriptions
-//      showOptions(out);
+      showOptions();
+
+      // Escape condition
+      String choice = getNonBlankString();
+      if (choice.equalsIgnoreCase("q")) return null;
 
       // If the card requires color input
       if (cc instanceof ColorInputCards) {
@@ -55,7 +61,7 @@ public class MenuEffect extends MenuGame {
       // Send the action
       if (controller.sender().sendActivateEffect(cc)) {
         waitForGreenLight();
-        return null;
+        return MenuEnum.PLACING;
       }
       out.println("Invalid input parameters");
     }

@@ -170,8 +170,8 @@ public class MenuPlacing extends MenuGame {
               break;
             }
             waitForGreenLight();
-            (new MenuEffect()).show();
-            ccUsed = true;
+            if ((new MenuEffect()).show() != null)
+              ccUsed = true;
           }
 
           default -> {

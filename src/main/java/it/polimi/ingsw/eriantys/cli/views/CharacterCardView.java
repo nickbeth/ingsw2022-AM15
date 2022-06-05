@@ -8,6 +8,8 @@ import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.VERTICAL;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 
 public class CharacterCardView extends View {
@@ -22,22 +24,30 @@ public class CharacterCardView extends View {
   public void draw(PrintStream o) {
     for (int i = 0; i < characterCards.size(); i++) {
       CharacterCard card = characterCards.get(i);
-      o.append("╭─╦──COST──╦─EFFECT──────────")
-              .append(System.lineSeparator())
-              .append(printColored(Integer.toString(i), HouseColor.RED))
-              .append(PADDING)
-              .append(VERTICAL.glyph)
-              .append(printColored(Integer.toString(card.getCardEnum().getCost()), HouseColor.YELLOW))
-              .append(PADDING)
-              .append(printColored("coins", HouseColor.YELLOW))
-              .append(PADDING)
-              .append(VERTICAL.glyph)
-              .append(PADDING)
-              .append(card.getCardEnum().toString())
-              .append(PADDING_DOUBLE)
-              .append(System.lineSeparator())
-              .append("╰─╩────────╩─────────────────")
-              .append(System.lineSeparator());
+      o
+          .append("╭─╦──COST──╦─EFFECT─────────────╮")
+          .append(System.lineSeparator())
+          .append(printColored(Integer.toString(i), HouseColor.RED))
+          .append(PADDING)
+          .append(VERTICAL.glyph)
+          .append(printColored(Integer.toString(card.getCardEnum().getCost()), HouseColor.YELLOW))
+          .append(PADDING)
+          .append(printColored("coins", HouseColor.YELLOW))
+          .append(PADDING)
+          .append(VERTICAL.glyph)
+          .append(PADDING)
+          .append(card.getCardEnum().toString());
+      int paddingLeft = "EFFECT─────────────".length() - card.getCardEnum().toString().length();
+      if (paddingLeft < 0) clientLogger.warn("CharacterCard cli view needs fixes");
+
+      for (int j = 0; j < paddingLeft; j++) {
+        o.append(PADDING);
+      }
+      o
+          .append(VERTICAL.glyph)
+          .append(System.lineSeparator())
+          .append("╰─╩────────╩────────────────────╯")
+          .append(System.lineSeparator());
     }
   }
 

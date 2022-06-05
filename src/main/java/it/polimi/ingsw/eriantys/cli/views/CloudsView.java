@@ -44,6 +44,7 @@ public class CloudsView extends View {
   private String drawCloud(Cloud cloud, int index) {
     LinkedList<HouseColor> studentsList = cloud.getStudents().toLinkedList();
     StringBuilder stringBuilder = new StringBuilder();
+
     // First row
     if (index >= 0) {
       stringBuilder.append(MessageFormat.format("╭──{0}──╮", index));
