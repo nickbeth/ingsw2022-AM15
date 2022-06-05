@@ -76,7 +76,6 @@ public class Gui extends Application {
 
   /**
    * Displays an alert notifying a socket error
-   * @param error
    */
   public void showSocketError() {
     Alert alert = new Alert(Alert.AlertType.ERROR);
