@@ -35,10 +35,10 @@ public class MenuPickAssistantCard extends MenuGame {
 
           // Choose assistant card
           case "Q", "q" -> {
-            (new AssistantCardsView(controller.getGameState().getPlayer(controller.getNickname()))).draw(out);
+            new AssistantCardsView(currentPlayer).draw(out);
 
             out.print("Choose card index:");
-            int index = getNumber();
+            int index = getNumber() - 1;
             if (controller.sender().sendPickAssistantCard(index)) {
               waitForGreenLight();
               return MenuEnum.PLACING;
@@ -46,7 +46,8 @@ public class MenuPickAssistantCard extends MenuGame {
             out.println("Invalid input parameters.");
           }
 
-          default -> {}
+          default -> {
+          }
         }
       }
     }

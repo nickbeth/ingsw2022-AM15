@@ -28,7 +28,7 @@ Game Info)
 └─────────────────┘
 
 Cloud)
-╭─────╮
+╭──I──╮
 │ * * │
 │ * * │
 ╰─────╯
@@ -37,3 +37,9 @@ Character Card)
 ╭─╦──COST──╦─EFFECT──────────
 0 │3 coins │ IGNORE_COLOR
 ╰─╩────────╩─────────────────
+
+Assistant Card)
+╭─I─────────╮
+│ Value: X  │
+│ Moves: X  │
+╰───────────╯

@@ -11,6 +11,7 @@ import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
+import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -135,6 +136,24 @@ public class ViewsTest {
     View view = new IslandsView(islandList, 0);
 
     view.draw(System.out);
+  }
+
+  @Test
+  public void printAssistantCards() {
+    List<AssistantCard> cards = Arrays.stream(AssistantCard.values()).toList();
+    List<AssistantCard> subCards;
+
+    System.out.println("- Test --------------------------------------------------");
+    subCards = cards;
+    new AssistantCardsView(subCards).draw(System.out);
+
+    System.out.println("- Test --------------------------------------------------");
+    subCards = cards.subList(0,5);
+    new AssistantCardsView(subCards).draw(System.out);
+
+    System.out.println("- Test --------------------------------------------------");
+    subCards = cards.subList(0,8);
+    new AssistantCardsView(subCards).draw(System.out);
   }
 
   @Test
