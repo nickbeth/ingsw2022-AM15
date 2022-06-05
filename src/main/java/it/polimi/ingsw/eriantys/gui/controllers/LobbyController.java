@@ -13,8 +13,7 @@ import javafx.scene.control.ListView;
 import java.beans.PropertyChangeEvent;
 import java.util.Map;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.*;
 
 public class LobbyController extends FXMLController {
   @FXML
@@ -52,7 +51,7 @@ public class LobbyController extends FXMLController {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if(evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
+    if(evt.getPropertyName().equals(START_GAME.tag))
       gui.setScene(SceneEnum.PLANNING); //provvisorio
     else
       updateAll();
@@ -83,14 +82,14 @@ public class LobbyController extends FXMLController {
   @Override
   public void start() {
     super.start();
-    Controller.get().addListener(this, GAMEDATA_EVENT.tag);
+    Controller.get().addListener(this,  START_GAME.tag);
     Controller.get().addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    Controller.get().removeListener(this, GAMEINFO_EVENT.tag);
+    Controller.get().removeListener(this,  START_GAME.tag);
     Controller.get().removeListener(this, GAMEDATA_EVENT.tag);
   }
 }
