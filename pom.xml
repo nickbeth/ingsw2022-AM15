@@ -23,11 +23,6 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.11</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.tobiasrm</groupId>
-            <artifactId>tinylog-coloredconsole</artifactId>
-            <version>1.3.1</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
         <dependency>
             <groupId>org.openjfx</groupId>
