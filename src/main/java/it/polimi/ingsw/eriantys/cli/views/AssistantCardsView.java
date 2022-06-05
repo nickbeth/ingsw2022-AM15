@@ -26,7 +26,7 @@ public class AssistantCardsView extends View {
   @Override
   public void draw(PrintStream o) {
     StringBuilder stringBuilder = new StringBuilder();
-    int maxColumn = 4;
+    int maxColumns = 4;
 
     // Gets the height of one single stamp
     int rows = drawAssistantCard(cards.get(0), 0).split(System.lineSeparator()).length;
@@ -38,11 +38,11 @@ public class AssistantCardsView extends View {
     }
 
     int progression = 0;
-    while (cards.size() - progression >= maxColumn) {
+    while (cards.size() - progression >= maxColumns) {
 
       // Build the stripes
       for (int row = 0; row < rows; row++) {
-        for (int cardIndex = progression; cardIndex < progression + maxColumn; cardIndex++) {
+        for (int cardIndex = progression; cardIndex < progression + maxColumns; cardIndex++) {
           stringBuilder
               .append(matrix[cardIndex][row])
               .append(PADDING_DOUBLE);
@@ -50,10 +50,11 @@ public class AssistantCardsView extends View {
         stringBuilder
             .append(System.lineSeparator());
       }
-      progression += maxColumn;
+      progression += maxColumns;
       stringBuilder.append(System.lineSeparator());
     }
-    // Build the last stripes
+
+    // Build last stripes
     for (int row = 0; row < rows; row++) {
       for (int cardIndex = progression; cardIndex < cards.size(); cardIndex++) {
         stringBuilder

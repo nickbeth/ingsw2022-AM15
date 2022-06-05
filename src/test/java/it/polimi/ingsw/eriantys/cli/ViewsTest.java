@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.printColored;
+import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ViewsTest {
@@ -34,41 +36,6 @@ public class ViewsTest {
 
   @BeforeAll
   static void setUp() {
-    // Initiate character cards
-    List<CharacterCardEnum> characterCardEnums = new ArrayList<>(Arrays.asList(CharacterCardEnum.values()));
-
-    // Initiate students on island
-    StudentBag bag = new StudentBag();
-    bag.initStudents(RuleBook.STUDENT_PER_COLOR_SETUP);
-    List<Students> studentsOnIslands = new ArrayList<>();
-    for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
-      studentsOnIslands.add(new Students());
-      if (i != 0 && i != 6)
-        studentsOnIslands.get(i).addStudent(bag.takeRandomStudent());
-    }
-
-    // Initiate entrances.
-    bag.initStudents(RuleBook.STUDENT_PER_COLOR - RuleBook.STUDENT_PER_COLOR_SETUP);
-    List<Students> entrances = new ArrayList<>();
-    for (int i = 0; i < playerCount; i++) {
-      entrances.add(new Students());
-      for (int j = 0; j < rules.entranceSize; j++) {
-        entrances.get(i).addStudent(bag.takeRandomStudent());
-      }
-    }
-
-    // Initiate clouds.
-    List<Students> cloudsStudents = new ArrayList<>();
-    for (int i = 0; i < rules.playableStudentCount; i++) {
-      cloudsStudents.add(new Students());
-      for (int j = 0; j < rules.playableStudentCount; j++) {
-        cloudsStudents.get(i).addStudent(bag.takeRandomStudent());
-      }
-    }
-    // Action Creation
-    GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, characterCardEnums);
-//    action.apply(gameState);
-
     students.addStudents(HouseColor.PINK, 5);
     students.addStudents(HouseColor.RED, 1);
     students.addStudents(HouseColor.YELLOW, 8);
@@ -92,8 +59,8 @@ public class ViewsTest {
 
     ProfessorHolder professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
     DashboardView dashboardView = new DashboardView(ruleBook, dashboard, professorHolder);
-    System.out.println("Initial view:");
-    dashboardView.draw(System.out);
+    out.println("Initial view:");
+    dashboardView.draw(out);
 
     // Play around with the dashboard, then draw again
     dashboard.getDiningHall().addStudents(entrance);
@@ -103,15 +70,15 @@ public class ViewsTest {
     professorHolder.setProfessorHolder(TowerColor.BLACK, HouseColor.YELLOW);
     professorHolder.setProfessorHolder(TowerColor.GRAY, HouseColor.GREEN);
     dashboard.removeTowers(3);
-    System.out.println("Dashboard view after some changes:");
-    dashboardView.draw(System.out);
+    out.println("Dashboard view after some changes:");
+    dashboardView.draw(out);
   }
 
   @Test
   public void printStudent() {
     View view = new StudentsView(students);
 
-    view.draw(System.out);
+    view.draw(out);
   }
 
   @Test
@@ -119,7 +86,27 @@ public class ViewsTest {
     Island island = new Island(students);
     View view = new IslandView(island);
 
-    view.draw(System.out);
+    island.setLocked(true);
+    island.setTowerCount(5);
+    island.setTowerColor(TowerColor.WHITE);
+
+    view.draw(out);
+
+    island.setTowerCount(10);
+    island.setTowerColor(TowerColor.GRAY);
+    island.getStudents().addStudents(HouseColor.YELLOW, 5);
+
+    view.draw(out);
+
+    island.setTowerColor(TowerColor.BLACK);
+
+    view.draw(out);
+
+    island.setLocked(false);
+    island.setTowerCount(5);
+    island.setTowerColor(TowerColor.WHITE);
+
+    view.draw(out);
   }
 
   @Test
@@ -129,31 +116,41 @@ public class ViewsTest {
     islandList.add(new Island(students));
     islandList.add(new Island(students));
     islandList.add(new Island(students));
+
     islandList.add(new Island(students));
+    islandList.add(new Island(students));
+    islandList.add(new Island(students));
+
+    islandList.add(new Island(students));
+    islandList.add(new Island(students));
+    islandList.add(new Island(students));
+
+    islandList.add(new Island(students));
+    islandList.add(new Island(students));
+    islandList.add(new Island(students));
+
     islandList.get(0).setLocked(true);
     islandList.get(2).setLocked(true);
 
     View view = new IslandsView(islandList, 0);
 
-    view.draw(System.out);
+    for (int i = 0; i < 12; i++) {
+      out.println("- Test --------------------------------------------------");
+      view.draw(out);
+      islandList.remove(0);
+    }
   }
 
   @Test
   public void printAssistantCards() {
-    List<AssistantCard> cards = Arrays.stream(AssistantCard.values()).toList();
-    List<AssistantCard> subCards;
+    List<AssistantCard> cards = new ArrayList<>(Arrays.stream(AssistantCard.values()).toList());
+    View view = new AssistantCardsView(cards);
 
-    System.out.println("- Test --------------------------------------------------");
-    subCards = cards;
-    new AssistantCardsView(subCards).draw(System.out);
-
-    System.out.println("- Test --------------------------------------------------");
-    subCards = cards.subList(0,5);
-    new AssistantCardsView(subCards).draw(System.out);
-
-    System.out.println("- Test --------------------------------------------------");
-    subCards = cards.subList(0,8);
-    new AssistantCardsView(subCards).draw(System.out);
+    for (var card : AssistantCard.values()) {
+      out.println("- Test --------------------------------------------------");
+      view.draw(out);
+      cards.remove(0);
+    }
   }
 
   @Test
@@ -170,17 +167,17 @@ public class ViewsTest {
     clouds.add(cloud);
     clouds.add(cloudWith3Students);
 
-    new CloudsView(clouds).draw(System.out);
+    new CloudsView(clouds).draw(out);
 
     clouds.add(cloud);
     clouds.add(cloud);
 
-    new CloudsView(clouds).draw(System.out);
+    new CloudsView(clouds).draw(out);
 
     clouds.add(cloudWith3Students);
     clouds.add(cloud);
 
-    new CloudsView(clouds).draw(System.out);
+    new CloudsView(clouds).draw(out);
   }
 
   @Test
@@ -190,7 +187,7 @@ public class ViewsTest {
     lobby.addPlayer("minchia un nome lunghissimo", TowerColor.WHITE);
     lobby.addPlayer("franco");
 
-    (new GameLobbyView(lobby, new GameCode("cia3"))).draw(System.out);
+    (new GameLobbyView(lobby, new GameCode("cia3"))).draw(out);
   }
 
   @Test
@@ -200,6 +197,6 @@ public class ViewsTest {
     cards.add(CharacterCardCreator.create(CharacterCardEnum.IGNORE_TOWERS));
     cards.add(CharacterCardCreator.create(CharacterCardEnum.STEAL_PROFESSOR));
 
-    (new CharacterCardView(cards)).draw(System.out);
+    (new CharacterCardView(cards)).draw(out);
   }
 }
