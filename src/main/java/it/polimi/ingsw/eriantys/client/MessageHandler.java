@@ -9,7 +9,7 @@ import it.polimi.ingsw.eriantys.network.MessageType;
 import java.util.concurrent.BlockingQueue;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
-import static it.polimi.ingsw.eriantys.loggers.Loggers.*;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class MessageHandler implements Runnable {
   Controller controller;

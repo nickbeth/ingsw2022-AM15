@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 

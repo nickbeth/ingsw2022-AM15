@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers.SectionHandler;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -14,7 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 public class PlayerGridHandler extends SectionHandler {
   private GridPane playerGrid;

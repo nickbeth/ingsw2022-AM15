@@ -2,7 +2,7 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
-import java.util.*;
+import java.util.Random;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 

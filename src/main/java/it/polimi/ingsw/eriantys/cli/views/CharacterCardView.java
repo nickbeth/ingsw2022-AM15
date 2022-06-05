@@ -7,9 +7,9 @@ import java.io.PrintStream;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.VERTICAL;
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.printColored;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
-import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 
 public class CharacterCardView extends View {
