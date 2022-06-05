@@ -28,6 +28,8 @@ public class LobbyController extends FXMLController {
   private Label gameMode;
   @FXML
   private Label maxPlayerCount;
+  
+  private GameInfo gameInfo = Controller.get().getGameInfo();
 
   @FXML
   private void startGameAction(ActionEvent actionEvent) {
@@ -52,15 +54,15 @@ public class LobbyController extends FXMLController {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if(evt.getPropertyName().equals(START_GAME.tag))
-      gui.setScene(SceneEnum.PLANNING); //provvisorio
+      gui.setScene(SceneEnum.PLANNING);
     else
       updateAll();
   }
+
   @Override
   public void updateAll() {
     playerList.getItems().clear();
     towerColorChoice.getItems().clear();
-    GameInfo gameInfo = Controller.get().getGameInfo();
     Map<String, TowerColor> playerMap = gameInfo.getPlayersMap();
     gameCode.setText(Controller.get().getGameCode().toString());
     gameMode.setText(gameInfo.getMode().toString());
@@ -78,10 +80,21 @@ public class LobbyController extends FXMLController {
     }
     towerColorChoice.getItems().add(null);
   }
+  
+  private void setDefaultValues(){
+    //sets the default value in choice box to the first available color
+    for (TowerColor color : TowerColor.values()) {
+      if(gameInfo.isTowerColorValid(Controller.get().getNickname(), color)) {
+        towerColorChoice.setValue(color);
+        break;
+      }
+    }
+  }
 
   @Override
   public void start() {
     super.start();
+    setDefaultValues();
     Controller.get().addListener(this,  START_GAME.tag);
     Controller.get().addListener(this, GAMEINFO_EVENT.tag);
   }

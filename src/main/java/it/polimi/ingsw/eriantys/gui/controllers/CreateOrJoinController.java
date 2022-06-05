@@ -4,6 +4,7 @@ import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -101,16 +102,27 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   }
 
   /**
+   * Sets default values for choice boxes, and gameID text field
+   */
+  private void setDefaultValues(){
+    playerNumberChoice.setValue(2);
+    gameModeChoice.setValue(GameMode.NORMAL);
+    gameUidField.setText("AAAA");
+  }
+
+  /**
    * Sets scene to lobby scene
    */
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    gui.setScene(SceneEnum.LOBBY);
+    if (evt.getPropertyName().equals(GAMEINFO_EVENT.tag))
+      gui.setScene(SceneEnum.LOBBY);
   }
 
   @Override
   public void start() {
     super.start();
+    setDefaultValues();
     Controller.get().addListener(this, GAMEINFO_EVENT.tag);
   }
 
