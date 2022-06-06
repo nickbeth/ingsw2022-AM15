@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import javafx.scene.Cursor;
@@ -12,7 +13,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class AssistCardHandler extends SectionHandler {
-  private TilePane assistCards;
+  private final TilePane assistCards;
+  private final GameState gameState = Controller.get().getGameState();
 
   public AssistCardHandler (TilePane assistCards) {
     this.assistCards = assistCards;
@@ -20,7 +22,7 @@ public class AssistCardHandler extends SectionHandler {
 
   @Override
   protected void refresh() {
-    GamePhase gamePhase = Controller.get().getGameState().getGamePhase();
+    GamePhase gamePhase = gameState.getGamePhase();
     if (gamePhase == GamePhase.PLANNING) {
       create();
     }
@@ -29,7 +31,7 @@ public class AssistCardHandler extends SectionHandler {
   @Override
   protected void create() {
     assistCards.getChildren().clear();
-    ArrayList<AssistantCard> cards = Controller.get().getGameState().getPlayer(Controller.get().getNickname()).getCards();
+    ArrayList<AssistantCard> cards = gameState.getPlayer(Controller.get().getNickname()).getCards();
     cards.forEach(card -> {
       ImageView img = new ImageView();
       URL imgPath = getClass().getResource("/assets/assistcards/Animali_1_" + card.value + ".png");
@@ -37,7 +39,7 @@ public class AssistCardHandler extends SectionHandler {
       img.setFitWidth(160);
       img.setId(card.toString());
       img.setPreserveRatio(true);
-      if (Controller.get().getGameState().getGamePhase() == GamePhase.PLANNING) {
+      if (gameState.getGamePhase() == GamePhase.PLANNING) {
         img.setCursor(Cursor.HAND);
         img.setOnMouseClicked(e -> playAssistCardAction(card));
       }
@@ -46,7 +48,7 @@ public class AssistCardHandler extends SectionHandler {
   }
 
   private void playAssistCardAction(AssistantCard card) {
-    int index = Controller.get().getGameState()
+    int index = gameState
             .getPlayer(Controller.get().getNickname()).getCards().indexOf(card);
     Controller.get().sender().sendPickAssistantCard(index);
   }

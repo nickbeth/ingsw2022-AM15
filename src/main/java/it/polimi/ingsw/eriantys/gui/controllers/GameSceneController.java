@@ -65,7 +65,7 @@ public class GameSceneController extends FXMLController {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if(evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
+    if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
       updateAll();
     else {
       quitGameAction();
@@ -80,6 +80,8 @@ public class GameSceneController extends FXMLController {
     mainDashboardHandler.update();
     islandsGridHandler.update();
     cloudBoxHandler.update();
+    if (assistCardPanel.isVisible())
+      assistCardTilesHandler.update();
   }
 
   @FXML
