@@ -58,8 +58,8 @@ public abstract class MenuGame extends Menu {
       // View all field
       case "1" -> {
         ViewGroup viewAll = new ViewGroup()
-            .addView(dashboardsView)
             .addView(islandsView)
+            .addView(dashboardsView)
             .addView(cloudsView);
         if (rules.gameMode.equals(GameMode.EXPERT))
           viewAll.addView(ccView);

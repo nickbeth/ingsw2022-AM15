@@ -54,9 +54,11 @@ public class ViewsTest {
     assertTrue(entrance.getCount() <= ruleBook.entranceSize);
 
     Dashboard dashboard = new Dashboard(entrance, ruleBook.dashboardTowerCount, TowerColor.WHITE);
-    Player player = new Player(rules, "Carnazza", TowerColor.WHITE, students);
-
     ProfessorHolder professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
+    Player player = new Player(rules, "Carnazza", TowerColor.WHITE, students);
+    player.setDashboard(dashboard);
+
+
     DashboardView dashboardView = new DashboardView(player, ruleBook, professorHolder);
     out.println("Initial view:");
     dashboardView.draw(out);
@@ -86,6 +88,8 @@ public class ViewsTest {
     assertTrue(entrance.getCount() <= ruleBook.entranceSize);
 
     Player player = new Player(rules, "Carnazza", TowerColor.WHITE, students);
+    Player player2 = new Player(rules, "Carnazza", TowerColor.WHITE, students);
+
 
     ProfessorHolder professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
 
@@ -94,7 +98,7 @@ public class ViewsTest {
     professorHolder.setProfessorHolder(TowerColor.BLACK, HouseColor.YELLOW);
     professorHolder.setProfessorHolder(TowerColor.GRAY, HouseColor.GREEN);
 
-    List<Player> players = new ArrayList<>(List.of(player, player, player, player, player));
+    List<Player> players = new ArrayList<>(List.of(player, player2, player2, player, player));
     View view = new DashboardsView(players, ruleBook, professorHolder);
 
     for (int i = 0; i < players.size(); i++) {

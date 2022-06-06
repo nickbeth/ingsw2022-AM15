@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.cli.views;
 import it.polimi.ingsw.eriantys.cli.utils.BoxSymbols;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
+import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -21,23 +22,38 @@ public class DashboardView extends View {
   private final int MAX_STUDENTS;
 
   private final Dashboard dashboard;
+  private final Player player;
   private final ProfessorHolder professors;
 
-  public DashboardView(RuleBook ruleBook, Dashboard dashboard, ProfessorHolder professors) {
+  public DashboardView(Player player, RuleBook ruleBook, ProfessorHolder professors) {
     this.MAX_TOWER = ruleBook.dashboardTowerCount;
     this.MAX_STUDENTS = ruleBook.entranceSize;
-    this.dashboard = dashboard;
+    this.dashboard = player.getDashboard();
+    this.player = player;
     this.professors = professors;
   }
 
   @Override
   public void draw(PrintStream o) {
+    o.append(drawDashboard());
+  }
+
+  public String drawDashboard() {
+    StringBuilder stringBuilder = new StringBuilder();
     LinkedList<HouseColor> entranceList = dashboard.getEntrance().toLinkedList();
     Students dining = dashboard.getDiningHall();
 
-    o.append("╭───────╦──1-2-3-4-5-6-7-8-9-10-╤─────╦───────╮").append(System.lineSeparator());
+    // First row
+    stringBuilder
+        .append(printCentredNickname(player.getNickname() + "'s─dashboard"))
+        .append(System.lineSeparator());
+
+    // Second row
+    stringBuilder.append("├───────╦──1-2-3-4-5-6-7-8-9-10─╤─────╦───────┤").append(System.lineSeparator());
+
+    // Content rows
     for (var color : HouseColor.values()) {
-      o.append(BoxSymbols.VERTICAL.glyph)
+      stringBuilder.append(BoxSymbols.VERTICAL.glyph)
           .append(PADDING_DOUBLE)
           .append(getEntranceOccupation(color.ordinal(), entranceList))
           .append(PADDING)
@@ -56,11 +72,16 @@ public class DashboardView extends View {
           .append(BoxSymbols.VERTICAL.glyph)
           .append(System.lineSeparator());
     }
-    o.append("╰───────╩───────────────────────╧─────╩───────╯").append(System.lineSeparator());
+
+    // Last row
+    stringBuilder.append("╰───────╩───────────────────────╧─────╩───────╯").append(System.lineSeparator());
+
+    return stringBuilder.toString();
   }
 
   private String getEntranceOccupation(int row, LinkedList<HouseColor> entrance) {
     StringBuilder out = new StringBuilder();
+
     if (row <= MAX_STUDENTS / 2) {
       for (int i = 0; i < 2 && i < MAX_STUDENTS; i++) {
         HouseColor nextStudent = entrance.poll();
@@ -101,4 +122,13 @@ public class DashboardView extends View {
       return PADDING_TRIPLE;
     }
   }
+
+  private String printCentredNickname(String row) {
+    StringBuilder top = new StringBuilder("╭─────────────────────────────────────────────╮");
+    String start = "├───────╦──1";
+
+
+    return top.replace(start.length(), start.length() + row.length(), row).toString();
+  }
+
 }

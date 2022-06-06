@@ -19,6 +19,7 @@ public class MenuPickAssistantCard extends MenuGame {
     } else {
       out.println("It's not your turn, you can see the state of the game tho.");
     }
+    out.print("Make option: ");
   }
 
   @Override

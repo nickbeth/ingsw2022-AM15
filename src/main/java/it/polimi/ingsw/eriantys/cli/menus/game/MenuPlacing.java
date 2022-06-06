@@ -65,7 +65,7 @@ public class MenuPlacing extends MenuGame {
             paramBuilder.flushStudentToMove();
 
             // Shows entrance
-            new DashboardView(rules, game.getCurrentPlayer().getDashboard(), professorHolder).draw(out);
+            new DashboardView(currentPlayer, rules, professorHolder).draw(out);
 
             // Takes the color
             new MenuStudentColor().show(in, out, paramBuilder);
@@ -113,7 +113,7 @@ public class MenuPlacing extends MenuGame {
             paramBuilder.flushStudentToMove();
 
             // Shows entrance
-            new DashboardView(rules, currentPlayer.getDashboard(), professorHolder).draw(out);
+            new DashboardView(currentPlayer, rules, professorHolder).draw(out);
 
             // Takes the color
             new MenuStudentColor().show(in, out, paramBuilder);

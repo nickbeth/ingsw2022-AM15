@@ -13,7 +13,7 @@ import static it.polimi.ingsw.eriantys.model.enums.AssistantCard.getFullDeck;
 public class Player {
   private final String nickname;
   private boolean connected;
-  private final Dashboard dashboard;
+  private Dashboard dashboard;
   private final ArrayList<AssistantCard> cards;
   private final TowerColor team;
   private AssistantCard chosenCard;
@@ -100,5 +100,9 @@ public class Player {
 
   public ArrayList<AssistantCard> getCards() {
     return cards;
+  }
+
+  public void setDashboard(Dashboard dashboard) {
+    this.dashboard = dashboard;
   }
 }
