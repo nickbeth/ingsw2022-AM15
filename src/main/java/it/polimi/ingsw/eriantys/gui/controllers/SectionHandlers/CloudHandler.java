@@ -1,7 +1,11 @@
 package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 
+import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Cloud;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
+import javafx.event.Event;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -14,9 +18,11 @@ import java.util.List;
 
 public class CloudHandler extends SectionHandler {
   private final AnchorPane cloudPane;
-  private Cloud cloud;
-  private final List<Label> studentlabels = new ArrayList<>();
 
+  private final Cloud cloud;
+  private final GameState gameState = Controller.get().getGameState();
+
+  private final List<Label> studentlabels = new ArrayList<>();
   private final EnumMap<HouseColor, String> studentColorToPath = new EnumMap<>(HouseColor.class);
 
   public CloudHandler(AnchorPane cloudPane, Cloud cloud) {
@@ -27,10 +33,15 @@ public class CloudHandler extends SectionHandler {
   }
 
   /**
-   * Refreshes the students amounts
+   * Refreshes the students amounts, and cursor
    */
   @Override
   protected void refresh() {
+    if (gameState.getTurnPhase() == TurnPhase.PICKING)
+      cloudPane.setCursor(Cursor.HAND);
+    else
+      cloudPane.setCursor(Cursor.NONE);
+
     for (HouseColor color : HouseColor.values()) {
       studentlabels.get(color.ordinal()).setText("×" + cloud.getStudents().getCount(color));
     }
@@ -43,7 +54,6 @@ public class CloudHandler extends SectionHandler {
   protected void create() {
     cloudPane.setPrefWidth(150);
     cloudPane.setPrefHeight(150);
-    cloudPane.setCursor(Cursor.HAND);
 
     ImageView cloudImg = new ImageView(new Image("/assets/realm/cloud.png"));
     cloudImg.setFitWidth(150);
@@ -97,6 +107,14 @@ public class CloudHandler extends SectionHandler {
 
     AnchorPane.setLeftAnchor(blueStudent, 95.0);
     studentlabels.add(blueStudent);
+
+    cloudPane.setOnMouseClicked(e -> pickCloud());
   }
 
+  private void pickCloud() {
+    if (gameState.getTurnPhase() == TurnPhase.PICKING) {
+      int index = gameState.getPlayingField().getClouds().indexOf(cloud);
+      Controller.get().sender().sendPickCloud(index);
+    }
+  }
 }
