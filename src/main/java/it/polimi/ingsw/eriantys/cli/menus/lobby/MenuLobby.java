@@ -65,8 +65,9 @@ public class MenuLobby extends Menu {
           return MenuEnum.PICK_ASSISTANT;
         }
 
-        // Back button
+        // Back button, exit lobby
         case "0" -> {
+          controller.sender().sendQuitGame();
           return MenuEnum.CREATE_OR_JOIN;
         }
 
