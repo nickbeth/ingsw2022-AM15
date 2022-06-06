@@ -29,7 +29,7 @@ public class LobbyController extends FXMLController {
   @FXML
   private Label maxPlayerCount;
   
-  private GameInfo gameInfo = Controller.get().getGameInfo();
+  private final GameInfo gameInfo = Controller.get().getGameInfo();
 
   @FXML
   private void startGameAction(ActionEvent actionEvent) {
@@ -47,8 +47,8 @@ public class LobbyController extends FXMLController {
 
   @FXML
   private void quitLobbyAction(ActionEvent actionEvent) {
-    Controller.get().disconnect();
-    gui.setScene(SceneEnum.MENU);
+    Controller.get().sender().sendQuitGame();
+    gui.setScene(SceneEnum.CREATE_OR_JOIN);
   }
 
   @Override
