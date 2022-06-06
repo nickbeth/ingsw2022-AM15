@@ -12,7 +12,9 @@ import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING_DOUBLE;
 
 public class AssistantCardsView extends View {
-  List<AssistantCard> cards;
+  private final List<AssistantCard> cards;
+  private final int maxColumns = 4;
+  private final String PADDING_FROM_EACH_CARD = PADDING_DOUBLE;
 
 
   public AssistantCardsView(Player player) {
@@ -26,7 +28,6 @@ public class AssistantCardsView extends View {
   @Override
   public void draw(PrintStream o) {
     StringBuilder stringBuilder = new StringBuilder();
-    int maxColumns = 4;
 
     // Gets the height of one single stamp
     int rows = drawAssistantCard(cards.get(0), 0).split(System.lineSeparator()).length;
@@ -45,27 +46,33 @@ public class AssistantCardsView extends View {
         for (int cardIndex = progression; cardIndex < progression + maxColumns; cardIndex++) {
           stringBuilder
               .append(matrix[cardIndex][row])
-              .append(PADDING_DOUBLE);
+              .append(PADDING_FROM_EACH_CARD);
         }
-        stringBuilder
-            .append(System.lineSeparator());
+        stringBuilder.append(System.lineSeparator());
       }
       progression += maxColumns;
-      stringBuilder.append(System.lineSeparator());
     }
 
     // Build last stripes
-    for (int row = 0; row < rows; row++) {
-      for (int cardIndex = progression; cardIndex < cards.size(); cardIndex++) {
-        stringBuilder
-            .append(matrix[cardIndex][row])
-            .append(PADDING_DOUBLE);
+    if (progression < cards.size()) {
+      for (int row = 0; row < rows; row++) {
+        for (int cardIndex = progression; cardIndex < cards.size(); cardIndex++) {
+          stringBuilder
+              .append(matrix[cardIndex][row])
+              .append(PADDING_FROM_EACH_CARD);
+        }
+        stringBuilder.append(System.lineSeparator());
       }
-      stringBuilder.append(System.lineSeparator());
     }
 
-    o.println(stringBuilder);
-    o.println();
+    // Title of the section
+    o.append(centredTitle("ASSISTANT CARDS")).append(System.lineSeparator());
+
+    // Write the content
+    o.append(stringBuilder);
+
+    // Writes a "-" separator
+    o.append(centredTitle("-")).append(System.lineSeparator());
   }
 
   private String drawAssistantCard(AssistantCard card, int index) {
@@ -113,5 +120,12 @@ public class AssistantCardsView extends View {
 
     return stringBuilder.toString();
 
+  }
+
+  private String centredTitle(String row) {
+    int baseRowLength = ("╰───────────╯" + PADDING_FROM_EACH_CARD).repeat(maxColumns).length();
+    int nPadding = (baseRowLength / 2) - (int) (Math.floor((double) row.length() / 2));
+
+    return "-".repeat(nPadding) + row + "-".repeat(nPadding);
   }
 }

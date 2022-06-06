@@ -5,8 +5,6 @@ import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.actions.GameAction;
-import it.polimi.ingsw.eriantys.model.actions.InitiateGameEntities;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
@@ -56,9 +54,10 @@ public class ViewsTest {
     assertTrue(entrance.getCount() <= ruleBook.entranceSize);
 
     Dashboard dashboard = new Dashboard(entrance, ruleBook.dashboardTowerCount, TowerColor.WHITE);
+    Player player = new Player(rules, "Carnazza", TowerColor.WHITE, students);
 
     ProfessorHolder professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
-    DashboardView dashboardView = new DashboardView(ruleBook, dashboard, professorHolder);
+    DashboardView dashboardView = new DashboardView(player, ruleBook, professorHolder);
     out.println("Initial view:");
     dashboardView.draw(out);
 
@@ -72,6 +71,36 @@ public class ViewsTest {
     dashboard.removeTowers(3);
     out.println("Dashboard view after some changes:");
     dashboardView.draw(out);
+  }
+
+  @Test
+  public void printDashboards() {
+    RuleBook ruleBook = RuleBook.makeRules(GameMode.NORMAL, 3);
+
+    Students entrance = new Students();
+    entrance.addStudents(HouseColor.RED, 2);
+    entrance.addStudents(HouseColor.BLUE, 3);
+    entrance.addStudents(HouseColor.YELLOW, 1);
+    entrance.addStudents(HouseColor.GREEN, 2);
+    entrance.addStudents(HouseColor.PINK, 1);
+    assertTrue(entrance.getCount() <= ruleBook.entranceSize);
+
+    Player player = new Player(rules, "Carnazza", TowerColor.WHITE, students);
+
+    ProfessorHolder professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
+
+    // Only one of the following professors should be printed
+    professorHolder.setProfessorHolder(TowerColor.WHITE, HouseColor.BLUE);
+    professorHolder.setProfessorHolder(TowerColor.BLACK, HouseColor.YELLOW);
+    professorHolder.setProfessorHolder(TowerColor.GRAY, HouseColor.GREEN);
+
+    List<Player> players = new ArrayList<>(List.of(player, player, player, player, player));
+    View view = new DashboardsView(players, ruleBook, professorHolder);
+
+    for (int i = 0; i < players.size(); i++) {
+      view.draw(out);
+      players.remove(0);
+    }
   }
 
   @Test
@@ -135,7 +164,6 @@ public class ViewsTest {
     View view = new IslandsView(islandList, 0);
 
     for (int i = 0; i < 12; i++) {
-      out.println("- Test --------------------------------------------------");
       view.draw(out);
       islandList.remove(0);
     }
@@ -147,7 +175,6 @@ public class ViewsTest {
     View view = new AssistantCardsView(cards);
 
     for (var card : AssistantCard.values()) {
-      out.println("- Test --------------------------------------------------");
       view.draw(out);
       cards.remove(0);
     }
