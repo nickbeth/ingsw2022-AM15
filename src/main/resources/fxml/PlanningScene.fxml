@@ -22,9 +22,7 @@
             <Image url="@../assets/realm/island-background.png" />
          </image>
       </ImageView>
-      <Button layoutX="12.0" layoutY="14.0" mnemonicParsing="false" onAction="#quitGameAction" text="Quit game" AnchorPane.bottomAnchor="680.4" />
-      <Button fx:id="playCardButton" layoutX="12.0" layoutY="679.0" mnemonicParsing="false" onAction="#showAssistCards" text="play Assistant Card" />
-      <CircularPane fx:id="islandsPane" layoutX="407.0" layoutY="211.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-50.0" clipAwayExcessWhitespace="true" gap="-100.0"/>
+      <CircularPane fx:id="islandsPane" clipAwayExcessWhitespace="true" gap="-100.0" layoutX="407.0" layoutY="211.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-50.0" />
        <AnchorPane fx:id="dashboardClient" layoutX="1000.0" styleClass="pane-dashboard" AnchorPane.rightAnchor="0.0">
            <children>
                <ImageView fitHeight="720.0" pickOnBounds="true" preserveRatio="true">
@@ -82,7 +80,7 @@
                </rowConstraints>
            </GridPane>
        </AnchorPane>
-       <VBox fx:id="cloudBox" prefHeight="600.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="470.0">
+       <VBox fx:id="cloudBox" prefHeight="400.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="350.0">
        </VBox>
        <GridPane fx:id="otherPlayersGrid" alignment="TOP_CENTER" layoutX="1085.0" layoutY="14.0" prefHeight="194.0" prefWidth="212.0" AnchorPane.rightAnchor="313.0" AnchorPane.topAnchor="0.0">
            <columnConstraints>
@@ -95,6 +93,8 @@
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            </rowConstraints>
        </GridPane>
+      <Button layoutX="12.0" layoutY="14.0" mnemonicParsing="false" onAction="#quitGameAction" text="Quit game" AnchorPane.bottomAnchor="680.4" />
+      <Button fx:id="playCardButton" layoutX="12.0" layoutY="679.0" mnemonicParsing="false" onAction="#showAssistCards" text="play Assistant Card" />
       <StackPane fx:id="assistCardPanel" layoutX="50.0" layoutY="250.0" prefHeight="460.0" prefWidth="1180.0" stylesheets="@../css/popupstyle.css" visible="false">
          <children>
             <Region layoutX="6.0" layoutY="4.0" styleClass="region-assistcards" />

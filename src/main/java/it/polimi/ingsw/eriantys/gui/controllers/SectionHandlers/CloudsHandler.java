@@ -7,6 +7,8 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+
 public class CloudsHandler extends SectionHandler {
   private final VBox cloudBox;
 
@@ -31,6 +33,7 @@ public class CloudsHandler extends SectionHandler {
    */
   @Override
   protected void create() {
+    clientLogger.debug("creating cloud handlers and populating cloud box");
     Controller.get().getGameState().getPlayingField().getClouds().forEach(
             cloud -> {
               AnchorPane cloudPane = new AnchorPane();
