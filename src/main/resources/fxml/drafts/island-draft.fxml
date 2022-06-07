@@ -73,6 +73,11 @@
                   <Image url="@../../assets/realm/lock-icon.png" />
                </image>
             </ImageView>
+            <ImageView fitWidth="25.0" layoutX="74.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="72.5" AnchorPane.topAnchor="0.0">
+               <image>
+                  <Image url="@../../assets/realm/mothernature.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
    </children>

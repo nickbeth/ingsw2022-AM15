@@ -39,6 +39,12 @@
             <artifactId>javafx-fxml</artifactId>
             <version>18</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jfxtras/jfxtras-common -->
+        <dependency>
+            <groupId>org.jfxtras</groupId>
+            <artifactId>jfxtras-common</artifactId>
+            <version>17-r1</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

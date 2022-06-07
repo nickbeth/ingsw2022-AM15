@@ -6,6 +6,7 @@ import it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import jfxtras.scene.layout.CircularPane;
 
 import java.beans.PropertyChangeEvent;
 
@@ -26,7 +27,7 @@ public class GameSceneController extends FXMLController {
   @FXML
   private VBox cloudBox;
   @FXML
-  private GridPane islandsGrid;
+  private CircularPane islandsPane;
   @FXML
   private AnchorPane rootPane;
   @FXML
@@ -41,7 +42,7 @@ public class GameSceneController extends FXMLController {
   PlayerGridHandler playerGridHandler;
   DashboardHandler mainDashboardHandler;
   CloudsHandler cloudBoxHandler;
-  IslandsHandler islandsGridHandler;
+  IslandsHandler islandsPaneHandler;
   AssistCardHandler assistCardTilesHandler;
 
   @Override
@@ -52,7 +53,7 @@ public class GameSceneController extends FXMLController {
     mainDashboardHandler = new DashboardHandler(Controller.get().getNickname(), studentHallGrid, entranceGrid, profTableGrid, dashboardTowers);
     playerGridHandler = new PlayerGridHandler(otherPlayersGrid);
     cloudBoxHandler = new CloudsHandler(cloudBox);
-    islandsGridHandler = new IslandsHandler(islandsGrid);
+    islandsPaneHandler = new IslandsHandler(islandsPane);
     assistCardTilesHandler = new AssistCardHandler(assistCards);
   }
 
@@ -78,7 +79,7 @@ public class GameSceneController extends FXMLController {
     super.updateAll();
     playerGridHandler.update();
     mainDashboardHandler.update();
-    islandsGridHandler.update();
+    islandsPaneHandler.update();
     cloudBoxHandler.update();
     if (assistCardPanel.isVisible())
       assistCardTilesHandler.update();
