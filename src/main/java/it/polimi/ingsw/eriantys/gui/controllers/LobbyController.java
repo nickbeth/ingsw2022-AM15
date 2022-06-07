@@ -28,13 +28,13 @@ public class LobbyController extends FXMLController {
   private Label gameMode;
   @FXML
   private Label maxPlayerCount;
-  
-  private final GameInfo gameInfo = Controller.get().getGameInfo();
+
+  private GameInfo gameInfo;
 
   @FXML
   private void startGameAction(ActionEvent actionEvent) {
 
-    if(!Controller.get().sender().sendStartGame()) {
+    if (!Controller.get().sender().sendStartGame()) {
       errorMessage.setText("not enough players with a chosen color to start");
       errorMessage.setVisible(true);
     }
@@ -53,7 +53,8 @@ public class LobbyController extends FXMLController {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if(evt.getPropertyName().equals(START_GAME.tag))
+    updateAll();
+    if (evt.getPropertyName().equals(START_GAME.tag))
       gui.setScene(SceneEnum.PLANNING);
     else
       updateAll();
@@ -61,6 +62,7 @@ public class LobbyController extends FXMLController {
 
   @Override
   public void updateAll() {
+    gameInfo = Controller.get().getGameInfo();
     playerList.getItems().clear();
     towerColorChoice.getItems().clear();
     Map<String, TowerColor> playerMap = gameInfo.getPlayersMap();
@@ -80,11 +82,12 @@ public class LobbyController extends FXMLController {
     }
     towerColorChoice.getItems().add(null);
   }
-  
-  private void setDefaultValues(){
+
+  private void setDefaultValues() {
     //sets the default value in choice box to the first available color
+    gameInfo = Controller.get().getGameInfo();
     for (TowerColor color : TowerColor.values()) {
-      if(gameInfo.isTowerColorValid(Controller.get().getNickname(), color)) {
+      if (gameInfo.isTowerColorValid(Controller.get().getNickname(), color)) {
         towerColorChoice.setValue(color);
         break;
       }
@@ -93,16 +96,16 @@ public class LobbyController extends FXMLController {
 
   @Override
   public void start() {
-    super.start();
     setDefaultValues();
-    Controller.get().addListener(this,  START_GAME.tag);
+    super.start();
+    Controller.get().addListener(this, START_GAME.tag);
     Controller.get().addListener(this, GAMEINFO_EVENT.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
-    Controller.get().removeListener(this,  START_GAME.tag);
+    Controller.get().removeListener(this, START_GAME.tag);
     Controller.get().removeListener(this, GAMEDATA_EVENT.tag);
   }
 }
