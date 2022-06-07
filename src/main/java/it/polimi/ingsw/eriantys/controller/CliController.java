@@ -27,7 +27,7 @@ public class CliController extends Controller {
 
   @Override
   public void fireChange(EventType event, Object oldValue, Object newValue) {
-    listenerHolder.firePropertyChange(event.tag, null, null);
+    listenerHolder.firePropertyChange(event.tag, null, newValue);
   }
 
   @Override
