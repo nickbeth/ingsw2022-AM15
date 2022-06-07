@@ -52,17 +52,16 @@ public class PickAssistantCard extends GameAction {
       // Checks if the card with the same value has been already played
       for (AssistantCard c : alreadyPlayedCards) {
         if (chosenCard.equals(c)) {
-          modelLogger.debug("Same card played {} - {}", c, chosenCard);
-          // If so, if I have even one card that has not been played then it's not ok
+          modelLogger.debug("{} has already been played", c);
+          // If so, if I have more than one other playable card its not a valid choiche
           for (AssistantCard myCard : currPlayer.getCards()) {
-            modelLogger.debug("Card in my hand: {}", myCard);
+            modelLogger.trace("Card in my hand: {}", myCard);
             if (!alreadyPlayedCards.contains(myCard)) {
-              modelLogger.debug("it could've been played {}", myCard);
+              modelLogger.debug("Another could've been played: {}", myCard);
               return false;
             }
           }
         }
-        modelLogger.debug("Not same card played {}", c);
       }
     } catch (IndexOutOfBoundsException e) {
       modelLogger.warn("\nIndex out of bound for Assistant card list. Message: " + e.getMessage());
