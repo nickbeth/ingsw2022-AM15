@@ -60,9 +60,10 @@ public class IslandHandler extends SectionHandler {
       }
 
 
-      TowerColor color = island.getTowerColor().get();
+      TowerColor color;
       if (island.getTowerColor().isPresent()) {
-        ImageView tower = new ImageView(new Image(towerColorToPath.get(island.getTowerColor().get())));
+        color = island.getTowerColor().get();
+        ImageView tower = new ImageView(new Image(towerColorToPath.get(color)));
         tower.setFitWidth(20);
         tower.setPreserveRatio(true);
         towerLabel = new Label("×" + island.getTowerCount(), tower);
@@ -74,6 +75,7 @@ public class IslandHandler extends SectionHandler {
       }
 
       if (towerColor != null) {
+        color = island.getTowerColor().get();
         towerLabel.setText("×" + island.getTowerCount());
         if (towerColor != color) {
           ImageView tower = new ImageView(new Image(towerColorToPath.get(color)));

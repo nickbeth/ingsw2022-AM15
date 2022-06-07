@@ -10,6 +10,7 @@ public abstract class SectionHandler {
   public void update() {
     if (!created) {
       create();
+      created = true;
     }
     refresh();
   }
@@ -21,9 +22,8 @@ public abstract class SectionHandler {
   }
 
   /**
-   * Sets created flag to true
+   * Base implementation does nothing
    */
   protected void create() {
-    created = true;
   }
 }

@@ -20,7 +20,7 @@ import java.util.List;
 
 public class PlayerGridHandler extends SectionHandler {
   private final GridPane playerGrid;
-  GameState gameState = Controller.get().getGameState();
+  private final GameState gameState = Controller.get().getGameState();
 
   private final HashMap<ImageView, Player> discIcons = new HashMap<>();
   private final HashMap<Label, Player> cardAmounts = new HashMap<>();
