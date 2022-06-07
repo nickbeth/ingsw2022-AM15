@@ -32,7 +32,8 @@ public class PlayerGridHandler extends SectionHandler {
   }
 
   /**
-   * Refreshes disconnect icon visibility, and numbers on card and tower counters
+   * Refreshes disconnect icon visibility, and numbers on card and tower counters. <br>
+   * If the game is in EXPERT mode it refreshes coin counter
    */
   protected void refresh() {
     discIcons.forEach((img, player) -> {
@@ -77,7 +78,7 @@ public class PlayerGridHandler extends SectionHandler {
         nickname.getStyleClass().add("label-nicknames");
         nickname.setCursor(Cursor.HAND);
         nickname.setContentDisplay(ContentDisplay.RIGHT);
-        //TODO: add show showDashboard action on click to image, maybe it depends on the grid?
+        //TODO: add show showDashboard action on click image, maybe it depends on the grid?
         playerGrid.add(nickname, 0, i);
         GridPane.setHalignment(nickname, HPos.RIGHT);
 

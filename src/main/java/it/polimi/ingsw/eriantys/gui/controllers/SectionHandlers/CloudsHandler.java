@@ -24,7 +24,6 @@ public class CloudsHandler extends SectionHandler {
   protected void refresh() {
     //TODO: check in wich gamePhase refillClouds Action gets called
     cloudHandlers.forEach(SectionHandler::update);
-    create();
   }
 
   /**
@@ -35,10 +34,10 @@ public class CloudsHandler extends SectionHandler {
     Controller.get().getGameState().getPlayingField().getClouds().forEach(
             cloud -> {
               AnchorPane cloudPane = new AnchorPane();
-              cloudPane.getChildren().add(cloudPane);
               CloudHandler cloudHandler = new CloudHandler(cloudPane, cloud);
               cloudHandler.update();
               cloudHandlers.add(cloudHandler);
+              cloudBox.getChildren().add(cloudPane);
             });
   }
 

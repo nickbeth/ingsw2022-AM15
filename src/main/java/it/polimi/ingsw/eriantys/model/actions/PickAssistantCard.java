@@ -33,7 +33,7 @@ public class PickAssistantCard extends GameAction {
     gameState.advancePlayer();
   }
 
-  // todo javadoc e testing
+  // todo javadoc
   @Override
   public boolean isValid(GameState gameState) {
     Player currPlayer = gameState.getCurrentPlayer();

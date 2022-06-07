@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 
 public abstract class SectionHandler {
-  protected boolean created = false;
+  private boolean created = false;
 
   /**
    * If {@link #created} is false calls {@link #create()} method.<br>
