@@ -13,6 +13,7 @@ import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
 
 public class CloudsView extends View {
   private final List<Cloud> clouds;
+  private final String PADDING_FROM_EACH_CLOUD = PADDING_TRIPLE;
 
   public CloudsView(List<Cloud> clouds) {
     this.clouds = clouds;
@@ -27,18 +28,27 @@ public class CloudsView extends View {
       matrix[i] = drawCloud(clouds.get(i), i).split(System.lineSeparator());
     }
 
-    StringBuilder builder = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder();
     for (int row = 0; row < rows; row++) {
       for (String[] cloud : matrix) {
-        builder
+        stringBuilder
             .append(cloud[row])
-            .append(PADDING_TRIPLE);
+            .append(PADDING_FROM_EACH_CLOUD);
       }
-      builder
+      stringBuilder
           .append(System.lineSeparator());
     }
 
-    o.print(builder);
+    o.append(System.lineSeparator());
+
+    // Title of the section
+    o.append(centredTitle("CLOUDS")).append(System.lineSeparator());
+
+    // Write the content
+    o.append(stringBuilder);
+
+    // Writes a "-" separator
+    o.append(centredTitle("")).append(System.lineSeparator());
   }
 
   private String drawCloud(Cloud cloud, int index) {
@@ -77,5 +87,12 @@ public class CloudsView extends View {
     stringBuilder.append("╰─────╯");
 
     return stringBuilder.toString();
+  }
+
+  private String centredTitle(String title) {
+    int rowLength = ("╭──I──╮" + PADDING_FROM_EACH_CLOUD).repeat(clouds.size()).length() - PADDING_FROM_EACH_CLOUD.length();
+    int nPadding = (rowLength / 2) - (int) (Math.floor((double) title.length() / 2));
+
+    return "-".repeat(nPadding) + title + "-".repeat(nPadding + 1);
   }
 }

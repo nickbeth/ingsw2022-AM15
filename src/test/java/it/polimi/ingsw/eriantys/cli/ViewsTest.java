@@ -108,13 +108,6 @@ public class ViewsTest {
   }
 
   @Test
-  public void printStudent() {
-    View view = new StudentsView(students);
-
-    view.draw(out);
-  }
-
-  @Test
   public void printIsland() {
     Island island = new Island(students);
     View view = new IslandView(island);
@@ -224,10 +217,11 @@ public class ViewsTest {
   @Test
   public void printCharacterCards() {
     List<CharacterCard> cards = new ArrayList<>();
-    cards.add(CharacterCardCreator.create(CharacterCardEnum.IGNORE_COLOR));
-    cards.add(CharacterCardCreator.create(CharacterCardEnum.IGNORE_TOWERS));
-    cards.add(CharacterCardCreator.create(CharacterCardEnum.STEAL_PROFESSOR));
 
-    (new CharacterCardView(cards)).draw(out);
+    for (var card : CharacterCardEnum.values()) {
+      cards.add(CharacterCardCreator.create(card));
+    }
+
+    (new CharacterCardsView(cards)).draw(out);
   }
 }

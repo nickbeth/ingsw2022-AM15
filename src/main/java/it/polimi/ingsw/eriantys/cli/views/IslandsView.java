@@ -59,6 +59,7 @@ public class IslandsView extends View {
       }
     }
 
+    o.append(System.lineSeparator());
 
     // Title of the section
     o.append(centredTitle("ISLANDS")).append(System.lineSeparator());
@@ -67,21 +68,21 @@ public class IslandsView extends View {
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.append(centredTitle("")).append(System.lineSeparator());
+    o.append(centredTitle("-")).append(System.lineSeparator());
   }
 
   private String centredIsland(String row) {
     int baseRowLength = "╭────────────────────────────────╮".length();
-    int nPadding = baseRowLength / 2;
+    int nPadding = (int) (Math.floor((double) baseRowLength / 2));
 
     return PADDING.repeat(nPadding) + row;
   }
 
-  private String centredTitle(String row) {
+  private String centredTitle(String title) {
     int baseRowLength = "╭────────────────────────────────╮".length();
-    int nPadding = baseRowLength - (int) (Math.floor((double) row.length() / 2));
+    int nPadding = baseRowLength - (int) (Math.floor((double) title.length() / 2));
 
-    return "-".repeat(nPadding) + row + "-".repeat(nPadding);
+    return "-".repeat(nPadding) + title + "-".repeat(nPadding - 1);
   }
 }
 

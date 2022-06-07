@@ -65,6 +65,8 @@ public class AssistantCardsView extends View {
       }
     }
 
+    o.append(System.lineSeparator());
+
     // Title of the section
     o.append(centredTitle("ASSISTANT CARDS")).append(System.lineSeparator());
 
@@ -122,10 +124,10 @@ public class AssistantCardsView extends View {
 
   }
 
-  private String centredTitle(String row) {
-    int baseRowLength = ("╰───────────╯" + PADDING_FROM_EACH_CARD).repeat(maxColumns).length();
-    int nPadding = (baseRowLength / 2) - (int) (Math.floor((double) row.length() / 2));
+  private String centredTitle(String title) {
+    int baseRowLength = ("╰───────────╯" + PADDING_FROM_EACH_CARD).repeat(maxColumns).length() - PADDING_FROM_EACH_CARD.length();
+    int nPadding = (baseRowLength / 2) - (int) (Math.floor((double) title.length() / 2));
 
-    return "-".repeat(nPadding) + row + "-".repeat(nPadding);
+    return "-".repeat(nPadding) + title + "-".repeat(nPadding-1);
   }
 }

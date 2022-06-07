@@ -38,7 +38,7 @@ public class MenuLobby extends Menu {
   public MenuEnum show() throws InterruptedException {
 
     while (true) {
-      out.print("Make a choice: ");
+//      out.print("Make a choice: ");
       choice = getKeyboardInput();
       clientLogger.debug("Handling choice");
 
@@ -71,7 +71,7 @@ public class MenuLobby extends Menu {
           return MenuEnum.CREATE_OR_JOIN;
         }
 
-        default -> out.println("Choose a valid option");
+        default -> out.print("Choose a valid option: ");
       }
     }
   }

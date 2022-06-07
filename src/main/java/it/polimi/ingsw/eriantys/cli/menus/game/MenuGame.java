@@ -51,7 +51,7 @@ public abstract class MenuGame extends Menu {
     View dashboardsView = new DashboardsView(players, rules, professorHolder);
     View islandsView = new IslandsView(islands, motherPosition);
     View cloudsView = new CloudsView(clouds);
-    View ccView = new CharacterCardView(ccs);
+    View ccView = new CharacterCardsView(ccs);
 
     clearConsole();
     switch (choice) {

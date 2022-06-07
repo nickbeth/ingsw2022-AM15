@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
-import it.polimi.ingsw.eriantys.cli.views.CharacterCardView;
+import it.polimi.ingsw.eriantys.cli.views.CharacterCardsView;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
@@ -158,7 +158,7 @@ public class MenuPlacing extends MenuGame {
             // Show playable CC
             List<CharacterCard> playableCC = controller.getGameState().getPlayingField().getCharacterCards();
             out.println("Playable character cards: ");
-            (new CharacterCardView(playableCC)).draw(out);
+            (new CharacterCardsView(playableCC)).draw(out);
 
             // Choose CC
             out.println("Choose a character card: ");

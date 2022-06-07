@@ -66,6 +66,8 @@ public class DashboardsView extends View {
       }
     }
 
+    o.append(System.lineSeparator());
+
     // Title of the section
     o.append(centredTitle("DASHBOARDS")).append(System.lineSeparator());
 
@@ -73,7 +75,7 @@ public class DashboardsView extends View {
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.append(centredTitle("-")).append(System.lineSeparator());
+    o.append(centredTitle("")).append(System.lineSeparator());
   }
 
 
@@ -84,11 +86,11 @@ public class DashboardsView extends View {
     return PADDING.repeat(nPadding) + row;
   }
 
-  private String centredTitle(String row) {
+  private String centredTitle(String title) {
     int baseRowLength = ("╰───────╩───────────────────────╧─────╩───────╯" + PADDING_FROM_EACH_DASHBOARD)
-        .repeat(maxColumns).length();
-    int nPadding = (baseRowLength / 2) - (int) (Math.floor((double) row.length() / 2));
+        .repeat(maxColumns).length() - PADDING_FROM_EACH_DASHBOARD.length();
+    int nPadding = (baseRowLength / 2) - (int) (Math.floor((double) title.length() / 2));
 
-    return "-".repeat(nPadding) + row + "-".repeat(nPadding);
+    return "-".repeat(nPadding) + title + "-".repeat(nPadding);
   }
 }

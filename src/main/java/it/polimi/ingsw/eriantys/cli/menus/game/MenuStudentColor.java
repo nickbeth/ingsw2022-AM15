@@ -6,19 +6,20 @@ import java.util.Scanner;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
 public class MenuStudentColor {
-  protected void showOptions(PrintStream out) {
+  private void showOptions(PrintStream out) {
     out.println("1 - Pink");
     out.println("2 - Red");
     out.println("3 - Blue");
     out.println("4 - Yellow");
     out.println("5 - Green");
+    out.print("Choose the color of the students you want to move:");
   }
 
   public void show(Scanner in, PrintStream out, ParamBuilder paramBuilder) {
     boolean done;
 
+    showOptions(out);
     do {
-      showOptions(out);
       done = true;
 
       // Choose the color
@@ -29,7 +30,7 @@ public class MenuStudentColor {
         case "4" -> paramBuilder.setChosenColor(YELLOW);
         case "5" -> paramBuilder.setChosenColor(GREEN);
         default -> {
-          out.println("Insert a valid option");
+          out.print("Insert a valid option: ");
           done = false;
         }
       }

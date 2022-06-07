@@ -12,24 +12,40 @@ import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.printColored;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 
-public class CharacterCardView extends View {
+public class CharacterCardsView extends View {
   private final List<CharacterCard> characterCards;
 
 
-  public CharacterCardView(List<CharacterCard> characterCards) {
+  public CharacterCardsView(List<CharacterCard> characterCards) {
     this.characterCards = characterCards;
   }
 
   @Override
   public void draw(PrintStream o) {
+    String start = "0 │3 coins │ ";
+
+    // Gets the longest name among character cards
+//    AtomicInteger longestName = new AtomicInteger();
+//    characterCards
+//        .stream()
+//        .min((c1, c2) -> c2.getCardEnum().toString().length() - c1.getCardEnum().toString().length())
+//        .map(c -> c.getCardEnum().toString().length())
+//        .ifPresent(longestName::set);
+
+
+
     for (int i = 0; i < characterCards.size(); i++) {
       CharacterCard card = characterCards.get(i);
       o
-          .append("╭─╦──COST──╦─EFFECT─────────────╮")
+          // First row
+          .append("╭─╦──COST───╦─EFFECT──────────────────────────╮")
           .append(System.lineSeparator())
+
+          // Content
           .append(printColored(Integer.toString(i), HouseColor.RED))
           .append(PADDING)
           .append(VERTICAL.glyph)
+          .append(PADDING)
           .append(printColored(Integer.toString(card.getCardEnum().getCost()), HouseColor.YELLOW))
           .append(PADDING)
           .append(printColored("coins", HouseColor.YELLOW))
@@ -37,7 +53,7 @@ public class CharacterCardView extends View {
           .append(VERTICAL.glyph)
           .append(PADDING)
           .append(card.getCardEnum().toString());
-      int paddingLeft = "EFFECT─────────────".length() - card.getCardEnum().toString().length();
+      int paddingLeft = "EFFECT──────────────────────────".length() - card.getCardEnum().toString().length();
       if (paddingLeft < 0) clientLogger.warn("CharacterCard cli view needs fixes");
 
       for (int j = 0; j < paddingLeft; j++) {
@@ -46,7 +62,7 @@ public class CharacterCardView extends View {
       o
           .append(VERTICAL.glyph)
           .append(System.lineSeparator())
-          .append("╰─╩────────╩────────────────────╯")
+          .append("╰─╩─────────╩─────────────────────────────────╯")
           .append(System.lineSeparator());
     }
   }
