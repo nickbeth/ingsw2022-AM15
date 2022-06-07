@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.gui.controllers.utils.DataFormats;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
@@ -12,12 +13,17 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class DashboardHandler extends SectionHandler {
   private final String nickname;
@@ -38,7 +44,6 @@ public class DashboardHandler extends SectionHandler {
   List<ImageView> pinkStudents = new ArrayList<>();
 
   ImageView[] professors = new ImageView[HouseColor.values().length];
-
   public DashboardHandler(String nickname, GridPane studentHallGrid, GridPane entranceGrid, GridPane professorGrid, TilePane towerTiles) {
     initMaps();
     this.nickname = nickname;
@@ -123,6 +128,19 @@ public class DashboardHandler extends SectionHandler {
       blueStudents.add(student);
       studentHallGrid.add(student, 0, 9 - blueStudents.indexOf(student));
     }
+
+    //TODO: move event action handlers outside of this method
+    studentHallGrid.setOnDragDropped(e -> {
+      e.acceptTransferModes(TransferMode.ANY);
+      Dragboard db = e.getDragboard();
+      HouseColor color = (HouseColor) db.getContent(DataFormats.HOUSE_COLOR.format);
+      clientLogger.debug(color.toString() + " student was dropped to dashboard");
+    });
+
+    studentHallGrid.setOnDragOver(e -> {
+      if (e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format))
+        e.acceptTransferModes(TransferMode.ANY);
+    });
   }
 
   /**
@@ -164,14 +182,12 @@ public class DashboardHandler extends SectionHandler {
     professor.setPreserveRatio(true);
     GridPane.setHalignment(professor, HPos.CENTER);
     GridPane.setValignment(professor, VPos.CENTER);
-
     return professor;
   }
 
   private void refereshEntrance() {
     //TODO: method to refresh entrances without recreating
   }
-
 
   private void createEntrance() {
     entranceGrid.getChildren().clear();
@@ -182,6 +198,15 @@ public class DashboardHandler extends SectionHandler {
       for (int i = 0; i < entrance.getCount(color); i++) {
         count++;
         ImageView student = createStudent(color);
+        student.setOnDragDetected((e) -> {
+          clientLogger.debug(color.toString() + " student drag detected");
+          Dragboard db = student.startDragAndDrop(TransferMode.ANY);
+          ClipboardContent content = new ClipboardContent();
+          content.put(DataFormats.HOUSE_COLOR.format, color);
+          db.setContent(content);
+          db.setDragView(student.getImage());
+          e.consume();
+        });
         if (count < 5) {
           entranceGrid.add(student, count, 0);
         } else {
