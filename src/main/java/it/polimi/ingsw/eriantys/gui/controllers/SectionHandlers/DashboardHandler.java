@@ -9,11 +9,13 @@ import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
@@ -44,6 +46,7 @@ public class DashboardHandler extends SectionHandler {
   List<ImageView> pinkStudents = new ArrayList<>();
 
   ImageView[] professors = new ImageView[HouseColor.values().length];
+
   public DashboardHandler(String nickname, GridPane studentHallGrid, GridPane entranceGrid, GridPane professorGrid, TilePane towerTiles) {
     initMaps();
     this.nickname = nickname;
@@ -69,7 +72,7 @@ public class DashboardHandler extends SectionHandler {
   @Override
   protected void create() {
     //populating dining hall
-    refreshDiningHall();
+    createDininghall();
     //populating professor table grid
     refreshProfTable();
     //pupulating entrance grid
@@ -95,9 +98,11 @@ public class DashboardHandler extends SectionHandler {
   }
 
   /**
+   * Adds dragOver event handler to {@link #studentHallGrid}<br>
    * For each table if the amount of students of the model is more than what is shown it adds new images.
    */
   private void refreshDiningHall() {
+    studentHallGrid.setOnDragOver(this::dragOverHall);
     Students hall = gameState.getPlayer(nickname).getDashboard().getDiningHall();
     for (int i = 0; i < hall.getCount(HouseColor.GREEN) - greenStudents.size(); i++) {
       ImageView student = createStudent(HouseColor.GREEN);
@@ -128,26 +133,21 @@ public class DashboardHandler extends SectionHandler {
       blueStudents.add(student);
       studentHallGrid.add(student, 0, 9 - blueStudents.indexOf(student));
     }
+  }
 
-    //TODO: move event action handlers outside of this method
-    studentHallGrid.setOnDragDropped(e -> {
-      e.acceptTransferModes(TransferMode.ANY);
-      Dragboard db = e.getDragboard();
-      HouseColor color = (HouseColor) db.getContent(DataFormats.HOUSE_COLOR.format);
-      clientLogger.debug(color.toString() + " student was dropped to dashboard");
-    });
-
-    studentHallGrid.setOnDragOver(e -> {
-      if (e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format))
-        e.acceptTransferModes(TransferMode.ANY);
-    });
+  /**
+   * Adds Drop event handler to {@link #studentHallGrid}, then calls {@link #refreshDiningHall()}
+   */
+  private void createDininghall() {
+    studentHallGrid.setOnDragDropped(this::dragDropOnHall);
+    refreshDiningHall();
   }
 
   /**
    * Creates a student ImageView containing de icon of given color
    */
   private ImageView createStudent(HouseColor color) {
-    ImageView student = new ImageView(new Image(studentColorToPath.get(HouseColor.BLUE)));
+    ImageView student = new ImageView(new Image(studentColorToPath.get(color)));
     student.setFitWidth(20);
     student.setPreserveRatio(true);
     GridPane.setHalignment(student, HPos.CENTER);
@@ -238,5 +238,22 @@ public class DashboardHandler extends SectionHandler {
     for (HouseColor color : HouseColor.values())
       professorColorToPath.put(color, "/assets/realm/professor-" + color + ".png");
 
+  }
+
+  private void dragDropOnHall(DragEvent e) {
+    Dragboard db = e.getDragboard();
+    HouseColor color = (HouseColor) db.getContent(DataFormats.HOUSE_COLOR.format);
+    clientLogger.debug(color.toString() + " student was dropped to dashboard");
+  }
+
+  /**
+   * if the turnPhase is PLACING accepts ANY transfer mode else NONE
+   */
+  private void dragOverHall(DragEvent e) {
+    if (e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format)) {
+      if (gameState.getTurnPhase() == TurnPhase.PLACING && gameState.getGamePhase() == GamePhase.ACTION)
+        e.acceptTransferModes(TransferMode.ANY);
+      else e.acceptTransferModes(TransferMode.NONE);
+    }
   }
 }
