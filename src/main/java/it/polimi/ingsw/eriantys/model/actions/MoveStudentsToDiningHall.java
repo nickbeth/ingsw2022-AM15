@@ -2,6 +2,8 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.entities.Player;
+import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
@@ -17,7 +19,7 @@ public class MoveStudentsToDiningHall extends GameAction {
 
   /**
    * moves students from entrance to dining hall,
-   *  if this is the last allowed movement it advances turn phase
+   * if this is the last allowed movement it advances turn phase
    */
   @Override
   public void apply(GameState gameState) {
@@ -27,14 +29,20 @@ public class MoveStudentsToDiningHall extends GameAction {
     GameService.placeStudents(move);
 
     int studentsInEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance().getCount();
-    int studentsToBeLeft = gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount;
+    int studentsShouldBeAtTheEndOfTurn = gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount;
 
-    if(studentsInEntrance <= studentsToBeLeft)
+    ProfessorHolder professorHolder = gameState.getPlayingField().getProfessorHolder();
+
+    GameService.updateProfessors(professorHolder, gameState.getPlayers(), gameState.getCurrentPlayer());
+
+    if (studentsInEntrance <= studentsShouldBeAtTheEndOfTurn)
       gameState.advanceTurnPhase();
   }
 
   /**
    * Checks if the current player's entrance has enough students for action
+   * and if the amount of students wanted to be moved are less than that the one left to
+   * move according to the rules
    */
   @Override
   public boolean isValid(GameState gameState) {
@@ -43,7 +51,16 @@ public class MoveStudentsToDiningHall extends GameAction {
       if (!currEntrance.hasEnough(color, students.getCount(color)))
         return false;
     }
+
+    int studentsLeftToMove = currEntrance.getCount() - (gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount);
+
+    if (students.getCount() > studentsLeftToMove)
+      return false;
+
+    if (students.getCount() > gameState.getRuleBook().playableStudentCount)
+      return false;
+
     return gameState.getTurnPhase() == TurnPhase.PLACING &&
-            gameState.getGamePhase() == GamePhase.ACTION;
+        gameState.getGamePhase() == GamePhase.ACTION;
   }
 }

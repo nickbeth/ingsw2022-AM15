@@ -42,8 +42,15 @@ public class MoveStudentsToIsland extends GameAction {
       if (!currEntrance.hasEnough(color, students.getCount(color)))
         return false;
     }
+
+    int studentsLeftToMove = currEntrance.getCount() - (gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount);
+
+    if (students.getCount() > studentsLeftToMove)
+      return false;
+
     if (students.getCount() > gameState.getRuleBook().playableStudentCount)
       return false;
+
     return gameState.getTurnPhase() == TurnPhase.PLACING &&
             gameState.getGamePhase() == GamePhase.ACTION;
   }
