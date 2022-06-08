@@ -11,6 +11,7 @@ import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import org.slf4j.helpers.MessageFormatter;
 
 import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
@@ -35,9 +36,12 @@ public abstract class MenuGame extends Menu {
     super();
     eventsToBeListening.add(GAMEDATA_EVENT);
     eventsToBeListening.add(GAME_ENDED);
+    clearConsole();
   }
 
   final protected void showViewOptions(PrintStream out) {
+    out.println();
+    out.println("- Phase: " + game.getGamePhase() + " - " + game.getTurnPhase() + " -----------------------------------------------");
     out.println("1 - View all");
     out.println("2 - View islands");
     out.println("3 - View dashboards");
@@ -82,7 +86,8 @@ public abstract class MenuGame extends Menu {
       }
 
       // Simply goes on
-      default -> {}
+      default -> {
+      }
     }
     showOptions();
   }
@@ -100,6 +105,14 @@ public abstract class MenuGame extends Menu {
         out.println("It's now your turn");
       showOptions();
     }
+  }
 
+  /**
+   * Checks if i amd the current player
+   *
+   * @return True if so, false otherwise.
+   */
+  protected boolean isMyTurn() {
+    return controller.getGameState().isTurnOf(controller.getNickname());
   }
 }

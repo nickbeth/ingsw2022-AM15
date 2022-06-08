@@ -63,7 +63,7 @@ public class MenuChooseNickname extends Menu {
         case "0" -> {
           return MenuEnum.CONNECTION;
         }
-        default -> out.println("Choose a valid option");
+        default -> out.print("Choose a valid option: ");
       }
     }
   }

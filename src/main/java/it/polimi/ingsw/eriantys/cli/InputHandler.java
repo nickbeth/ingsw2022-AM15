@@ -6,10 +6,12 @@ import java.beans.PropertyChangeSupport;
 import java.util.Scanner;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.INPUT_ENTERED;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class InputHandler implements Runnable {
   private final PropertyChangeSupport support;
   private static InputHandler inputHandler;
+  private final Scanner scanner = new Scanner(System.in);
 
   private String line = "";
 
@@ -17,7 +19,7 @@ public class InputHandler implements Runnable {
     this.support = support;
   }
 
-  public static InputHandler getInputHandler() {
+  public static InputHandler get() {
     if (inputHandler == null)
       inputHandler = new InputHandler(Controller.get().getListenerHolder());
     return inputHandler;
@@ -26,11 +28,10 @@ public class InputHandler implements Runnable {
   @Override
   public void run() {
     // Starting input handler
-    Scanner scanner = new Scanner(System.in);
     while (!line.equals("quit")) {
-//      System.out.println("Input handler: ");
       line = scanner.nextLine();
       support.firePropertyChange(INPUT_ENTERED.tag, null, line);
+      clientLogger.debug("Thrown INPUT_ENTERED event line taken: " + line);
     }
   }
 

@@ -1,39 +1,77 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
-import java.io.PrintStream;
-import java.util.Scanner;
+import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
+
+import java.beans.PropertyChangeEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
-public class MenuStudentColor {
-  private void showOptions(PrintStream out) {
+public class MenuStudentColor extends MenuGame {
+
+  public MenuStudentColor() {
+    super();
+    showOptions();
+    addListeningEvents();
+  }
+
+  private void addListeningEvents() {
+    eventsToBeListening.forEach(eventType -> controller.addListener(this, eventType.tag));
+  }
+
+  private void removeListeningEvents() {
+    eventsToBeListening.forEach(eventType -> controller.removeListener(this, eventType.tag));
+  }
+
+  @Override
+  public void showOptions() {
+    out.println("Colors:");
     out.println("1 - Pink");
     out.println("2 - Red");
     out.println("3 - Blue");
     out.println("4 - Yellow");
     out.println("5 - Green");
-    out.print("Choose the color of the students you want to move:");
+    out.print("Choose the color of the students you want to move: ");
   }
 
-  public void show(Scanner in, PrintStream out, ParamBuilder paramBuilder) {
-    boolean done;
+  @Override
+  public MenuEnum show() throws InterruptedException {
+    return null;
+  }
 
-    showOptions(out);
-    do {
-      done = true;
+  public void show(ParamBuilder paramBuilder) {
+
+    while (true) {
+      String choice = getNonBlankString();
 
       // Choose the color
-      switch (in.nextLine()) {
-        case "1" -> paramBuilder.setChosenColor(PINK);
-        case "2" -> paramBuilder.setChosenColor(RED);
-        case "3" -> paramBuilder.setChosenColor(BLUE);
-        case "4" -> paramBuilder.setChosenColor(YELLOW);
-        case "5" -> paramBuilder.setChosenColor(GREEN);
-        default -> {
-          out.print("Insert a valid option: ");
-          done = false;
+      switch (choice) {
+        case "1", "2", "3", "4", "5" -> {
+          paramBuilder.setChosenColor(getHouseColor(choice));
+          removeListeningEvents();
+          return;
         }
+        default -> out.print("Insert a valid option: ");
       }
-    } while (!done);
+    }
+  }
+
+  private HouseColor getHouseColor(String choice) {
+    Map<String, HouseColor> houseColorMap = new HashMap<>();
+
+    houseColorMap.put("1", PINK);
+    houseColorMap.put("2", RED);
+    houseColorMap.put("3", BLUE);
+    houseColorMap.put("4", YELLOW);
+    houseColorMap.put("5", GREEN);
+
+    return houseColorMap.get(choice);
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    super.propertyChange(evt);
   }
 }
