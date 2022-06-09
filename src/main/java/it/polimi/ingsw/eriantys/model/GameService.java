@@ -11,6 +11,11 @@ import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 
 public interface GameService {
+  // TODO: test
+  static void updateProfessors(ProfessorHolder professors, List<Dashboard> dashboards) {
+    professors.updateProfessors(dashboards);
+  }
+
   /**
    * Set the chosen assistant card by the player as the current played card
    */
