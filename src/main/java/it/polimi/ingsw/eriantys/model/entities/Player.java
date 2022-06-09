@@ -109,4 +109,9 @@ public class Player {
   public void setDashboard(Dashboard dashboard) {
     this.dashboard = dashboard;
   }
+
+  @Override
+  public String toString() {
+    return nickname;
+  }
 }

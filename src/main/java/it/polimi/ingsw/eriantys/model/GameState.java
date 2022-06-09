@@ -84,16 +84,7 @@ public class GameState {
         dashes.add(p.getDashboard()));
     return dashes;
   }
-
-  /**
-   * returns order for PLANNING phase
-   *
-   * @return List of players
-   */
-  public List<Player> getPlanOrderPlayers() {
-    return planOrder;
-  }
-
+  
   /**
    * @return the playing field of this game
    */
