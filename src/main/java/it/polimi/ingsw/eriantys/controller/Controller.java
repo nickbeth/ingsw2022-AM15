@@ -241,7 +241,8 @@ abstract public class Controller implements Runnable {
           .build();
       networkClient.send(msg);
 
-      clientLogger.info("Sending message {} to the server", msg.type());
+      clientLogger.info("Sent message {} to the server", msg.type());
+      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
       return true;
     }
 
@@ -259,6 +260,8 @@ abstract public class Controller implements Runnable {
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
+      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
+
       return true;
     }
 
@@ -278,6 +281,8 @@ abstract public class Controller implements Runnable {
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
+      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
+
       return true;
     }
 
@@ -298,11 +303,13 @@ abstract public class Controller implements Runnable {
         temp = new Students(); // clear temp
       }
 
-      networkClient.send(new Message.Builder(GAMEDATA)
-          .action(new RefillClouds(cloudsStudents))
+      GameAction action = new RefillClouds(cloudsStudents);
+      networkClient.send(new Message.Builder(PLAY_ACTION)
+          .action(action)
           .gameCode(gameCode)
           .gameInfo(gameInfo)
           .build());
+      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
     }
 
     /**
@@ -314,11 +321,13 @@ abstract public class Controller implements Runnable {
       if (!action.isValid(gameState))
         return false;
 
-      networkClient.send(new Message.Builder(GAMEDATA)
+      networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
           .gameCode(gameCode)
           .gameInfo(gameInfo)
           .build());
+      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
+
       return true;
     }
 
@@ -338,6 +347,8 @@ abstract public class Controller implements Runnable {
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
+      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
+
       return true;
     }
 
@@ -352,11 +363,13 @@ abstract public class Controller implements Runnable {
       if (!action.isValid(gameState))
         return false;
 
-      networkClient.send(new Message.Builder(GAMEDATA)
+      networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
+      clientLogger.info("Sent action {}", action.getClass().getSimpleName());
+
       return true;
     }
 
@@ -376,6 +389,8 @@ abstract public class Controller implements Runnable {
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
+      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
+
       return true;
     }
 
@@ -397,52 +412,66 @@ abstract public class Controller implements Runnable {
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
+      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
+
       return true;
     }
 
     public void sendNickname(String nickname) {
-      networkClient.send(new Message.Builder(NICKNAME_REQUEST)
+      Message msg = new Message.Builder(NICKNAME_REQUEST)
           .nickname(nickname)
-          .build());
+          .build();
+      networkClient.send(msg);
+
+      clientLogger.info("Sent message {} to the server", msg);
     }
 
     public void sendCreateGame(int numberOfPlayers, GameMode gameMode) {
       gameInfo = new GameInfo(numberOfPlayers, gameMode);
-      networkClient.send(new Message.Builder(CREATE_GAME)
+      Message msg = new Message.Builder(CREATE_GAME)
           .gameInfo(gameInfo)
           .nickname(nickname)
-          .build());
+          .build();
+      networkClient.send(msg);
+
+      clientLogger.info("Sent message {} to the server", msg);
     }
 
 
     public void sendJoinGame(GameCode gameCode) {
-      networkClient.send(new Message.Builder(JOIN_GAME)
+      Message msg = new Message.Builder(JOIN_GAME)
           .gameInfo(gameInfo)
           .gameCode(gameCode)
           .nickname(nickname)
-          .build());
+          .build();
+      networkClient.send(msg);
+
+      clientLogger.info("Sent message {} to the server", msg);
     }
 
     public void sendQuitGame() {
-      networkClient.send(new Message.Builder(QUIT_GAME)
+      Message msg = new Message.Builder(QUIT_GAME)
           .nickname(nickname)
           .gameCode(gameCode)
-          .build());
+          .build();
+      networkClient.send(msg);
+
+      clientLogger.info("Sent message {} to the server", msg);
     }
 
     public boolean sendSelectTower(TowerColor color) {
       if (!gameInfo.isTowerColorValid(nickname, color))
         return false;
       gameInfo.addPlayer(nickname, color);
-      networkClient.send(new Message.Builder(SELECT_TOWER)
+
+      Message msg = new Message.Builder(SELECT_TOWER)
           .gameInfo(gameInfo)
           .gameCode(gameCode)
           .nickname(nickname)
-          .build());
+          .build();
+      networkClient.send(msg);
       return true;
     }
-
-
   }
 
   public PropertyChangeSupport getListenerHolder() {
