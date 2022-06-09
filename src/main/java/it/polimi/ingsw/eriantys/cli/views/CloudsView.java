@@ -25,7 +25,7 @@ public class CloudsView extends View {
     String[][] matrix = new String[clouds.size()][rows];
 
     for (int i = 0; i < clouds.size(); i++) {
-      matrix[i] = drawCloud(clouds.get(i), i).split(System.lineSeparator());
+      matrix[i] = drawCloud(clouds.get(i), i + 1).split(System.lineSeparator());
     }
 
     StringBuilder stringBuilder = new StringBuilder();
@@ -55,12 +55,21 @@ public class CloudsView extends View {
     LinkedList<HouseColor> studentsList = cloud.getStudents().toLinkedList();
     StringBuilder stringBuilder = new StringBuilder();
 
-    // First row
-    if (index >= 0) {
-      stringBuilder.append(MessageFormat.format("╭──{0}──╮", index));
+    // Empty cloud case
+    if (studentsList.isEmpty()) {
+      stringBuilder.append(MessageFormat.format("╭──{0}──╮", index)).append(System.lineSeparator());
+      stringBuilder.append("│     │").append(System.lineSeparator());
+      stringBuilder.append("│     │").append(System.lineSeparator());
+      stringBuilder.append("╰─────╯");
+      return stringBuilder.toString();
     }
+
+    // First row
+    stringBuilder.append(MessageFormat.format("╭──{0}──╮", index));
+    stringBuilder.append(System.lineSeparator());
+
+    // Second row
     stringBuilder
-        .append(System.lineSeparator())
         .append(VERTICAL.glyph)
         .append(PADDING)
         .append(printColored(STUDENT_CHAR, studentsList.poll()))
@@ -70,7 +79,7 @@ public class CloudsView extends View {
         .append(VERTICAL.glyph)
         .append(System.lineSeparator());
 
-    // Second row
+    // Third row
     stringBuilder.append(VERTICAL.glyph)
         .append(PADDING)
         .append(printColored(STUDENT_CHAR, studentsList.poll()))
@@ -82,8 +91,11 @@ public class CloudsView extends View {
     } else {
       stringBuilder.append(PADDING_DOUBLE);
     }
-    stringBuilder.append(VERTICAL.glyph)
+    stringBuilder
+        .append(VERTICAL.glyph)
         .append(System.lineSeparator());
+
+    // Last row
     stringBuilder.append("╰─────╯");
 
     return stringBuilder.toString();
