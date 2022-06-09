@@ -25,7 +25,7 @@ public abstract class Menu implements PropertyChangeListener {
   protected static PrintStream out = System.out;
   protected static Scanner in = new Scanner(System.in);
 
-  // Events that single menus want to listen to. Every menu listens to 'INTERNAL_SOCKET_ERROR'
+  // Events that single menus want to listen to. Every menu listens to 'INTERNAL_SOCKET_ERROR' and 'INPUT_ENTERED'
   protected List<EventType> eventsToBeListening = new ArrayList<>(
       List.of(INTERNAL_SOCKET_ERROR, INPUT_ENTERED)
   );
@@ -43,7 +43,7 @@ public abstract class Menu implements PropertyChangeListener {
     while (!inputGreenLight) {
       Thread.onSpinWait();
     }
-    return InputHandler.getInputHandler().getLine();
+    return InputHandler.get().getLine();
   }
 
   /**
@@ -70,12 +70,13 @@ public abstract class Menu implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+    clientLogger.debug("Event arrived: " + evt.getPropertyName());
     if (evt.getPropertyName().equals(INPUT_ENTERED.tag)) {
       inputGreenLight = true;
       return;
     }
     if (evt.getPropertyName().equals(INTERNAL_SOCKET_ERROR.tag)) {
-      clientLogger.error("Internal socket error occured, server might be down");
+      clientLogger.error("Internal socket error occurred, server might be down");
     }
   }
 
@@ -84,12 +85,12 @@ public abstract class Menu implements PropertyChangeListener {
   }
 
   final protected int getNumber() {
-    String number;
+    String line;
+
     while (true) {
       try {
-//        number = in.nextLine();
-        number = getKeyboardInput();
-        return Integer.parseInt(number);
+        line = getKeyboardInput();
+        return Integer.parseInt(line);
       } catch (NumberFormatException e) {
         out.print("Must insert a number, insert again: ");
       }
@@ -100,11 +101,14 @@ public abstract class Menu implements PropertyChangeListener {
     String string;
     while (true) {
       string = getKeyboardInput();
-//      string = in.nextLine();
-      if (!string.isBlank() && !string.contains(" "))
+      clientLogger.debug("getNonBlankString() String taken = " + string);
+      if (!string.isBlank() && !string.contains(" ")) {
+        clientLogger.debug("getNonBlankString() Returning string = " + string);
         return string;
-      else
+      } else {
+        clientLogger.debug("getNonBlankString() " + string + " is either empty or has spaces");
         out.print("Cannot neither be empty or contains spaces, insert again: ");
+      }
     }
   }
 

@@ -42,7 +42,7 @@ public class MenuEffect extends MenuGame {
       if (cc instanceof ColorInputCards) {
         // Get color input
         out.println("Insert color: ");
-        (new MenuStudentColor()).show(in, out, paramBuilder);
+        (new MenuStudentColor()).show(paramBuilder);
         ((ColorInputCards) cc).setColor(paramBuilder.getChosenColor());
       }
 

@@ -8,20 +8,19 @@ import java.beans.PropertyChangeEvent;
 
 public class MenuPickingCloud extends MenuGame {
   public MenuPickingCloud() {
-//    this.nextMenu = new MenuPickAssistantCard(controller);
+    super();
     showOptions();
-    out.print("Make a choice: ");
-
   }
 
   @Override
   protected void showOptions() {
     showViewOptions(out);
-    if (controller.getGameState().isTurnOf(controller.getNickname())) {
+    if (isMyTurn()) {
       out.println("Q - Pick cloud");
     } else {
       out.println("It's not your turn, you can see the state of the game tho.");
     }
+    out.print("Make a choice: ");
   }
 
   @Override
@@ -32,26 +31,29 @@ public class MenuPickingCloud extends MenuGame {
       String choice = getNonBlankString();
 
       handleViewOptions(choice);
-      switch (choice) {
-        case "Q", "q" -> {
-          if (!game.getTurnPhase().equals(TurnPhase.PICKING))
-            break;
 
-          // Show clouds
-          (new CloudsView(controller.getGameState().getPlayingField().getClouds())).draw(out);
+      if (isMyTurn()) {
+        switch (choice) {
+          case "Q", "q" -> {
+            if (!game.getTurnPhase().equals(TurnPhase.PICKING))
+              break;
 
-          // Gets cloud index
-          out.println("Choose cloud index: ");
-          int cloudIndex = getNumber();
+            // Show clouds
+            (new CloudsView(controller.getGameState().getPlayingField().getClouds())).draw(out);
 
-          // Send action
-          if (controller.sender().sendPickCloud(cloudIndex)) {
-            waitForGreenLight();
-            return MenuEnum.PICK_ASSISTANT;
+            // Gets cloud index
+            out.println("Choose cloud index: ");
+            int cloudIndex = getNumber();
+
+            // Send action
+            if (controller.sender().sendPickCloud(cloudIndex)) {
+              waitForGreenLight();
+              return MenuEnum.PICK_ASSISTANT;
+            }
+            out.println("Invalid input parameters");
           }
-          out.println("Invalid input parameters");
+          default -> out.print("Choose a valid option: ");
         }
-        default -> out.println("Choose a valid option");
       }
     }
   }

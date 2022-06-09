@@ -32,6 +32,7 @@ public class MenuLobby extends Menu {
     out.println("3 - Set GRAY");
     out.println("4 - Start game");
     out.println("0 - Quit Lobby");
+    out.print("Make a choice:");
   }
 
   @Override
@@ -78,6 +79,7 @@ public class MenuLobby extends Menu {
 
   private TowerColor getTowerColor(String choice) {
     Map<String, TowerColor> towerColorMap = new HashMap<>();
+
     towerColorMap.put("1", TowerColor.WHITE);
     towerColorMap.put("2", TowerColor.BLACK);
     towerColorMap.put("3", TowerColor.GRAY);
@@ -91,7 +93,7 @@ public class MenuLobby extends Menu {
     clearConsole();
 
     if (evt.getPropertyName().equals(START_GAME.tag)) {
-      InputHandler.getInputHandler().setLine("4");
+      InputHandler.get().setLine("4");
       inputGreenLight = true;
       greenLight = true;
       return;
@@ -99,7 +101,6 @@ public class MenuLobby extends Menu {
 
     if (evt.getPropertyName().equals(GAMEINFO_EVENT.tag)) {
       showOptions();
-      out.print("Make a choice: ");
     }
     greenLight = true;
   }

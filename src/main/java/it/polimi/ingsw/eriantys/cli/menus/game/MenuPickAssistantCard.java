@@ -14,7 +14,8 @@ public class MenuPickAssistantCard extends MenuGame {
   @Override
   protected void showOptions() {
     showViewOptions(out);
-    if (controller.getGameState().isTurnOf(controller.getNickname())) {
+
+    if (isMyTurn()) {
       out.println("Q - Choose assistant card");
     } else {
       out.println("It's not your turn, you can see the state of the game tho.");
@@ -31,14 +32,14 @@ public class MenuPickAssistantCard extends MenuGame {
 
       handleViewOptions(choice);
 
-      if (controller.getGameState().isTurnOf(controller.getNickname())) {
+      if (isMyTurn()) {
         switch (choice) {
 
           // Choose assistant card
           case "Q", "q" -> {
             new AssistantCardsView(currentPlayer).draw(out);
 
-            out.print("Choose card index:");
+            out.print("Choose card index: ");
             int index = getNumber() - 1;
             if (controller.sender().sendPickAssistantCard(index)) {
               waitForGreenLight();

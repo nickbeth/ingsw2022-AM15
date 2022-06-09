@@ -2,7 +2,6 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
 import it.polimi.ingsw.eriantys.model.entities.Students;
@@ -18,7 +17,7 @@ public class MoveStudentsToDiningHall extends GameAction {
   }
 
   /**
-   * moves students from entrance to dining hall,
+   * Moves students from entrance to dining hall,
    * if this is the last allowed movement it advances turn phase
    */
   @Override
@@ -33,7 +32,7 @@ public class MoveStudentsToDiningHall extends GameAction {
 
     ProfessorHolder professorHolder = gameState.getPlayingField().getProfessorHolder();
 
-    GameService.updateProfessors(professorHolder, gameState.getPlayers(), gameState.getCurrentPlayer());
+    GameService.updateProfessors(professorHolder, gameState.getDashboards());
 
     if (studentsInEntrance <= studentsShouldBeAtTheEndOfTurn)
       gameState.advanceTurnPhase();

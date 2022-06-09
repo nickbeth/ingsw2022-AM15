@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 public class MenuMoving extends MenuGame {
   public MenuMoving() {
     super();
+    showOptions();
   }
 
   @Override
@@ -17,19 +18,19 @@ public class MenuMoving extends MenuGame {
     if (controller.getGameState().isTurnOf(controller.getNickname())) {
       out.println("T - Move mother nature");
     }
+    out.print("Make a choice: ");
   }
 
   @Override
   public MenuEnum show() {
 
     while (true) {
-      showOptions();
 
       String choice = getNonBlankString();
 
       handleViewOptions(choice);
 
-      if (controller.getGameState().isTurnOf(controller.getNickname())) {
+      if (isMyTurn()) {
         switch (choice) {
           // Move mother nature a certain amount
           case "T", "t" -> {
@@ -48,6 +49,7 @@ public class MenuMoving extends MenuGame {
             // Send action
             if (controller.sender().sendMoveMotherNature(amount)) {
               waitForGreenLight();
+              new IslandsView(islands, motherPosition).draw(out);
               return MenuEnum.PICKING_CLOUD;
             }
             out.println("Invalid input parameters");
@@ -66,7 +68,5 @@ public class MenuMoving extends MenuGame {
     greenLight = true;
 
     clearConsole();
-
-    new IslandsView(islands, motherPosition).draw(out);
   }
 }

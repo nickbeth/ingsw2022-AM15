@@ -35,6 +35,10 @@ public class DashboardView extends View {
 
   @Override
   public void draw(PrintStream o) {
+    // Separator
+    o.println();
+
+    // Draw content
     o.append(drawDashboard());
   }
 

@@ -14,14 +14,12 @@ import java.beans.PropertyChangeListener;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.cli.InputHandler.getInputHandler;
 import static it.polimi.ingsw.eriantys.cli.menus.MenuIterator.MenuFactory.makeMenu;
-import static it.polimi.ingsw.eriantys.controller.Controller.get;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class MenuIterator implements PropertyChangeListener {
-  private final Controller controller = get();
-  private InputHandler inputHandler = getInputHandler();
+  private final Controller controller = Controller.get();
+  private InputHandler inputHandler = InputHandler.get();
   private MenuEnum nextMenu;
   private Menu currentMenu;
 
