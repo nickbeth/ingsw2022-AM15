@@ -49,6 +49,7 @@ public class MenuLobby extends Menu {
         case "1", "2", "3" -> {
           if (!controller.sender().sendSelectTower(getTowerColor(choice))) {
             out.printf("Cannot choose %s.", getTowerColor(choice));
+            showOptions();
             break;
           }
           waitForGreenLight();

@@ -4,14 +4,13 @@ import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.views.*;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.entities.Cloud;
 import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import org.slf4j.helpers.MessageFormatter;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 
 import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
@@ -28,6 +27,7 @@ public abstract class MenuGame extends Menu {
   List<Cloud> clouds = game.getPlayingField().getClouds();
   List<Player> players = game.getPlayers();
   Player currentPlayer = game.getCurrentPlayer();
+  Player me = game.getPlayer(controller.getNickname());
   List<CharacterCard> ccs = game.getPlayingField().getCharacterCards();
   ProfessorHolder professorHolder = game.getPlayingField().getProfessorHolder();
   int motherPosition = game.getPlayingField().getMotherNaturePosition();
@@ -41,13 +41,23 @@ public abstract class MenuGame extends Menu {
 
   final protected void showViewOptions(PrintStream out) {
     out.println();
-    out.println("- Phase: " + game.getGamePhase() + " - " + game.getTurnPhase() + " -----------------------------------------------");
+    out.printf("- GamePhase: %s TurnPhase: %s ------------------------------------------------\n", game.getGamePhase().toString(), game.getTurnPhase().toString());
+
+    if (isMyTurn()) {
+      out.println("It's now your turn " + currentPlayer + "(i am actually " + me + ")");
+    } else {
+      out.println("It's now turn of: " + currentPlayer);
+      out.println("Event if it's not your turn, you can see the game.");
+    }
     out.println("1 - View all");
     out.println("2 - View islands");
     out.println("3 - View dashboards");
     out.println("4 - View clouds");
+    out.println("5 - View my assistant cards");
+    out.println("6 - View my dashboard");
+    out.println("7 - Show turn orders");
     if (rules.gameMode.equals(GameMode.EXPERT))
-      out.println("5 - CharacterCards");
+      out.println("10 - CharacterCards");
   }
 
   final protected void handleViewOptions(String choice) {
@@ -79,8 +89,29 @@ public abstract class MenuGame extends Menu {
       // View all character cards
       case "4" -> cloudsView.draw(out);
 
+      // View my assistant cards
+      case "5" -> new AssistantCardsView(me).draw(out);
+
+      // View my dashboard
+      case "6" -> new DashboardView(me, rules, professorHolder).draw(out);
+
+      // Show turn orders
+      case "7" -> {
+        out.println("Plan order:");
+        game.getPlanOrderPlayers()
+            .forEach(player -> out.print(player + " -> "));
+
+        out.println();
+
+        if (game.getGamePhase().equals(GamePhase.ACTION)) {
+          out.println("Action order:");
+          game.getTurnOrderPlayers()
+              .forEach(player -> out.print(player + " -> "));
+        }
+      }
+
       // View all character cards
-      case "5" -> {
+      case "10" -> {
         if (rules.gameMode.equals(GameMode.EXPERT))
           ccView.draw(out);
       }
@@ -98,11 +129,9 @@ public abstract class MenuGame extends Menu {
 
     // Refresh view and print what's happened
     if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag)) {
-      GameAction action = (GameAction) evt.getNewValue();
+      String actionDescription = (String) evt.getNewValue();
       clearConsole();
-      out.println(action.getDescription());
-      if (controller.getGameState().isTurnOf(controller.getNickname()))
-        out.println("It's now your turn");
+      out.println(actionDescription);
       showOptions();
     }
   }

@@ -15,10 +15,9 @@ public class MenuPickingCloud extends MenuGame {
   @Override
   protected void showOptions() {
     showViewOptions(out);
+
     if (isMyTurn()) {
       out.println("Q - Pick cloud");
-    } else {
-      out.println("It's not your turn, you can see the state of the game tho.");
     }
     out.print("Make a choice: ");
   }
@@ -35,15 +34,15 @@ public class MenuPickingCloud extends MenuGame {
       if (isMyTurn()) {
         switch (choice) {
           case "Q", "q" -> {
-            if (!game.getTurnPhase().equals(TurnPhase.PICKING))
-              break;
+//            if (!game.getTurnPhase().equals(TurnPhase.PICKING))
+//              break;
 
             // Show clouds
-            (new CloudsView(controller.getGameState().getPlayingField().getClouds())).draw(out);
+            new CloudsView(clouds).draw(out);
 
             // Gets cloud index
             out.println("Choose cloud index: ");
-            int cloudIndex = getNumber();
+            int cloudIndex = getNumber() - 1; // Index correction
 
             // Send action
             if (controller.sender().sendPickCloud(cloudIndex)) {
@@ -52,7 +51,9 @@ public class MenuPickingCloud extends MenuGame {
             }
             out.println("Invalid input parameters");
           }
-          default -> out.print("Choose a valid option: ");
+          default -> {
+
+          }
         }
       }
     }

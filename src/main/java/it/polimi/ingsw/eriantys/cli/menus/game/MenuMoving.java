@@ -5,6 +5,7 @@ import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
+import java.text.MessageFormat;
 
 public class MenuMoving extends MenuGame {
   public MenuMoving() {
@@ -15,7 +16,8 @@ public class MenuMoving extends MenuGame {
   @Override
   protected void showOptions() {
     showViewOptions(out);
-    if (controller.getGameState().isTurnOf(controller.getNickname())) {
+
+    if (isMyTurn()) {
       out.println("T - Move mother nature");
     }
     out.print("Make a choice: ");
@@ -43,7 +45,9 @@ public class MenuMoving extends MenuGame {
             new IslandsView(islands, motherPosition).draw(out);
 
             // Gets the amount
-            out.println("Insert the amount of mother nature movements: ");
+            out.print(
+                MessageFormat.format("Insert the amount of mother nature movements (max {0}): ", me.getMaxMovement()));
+
             int amount = getNumber();
 
             // Send action
@@ -52,7 +56,8 @@ public class MenuMoving extends MenuGame {
               new IslandsView(islands, motherPosition).draw(out);
               return MenuEnum.PICKING_CLOUD;
             }
-            out.println("Invalid input parameters");
+            out.println("Invalid input parameters. Valid movement:" + me.getMaxMovement() + ".");
+            showOptions();
           }
 
           default -> {

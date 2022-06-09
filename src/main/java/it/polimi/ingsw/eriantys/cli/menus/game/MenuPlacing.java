@@ -28,6 +28,7 @@ public class MenuPlacing extends MenuGame {
     int studentsLeft = rules.playableStudentCount - studentMoved;
 
     showViewOptions(out);
+
     if (isMyTurn()) {
       out.println(MessageFormat
           .format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
@@ -35,8 +36,6 @@ public class MenuPlacing extends MenuGame {
           .format("W - Move a student from entrance to dining ({0} left)", studentsLeft));
       if (rules.gameMode.equals(GameMode.EXPERT) && !ccUsed)
         out.println("E - Play a character card");
-    } else {
-      out.println("It's not your turn, you can see the state of the game tho.");
     }
     out.print("Make option: ");
   }
@@ -57,17 +56,17 @@ public class MenuPlacing extends MenuGame {
           // Move Students from entrance to island
           case "Q", "q" -> {
             // Check of the Turn phase
-            if (!game.getTurnPhase().equals(TurnPhase.PLACING))
-              break;
+//            if (!game.getTurnPhase().equals(TurnPhase.PLACING))
+//              break;
 
             chooseColorAndAmount(paramBuilder);
 
             // Shows islands
-            (new IslandsView(islands, motherPosition)).draw(out);
+            new IslandsView(islands, motherPosition).draw(out);
 
             // Take island index input
             out.println("Choose an island: ");
-            int islandIndex = getNumber();
+            int islandIndex = getNumber() - 1; // Index correction
 
             // Send actions
             if (!controller.sender().sendMoveStudentsToIsland(paramBuilder.getStudentsToMove(), islandIndex)) {
@@ -77,37 +76,7 @@ public class MenuPlacing extends MenuGame {
             }
             waitForGreenLight();
 
-            // Memorize new students moved
-            studentMoved += paramBuilder.getStudentsToMove().getCount();
-
-            // Escape condition
-            int playableStudents = rules.playableStudentCount;
-            if (studentMoved == playableStudents)
-              return MenuEnum.MOVING;
-            else if (studentMoved > playableStudents) {
-              studentMoved -= paramBuilder.getStudentsToMove().getCount();
-              out.println("You're moving too many students. Try again.");
-              showOptions();
-            }
-          }
-
-          // Move Students from entrance to dining
-          case "W", "w" -> {
-            // Check of the Turn phase
-            if (!game.getTurnPhase().equals(TurnPhase.PLACING))
-              break;
-
-            chooseColorAndAmount(paramBuilder);
-
-            // Send actions
-            if (!controller.sender().sendMoveStudentsToDiningHall(paramBuilder.getStudentsToMove())) {
-              out.println("Invalid input parameters");
-              showOptions();
-            }
-
-            waitForGreenLight();
-
-            // Memorize new students moved
+            // Update students moved
             studentMoved += paramBuilder.getStudentsToMove().getCount();
 
             // Escape condition
@@ -117,6 +86,38 @@ public class MenuPlacing extends MenuGame {
             else if (studentMoved > playableStudents) {
               studentMoved -= paramBuilder.getStudentsToMove().getCount();
               clientLogger.error("Error implementing placing students");
+              showOptions();
+            }
+          }
+
+          // Move Students from entrance to dining
+          case "W", "w" -> {
+            // Check of the Turn phase
+//            if (!game.getTurnPhase().equals(TurnPhase.PLACING))
+//              break;
+
+            chooseColorAndAmount(paramBuilder);
+
+            // Send actions
+            if (!controller.sender().sendMoveStudentsToDiningHall(paramBuilder.getStudentsToMove())) {
+              out.println("Invalid input parameters");
+              showOptions();
+              break;
+            }
+
+            waitForGreenLight();
+
+            // Update students moved
+            studentMoved += paramBuilder.getStudentsToMove().getCount();
+
+            // Escape condition
+            int playableStudents = rules.playableStudentCount;
+            if (studentMoved == playableStudents)
+              return MenuEnum.MOVING;
+            else if (studentMoved > playableStudents) {
+              studentMoved -= paramBuilder.getStudentsToMove().getCount();
+              clientLogger.error("Error implementing placing students");
+              showOptions();
             }
           }
 
@@ -158,7 +159,7 @@ public class MenuPlacing extends MenuGame {
     paramBuilder.flushStudentToMove();
 
     // Shows entrance
-    new DashboardView(currentPlayer, rules, professorHolder).draw(out);
+    new DashboardView(me, rules, professorHolder).draw(out);
 
     // Takes the color
     new MenuStudentColor().show(paramBuilder);
@@ -171,7 +172,7 @@ public class MenuPlacing extends MenuGame {
         paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
         break;
       }
-      out.println("Cannot move that amount. Student left to move " + (rules.playableStudentCount - studentMoved) + ".");
+      out.println("Cannot move that amount. Student left to move: " + (rules.playableStudentCount - studentMoved) + ".");
     }
   }
 

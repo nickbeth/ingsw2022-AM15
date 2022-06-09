@@ -17,8 +17,6 @@ public class MenuPickAssistantCard extends MenuGame {
 
     if (isMyTurn()) {
       out.println("Q - Choose assistant card");
-    } else {
-      out.println("It's not your turn, you can see the state of the game tho.");
     }
     out.print("Make option: ");
   }
@@ -37,17 +35,25 @@ public class MenuPickAssistantCard extends MenuGame {
 
           // Choose assistant card
           case "Q", "q" -> {
-            new AssistantCardsView(currentPlayer).draw(out);
+            new AssistantCardsView(me).draw(out);
 
             out.print("Choose card index: ");
-            int index = getNumber() - 1;
+
+            int index;
+            while (true) {
+              index = getNumber() - 1;
+              if (index < me.getCards().size() && index >= 0)
+                break;
+              out.print("Choose a valid card: ");
+            }
+
             if (controller.sender().sendPickAssistantCard(index)) {
               waitForGreenLight();
               return MenuEnum.PLACING;
             }
-            out.println("Invalid input parameters.");
+            out.println("Someone else already played this card.");
+            showOptions();
           }
-
           default -> {
           }
         }
