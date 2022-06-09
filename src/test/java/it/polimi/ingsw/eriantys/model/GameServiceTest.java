@@ -51,10 +51,10 @@ class GameServiceTest {
     GameService.pickCloud(cloud, dashboard);
 
     Arrays.stream(HouseColor.values()).forEach((color) ->
-        assertEquals(0, cloud.getStudents().getCount(color))
+            assertEquals(0, cloud.getStudents().getCount(color))
     );
     Arrays.stream(HouseColor.values()).forEach((color) ->
-        assertEquals(temp.getCount(color), dashboard.getEntrance().getCount(color))
+            assertEquals(temp.getCount(color), dashboard.getEntrance().getCount(color))
     );
   }
 
@@ -246,5 +246,51 @@ class GameServiceTest {
     d1.getDiningHall().addStudents(HouseColor.PINK, 1);
     GameService.updateProfessors(professors, List.of(d1, d2));
     assertEquals(d1.towerColor(), professors.getPossessorOfColor(HouseColor.PINK));
+  }
+
+  @Test
+  void updatePlayerCoins() {
+    RuleBook ruleBook = RuleBook.makeRules(GameMode.EXPERT, 2);
+
+    //covering the first coin slot
+    Students students = new Students();
+    students.addStudents(HouseColor.PINK, 3);
+    Player player = new Player(ruleBook, "GINO", TowerColor.BLACK, students);
+
+    player.getDashboard().getDiningHall().addStudents(HouseColor.PINK, 2);
+    GameService.updatePlayerCoins(students, player);
+
+    assertEquals(RuleBook.INITIAL_COINS + 1, player.getCoins());
+
+    //covering the first coin slot from two tables
+    students = new Students();
+    students.addStudent(HouseColor.PINK);
+    students.addStudents(HouseColor.RED, 3);
+    player = new Player(ruleBook, "GINO", TowerColor.BLACK, students);
+
+    player.getDashboard().getDiningHall().addStudents(HouseColor.PINK, 2);
+    GameService.updatePlayerCoins(students, player);
+
+    assertEquals(RuleBook.INITIAL_COINS + 2, player.getCoins());
+
+    //covering the second coin slot when the first is already covered
+    students = new Students();
+    students.addStudents(HouseColor.PINK, 3);
+    player = new Player(ruleBook, "GINO", TowerColor.BLACK, students);
+
+    player.getDashboard().getDiningHall().addStudents(HouseColor.PINK, 3);
+    GameService.updatePlayerCoins(students, player);
+
+    assertEquals(RuleBook.INITIAL_COINS + 1, player.getCoins());
+
+    //adding a student when all coin slots are covered
+    students = new Students();
+    students.addStudents(HouseColor.PINK, 1);
+    player = new Player(ruleBook, "GINO", TowerColor.BLACK, students);
+
+    player.getDashboard().getDiningHall().addStudents(HouseColor.PINK, 9);
+    GameService.updatePlayerCoins(students, player);
+
+    assertEquals(RuleBook.INITIAL_COINS, player.getCoins());
   }
 }

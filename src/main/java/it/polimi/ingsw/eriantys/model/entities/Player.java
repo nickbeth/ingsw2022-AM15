@@ -55,8 +55,12 @@ public class Player {
     return chosenCard != null ? chosenCard.value : 0;
   }
 
-  public void addCoin() {
+  public void addCoins() {
     coins++;
+  }
+
+  public void addCoins(int amount) {
+    coins += amount;
   }
 
   public int getCoins() {

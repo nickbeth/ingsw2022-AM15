@@ -16,6 +16,7 @@ public class RuleBook {
   public static final int PLAYABLE_CC_AMOUNT = 3;
   public static final int ISLAND_COUNT = 12;
   public static final int STUDENT_PER_COLOR_SETUP = 2;
+  public static final int HALL_TABLE_SIZE = 10;
   // Constants based on the type of game
   public static final int PLAYABLE_STUDENTS_2_4 = 3;
   public static final int PLAYABLE_STUDENTS_3 = 4;

@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.model;
 
 import it.polimi.ingsw.eriantys.model.actions.StudentsMovement;
 import it.polimi.ingsw.eriantys.model.entities.*;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
 import java.util.List;
@@ -18,6 +19,25 @@ public interface GameService {
    */
   static void updateProfessors(ProfessorHolder professors, List<Dashboard> dashboards) {
     professors.updateProfessors(dashboards);
+  }
+
+  /**
+   * Updates Player coin amount depending on the new amount of students of each color in the dining hall
+   * @param students Needs the addon students
+   * @param player Player that will get his coins updated
+   */
+  static void updatePlayerCoins(Students students, Player player) {
+    for (HouseColor color : HouseColor.values()) {
+      int coinSlotAmount = 3;
+      int hallStudentCount = player.getDashboard().getDiningHall().getCount(color);
+      int addonStudentCount = students.getCount(color);
+
+      if (addonStudentCount != 0) {
+        int freeCoinSlotAmount = coinSlotAmount - Math.floorDiv(hallStudentCount, coinSlotAmount);
+        int newFreeCoinSlotAmount = coinSlotAmount - Math.floorDiv(hallStudentCount + addonStudentCount, coinSlotAmount);
+        player.addCoins(freeCoinSlotAmount - newFreeCoinSlotAmount);
+      }
+    }
   }
 
   /**

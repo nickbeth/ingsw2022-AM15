@@ -313,8 +313,8 @@ public class ActionTest {
     gameState.getPlayingField().setPlayedCharacterCard(0);
     gameState.setTurnPhase(TurnPhase.EFFECT);
     gameState.advanceGamePhase();
-    gameState.getCurrentPlayer().addCoin();
-    gameState.getCurrentPlayer().addCoin();
+    gameState.getCurrentPlayer().addCoins();
+    gameState.getCurrentPlayer().addCoins();
     field.getIslands().forEach(is -> is.updateInfluences(field.getProfessorHolder()));
     field.getIsland(0).setTowerColor(TowerColor.WHITE);
     field.getIsland(0).setTowerCount(1);
@@ -333,10 +333,10 @@ public class ActionTest {
     modelLogger.debug(String.valueOf(field.getPlayedCharacterCard().getCardEnum()));
     assertEquals(0 , gameState.getCurrentPlayer().getCoins());
     assertEquals(4, field.getPlayedCharacterCard().getCost());
-    gameState.getCurrentPlayer().addCoin();
-    gameState.getCurrentPlayer().addCoin();
-    gameState.getCurrentPlayer().addCoin();
-    gameState.getCurrentPlayer().addCoin();
+    gameState.getCurrentPlayer().addCoins();
+    gameState.getCurrentPlayer().addCoins();
+    gameState.getCurrentPlayer().addCoins();
+    gameState.getCurrentPlayer().addCoins();
 
     newCC = field.getCharacterCards().get(0);
     actionDue = new ActivateCCEffect(newCC);
