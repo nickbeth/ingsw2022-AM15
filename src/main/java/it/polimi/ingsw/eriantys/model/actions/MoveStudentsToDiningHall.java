@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.model.actions;
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
@@ -27,6 +28,7 @@ public class MoveStudentsToDiningHall extends GameAction {
    */
   @Override
   public void apply(GameState gameState) {
+    // Moves students
     Player player = gameState.getCurrentPlayer();
     Slot currEntrance = player.getDashboard().getEntrance();
     Slot destination = player.getDashboard().getDiningHall();
@@ -39,24 +41,23 @@ public class MoveStudentsToDiningHall extends GameAction {
     StudentsMovement move = new StudentsMovement(students, currEntrance, destination);
     GameService.placeStudents(move);
 
-    int studentsInEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance().getCount();
-    int finalEntranceAmount = gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount;
-
-    //updates ProfessorHolder
+    // Updates professor holder
     ProfessorHolder professorHolder = gameState.getPlayingField().getProfessorHolder();
-    GameService.updateProfessors(professorHolder, gameState.getDashboards());
-    
-    if (studentsInEntrance <= finalEntranceAmount)
-      gameState.advanceTurnPhase();
 
+    GameService.updateProfessors(professorHolder, gameState.getDashboards());
+
+    // Manage advance phase
+    Students entrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
+    RuleBook rules = gameState.getRuleBook();
+
+    if (entrance.getCount() == rules.entranceSize - rules.playableStudentCount)
+      gameState.advanceTurnPhase();
   }
 
   /**
-   * Checks:
-   * - If the current player's entrance has enough students for action<br>
-   * - If the current player's dining hall fits the students
-   * - If the amount of students wanted to be moved are less than that the one left to
-   * move according to the rules<br>
+   * Checks if the current player's entrance has enough students for action
+   * and if the amount of students wanted to be moved are less than that the one left to
+   * move according to the rules
    */
   @Override
   public boolean isValid(GameState gameState) {
@@ -76,7 +77,6 @@ public class MoveStudentsToDiningHall extends GameAction {
 
     if (students.getCount() > gameState.getRuleBook().playableStudentCount)
       return false;
-
 
     return gameState.getTurnPhase() == TurnPhase.PLACING &&
             gameState.getGamePhase() == GamePhase.ACTION;

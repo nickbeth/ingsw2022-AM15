@@ -19,7 +19,6 @@ public class ChooseCharacterCard extends GameAction {
     p.setPlayedCharacterCard(ccIndex);
     if (!p.getPlayedCharacterCard().requiresInput()) {
       p.getPlayedCharacterCard().applyEffect(gameState);
-      gameState.advanceTurnPhase();
     }
   }
 

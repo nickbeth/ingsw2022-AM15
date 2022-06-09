@@ -10,7 +10,7 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import java.util.List;
 
 public class MoveMotherNature extends GameAction {
-  private int amount;
+  private final int amount;
 
   public MoveMotherNature(int amount) {
     this.amount = amount;
@@ -18,16 +18,21 @@ public class MoveMotherNature extends GameAction {
 
   /**
    * Moves motherNature. <br/>
-   * Applys motherNatureEffects on the island where mothernature resides<br>
+   * Applies motherNatureEffects on the island where mother nature resides<br>
    * Advances turnPhase.
    */
   @Override
   public void apply(GameState gameState) {
     PlayingField playingField = gameState.getPlayingField();
+    List<Player> players = gameState.getPlayers();
+
+    // Moves mother nature
     playingField.moveMotherNature(amount);
     int motherNaturePos = playingField.getMotherNaturePosition();
-    List<Player> players = gameState.getPlayers();
+
+    // Apply her effect
     GameService.applyMotherNatureEffect(motherNaturePos, playingField, players);
+
     gameState.advanceTurnPhase();
   }
 
@@ -35,14 +40,11 @@ public class MoveMotherNature extends GameAction {
    * checks:<br/>
    * - If the amount of movements is allowed<br/>
    * - If the GamePhase is ACTION & the TurnPhase is MOVING.
-   * @param gameState
+   *
    * @return boolean
    */
   @Override
   public boolean isValid(GameState gameState) {
-    return amount > 0 &&
-            gameState.getCurrentPlayer().getMaxMovement() >= amount &&
-            gameState.getGamePhase() == GamePhase.ACTION &&
-            gameState.getTurnPhase() == TurnPhase.MOVING;
+    return amount > 0 && amount <= gameState.getCurrentPlayer().getMaxMovement();
   }
 }

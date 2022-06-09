@@ -20,7 +20,6 @@ public class ActivateCCEffect extends GameAction {
   public void apply(GameState gameState) {
     gameState.getPlayingField().setPlayedCharacterCard(cc);
     gameState.getPlayingField().getPlayedCharacterCard().applyEffect(gameState);
-    gameState.advanceTurnPhase();
   }
 
   /**

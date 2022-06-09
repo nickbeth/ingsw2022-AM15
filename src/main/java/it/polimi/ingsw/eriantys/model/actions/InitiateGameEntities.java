@@ -51,18 +51,17 @@ public class InitiateGameEntities extends GameAction {
 
     // Initiate clouds' students
     GameService.refillClouds(
-            gameState.getPlayingField().getStudentBag(),
-            gameState.getPlayingField().getClouds(),
-            clouds);
+        gameState.getPlayingField().getStudentBag(),
+        gameState.getPlayingField().getClouds(),
+        clouds);
 
     // Initiate characterCards
-    if(gameState.getRuleBook().gameMode == GameMode.EXPERT) {
+    if (gameState.getRuleBook().gameMode == GameMode.EXPERT) {
 
       List<CharacterCard> cards = new ArrayList<>();
       cardsEnum.forEach(card -> cards.add(CharacterCardCreator.create(card)));
       modelLogger.info(cards.toString());
       gameState.getPlayingField().setCharacterCards(cards);
-
     }
   }
 
@@ -75,16 +74,16 @@ public class InitiateGameEntities extends GameAction {
     RuleBook ruleBook = gameState.getRuleBook();
     boolean isValid = true;
 
-    if(gameState.getRuleBook().gameMode == GameMode.EXPERT)
+    if (gameState.getRuleBook().gameMode == GameMode.EXPERT)
       isValid = cardsEnum.size() == PLAYABLE_CC_AMOUNT;
 
     isValid = isValid &&
-            entrances.size() == ruleBook.cloudCount &&
-            entrances.stream().allMatch((students) -> students.getCount() == ruleBook.entranceSize) &&
-            islands.size() == ISLAND_COUNT &&
-            islands.stream().allMatch((students) -> (((islands.indexOf(students) == 0 || islands.indexOf(students) == 6 )&& students.getCount() == 0) || students.getCount() == INITIAL_ISLAND_STUDENTS)) &&
-            clouds.size() == ruleBook.cloudCount &&
-            clouds.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount);
+        entrances.size() == ruleBook.cloudCount &&
+        entrances.stream().allMatch((students) -> students.getCount() == ruleBook.entranceSize) &&
+        islands.size() == ISLAND_COUNT &&
+        islands.stream().allMatch((students) -> (((islands.indexOf(students) == 0 || islands.indexOf(students) == 6) && students.getCount() == 0) || students.getCount() == INITIAL_ISLAND_STUDENTS)) &&
+        clouds.size() == ruleBook.cloudCount &&
+        clouds.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount);
     return isValid;
   }
 }

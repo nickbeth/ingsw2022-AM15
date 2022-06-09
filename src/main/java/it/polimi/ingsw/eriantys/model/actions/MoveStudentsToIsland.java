@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
@@ -23,12 +24,17 @@ public class MoveStudentsToIsland extends GameAction {
    */
   @Override
   public void apply(GameState gameState) {
+    // Moves students
     Slot currEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
     Slot destination = gameState.getPlayingField().getIsland(islandIndex);
     StudentsMovement move = new StudentsMovement(students, currEntrance, destination);
     GameService.placeStudents(move);
-    if (gameState.getCurrentPlayer().getDashboard().getEntrance().getCount()
-            <= gameState.getRuleBook().entranceSize - gameState.getRuleBook().playableStudentCount)
+
+    // Manage advance phase
+    Students entrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
+    RuleBook rules = gameState.getRuleBook();
+
+    if (entrance.getCount() == rules.entranceSize - rules.playableStudentCount)
       gameState.advanceTurnPhase();
   }
 
@@ -38,6 +44,7 @@ public class MoveStudentsToIsland extends GameAction {
   @Override
   public boolean isValid(GameState gameState) {
     Students currEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
+
     for (var color : HouseColor.values()) {
       if (!currEntrance.hasEnough(color, students.getCount(color)))
         return false;

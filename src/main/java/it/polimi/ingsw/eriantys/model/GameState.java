@@ -84,7 +84,7 @@ public class GameState {
         dashes.add(p.getDashboard()));
     return dashes;
   }
-  
+
   /**
    * @return the playing field of this game
    */
@@ -128,14 +128,14 @@ public class GameState {
    * advances to next turnPhase (takes into account gameMode)
    */
   public void advanceTurnPhase() {
-    if (ruleBook.gameMode == GameMode.EXPERT) {
-      switch (turnPhase) {
-        case PLACING -> turnPhase = TurnPhase.EFFECT;
-        case EFFECT -> turnPhase = TurnPhase.MOVING;
-        case MOVING -> turnPhase = TurnPhase.PICKING;
-        case PICKING -> turnPhase = TurnPhase.PLACING;
-      }
-    }
+//    if (ruleBook.gameMode == GameMode.EXPERT) {
+//      switch (turnPhase) {
+//        case PLACING -> turnPhase = TurnPhase.EFFECT;
+//        case EFFECT -> turnPhase = TurnPhase.MOVING;
+//        case MOVING -> turnPhase = TurnPhase.PICKING;
+//        case PICKING -> turnPhase = TurnPhase.PLACING;
+//      }
+//    }
     if (ruleBook.gameMode == GameMode.NORMAL) {
       switch (turnPhase) {
         case PLACING -> turnPhase = TurnPhase.MOVING;
@@ -216,15 +216,6 @@ public class GameState {
   }
 
   /**
-   * returns player order for ACTION phase
-   *
-   * @return List of players
-   */
-  public List<Player> getTurnOrderPlayers() {
-    return turnOrder;
-  }
-
-  /**
    * Sorts turnOrder players by their turn priority (in descending order)
    */
   private void prepareOrderForActionPhase() {
@@ -265,11 +256,11 @@ public class GameState {
     this.planOrder = planOrder;
   }
 
-  public List<Player> getTurnOrder() {
+  public List<Player> getTurnOrderPlayers() {
     return turnOrder;
   }
 
-  public List<Player> getPlanOrder() {
+  public List<Player> getPlanOrderPlayers() {
     return planOrder;
   }
 
