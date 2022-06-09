@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
+
 public class GameEntry {
   private final GameInfo gameInfo;
   private final HashMap<String, Client> players;
@@ -31,6 +33,7 @@ public class GameEntry {
     synchronized (gameState) {
       if (action.isValid(gameState)) {
         action.apply(gameState);
+        serverLogger.debug("Action {} applied to game ", action.getClass().getSimpleName());
         return true;
       }
       return false;

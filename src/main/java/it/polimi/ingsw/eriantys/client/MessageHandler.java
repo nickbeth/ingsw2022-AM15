@@ -49,7 +49,7 @@ public class MessageHandler implements Runnable {
       return;
     }
 
-    clientLogger.debug("Handling entry: {}", entry);
+    clientLogger.info("Handling entry: {}", entry);
     switch (message.type()) {
       case NICKNAME_OK -> handleNicknameOk(client, message);
       case GAMEINFO -> handleGameInfo(client, message);
@@ -94,7 +94,7 @@ public class MessageHandler implements Runnable {
     controller.executeAction(message.gameAction());
 
     // Notifies listeners that the game state was modified
-    controller.fireChange(GAMEDATA_EVENT, null, message.gameAction());
+    controller.fireChange(GAMEDATA_EVENT, null, message.gameAction().getDescription());
   }
 
   private void handlePlayerDisconnected(Client client, Message message) {
@@ -103,7 +103,11 @@ public class MessageHandler implements Runnable {
   }
 
   private void handlePlayerReconnected(Client client, Message message) {
-    controller.setPlayerConnected(true, message.nickname());
+    try {
+      controller.setPlayerConnected(true, message.nickname());
+    } catch (NullPointerException e) {
+      clientLogger.error("Cannot set reconnect because this game state does not exists");
+    }
     controller.fireChange(PLAYER_CONNECTION_CHANGED, null, null);
   }
 
