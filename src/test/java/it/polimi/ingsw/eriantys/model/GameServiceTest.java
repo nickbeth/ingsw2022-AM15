@@ -9,10 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,10 +51,10 @@ class GameServiceTest {
     GameService.pickCloud(cloud, dashboard);
 
     Arrays.stream(HouseColor.values()).forEach((color) ->
-            assertEquals(0, cloud.getStudents().getCount(color))
+        assertEquals(0, cloud.getStudents().getCount(color))
     );
     Arrays.stream(HouseColor.values()).forEach((color) ->
-            assertEquals(temp.getCount(color), dashboard.getEntrance().getCount(color))
+        assertEquals(temp.getCount(color), dashboard.getEntrance().getCount(color))
     );
   }
 
@@ -215,5 +212,39 @@ class GameServiceTest {
     assertEquals(whitePTowerCount - 1, players.get(1).getDashboard().towerCount());
   }
 
+  @Test
+  public void updateProfessorsTest() {
+    ProfessorHolder professors = new ProfessorHolder(new EnumMap<>(HouseColor.class));
 
+    Dashboard d1 = new Dashboard(new Students(), 0, TowerColor.WHITE);
+    Dashboard d2 = new Dashboard(new Students(), 0, TowerColor.BLACK);
+
+    for (var color : HouseColor.values())
+      assertNull(professors.getPossessorOfColor(color));
+
+    // d1 2 pinks - d2 0 pinks
+    d1.getDiningHall().addStudents(HouseColor.PINK, 2);
+    GameService.updateProfessors(professors, List.of(d1, d2));
+    assertEquals(d1.towerColor(), professors.getPossessorOfColor(HouseColor.PINK));
+
+    // d1 2 pinks - d2 2 pinks
+    d2.getDiningHall().addStudents(HouseColor.PINK, 2);
+    GameService.updateProfessors(professors, List.of(d1, d2));
+    assertEquals(d1.towerColor(), professors.getPossessorOfColor(HouseColor.PINK));
+
+    // d1 2 pinks - d2 3 pinks
+    d2.getDiningHall().addStudents(HouseColor.PINK, 1);
+    GameService.updateProfessors(professors, List.of(d1, d2));
+    assertEquals(d2.towerColor(), professors.getPossessorOfColor(HouseColor.PINK));
+
+    // d1 3 pinks - d2 3 pinks
+    d1.getDiningHall().addStudents(HouseColor.PINK, 1);
+    GameService.updateProfessors(professors, List.of(d1, d2));
+    assertEquals(d2.towerColor(), professors.getPossessorOfColor(HouseColor.PINK));
+
+    // d1 4 pinks - d2 3 pinks
+    d1.getDiningHall().addStudents(HouseColor.PINK, 1);
+    GameService.updateProfessors(professors, List.of(d1, d2));
+    assertEquals(d1.towerColor(), professors.getPossessorOfColor(HouseColor.PINK));
+  }
 }

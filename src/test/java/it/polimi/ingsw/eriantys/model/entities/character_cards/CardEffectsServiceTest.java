@@ -91,14 +91,14 @@ public class CardEffectsServiceTest {
     islands.forEach(island -> island.updateInfluences(professorHolder));
 
     islands.forEach(island -> modelLogger.debug(String.valueOf(island.getTeamsInfluenceTracer())));
-    CardService.ignoreColor(islands, HouseColor.PINK, professorHolder.getProfessorOwner(HouseColor.PINK));
+    CardService.ignoreColor(islands, HouseColor.PINK, professorHolder.getPossessorOfColor(HouseColor.PINK));
     assertEquals(0, islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
     assertEquals(0, islands.get(1).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
     assertEquals(0, islands.get(0).getTeamsInfluenceTracer().getInfluence(BLACK));
     assertEquals(3, islands.get(1).getTeamsInfluenceTracer().getInfluence(BLACK));
 
     islands.forEach(island -> island.updateInfluences(professorHolder));
-    CardService.ignoreColor(islands, HouseColor.RED, professorHolder.getProfessorOwner(HouseColor.RED));
+    CardService.ignoreColor(islands, HouseColor.RED, professorHolder.getPossessorOfColor(HouseColor.RED));
     islands.forEach(island -> modelLogger.debug(String.valueOf(island.getTeamsInfluenceTracer())));
     assertEquals(1, islands.get(0).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
     assertEquals(1, islands.get(1).getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE));
@@ -196,8 +196,8 @@ public class CardEffectsServiceTest {
     CardService.stealProfessor(dashes.get(0), dashes, professorHolder);
     modelLogger.debug(professorHolder.toString());
 
-    assertEquals(BLACK, professorHolder.getProfessorOwner(HouseColor.RED));
-    assertEquals(WHITE, professorHolder.getProfessorOwner(HouseColor.PINK));
+    assertEquals(BLACK, professorHolder.getPossessorOfColor(HouseColor.RED));
+    assertEquals(WHITE, professorHolder.getPossessorOfColor(HouseColor.PINK));
   }
 }
 

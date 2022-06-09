@@ -11,7 +11,11 @@ import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 
 public interface GameService {
-  // TODO: test
+  /**
+   * Reallocate professors to the player who has more students in his dining
+   * @param professors Needs professorHolder of the game
+   * @param dashboards Dashboard list of the game
+   */
   static void updateProfessors(ProfessorHolder professors, List<Dashboard> dashboards) {
     professors.updateProfessors(dashboards);
   }

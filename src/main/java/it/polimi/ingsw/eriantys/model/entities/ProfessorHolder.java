@@ -67,9 +67,12 @@ public record ProfessorHolder(
           return;
         }
 
+        // If my opponent has that professor
         if (opponentDashboard.isPresent()) {
+          // Checks if I have more students
           int opponentStudentsCount = opponentDashboard.get().getDiningHall().getCount(color);
-          if (myStudentsCount > opponentStudentsCount) setProfessorHolder(currentDashboard.towerColor(), color);
+          if (myStudentsCount > opponentStudentsCount)
+            setProfessorHolder(currentDashboard.towerColor(), color);
         }
       });
     }

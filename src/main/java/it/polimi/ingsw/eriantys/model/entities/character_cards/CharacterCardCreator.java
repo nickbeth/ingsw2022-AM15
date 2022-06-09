@@ -16,7 +16,7 @@ public class CharacterCardCreator {
           List<Island> islands = gameState.getPlayingField().getIslands();
           islands.forEach(island -> island.updateInfluences(gameState.getPlayingField().getProfessorHolder()));
           
-          CardService.ignoreColor(islands, color, gameState.getPlayingField().getProfessorHolder().getProfessorOwner(color));
+          CardService.ignoreColor(islands, color, gameState.getPlayingField().getProfessorHolder().getPossessorOfColor(color));
         }), playedCard);
       }
       case IGNORE_TOWERS -> {
