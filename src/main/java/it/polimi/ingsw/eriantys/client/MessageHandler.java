@@ -68,7 +68,6 @@ public class MessageHandler implements Runnable {
   private void handlePing(Client client, Message message) {
     client.send(new Message.Builder(MessageType.PONG)
         .nickname(controller.getNickname())
-        .gameCode(controller.getGameCode())
         .build());
   }
 

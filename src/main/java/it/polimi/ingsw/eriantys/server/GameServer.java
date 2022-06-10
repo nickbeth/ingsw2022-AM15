@@ -122,6 +122,7 @@ public class GameServer implements Runnable {
     client.attach(new ClientAttachment(nickname));
     serverLogger.info("Nickname '{}' registered for client '{}'", nickname, client);
     send(client, new Message.Builder().type(MessageType.NICKNAME_OK).nickname(nickname).build());
+    initHeartbeat(client);
 
     handleRejoinGame(client, message);
   }
@@ -140,7 +141,6 @@ public class GameServer implements Runnable {
       serverLogger.info("Player '{}' reconnected to game '{}'", nickname, gameCode);
       // TODO: send game state to the reconnected client
       broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_RECONNECTED).nickname(nickname).build());
-      initHeartbeat(client);
     }
   }
 
@@ -163,7 +163,6 @@ public class GameServer implements Runnable {
 
     serverLogger.info("Player '{}' created a new game: {}", nickname, gameCode);
     send(client, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
-    initHeartbeat(client);
   }
 
   private void handleJoinGame(Client client, Message message) {
@@ -205,7 +204,6 @@ public class GameServer implements Runnable {
 
     serverLogger.info("Player '{}' joined game '{}'", nickname, gameCode);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
-    initHeartbeat(client);
   }
 
   private void handleQuitGame(Client client, Message message) {
@@ -408,14 +406,14 @@ public class GameServer implements Runnable {
       String nickname = attachment.nickname();
       GameCode gameCode = attachment.gameCode();
       GameEntry gameEntry = activeGames.get(gameCode);
-      // If game entry is null, ignore and cancel the heartbeat
+      // If game entry is null, ignore
       if (gameEntry == null)
         return;
 
       activeNicknames.remove(nickname);
       if (!gameEntry.isStarted()) {
-        // If the game is not started, remove the client from the lobby
-        // If there's only one client in the lobby, remove the game
+        // If the game has not started, remove the client from the lobby
+        // If there was only one client in the lobby, remove the game
         if (gameEntry.getClients().size() == 1) {
           activeGames.remove(gameCode);
           serverLogger.info("Player '{}' lost connection to game '{}' while being alone, the game was deleted", nickname, gameCode);
@@ -425,7 +423,7 @@ public class GameServer implements Runnable {
           broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
         }
       } else {
-        // If the game is started, set the client as disconnected
+        // If the game has started, set the client as disconnected
         gameEntry.disconnectPlayer(nickname);
         disconnectedPlayers.put(nickname, gameCode);
         serverLogger.info("Player '{}' playing game '{}' marked as disconnected", nickname, gameCode);
