@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.server;
 
 import it.polimi.ingsw.eriantys.model.GameCode;
+import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.actions.InitiateGameEntities;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -25,7 +26,7 @@ public class GameServer implements Runnable {
   private final BlockingQueue<MessageQueueEntry> messageQueue;
   private final ScheduledExecutorService heartbeatService;
 
-  private final HashMap<GameCode, GameEntry> activeGames;
+  private final Map<GameCode, GameEntry> activeGames;
   private final Set<String> activeNicknames;
   private final Map<String, GameCode> disconnectedPlayers;
 
@@ -91,8 +92,6 @@ public class GameServer implements Runnable {
       case START_GAME -> handleStartGame(client, message);
 
       case PLAY_ACTION -> handlePlayAction(client, message);
-
-      case INTERNAL_SOCKET_ERROR -> handleSocketError(client, message);
     }
   }
 
@@ -208,36 +207,43 @@ public class GameServer implements Runnable {
 
   private void handleQuitGame(Client client, Message message) {
     String nickname = message.nickname();
-    GameCode gameCode = message.gameCode();
+    GameCode gameCode = message.gameCode(); // If the player is not yet in a lobby, this will be null
     GameEntry gameEntry = activeGames.get(gameCode);
 
-    if (gameEntry.isStarted()) {
-      String errorMessage = "Cannot remove player '" + nickname + "' from game '" + gameCode + "' while it's started";
-      serverLogger.info(errorMessage);
-      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
-      return;
-    }
-
-    // Cancel the heartbeat for this client
-    var attachment = (ClientAttachment) client.attachment();
-    // We acquire the lock to avoid cancelling the heartbeat while another thread is scheduling a new one,
-    // which would result in cancelling the wrong heartbeat schedule
-    attachment.acquireHeartbeatLock();
-    try {
-      attachment.cancelHeartbeatSchedule();
-    } finally {
-      attachment.releaseHeartbeatLock();
-    }
-    attachment.resetMissedHeartbeatCount();
-    attachment.setGameCode(null);
-
-    if (gameEntry.getClients().size() == 1) {
-      activeGames.remove(gameCode);
-      serverLogger.info("Player '{}' left game '{}' while being alone, the game was deleted", nickname, gameCode);
+    if (gameEntry == null) {
+      // The player was not in a lobby: remove the player's nickname and close the socket
+      stopHeartbeat(client);
+      activeNicknames.remove(nickname);
+      client.attach(null);
+      client.close();
+    } else if (!gameEntry.isStarted()) {
+      // The player was in a lobby: remove it from the lobby or delete the lobby if last
+      if (gameEntry.getClients().size() == 1) {
+        activeGames.remove(gameCode);
+        serverLogger.info("Player '{}' left game '{}' while being alone, the game was deleted", nickname, gameCode);
+      } else {
+        gameEntry.removePlayer(nickname);
+        serverLogger.info("Player '{}' left game '{}'", nickname, gameCode);
+        broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+      }
     } else {
-      gameEntry.removePlayer(nickname);
-      serverLogger.info("Player '{}' left game '{}'", nickname, gameCode);
-      broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+      // The player was playing a game: disconnect it from the game or delete the game if last
+      // remove the player's nickname and close the socket (we don't allow players to be in multiple games at the same time)
+      stopHeartbeat(client);
+
+      if (gameEntry.getClients().size() == 1) {
+        deleteGame(gameCode, gameEntry);
+        serverLogger.info("Player '{}' left ongoing game '{}' while being alone, the game was deleted", nickname, gameCode);
+      } else {
+        gameEntry.disconnectPlayer(nickname);
+        disconnectedPlayers.put(nickname, gameCode);
+        serverLogger.info("Player '{}' left ongoing game '{}', marked as disconnected", nickname, gameCode);
+        broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
+      }
+
+      activeNicknames.remove(nickname);
+      client.attach(null);
+      client.close();
     }
   }
 
@@ -320,22 +326,6 @@ public class GameServer implements Runnable {
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEDATA).gameCode(gameCode).action(action).build());
   }
 
-  public void handleSocketError(Client client, Message message) {
-    // Check that this message was created internally and is not coming from the network
-    if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
-      return;
-
-    // Here we only handle cases where a client disconnected after choosing a nickname but before joining a lobby
-    // If that's not the case, ignore and the heartbeat will take care of it
-    ClientAttachment attachment = (ClientAttachment) client.attachment();
-    if (attachment == null || attachment.gameCode() != null)
-      return;
-
-    serverLogger.info("Player '{}' disconnected while not being in a game", attachment.nickname());
-    activeNicknames.remove(attachment.nickname());
-    client.close();
-  }
-
   /**
    * Sends a message to the given client and logs the message.
    *
@@ -359,16 +349,49 @@ public class GameServer implements Runnable {
   }
 
   /**
+   * Deletes a game from the active games list and cleans up its related disconnected players
+   *
+   * @param gameCode  The game code to delete
+   * @param gameEntry The game entry to delete
+   */
+  private void deleteGame(GameCode gameCode, GameEntry gameEntry) {
+    // Clean up disconnected players
+    GameInfo gameInfo = gameEntry.getGameInfo();
+    for (String player : gameInfo.getJoinedPlayers())
+      disconnectedPlayers.remove(player);
+
+    activeGames.remove(gameCode);
+  }
+
+  /**
    * Initializes the heartbeat for the given client.
    *
    * @param client The client to initialize the heartbeat for
-   * @apiNote This method should only be called on a client that has a valid attachment.
+   * @apiNote This method should only be called on a client that has a valid attachment
    */
   private void initHeartbeat(Client client) {
     var heartbeatSchedule = heartbeatService.schedule(new HeartbeatRunnable(client), HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
     var attachment = (ClientAttachment) client.attachment();
     // Save the heartbeat schedule in the attachment, so we can cancel it later
     attachment.setHeartbeatSchedule(heartbeatSchedule);
+  }
+
+  /**
+   * Cancels the heartbeat for the given client.
+   *
+   * @param client The client to cancel the heartbeat for
+   * @apiNote This method should only be called on a client that has a valid attachment
+   */
+  private void stopHeartbeat(Client client) {
+    var attachment = (ClientAttachment) client.attachment();
+    // We acquire the lock to avoid cancelling the heartbeat while another thread is scheduling a new one,
+    // which would result in cancelling the wrong heartbeat schedule
+    attachment.acquireHeartbeatLock();
+    try {
+      attachment.cancelHeartbeatSchedule();
+    } finally {
+      attachment.releaseHeartbeatLock();
+    }
   }
 
   /**
@@ -406,29 +429,30 @@ public class GameServer implements Runnable {
       String nickname = attachment.nickname();
       GameCode gameCode = attachment.gameCode();
       GameEntry gameEntry = activeGames.get(gameCode);
-      // If game entry is null, ignore
-      if (gameEntry == null)
-        return;
+
+      // If game entry is null, the player disconnected before joining a lobby or game
+      if (gameEntry != null) {
+        if (!gameEntry.isStarted()) {
+          // If the game has not started, remove the client from the lobby
+          // If there was only one client in the lobby, remove the game
+          if (gameEntry.getClients().size() == 1) {
+            activeGames.remove(gameCode);
+            serverLogger.info("Player '{}' lost connection to game '{}' while being alone, the game was deleted", nickname, gameCode);
+          } else {
+            gameEntry.removePlayer(nickname);
+            serverLogger.info("Player '{}' lost connection to game '{}'", nickname, gameCode);
+            broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+          }
+        } else {
+          // If the game has started, set the client as disconnected
+          gameEntry.disconnectPlayer(nickname);
+          disconnectedPlayers.put(nickname, gameCode);
+          serverLogger.info("Player '{}' lost connection to ongoing game '{}', marked as disconnected", nickname, gameCode);
+          broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
+        }
+      }
 
       activeNicknames.remove(nickname);
-      if (!gameEntry.isStarted()) {
-        // If the game has not started, remove the client from the lobby
-        // If there was only one client in the lobby, remove the game
-        if (gameEntry.getClients().size() == 1) {
-          activeGames.remove(gameCode);
-          serverLogger.info("Player '{}' lost connection to game '{}' while being alone, the game was deleted", nickname, gameCode);
-        } else {
-          gameEntry.removePlayer(nickname);
-          serverLogger.info("Player '{}' lost connection to game '{}'", nickname, gameCode);
-          broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
-        }
-      } else {
-        // If the game has started, set the client as disconnected
-        gameEntry.disconnectPlayer(nickname);
-        disconnectedPlayers.put(nickname, gameCode);
-        serverLogger.info("Player '{}' playing game '{}' marked as disconnected", nickname, gameCode);
-        broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
-      }
       client.attach(null);
       client.close();
     }

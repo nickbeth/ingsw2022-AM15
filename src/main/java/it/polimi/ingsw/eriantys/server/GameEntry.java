@@ -27,7 +27,7 @@ public class GameEntry {
    * Applies the given {@link GameAction} to the game state.
    *
    * @param action The {@link GameAction} to apply to the game state
-   * @return {@code true} if action was valid and was applied successfully, {@code false} otherwise
+   * @return {@code true} if the action was valid and was applied successfully, {@code false} otherwise
    */
   public boolean executeAction(GameAction action) {
     synchronized (gameState) {
