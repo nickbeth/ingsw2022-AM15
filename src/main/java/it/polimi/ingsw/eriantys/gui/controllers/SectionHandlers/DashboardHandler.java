@@ -25,35 +25,36 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
-
 public class DashboardHandler extends SectionHandler {
+  private final DebugScreenHandler debugScreenHandler;
+
   private final String nickname;
   private final GridPane studentHallGrid;
   private final GridPane entranceGrid;
   private final GridPane professorGrid;
   private final TilePane towerTiles;
-  GameState gameState = Controller.get().getGameState();
+  private GameState gameState = Controller.get().getGameState();
 
   private final EnumMap<TowerColor, String> towerColorToPath = new EnumMap<TowerColor, String>(TowerColor.class);
   private final EnumMap<HouseColor, String> studentColorToPath = new EnumMap<>(HouseColor.class);
   private final EnumMap<HouseColor, String> professorColorToPath = new EnumMap<>(HouseColor.class);
 
-  List<ImageView> blueStudents = new ArrayList<>();
-  List<ImageView> redStudents = new ArrayList<>();
-  List<ImageView> yellowStudents = new ArrayList<>();
-  List<ImageView> greenStudents = new ArrayList<>();
-  List<ImageView> pinkStudents = new ArrayList<>();
+  private List<ImageView> blueStudents = new ArrayList<>();
+  private List<ImageView> redStudents = new ArrayList<>();
+  private List<ImageView> yellowStudents = new ArrayList<>();
+  private List<ImageView> greenStudents = new ArrayList<>();
+  private List<ImageView> pinkStudents = new ArrayList<>();
 
-  ImageView[] professors = new ImageView[HouseColor.values().length];
+  private ImageView[] professors = new ImageView[HouseColor.values().length];
 
-  public DashboardHandler(String nickname, GridPane studentHallGrid, GridPane entranceGrid, GridPane professorGrid, TilePane towerTiles) {
-    initMaps();
+  public DashboardHandler(String nickname, GridPane studentHallGrid, GridPane entranceGrid, GridPane professorGrid, TilePane towerTiles, DebugScreenHandler debugScreenHandler) {
+    this.debugScreenHandler = debugScreenHandler;
     this.nickname = nickname;
     this.studentHallGrid = studentHallGrid;
     this.entranceGrid = entranceGrid;
     this.professorGrid = professorGrid;
     this.towerTiles = towerTiles;
+    initMaps();
   }
 
   @Override
@@ -102,6 +103,7 @@ public class DashboardHandler extends SectionHandler {
    * For each table if the amount of students of the model is more than what is shown it adds new images.
    */
   private void refreshDiningHall() {
+    debugScreenHandler.showMessage("Refreshing DiningHall");
     studentHallGrid.setOnDragOver(this::dragOverHall);
     Students hall = gameState.getPlayer(nickname).getDashboard().getDiningHall();
     for (int i = 0; i < hall.getCount(HouseColor.GREEN) - greenStudents.size(); i++) {
@@ -159,6 +161,7 @@ public class DashboardHandler extends SectionHandler {
    * For each professor checks if the player is the holder, if not check if the prof imgview is displayed and removes it
    */
   private void refreshProfTable() {
+    debugScreenHandler.showMessage("refreshing professor table");
     TowerColor team = gameState.getPlayer(nickname).getColorTeam();
     ProfessorHolder profHold = gameState.getPlayingField().getProfessorHolder();
     for (HouseColor color : HouseColor.values()) {
@@ -190,6 +193,7 @@ public class DashboardHandler extends SectionHandler {
   }
 
   private void createEntrance() {
+    debugScreenHandler.showMessage("creating entrance");
     entranceGrid.getChildren().clear();
     Player player = gameState.getPlayer(nickname);
     Students entrance = player.getDashboard().getEntrance();
@@ -199,7 +203,7 @@ public class DashboardHandler extends SectionHandler {
         count++;
         ImageView student = createStudent(color);
         student.setOnDragDetected((e) -> {
-          clientLogger.debug(color.toString() + " student drag detected");
+          debugScreenHandler.showMessage(color.toString() + " student drag detected");
           Dragboard db = student.startDragAndDrop(TransferMode.ANY);
           ClipboardContent content = new ClipboardContent();
           content.put(DataFormats.HOUSE_COLOR.format, color);
@@ -243,7 +247,12 @@ public class DashboardHandler extends SectionHandler {
   private void dragDropOnHall(DragEvent e) {
     Dragboard db = e.getDragboard();
     HouseColor color = (HouseColor) db.getContent(DataFormats.HOUSE_COLOR.format);
-    clientLogger.debug(color.toString() + " student was dropped to dashboard");
+    Students students = new Students();
+    students.addStudent(color);
+    if (!Controller.get().sender().sendMoveStudentsToDiningHall(students))
+      debugScreenHandler.showMessage("invalid " + color.toString() + " student drop to dining hall");
+    else
+      debugScreenHandler.showMessage(color.toString() + " student drop to dining hall");
   }
 
   /**

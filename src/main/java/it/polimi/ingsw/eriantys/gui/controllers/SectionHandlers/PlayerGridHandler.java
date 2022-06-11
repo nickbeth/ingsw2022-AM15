@@ -27,7 +27,7 @@ public class PlayerGridHandler extends SectionHandler {
   private final HashMap<Label, Player> towerAmounts = new HashMap<>();
   private final HashMap<Label, Player> coinAmounts = new HashMap<>();
 
-  public PlayerGridHandler(GridPane playerGrid) {
+  public PlayerGridHandler(GridPane playerGrid, DebugScreenHandler debugScreenHandler) {
     this.playerGrid = playerGrid;
   }
 
@@ -78,6 +78,8 @@ public class PlayerGridHandler extends SectionHandler {
         nickname.getStyleClass().add("label-nicknames");
         nickname.setCursor(Cursor.HAND);
         nickname.setContentDisplay(ContentDisplay.RIGHT);
+        //makes trasparent parts not clickable
+        nickname.setPickOnBounds(false);
         //TODO: add show showDashboard action on click image, maybe it depends on the grid?
         playerGrid.add(nickname, 0, i);
         GridPane.setHalignment(nickname, HPos.RIGHT);

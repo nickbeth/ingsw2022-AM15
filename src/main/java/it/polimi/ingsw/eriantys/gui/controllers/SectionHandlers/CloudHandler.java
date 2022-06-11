@@ -5,7 +5,6 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Cloud;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
-import javafx.event.Event;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -18,6 +17,7 @@ import java.util.List;
 
 public class CloudHandler extends SectionHandler {
   private final AnchorPane cloudPane;
+  private final DebugScreenHandler debugScreenHandler;
 
   private final Cloud cloud;
   private final GameState gameState = Controller.get().getGameState();
@@ -25,9 +25,10 @@ public class CloudHandler extends SectionHandler {
   private final List<Label> studentlabels = new ArrayList<>();
   private final EnumMap<HouseColor, String> studentColorToPath = new EnumMap<>(HouseColor.class);
 
-  public CloudHandler(AnchorPane cloudPane, Cloud cloud) {
+  public CloudHandler(AnchorPane cloudPane, Cloud cloud, DebugScreenHandler debugScreenHandler) {
     this.cloudPane = cloudPane;
     this.cloud = cloud;
+    this.debugScreenHandler = debugScreenHandler;
     for (HouseColor color : HouseColor.values())
       studentColorToPath.put(color, "/assets/realm/student-" + color + ".png");
   }
@@ -114,7 +115,8 @@ public class CloudHandler extends SectionHandler {
   private void pickCloud() {
     if (gameState.getTurnPhase() == TurnPhase.PICKING) {
       int index = gameState.getPlayingField().getClouds().indexOf(cloud);
-      Controller.get().sender().sendPickCloud(index);
+      if (!Controller.get().sender().sendPickCloud(index))
+        debugScreenHandler.showMessage("Cloud " + index + "isInvalid");
     }
   }
 }

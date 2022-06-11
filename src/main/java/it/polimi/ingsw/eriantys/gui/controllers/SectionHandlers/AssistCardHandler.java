@@ -13,15 +13,16 @@ import javafx.scene.layout.TilePane;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
-
 public class AssistCardHandler extends SectionHandler {
+  private DebugScreenHandler debugScreenHandler;
   private final TilePane assistCards;
+
   private final GameState gameState = Controller.get().getGameState();
   private boolean isFirstActionTurn;
 
-  public AssistCardHandler(TilePane assistCards) {
+  public AssistCardHandler(TilePane assistCards, DebugScreenHandler debugScreenHandler) {
     this.assistCards = assistCards;
+    this.debugScreenHandler = debugScreenHandler;
   }
 
   @Override
@@ -58,10 +59,11 @@ public class AssistCardHandler extends SectionHandler {
   }
 
   private void playAssistCardAction(AssistantCard card) {
-    clientLogger.debug("played " + card.toString());
     int index = gameState
             .getPlayer(Controller.get().getNickname()).getCards().indexOf(card);
-    if (Controller.get().sender().sendPickAssistantCard(index))
-      clientLogger.debug("error assist card action invalid");
+    if (!Controller.get().sender().sendPickAssistantCard(index))
+      debugScreenHandler.showMessage("error assist card action invalid");
+    else
+      debugScreenHandler.showMessage("played " + card.toString());
   }
 }

@@ -5,6 +5,7 @@ import it.polimi.ingsw.eriantys.gui.controllers.utils.DataFormats;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
+import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -21,9 +22,8 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
-
 public class IslandHandler extends SectionHandler {
+  private final DebugScreenHandler debugScreenHandler;
   private final AnchorPane islandPane;
   private final Island island;
   private final GameState gameState = Controller.get().getGameState();
@@ -37,9 +37,10 @@ public class IslandHandler extends SectionHandler {
   private Label towerLabel;
   private TowerColor towerColor;
 
-  public IslandHandler(AnchorPane islandPane, Island island) {
+  public IslandHandler(AnchorPane islandPane, Island island, DebugScreenHandler debugScreenHandler) {
     this.islandPane = islandPane;
     this.island = island;
+    this.debugScreenHandler = debugScreenHandler;
     initMaps();
   }
 
@@ -178,8 +179,14 @@ public class IslandHandler extends SectionHandler {
   private void dragDropOnIsland(DragEvent e) {
     e.acceptTransferModes(TransferMode.ANY);
     Dragboard db = e.getDragboard();
+    int islandIndex = Controller.get().getGameState().getPlayingField().getIslands().indexOf(island);
     HouseColor color = (HouseColor) db.getContent(DataFormats.HOUSE_COLOR.format);
-    clientLogger.debug(color.toString() + " student was dropped to island");
+    Students students = new Students();
+    students.addStudent(color);
+    if (!Controller.get().sender().sendMoveStudentsToIsland(students, islandIndex))
+      debugScreenHandler.showMessage("invalid " + color.toString() + "student drop on island " + islandIndex);
+    else
+      debugScreenHandler.showMessage(color.toString() + " student was dropped to island " + islandIndex);
   }
 
 }

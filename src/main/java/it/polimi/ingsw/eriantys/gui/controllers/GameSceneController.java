@@ -7,6 +7,8 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import jfxtras.scene.layout.CircularPane;
 
@@ -14,8 +16,11 @@ import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
 import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class GameSceneController extends FXMLController {
+  @FXML
+  private VBox debugScreen;
   @FXML
   private Label phase;
   @FXML
@@ -45,22 +50,24 @@ public class GameSceneController extends FXMLController {
   @FXML
   private Button playCardButton;
 
-  PlayerGridHandler playerGridHandler;
-  DashboardHandler mainDashboardHandler;
-  CloudsHandler cloudBoxHandler;
-  IslandsHandler islandsPaneHandler;
-  AssistCardHandler assistCardTilesHandler;
+  private PlayerGridHandler playerGridHandler;
+  private DashboardHandler mainDashboardHandler;
+  private CloudsHandler cloudBoxHandler;
+  private IslandsHandler islandsPaneHandler;
+  private AssistCardHandler assistCardTilesHandler;
+  private DebugScreenHandler debugScreenHandler;
 
   @Override
   public void start() {
     super.start();
     Controller.get().addListener(this, GAMEDATA_EVENT.tag);
     Controller.get().addListener(this, INTERNAL_SOCKET_ERROR.tag);
-    mainDashboardHandler = new DashboardHandler(Controller.get().getNickname(), studentHallGrid, entranceGrid, profTableGrid, dashboardTowers);
-    playerGridHandler = new PlayerGridHandler(otherPlayersGrid);
-    cloudBoxHandler = new CloudsHandler(cloudBox);
-    islandsPaneHandler = new IslandsHandler(islandsPane);
-    assistCardTilesHandler = new AssistCardHandler(assistCards);
+    debugScreenHandler = new DebugScreenHandler(debugScreen);
+    mainDashboardHandler = new DashboardHandler(Controller.get().getNickname(), studentHallGrid, entranceGrid, profTableGrid, dashboardTowers, debugScreenHandler);
+    playerGridHandler = new PlayerGridHandler(otherPlayersGrid, debugScreenHandler);
+    cloudBoxHandler = new CloudsHandler(cloudBox, debugScreenHandler);
+    islandsPaneHandler = new IslandsHandler(islandsPane, debugScreenHandler);
+    assistCardTilesHandler = new AssistCardHandler(assistCards, debugScreenHandler);
   }
 
   @Override
@@ -72,6 +79,8 @@ public class GameSceneController extends FXMLController {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+    if (evt.getNewValue() != null)
+      debugScreenHandler.showMessage((String) evt.getNewValue());
     if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
       updateAll();
     else {
@@ -79,6 +88,7 @@ public class GameSceneController extends FXMLController {
       gui.showSocketError();
     }
   }
+
 
   @Override
   public void updateAll() {
@@ -103,7 +113,7 @@ public class GameSceneController extends FXMLController {
   @FXML
   private void quitGameAction() {
     Controller.get().sender().sendQuitGame();
-    gui.setScene(SceneEnum.CREATE_OR_JOIN);
+    gui.setScene(SceneEnum.CONNECTION);
   }
 
   @FXML
@@ -116,6 +126,15 @@ public class GameSceneController extends FXMLController {
   @FXML
   private void hideAssistCards() {
     assistCardPanel.setVisible(false);
+  }
+
+  @FXML
+  private void toggleDebugScreen(KeyEvent event) {
+    boolean isVisible = !debugScreen.isVisible();
+    if (event.getCode() == KeyCode.F3) {
+      clientLogger.debug("debug screen is visible: " + isVisible);
+      debugScreen.setVisible(isVisible);
+    }
   }
 
 }

@@ -12,13 +12,15 @@ import java.util.List;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class IslandsHandler extends SectionHandler {
+  private final DebugScreenHandler debugScreenHandler;
   private final CircularPane islandsCircle;
 
   private GameState gameState;
   private final List<IslandHandler> islandsHandlers = new ArrayList<>();
 
-  public IslandsHandler(CircularPane islandsCircle) {
+  public IslandsHandler(CircularPane islandsCircle, DebugScreenHandler debugScreenHandler) {
     this.islandsCircle = islandsCircle;
+    this.debugScreenHandler = debugScreenHandler;
   }
 
   /**
@@ -34,11 +36,11 @@ public class IslandsHandler extends SectionHandler {
     islandsCircle.getChildren().clear();
     gameState = Controller.get().getGameState();
     List<Island> islands = gameState.getPlayingField().getIslands();
-    clientLogger.debug("creating island handlers and populating circle");
+    debugScreenHandler.showMessage("creating island handlers and populating circle");
     islands.forEach(island -> {
       AnchorPane islandPane = new AnchorPane();
       int mnPosition = gameState.getPlayingField().getMotherNaturePosition();
-      IslandHandler islandHandler = new IslandHandler(islandPane, island);
+      IslandHandler islandHandler = new IslandHandler(islandPane, island, debugScreenHandler);
       islandHandler.update();
       islandsHandlers.add(islandHandler);
       islandsCircle.add(islandPane);

@@ -7,16 +7,14 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
-
 public class CloudsHandler extends SectionHandler {
   private final VBox cloudBox;
-
+  private final DebugScreenHandler debugScreenHandler;
   private final List<CloudHandler> cloudHandlers = new ArrayList<>();
 
-  public CloudsHandler(VBox cloudBox) {
+  public CloudsHandler(VBox cloudBox, DebugScreenHandler debugScreenHandler) {
     this.cloudBox = cloudBox;
-
+    this.debugScreenHandler = debugScreenHandler;
   }
 
   /**
@@ -33,11 +31,11 @@ public class CloudsHandler extends SectionHandler {
    */
   @Override
   protected void create() {
-    clientLogger.debug("creating cloud handlers and populating cloud box");
+    debugScreenHandler.showMessage("Creating cloud handlers and populating cloud box");
     Controller.get().getGameState().getPlayingField().getClouds().forEach(
             cloud -> {
               AnchorPane cloudPane = new AnchorPane();
-              CloudHandler cloudHandler = new CloudHandler(cloudPane, cloud);
+              CloudHandler cloudHandler = new CloudHandler(cloudPane, cloud, debugScreenHandler);
               cloudHandler.update();
               cloudHandlers.add(cloudHandler);
               cloudBox.getChildren().add(cloudPane);
