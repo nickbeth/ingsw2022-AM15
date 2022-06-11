@@ -61,10 +61,10 @@ public class IslandHandler extends SectionHandler {
       }
 
 
-      TowerColor color;
+      TowerColor towerColor;
       if (island.getTowerColor().isPresent()) {
-        color = island.getTowerColor().get();
-        ImageView tower = new ImageView(new Image(towerColorToPath.get(color)));
+        towerColor = island.getTowerColor().get();
+        ImageView tower = new ImageView(new Image(towerColorToPath.get(towerColor)));
         tower.setFitWidth(20);
         tower.setPreserveRatio(true);
         towerLabel = new Label("×" + island.getTowerCount(), tower);
@@ -72,18 +72,22 @@ public class IslandHandler extends SectionHandler {
         AnchorPane.setBottomAnchor(towerLabel, 75.0);
         AnchorPane.setLeftAnchor(towerLabel, 75.0);
         towerLabel.setVisible(false);
-        towerColor = color;
+        this.towerColor = towerColor;
       }
 
-      if (towerColor != null) {
-        color = island.getTowerColor().get();
+      if (this.towerColor != null) {
+        towerColor = island.getTowerColor().get();
         towerLabel.setText("×" + island.getTowerCount());
-        if (towerColor != color) {
-          ImageView tower = new ImageView(new Image(towerColorToPath.get(color)));
+        if (this.towerColor != towerColor) {
+          ImageView tower = new ImageView(new Image(towerColorToPath.get(towerColor)));
           tower.setFitWidth(20);
           tower.setPreserveRatio(true);
           towerLabel.setGraphic(tower);
         }
+      }
+
+      for (HouseColor color : HouseColor.values()) {
+        studentlabels.get(color.ordinal()).setText("×" + island.getStudents().getCount(color));
       }
     }
   }
@@ -186,7 +190,7 @@ public class IslandHandler extends SectionHandler {
     if (!Controller.get().sender().sendMoveStudentsToIsland(students, islandIndex))
       debugScreenHandler.showMessage("invalid " + color.toString() + "student drop on island " + islandIndex);
     else
-      debugScreenHandler.showMessage(color.toString() + " student was dropped to island " + islandIndex);
+      debugScreenHandler.showMessage(color.toString() + " student was dropped on island " + islandIndex);
   }
 
 }

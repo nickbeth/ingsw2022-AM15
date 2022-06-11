@@ -28,6 +28,7 @@ public class IslandsHandler extends SectionHandler {
    */
   @Override
   protected void refresh() {
+    debugScreenHandler.showMessage("refreshing islands");
     islandsHandlers.forEach(SectionHandler::update);
   }
 

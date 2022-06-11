@@ -114,26 +114,26 @@ public class DashboardHandler extends SectionHandler {
 
     for (int i = 0; i < hall.getCount(HouseColor.RED) - redStudents.size(); i++) {
       ImageView student = createStudent(HouseColor.RED);
-      greenStudents.add(student);
-      studentHallGrid.add(student, 0, 9 - redStudents.indexOf(student));
+      redStudents.add(student);
+      studentHallGrid.add(student, 1, 9 - redStudents.indexOf(student));
     }
 
     for (int i = 0; i < hall.getCount(HouseColor.YELLOW) - yellowStudents.size(); i++) {
       ImageView student = createStudent(HouseColor.YELLOW);
       yellowStudents.add(student);
-      studentHallGrid.add(student, 0, 9 - yellowStudents.indexOf(student));
+      studentHallGrid.add(student, 2, 9 - yellowStudents.indexOf(student));
     }
 
     for (int i = 0; i < hall.getCount(HouseColor.PINK) - pinkStudents.size(); i++) {
       ImageView student = createStudent(HouseColor.PINK);
       pinkStudents.add(student);
-      studentHallGrid.add(student, 0, 9 - pinkStudents.indexOf(student));
+      studentHallGrid.add(student, 3, 9 - pinkStudents.indexOf(student));
     }
 
     for (int i = 0; i < hall.getCount(HouseColor.BLUE) - blueStudents.size(); i++) {
       ImageView student = createStudent(HouseColor.BLUE);
       blueStudents.add(student);
-      studentHallGrid.add(student, 0, 9 - blueStudents.indexOf(student));
+      studentHallGrid.add(student, 4, 9 - blueStudents.indexOf(student));
     }
   }
 
