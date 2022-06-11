@@ -3,8 +3,10 @@ package it.polimi.ingsw.eriantys.gui.controllers;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers.*;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import jfxtras.scene.layout.CircularPane;
 
@@ -14,6 +16,10 @@ import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
 import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
 
 public class GameSceneController extends FXMLController {
+  @FXML
+  private Label phase;
+  @FXML
+  private Label currPlayerLabel;
   @FXML
   private TilePane dashboardTowers;
   @FXML
@@ -81,8 +87,17 @@ public class GameSceneController extends FXMLController {
     mainDashboardHandler.update();
     islandsPaneHandler.update();
     cloudBoxHandler.update();
+    updateGameLables();
     if (assistCardPanel.isVisible())
       assistCardTilesHandler.update();
+  }
+
+  private void updateGameLables() {
+    String phaseText = "Phase: " + Controller.get().getGameState().getGamePhase();
+    if (Controller.get().getGameState().getGamePhase() == GamePhase.ACTION)
+      phaseText += " -> " + Controller.get().getGameState().getTurnPhase();
+    phase.setText(phaseText);
+    currPlayerLabel.setText("Turn of: " + Controller.get().getGameState().getCurrentPlayer());
   }
 
   @FXML
