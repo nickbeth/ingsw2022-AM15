@@ -15,11 +15,10 @@ public class PlayingField {
   private final List<Cloud> clouds;
   private final StudentBag studentBag;
   private final ProfessorHolder professorHolder;
-  private final TeamsInfluenceTracer teamsInfluence;
   private final List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
+  private int motherNaturePosition;
   private int locks;
   private int bank;
-  private int motherNaturePosition;
 
   private List<CharacterCard> characterCards = new ArrayList<>();
   private CharacterCard playedCharacterCard;
@@ -29,7 +28,6 @@ public class PlayingField {
    */
   public PlayingField(RuleBook ruleBook) {
     professorHolder = new ProfessorHolder(new EnumMap<>(HouseColor.class));
-    teamsInfluence = new TeamsInfluenceTracer(new EnumMap<>(TowerColor.class));
 
     // Island initialization
     islands = new ArrayList<>();
