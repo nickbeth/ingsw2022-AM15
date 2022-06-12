@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+
 public class DashboardHandler extends SectionHandler {
   private final DebugScreenHandler debugScreenHandler;
 
@@ -94,7 +96,7 @@ public class DashboardHandler extends SectionHandler {
         tower.setPreserveRatio(true);
         towerTiles.getChildren().add(tower);
       }
-    } else
+    } else if (towerCount < tileCount)
       towerTiles.getChildren().remove(0);
   }
 
@@ -169,7 +171,7 @@ public class DashboardHandler extends SectionHandler {
         ImageView prof = createProfessor(color);
         professors[color.ordinal()] = prof;
         professorGrid.add(prof, color.ordinal(), 0);
-      } else {
+      } else if (!profHold.hasProfessor(team, color) && professors[color.ordinal()] != null){
         professorGrid.getChildren().remove(professors[color.ordinal()]);
         professors[color.ordinal()] = null;
       }

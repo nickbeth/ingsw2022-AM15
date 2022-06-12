@@ -13,6 +13,7 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -28,9 +29,9 @@ public class IslandHandler extends SectionHandler {
   private final Island island;
   private final GameState gameState = Controller.get().getGameState();
 
-  private final EnumMap<TowerColor, String> towerColorToPath = new EnumMap<TowerColor, String>(TowerColor.class);
+  private final EnumMap<TowerColor, String> towerColorToPath = new EnumMap<>(TowerColor.class);
   private final EnumMap<HouseColor, String> studentColorToPath = new EnumMap<>(HouseColor.class);
-  private final List<Label> studentlabels = new ArrayList<>();
+  private final List<Label> studentLabels = new ArrayList<>();
   private ImageView lockView;
   private ImageView mnView;
 
@@ -48,6 +49,7 @@ public class IslandHandler extends SectionHandler {
   protected void refresh() {
     PlayingField playingField = gameState.getPlayingField();
     mnView.setVisible(playingField.getMotherNaturePosition() == playingField.getIslands().indexOf(island));
+
     if (gameState.getGamePhase() == GamePhase.ACTION) {
       if (island.getTowerColor().isPresent()) {
         towerLabel.setVisible(true);
@@ -87,7 +89,7 @@ public class IslandHandler extends SectionHandler {
       }
 
       for (HouseColor color : HouseColor.values()) {
-        studentlabels.get(color.ordinal()).setText("×" + island.getStudents().getCount(color));
+        studentLabels.get(color.ordinal()).setText("×" + island.getStudents().getCount(color));
       }
     }
   }
@@ -123,31 +125,31 @@ public class IslandHandler extends SectionHandler {
     islandPane.getChildren().add(greenStudent);
     AnchorPane.setBottomAnchor(greenStudent, 60.0);
     AnchorPane.setLeftAnchor(greenStudent, 35.0);
-    studentlabels.add(greenStudent);
+    studentLabels.add(greenStudent);
 
     Label redStudent = new Label("×" + island.getStudents().getCount(HouseColor.RED), red);
     islandPane.getChildren().add(redStudent);
     AnchorPane.setTopAnchor(redStudent, 30.0);
     AnchorPane.setLeftAnchor(redStudent, 35.0);
-    studentlabels.add(redStudent);
+    studentLabels.add(redStudent);
 
     Label yellowStudent = new Label("×" + island.getStudents().getCount(HouseColor.YELLOW), yellow);
     islandPane.getChildren().add(yellowStudent);
     AnchorPane.setBottomAnchor(yellowStudent, 30.0);
     AnchorPane.setLeftAnchor(yellowStudent, 75.0);
-    studentlabels.add(yellowStudent);
+    studentLabels.add(yellowStudent);
 
     Label pinkStudent = new Label("×" + island.getStudents().getCount(HouseColor.PINK), pink);
     islandPane.getChildren().add(pinkStudent);
     AnchorPane.setTopAnchor(pinkStudent, 30.0);
     AnchorPane.setLeftAnchor(pinkStudent, 115.0);
-    studentlabels.add(pinkStudent);
+    studentLabels.add(pinkStudent);
 
     Label blueStudent = new Label("×" + island.getStudents().getCount(HouseColor.BLUE), blue);
     islandPane.getChildren().add(blueStudent);
     AnchorPane.setBottomAnchor(blueStudent, 60.0);
     AnchorPane.setLeftAnchor(blueStudent, 115.0);
-    studentlabels.add(blueStudent);
+    studentLabels.add(blueStudent);
 
     lockView = new ImageView(new Image("/assets/realm/lock-icon.png"));
     lockView.setFitWidth(20);
@@ -157,13 +159,23 @@ public class IslandHandler extends SectionHandler {
     AnchorPane.setLeftAnchor(lockView, 63.0);
     lockView.setVisible(false);
 
-    mnView = new ImageView(new Image("/assets/realm/mothernature.png"));
+    mnView = new ImageView(new Image("/assets/realm/mother-nature.png"));
     mnView.setFitWidth(25);
     mnView.setPreserveRatio(true);
     islandPane.getChildren().add(mnView);
     AnchorPane.setTopAnchor(mnView, 0.0);
     AnchorPane.setLeftAnchor(mnView, 72.5);
     mnView.setVisible(false);
+    mnView.setOnDragDetected(e -> {
+      debugScreenHandler.showMessage("mother nature drag detected");
+      Dragboard db = mnView.startDragAndDrop(TransferMode.ANY);
+      ClipboardContent content = new ClipboardContent();
+      int startIndex = Controller.get().getGameState().getPlayingField().getIslands().indexOf(island);
+      content.put(DataFormats.MOTHER_NATURE.format, startIndex);
+      db.setContent(content);
+      db.setDragView(mnView.getImage());
+      e.consume();
+    });
   }
 
   private void initMaps() {
@@ -176,21 +188,35 @@ public class IslandHandler extends SectionHandler {
   }
 
   private void dragOverIsland(DragEvent e) {
-    if (e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format))
+    if (gameState.getTurnPhase() == TurnPhase.PLACING &&
+            gameState.getGamePhase() == GamePhase.ACTION &&
+            e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format))
       e.acceptTransferModes(TransferMode.ANY);
+    else if (gameState.getTurnPhase() == TurnPhase.MOVING &&
+            gameState.getGamePhase() == GamePhase.ACTION &&
+            e.getDragboard().getContentTypes().contains(DataFormats.MOTHER_NATURE.format))
+      e.acceptTransferModes(TransferMode.ANY);
+    else
+      e.acceptTransferModes(TransferMode.NONE);
   }
 
   private void dragDropOnIsland(DragEvent e) {
-    e.acceptTransferModes(TransferMode.ANY);
-    Dragboard db = e.getDragboard();
     int islandIndex = Controller.get().getGameState().getPlayingField().getIslands().indexOf(island);
-    HouseColor color = (HouseColor) db.getContent(DataFormats.HOUSE_COLOR.format);
-    Students students = new Students();
-    students.addStudent(color);
-    if (!Controller.get().sender().sendMoveStudentsToIsland(students, islandIndex))
-      debugScreenHandler.showMessage("invalid " + color.toString() + "student drop on island " + islandIndex);
-    else
-      debugScreenHandler.showMessage(color.toString() + " student was dropped on island " + islandIndex);
+    Dragboard db = e.getDragboard();
+    if (db.getContentTypes().contains(DataFormats.HOUSE_COLOR.format)) {
+      HouseColor color = (HouseColor) db.getContent(DataFormats.HOUSE_COLOR.format);
+      Students students = new Students();
+      students.addStudent(color);
+      if (!Controller.get().sender().sendMoveStudentsToIsland(students, islandIndex))
+        debugScreenHandler.showMessage("invalid " + color.toString() + "student drop on island " + islandIndex);
+      else
+        debugScreenHandler.showMessage(color.toString() + " student was dropped on island " + islandIndex);
+    } else if (db.getContentTypes().contains(DataFormats.MOTHER_NATURE.format)) {
+      int startIndex = (int) db.getContent(DataFormats.MOTHER_NATURE.format);
+      if (!Controller.get().sender().sendMoveMotherNature(startIndex - islandIndex))
+        debugScreenHandler.showMessage("invalid mother nature drop on island " + islandIndex);
+      else
+        debugScreenHandler.showMessage("mother nature was dropped on island " + islandIndex);
+    }
   }
-
 }
