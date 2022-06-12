@@ -51,43 +51,23 @@ public class IslandHandler extends SectionHandler {
     mnView.setVisible(playingField.getMotherNaturePosition() == playingField.getIslands().indexOf(island));
 
     if (gameState.getGamePhase() == GamePhase.ACTION) {
-      if (island.getTowerColor().isPresent()) {
+      // if tower is present on island make it visible
+      if (island.getTowerColor().isPresent() ) {
         towerLabel.setVisible(true);
         towerLabel.setText("×" + island.getTowerCount());
-      }
-      lockView.setVisible(island.isLocked());
-
-      if (gameState.getTurnPhase() == TurnPhase.PLACING) {
-        islandPane.setOnDragOver(this::dragOverIsland);
-        islandPane.setOnDragDropped(this::dragDropOnIsland);
-      }
-
-
-      TowerColor towerColor;
-      if (island.getTowerColor().isPresent()) {
-        towerColor = island.getTowerColor().get();
-        ImageView tower = new ImageView(new Image(towerColorToPath.get(towerColor)));
-        tower.setFitWidth(20);
-        tower.setPreserveRatio(true);
-        towerLabel = new Label("×" + island.getTowerCount(), tower);
-        islandPane.getChildren().add(towerLabel);
-        AnchorPane.setBottomAnchor(towerLabel, 75.0);
-        AnchorPane.setLeftAnchor(towerLabel, 75.0);
-        towerLabel.setVisible(false);
-        this.towerColor = towerColor;
-      }
-
-      if (this.towerColor != null) {
-        towerColor = island.getTowerColor().get();
-        towerLabel.setText("×" + island.getTowerCount());
-        if (this.towerColor != towerColor) {
+        // if towerColor changed change graphic
+        if (towerColor != island.getTowerColor().get()) {
+          towerColor = island.getTowerColor().get();
           ImageView tower = new ImageView(new Image(towerColorToPath.get(towerColor)));
           tower.setFitWidth(20);
           tower.setPreserveRatio(true);
           towerLabel.setGraphic(tower);
         }
       }
+      //refresh lock visibility
+      lockView.setVisible(island.isLocked());
 
+      //refresh student counters
       for (HouseColor color : HouseColor.values()) {
         studentLabels.get(color.ordinal()).setText("×" + island.getStudents().getCount(color));
       }
@@ -151,6 +131,12 @@ public class IslandHandler extends SectionHandler {
     AnchorPane.setLeftAnchor(blueStudent, 115.0);
     studentLabels.add(blueStudent);
 
+    towerLabel = new Label("×" + island.getTowerCount());
+    islandPane.getChildren().add(towerLabel);
+    AnchorPane.setBottomAnchor(towerLabel, 75.0);
+    AnchorPane.setLeftAnchor(towerLabel, 75.0);
+    towerLabel.setVisible(false);
+
     lockView = new ImageView(new Image("/assets/realm/lock-icon.png"));
     lockView.setFitWidth(20);
     lockView.setPreserveRatio(true);
@@ -176,6 +162,8 @@ public class IslandHandler extends SectionHandler {
       db.setDragView(mnView.getImage());
       e.consume();
     });
+    islandPane.setOnDragOver(this::dragOverIsland);
+    islandPane.setOnDragDropped(this::dragDropOnIsland);
   }
 
   private void initMaps() {
@@ -188,12 +176,20 @@ public class IslandHandler extends SectionHandler {
   }
 
   private void dragOverIsland(DragEvent e) {
+    //if its not the right gamePhase or player doesn't accept any transfer mode
+    if (!gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname()) ||
+            gameState.getGamePhase() != GamePhase.ACTION) {
+      e.acceptTransferModes(TransferMode.NONE);
+      return;
+    }
+
     if (gameState.getTurnPhase() == TurnPhase.PLACING &&
-            gameState.getGamePhase() == GamePhase.ACTION &&
             e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format))
-      e.acceptTransferModes(TransferMode.ANY);
+      if(island.isLocked())
+        e.acceptTransferModes(TransferMode.NONE);
+      else
+        e.acceptTransferModes(TransferMode.ANY);
     else if (gameState.getTurnPhase() == TurnPhase.MOVING &&
-            gameState.getGamePhase() == GamePhase.ACTION &&
             e.getDragboard().getContentTypes().contains(DataFormats.MOTHER_NATURE.format))
       e.acceptTransferModes(TransferMode.ANY);
     else
@@ -213,7 +209,7 @@ public class IslandHandler extends SectionHandler {
         debugScreenHandler.showMessage(color.toString() + " student was dropped on island " + islandIndex);
     } else if (db.getContentTypes().contains(DataFormats.MOTHER_NATURE.format)) {
       int startIndex = (int) db.getContent(DataFormats.MOTHER_NATURE.format);
-      if (!Controller.get().sender().sendMoveMotherNature(startIndex - islandIndex))
+      if (!Controller.get().sender().sendMoveMotherNature(islandIndex - startIndex))
         debugScreenHandler.showMessage("invalid mother nature drop on island " + islandIndex);
       else
         debugScreenHandler.showMessage("mother nature was dropped on island " + islandIndex);

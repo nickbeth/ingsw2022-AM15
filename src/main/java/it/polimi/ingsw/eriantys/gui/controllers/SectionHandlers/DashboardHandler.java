@@ -261,6 +261,10 @@ public class DashboardHandler extends SectionHandler {
    * if the turnPhase is PLACING accepts ANY transfer mode else NONE
    */
   private void dragOverHall(DragEvent e) {
+    if (!gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname())) {
+      e.acceptTransferModes(TransferMode.NONE);
+      return;
+    }
     if (e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format)) {
       if (gameState.getTurnPhase() == TurnPhase.PLACING && gameState.getGamePhase() == GamePhase.ACTION)
         e.acceptTransferModes(TransferMode.ANY);
