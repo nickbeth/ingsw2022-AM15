@@ -224,7 +224,7 @@ public class ActionTest {
     action.apply(normalGame);
     assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
     assertEquals(GamePhase.ACTION, normalGame.getGamePhase());
-    assertEquals(normalGame.getTurnOrderPlayers().get(2), normalGame.getCurrentPlayer());
+    assertEquals(normalGame.getActionPhaseOrder().get(2), normalGame.getCurrentPlayer());
 
     //last player
     action = new PickCloud(1);
@@ -234,7 +234,7 @@ public class ActionTest {
     action.apply(normalGame);
     assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
     assertEquals(GamePhase.PLANNING, normalGame.getGamePhase());
-    assertEquals(normalGame.getPlanOrderPlayers().get(0), normalGame.getCurrentPlayer());
+    assertEquals(normalGame.getPlanningPhaseOrder().get(0), normalGame.getCurrentPlayer());
 
     //is valid tests
     action = new PickCloud(6);

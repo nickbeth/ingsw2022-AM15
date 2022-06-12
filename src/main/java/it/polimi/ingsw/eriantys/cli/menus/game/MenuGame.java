@@ -66,6 +66,7 @@ public abstract class MenuGame extends Menu {
     View islandsView = new IslandsView(islands, motherPosition);
     View cloudsView = new CloudsView(clouds);
     View ccView = new CharacterCardsView(ccs);
+    View playersView = new PlayersView(players, rules);
 
     clearConsole();
     switch (choice) {
@@ -73,6 +74,7 @@ public abstract class MenuGame extends Menu {
       case "1" -> {
         ViewGroup viewAll = new ViewGroup()
             .addView(islandsView)
+            .addView(playersView)
             .addView(dashboardsView)
             .addView(cloudsView);
         if (rules.gameMode.equals(GameMode.EXPERT))
@@ -98,17 +100,19 @@ public abstract class MenuGame extends Menu {
       // Show turn orders
       case "7" -> {
         out.println("Plan order:");
-        game.getPlanOrderPlayers()
+        game.getPlanningPhaseOrder()
             .forEach(player -> out.print(player + " -> "));
 
         out.println();
 
         if (game.getGamePhase().equals(GamePhase.ACTION)) {
           out.println("Action order:");
-          game.getTurnOrderPlayers()
+          game.getActionPhaseOrder()
               .forEach(player -> out.print(player + " -> "));
         }
       }
+
+      case "8" -> playersView.draw(out);
 
       // View all character cards
       case "10" -> {
@@ -142,6 +146,6 @@ public abstract class MenuGame extends Menu {
    * @return True if so, false otherwise.
    */
   protected boolean isMyTurn() {
-    return controller.getGameState().isTurnOf(controller.getNickname());
+    return game.isTurnOf(controller.getNickname());
   }
 }

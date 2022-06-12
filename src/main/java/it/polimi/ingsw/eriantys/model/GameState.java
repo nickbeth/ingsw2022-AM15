@@ -12,8 +12,8 @@ import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class GameState {
   private List<Player> players = new ArrayList<>(); // Players in the game
-  private List<Player> turnOrder = new ArrayList<>(); // List of players sorted by their turn order
-  private List<Player> planOrder = new ArrayList<>(); // List of players sorted by their turn order
+  private List<Player> actionPhaseOrder = new ArrayList<>(); // List of players sorted by their turn order
+  private List<Player> planningPhaseOrder = new ArrayList<>(); // List of players sorted by their turn order
   private Player currentPlayer;
 
   private GamePhase gamePhase; // Current phase of the game
@@ -38,7 +38,7 @@ public class GameState {
   public void addPlayer(String nickname, TowerColor towerColor) {
     Player newPlayer = new Player(ruleBook, nickname, towerColor, new Students());
     players.add(newPlayer);
-    planOrder.add(newPlayer);
+    planningPhaseOrder.add(newPlayer);
     currentPlayer = players.get(0);
     playingField.addTeam(towerColor);
   }
@@ -47,11 +47,10 @@ public class GameState {
    * Sets current player to next in line depending on GamePhase
    */
   public void advancePlayer() {
-//    currentPlayer = (currentPlayer + 1) % players.size();
     if (getGamePhase() == GamePhase.PLANNING)
-      currentPlayer = planOrder.get((planOrder.indexOf(currentPlayer) + 1) % players.size());
+      currentPlayer = planningPhaseOrder.get((planningPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
     if (getGamePhase() == GamePhase.ACTION)
-      currentPlayer = turnOrder.get((turnOrder.indexOf(currentPlayer) + 1) % players.size());
+      currentPlayer = actionPhaseOrder.get((actionPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
   }
 
   public List<Player> getPlayers() {
@@ -105,12 +104,12 @@ public class GameState {
   public void advanceGamePhase() {
     switch (gamePhase) {
       case ACTION -> {
-        modelLogger.debug("\nACTION Phase advances to PLANNING");
+        modelLogger.debug("ACTION Phase advances to PLANNING");
         gamePhase = GamePhase.PLANNING;
-        prepareOrderForNextRound();
+        prepareOrderForPlanningPhase();
       }
       case PLANNING -> {
-        modelLogger.debug("\nPLANNING Phase advances to ACTION");
+        modelLogger.debug("PLANNING Phase advances to ACTION");
         gamePhase = GamePhase.ACTION;
         prepareOrderForActionPhase();
       }
@@ -219,25 +218,34 @@ public class GameState {
    * Sorts turnOrder players by their turn priority (in descending order)
    */
   private void prepareOrderForActionPhase() {
-    turnOrder.clear();
-    turnOrder.addAll(players);
-    modelLogger.debug("\nold turnOrder: " + turnOrder);
-    turnOrder.sort(Comparator.comparingInt(Player::getTurnPriority).reversed());
-    modelLogger.debug("\nnew turnOrder: " + turnOrder);
+    modelLogger.info("Updated action turn order.");
+    modelLogger.debug("Old action order: "
+        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
+    );
+    actionPhaseOrder.clear();
+    actionPhaseOrder.addAll(players);
+    actionPhaseOrder.sort(Comparator.comparingInt(Player::getTurnPriority));
+    modelLogger.debug("New action order: "
+        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
+    );
   }
 
   /**
    * Sorts planOrder players clockwise starting from the first of turnOrder
    */
-  private void prepareOrderForNextRound() {
-    modelLogger.debug("\nold planOrder: " + planOrder);
-    planOrder.clear();
+  private void prepareOrderForPlanningPhase() {
+    modelLogger.info("Updated planning turn order for the next round.");
+    modelLogger.debug("Old planOrder: " + planningPhaseOrder);
+    planningPhaseOrder.clear();
+
     //planOrder.add(turnOrder.get(0));
-    int offset = players.indexOf(turnOrder.get(0));
+    // Prepare turns for the next round.
+    // First player is the first who played in the previous action phase
+    int offset = players.indexOf(actionPhaseOrder.get(0));
     for (int i = 0; i < players.size(); i++) {
-      planOrder.add(players.get((i + offset) % players.size()));
+      planningPhaseOrder.add(players.get((i + offset) % players.size()));
     }
-    modelLogger.debug("\nnew planOrder: " + planOrder);
+    modelLogger.debug("New planOrder: " + planningPhaseOrder);
   }
 
   public boolean isTurnOf(String nickname) {
@@ -248,20 +256,20 @@ public class GameState {
     this.players = players;
   }
 
-  public void setTurnOrder(List<Player> turnOrder) {
-    this.turnOrder = turnOrder;
+  public void setActionPhaseOrder(List<Player> actionPhaseOrder) {
+    this.actionPhaseOrder = actionPhaseOrder;
   }
 
-  public void setPlanOrder(List<Player> planOrder) {
-    this.planOrder = planOrder;
+  public void setPlanningPhaseOrder(List<Player> planningPhaseOrder) {
+    this.planningPhaseOrder = planningPhaseOrder;
   }
 
-  public List<Player> getTurnOrderPlayers() {
-    return turnOrder;
+  public List<Player> getActionPhaseOrder() {
+    return actionPhaseOrder;
   }
 
-  public List<Player> getPlanOrderPlayers() {
-    return planOrder;
+  public List<Player> getPlanningPhaseOrder() {
+    return planningPhaseOrder;
   }
 
   public void setCurrentPlayer(Player currentPlayer) {
@@ -279,4 +287,5 @@ public class GameState {
   public void setPlayingField(PlayingField playingField) {
     this.playingField = playingField;
   }
+
 }

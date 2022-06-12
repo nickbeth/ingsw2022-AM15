@@ -14,8 +14,8 @@ public class ReInitiateGame extends GameAction {
 
     // ReInitiate players
     gameState.setPlayers(gameCopy.getPlayers());
-    gameState.setPlanOrder(gameCopy.getPlanOrderPlayers());
-    gameState.setTurnOrder(gameCopy.getTurnOrderPlayers());
+    gameState.setPlanningPhaseOrder(gameCopy.getPlanningPhaseOrder());
+    gameState.setActionPhaseOrder(gameCopy.getActionPhaseOrder());
     gameState.setCurrentPlayer(gameCopy.getCurrentPlayer());
 
     // ReInitiate phases

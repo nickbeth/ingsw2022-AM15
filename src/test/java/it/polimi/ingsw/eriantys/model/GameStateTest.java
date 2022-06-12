@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.testLogger;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -31,9 +32,9 @@ class GameStateTest {
   void addPlayer() {
     game.addPlayer("gino", TowerColor.BLACK);
     assertTrue(game.getPlayers().stream()
-            .anyMatch(p -> p.getNickname().equals("gino") && p.getColorTeam() == TowerColor.BLACK));
-    assertTrue(game.getPlanOrderPlayers().stream()
-            .anyMatch(p -> p.getNickname().equals("gino") && p.getColorTeam() == TowerColor.BLACK));
+        .anyMatch(p -> p.getNickname().equals("gino") && p.getColorTeam() == TowerColor.BLACK));
+    assertTrue(game.getPlanningPhaseOrder().stream()
+        .anyMatch(p -> p.getNickname().equals("gino") && p.getColorTeam() == TowerColor.BLACK));
   }
 
   @Test
@@ -43,18 +44,29 @@ class GameStateTest {
 
     //tests correct advancement for plan order
     doReturn(GamePhase.PLANNING).when(spyedField).getGamePhase();
-    Player oldPlayerTwo = spyedField.getPlanOrderPlayers().get(1);
+    Player oldPlayerTwo = spyedField.getPlanningPhaseOrder().get(1);
     spyedField.advancePlayer();
     assertEquals(oldPlayerTwo, spyedField.getCurrentPlayer());
 
     //tests correct advancement for action phase order
     spyedField.advancePlayer();
-    spyedField.advanceGamePhase();
 
-    doReturn(GamePhase.ACTION).when(spyedField).getGamePhase();
-    oldPlayerTwo = spyedField.getTurnOrderPlayers().get(1);
-    spyedField.advancePlayer();
-    assertEquals(oldPlayerTwo, spyedField.getCurrentPlayer());
+    spyedField.getPlayer("gino").setPlayedCard(5);
+    spyedField.getPlayer("franco").setPlayedCard(1);
+    spyedField.advanceGamePhase();
+    assertEquals(List.of("franco","gino"),spyedField.getActionPhaseOrder().stream().map(Player::getNickname).toList());
+
+    spyedField.advanceGamePhase();
+    assertEquals(List.of("franco","gino"),spyedField.getPlanningPhaseOrder().stream().map(Player::getNickname).toList());
+
+    spyedField.getPlayer("gino").setPlayedCard(0);
+    spyedField.getPlayer("franco").setPlayedCard(5);
+    spyedField.advanceGamePhase();
+    assertEquals(List.of("gino","franco"),spyedField.getActionPhaseOrder().stream().map(Player::getNickname).toList());
+
+    spyedField.advanceGamePhase();
+    assertEquals(List.of("gino","franco"),spyedField.getPlanningPhaseOrder().stream().map(Player::getNickname).toList());
+
   }
 
 
@@ -67,8 +79,8 @@ class GameStateTest {
     Player oldFirst = game.getPlayers().get(0);
     game.advanceGamePhase();
 
-    assertEquals(oldSecond, game.getTurnOrderPlayers().get(0));
-    assertEquals(oldFirst, game.getTurnOrderPlayers().get(1));
+    assertEquals(oldSecond, game.getActionPhaseOrder().get(0));
+    assertEquals(oldFirst, game.getActionPhaseOrder().get(1));
   }
 
   @Test
@@ -82,14 +94,14 @@ class GameStateTest {
     Player oldThird = threePlayerGame.getPlayers().get(2);
     threePlayerGame.advanceGamePhase();
 
-    assertEquals(oldSecond, threePlayerGame.getTurnOrderPlayers().get(0));
-    assertEquals(oldFirst, threePlayerGame.getTurnOrderPlayers().get(1));
-    assertEquals(oldThird, threePlayerGame.getTurnOrderPlayers().get(2));
+    assertEquals(oldSecond, threePlayerGame.getActionPhaseOrder().get(0));
+    assertEquals(oldFirst, threePlayerGame.getActionPhaseOrder().get(1));
+    assertEquals(oldThird, threePlayerGame.getActionPhaseOrder().get(2));
 
     threePlayerGame.advanceGamePhase();
-    assertEquals(oldSecond, threePlayerGame.getPlanOrderPlayers().get(0));
-    assertEquals(oldThird, threePlayerGame.getPlanOrderPlayers().get(1));
-    assertEquals(oldFirst, threePlayerGame.getPlanOrderPlayers().get(2));
+    assertEquals(oldSecond, threePlayerGame.getPlanningPhaseOrder().get(0));
+    assertEquals(oldThird, threePlayerGame.getPlanningPhaseOrder().get(1));
+    assertEquals(oldFirst, threePlayerGame.getPlanningPhaseOrder().get(2));
   }
 
   @Test
@@ -242,6 +254,6 @@ class GameStateTest {
     assertEquals(TurnPhase.PICKING, game.getTurnPhase());
     game.advanceTurnPhase();
     assertEquals(TurnPhase.PLACING, game.getTurnPhase());
-    
+
   }
 }
