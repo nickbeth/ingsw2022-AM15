@@ -93,37 +93,49 @@ public interface GameService {
    */
   static void applyMotherNatureEffect(int islandIndex, PlayingField field, List<Player> players) {
     if (field.getIsland(islandIndex).isLocked()) {
+      modelLogger.info("Island {} is locked. No effect applied", islandIndex);
       field.getIsland(islandIndex).setLocked(false);
+      modelLogger.info("Island {} unlocked", islandIndex);
       field.setLocks(field.getLocks() + 1);
-    } else {
-      Optional<TowerColor> mostInfluentialTeam = field.getMostInfluential(islandIndex);
-      Island currIsland = field.getIsland(islandIndex);
-
-      if (mostInfluentialTeam.isPresent()) {
-        // Set tower color
-        Optional<TowerColor> oldColor = currIsland.getTowerColor();
-        currIsland.setTowerColor(mostInfluentialTeam.get());
-
-        // If the island was previously empty make tower count = 1
-        if (oldColor.isEmpty()) {
-         currIsland.setTowerCount(1);
-        }
-
-        for (Player p : players) {
-          // Remove towers from conquerors' dashboard
-          if (p.getColorTeam() == mostInfluentialTeam.get()) {
-            p.getDashboard().removeTowers(currIsland.getTowerCount());
-          }
-          // If the island was conquered from another team, move towers to their dashboard
-          if (oldColor.isPresent() && !oldColor.get().equals(mostInfluentialTeam.get())) {
-            // Add towers to conquered dashboard
-            if (p.getColorTeam() == oldColor.get()) {
-              p.getDashboard().addTowers(currIsland.getTowerCount());
-            }
-          }
-        }
-        field.mergeIslands(islandIndex);
-      }
+      return;
     }
+
+    Optional<TowerColor> mostInfluentialTeam = field.getMostInfluential(islandIndex);
+    Island currIsland = field.getIsland(islandIndex);
+
+    mostInfluentialTeam.ifPresent(bestTeam -> {
+      // Set tower color
+      Optional<TowerColor> oldColor = currIsland.getTowerColor();
+      currIsland.setTowerColor(bestTeam);
+
+      // If the island was previously empty make tower count = 1
+      if (oldColor.isEmpty()) {
+        modelLogger.info("Island {} is being conquered for the first time by team {}", islandIndex, bestTeam);
+        currIsland.setTowerCount(1);
+      }
+
+      oldColor.ifPresentOrElse(oldTeam -> {
+            // If a team is being dethroned
+            if (!oldTeam.equals(bestTeam)) {
+              modelLogger.info("Team {} is dethroning team {} on island {}", bestTeam, oldTeam, islandIndex);
+
+              // Updates players dashboards
+              for (Player p : players) {
+                // Remove towers from conquerors' dashboard
+                if (p.getColorTeam().equals(bestTeam)) {
+                  p.getDashboard().removeTowers(currIsland.getTowerCount());
+                }
+
+                // Add towers to conquered dashboard
+                if (p.getColorTeam() == oldTeam) {
+                  p.getDashboard().addTowers(currIsland.getTowerCount());
+                }
+              }
+            }
+          },
+          () -> modelLogger.info("Nothing happens when mother nature landed on island {}", islandIndex)
+      );
+      field.mergeIslands(islandIndex);
+    });
   }
 }
