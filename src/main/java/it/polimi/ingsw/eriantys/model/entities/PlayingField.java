@@ -75,9 +75,6 @@ public class PlayingField {
     Island nextIsland = islands.get(islandIndex + 1 % islands.size());
     Island prevIsland = (islandIndex == 0) ? islands.get(islands.size() - 1) : islands.get(islandIndex - 1);
     Island currIsland = islands.get(islandIndex);
-    modelLogger.debug("\nprev island:" + islands.indexOf(prevIsland));
-    modelLogger.debug("\ncurrent island:" + islands.indexOf(currIsland));
-    modelLogger.debug("\nnext island:" + islands.indexOf(nextIsland));
 
     //tries merging next island
     if (nextIsland.getTowerColor().isPresent())
@@ -95,6 +92,7 @@ public class PlayingField {
    * merges secondIsland onto firstIsland
    */
   private void merge(Island firstIsland, Island secondIsland) {
+    modelLogger.debug("merging islands: " + islands.indexOf(firstIsland) + " <== " + islands.indexOf(secondIsland));
     //manage locks , and eventually return them to CC
     if (secondIsland.isLocked() && firstIsland.isLocked()) {
       locks++;

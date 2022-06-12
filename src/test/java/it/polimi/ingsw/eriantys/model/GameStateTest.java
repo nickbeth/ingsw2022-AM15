@@ -242,19 +242,6 @@ class GameStateTest {
     assertEquals(TurnPhase.PICKING, game.getTurnPhase());
     game.advanceTurnPhase();
     assertEquals(TurnPhase.PLACING, game.getTurnPhase());
-
-    GameState expGame = new GameState(2, GameMode.EXPERT);
-    expGame.addPlayer("gino", TowerColor.BLACK);
-    expGame.addPlayer("franco", TowerColor.WHITE);
-
-    expGame.advanceTurnPhase();
-    assertEquals(TurnPhase.EFFECT, expGame.getTurnPhase());
-    expGame.advanceTurnPhase();
-    assertEquals(TurnPhase.MOVING, expGame.getTurnPhase());
-    expGame.advanceTurnPhase();
-    assertEquals(TurnPhase.PICKING, expGame.getTurnPhase());
-    expGame.advanceTurnPhase();
-    assertEquals(TurnPhase.PLACING, expGame.getTurnPhase());
-
+    
   }
 }

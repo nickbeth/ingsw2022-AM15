@@ -116,7 +116,7 @@ public class CloudHandler extends SectionHandler {
     if (gameState.getTurnPhase() == TurnPhase.PICKING) {
       int index = gameState.getPlayingField().getClouds().indexOf(cloud);
       if (!Controller.get().sender().sendPickCloud(index))
-        debugScreenHandler.showMessage("Cloud " + index + "isInvalid");
+        debugScreenHandler.showMessage("cloud " + index + " is invalid");
     }
   }
 }
