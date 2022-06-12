@@ -51,7 +51,7 @@ public class GameState {
     if (getGamePhase() == GamePhase.PLANNING)
       currentPlayer = planOrder.get((planOrder.indexOf(currentPlayer) + 1) % players.size());
     if (getGamePhase() == GamePhase.ACTION)
-      currentPlayer = turnOrder.get((planOrder.indexOf(currentPlayer) + 1) % players.size());
+      currentPlayer = turnOrder.get((turnOrder.indexOf(currentPlayer) + 1) % players.size());
   }
 
   public List<Player> getPlayers() {

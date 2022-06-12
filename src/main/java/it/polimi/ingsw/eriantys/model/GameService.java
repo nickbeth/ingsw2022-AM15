@@ -14,6 +14,7 @@ import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 public interface GameService {
   /**
    * Reallocate professors to the player who has more students in his dining
+   *
    * @param professors Needs professorHolder of the game
    * @param dashboards Dashboard list of the game
    */
@@ -23,8 +24,9 @@ public interface GameService {
 
   /**
    * Updates Player coin amount depending on the new amount of students of each color in the dining hall
+   *
    * @param students Needs the addon students
-   * @param player Player that will get his coins updated
+   * @param player   Player that will get his coins updated
    */
   static void updatePlayerCoins(Students students, Player player) {
     for (HouseColor color : HouseColor.values()) {
@@ -99,20 +101,23 @@ public interface GameService {
 
       if (mostInfluentialTeam.isPresent()) {
         // Set tower color
-        TowerColor oldColor = currIsland.getTowerColor().get();
+        Optional<TowerColor> oldColor = currIsland.getTowerColor();
         currIsland.setTowerColor(mostInfluentialTeam.get());
 
-        // If old color != new color => manage player towers
-        if (!oldColor.equals(mostInfluentialTeam.get())) {
-          for (Player p : players) {
+        // If the island was previously empty make tower count = 1
+        if (oldColor.isEmpty()) {
+         currIsland.setTowerCount(1);
+        }
 
-            // Remove towers from conquerors' dashboard
-            if (p.getColorTeam() == mostInfluentialTeam.get()) {
-              p.getDashboard().removeTowers(currIsland.getTowerCount());
-            }
-
+        for (Player p : players) {
+          // Remove towers from conquerors' dashboard
+          if (p.getColorTeam() == mostInfluentialTeam.get()) {
+            p.getDashboard().removeTowers(currIsland.getTowerCount());
+          }
+          // If the island was conquered from another team, move towers to their dashboard
+          if (oldColor.isPresent() && !oldColor.get().equals(mostInfluentialTeam.get())) {
             // Add towers to conquered dashboard
-            if (p.getColorTeam() == oldColor) {
+            if (p.getColorTeam() == oldColor.get()) {
               p.getDashboard().addTowers(currIsland.getTowerCount());
             }
           }
