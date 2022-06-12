@@ -58,7 +58,6 @@ public class MoveStudentsToIsland extends GameAction {
     if (students.getCount() > gameState.getRuleBook().playableStudentCount)
       return false;
 
-    return gameState.getTurnPhase() == TurnPhase.PLACING &&
-            gameState.getGamePhase() == GamePhase.ACTION;
+    return true;
   }
 }
