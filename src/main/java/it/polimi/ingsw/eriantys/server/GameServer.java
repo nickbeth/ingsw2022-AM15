@@ -10,11 +10,10 @@ import it.polimi.ingsw.eriantys.network.Message;
 import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
 import it.polimi.ingsw.eriantys.network.MessageType;
 
-import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
@@ -40,9 +39,9 @@ public class GameServer implements Runnable {
     this.heartbeat = heartbeat;
     this.messageQueue = messageQueue;
     this.heartbeatService = Executors.newScheduledThreadPool(1);
-    this.activeGames = new HashMap<>();
-    this.activeNicknames = new HashSet<>();
-    this.disconnectedPlayers = new HashMap<>();
+    this.activeGames = new ConcurrentHashMap<>();
+    this.activeNicknames = ConcurrentHashMap.newKeySet();
+    this.disconnectedPlayers = new ConcurrentHashMap<>();
   }
 
   /**
