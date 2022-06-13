@@ -4,6 +4,7 @@ import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.actions.InitiateGameEntities;
+import it.polimi.ingsw.eriantys.model.actions.ReInitiateGame;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
@@ -143,7 +144,11 @@ public class GameServer implements Runnable {
       disconnectedPlayers.remove(nickname);
 
       serverLogger.info("Player '{}' reconnected to game '{}'", nickname, gameCode);
-      // TODO: send game state to the reconnected client
+      send(client, new Message.Builder().type(MessageType.START_GAME_RECONNECTED)
+          .gameCode(gameCode)
+          .gameInfo(gameEntry.getGameInfo())
+          .action(new ReInitiateGame(gameEntry.getGameState()))
+          .build());
       broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_RECONNECTED).nickname(nickname).build());
       return true;
     }

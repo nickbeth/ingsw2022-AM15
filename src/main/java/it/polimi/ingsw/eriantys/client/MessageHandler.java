@@ -54,6 +54,7 @@ public class MessageHandler implements Runnable {
       case NICKNAME_OK -> handleNicknameOk(client, message);
       case GAMEINFO -> handleGameInfo(client, message);
       case START_GAME -> handleStartGame(client, message);
+      case START_GAME_RECONNECTED -> handleStartGameReconnected(client, message);
       case GAMEDATA -> handleGameData(client, message);
 
       case PLAYER_DISCONNECTED -> handlePlayerDisconnected(client, message);
@@ -85,6 +86,14 @@ public class MessageHandler implements Runnable {
   private void handleStartGame(Client client, Message message) {
     controller.setGameInfo(message.gameInfo());
     controller.initGame();
+    controller.executeAction(message.gameAction());
+    controller.fireChange(START_GAME, null, message.gameAction());
+  }
+
+  private void handleStartGameReconnected(Client client, Message message) {
+    controller.setGameCode(message.gameCode());
+    controller.setGameInfo(message.gameInfo());
+    controller.initEmptyGame();
     controller.executeAction(message.gameAction());
     controller.fireChange(START_GAME, null, message.gameAction());
   }

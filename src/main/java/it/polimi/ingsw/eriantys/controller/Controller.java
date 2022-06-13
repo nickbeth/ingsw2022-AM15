@@ -91,10 +91,14 @@ abstract public class Controller implements Runnable {
   }
 
   public void initGame() {
-    gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
+    initEmptyGame();
 
     for (var playerEntry : gameInfo.getPlayersMap().entrySet())
       gameState.addPlayer(playerEntry.getKey(), playerEntry.getValue());
+  }
+
+  public void initEmptyGame() {
+    gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
   }
 
   /**
