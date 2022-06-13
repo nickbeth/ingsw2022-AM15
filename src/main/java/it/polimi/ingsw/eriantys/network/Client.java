@@ -76,7 +76,7 @@ public class Client implements Runnable {
         out.reset();
         out.flush();
       } catch (IOException e) {
-        clientLogger.error("Couldn't send message: {}", e.getMessage());
+        clientLogger.error("Couldn't send message to '{}': {}", this, e.getMessage());
       }
     }
   }
@@ -94,13 +94,24 @@ public class Client implements Runnable {
    * Closes this socket.
    */
   public void close() {
+    closed.set(true);
     if (socket != null) {
       try {
         socket.close();
-        closed.set(true);
       } catch (IOException ignored) {
       }
     }
+  }
+
+  /**
+   * Returns the closed socket state. After a {@link Client} has been closed,
+   * every operation on it will result in undefined behaviour and should be avoided,
+   * until {@link #connect(String, int)} is called on it again.
+   *
+   * @return {@code true} if the socket was closed, {@code false} otherwise
+   */
+  public boolean isClosed() {
+    return closed.get();
   }
 
   /**
