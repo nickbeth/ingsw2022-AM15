@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
-
 public class DashboardHandler extends SectionHandler {
   private final DebugScreenHandler debugScreenHandler;
 
@@ -270,5 +268,9 @@ public class DashboardHandler extends SectionHandler {
         e.acceptTransferModes(TransferMode.ANY);
       else e.acceptTransferModes(TransferMode.NONE);
     }
+  }
+
+  public String getNickname() {
+    return nickname;
   }
 }

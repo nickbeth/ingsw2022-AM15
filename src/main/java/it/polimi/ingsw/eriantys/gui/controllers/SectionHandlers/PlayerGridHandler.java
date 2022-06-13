@@ -11,6 +11,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -26,9 +27,11 @@ public class PlayerGridHandler extends SectionHandler {
   private final HashMap<Label, Player> cardAmounts = new HashMap<>();
   private final HashMap<Label, Player> towerAmounts = new HashMap<>();
   private final HashMap<Label, Player> coinAmounts = new HashMap<>();
+  private List<EnemyDashboardHandler> dashboardHandlers;
 
-  public PlayerGridHandler(GridPane playerGrid, DebugScreenHandler debugScreenHandler) {
+  public PlayerGridHandler(GridPane playerGrid, DebugScreenHandler debugScreenHandler, List<EnemyDashboardHandler> dashboardHandlers) {
     this.playerGrid = playerGrid;
+    this.dashboardHandlers = dashboardHandlers;
   }
 
   /**
@@ -80,7 +83,8 @@ public class PlayerGridHandler extends SectionHandler {
         nickname.setContentDisplay(ContentDisplay.RIGHT);
         //makes trasparent parts not clickable
         nickname.setPickOnBounds(false);
-        //TODO: add show showDashboard action on click image, maybe it depends on the grid?
+        EnemyDashboardHandler dashboardHandlerandler = dashboardHandlers.stream().filter(handler -> handler.getNickname().equals(player.getNickname())).findFirst().get();
+        nickname.setOnMouseClicked(e -> dashboardHandlerandler.show());
         playerGrid.add(nickname, 0, i);
         GridPane.setHalignment(nickname, HPos.RIGHT);
 
