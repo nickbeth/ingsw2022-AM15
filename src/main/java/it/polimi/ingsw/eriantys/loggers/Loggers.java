@@ -10,4 +10,6 @@ public class Loggers {
       = (Logger) LoggerFactory.getLogger("server");
   public static final Logger modelLogger
       = (Logger) LoggerFactory.getLogger("model");
+  public static final Logger testLogger
+      = (Logger) LoggerFactory.getLogger("test");
 }

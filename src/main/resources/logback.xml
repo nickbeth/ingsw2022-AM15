@@ -8,9 +8,9 @@
     </appender>
 
     <!--      FILE APPENDER    -->
-    <appender name="file" class="ch.qos.logback.core.FileAppender">
+    <appender name="model_logs" class="ch.qos.logback.core.FileAppender">
         <file>eriantys.log</file>
-        <append>true</append>
+        <append>false</append>
         <encoder>
             <pattern>%d{MM-dd HH:mm:ss} [%thread] %-5p %m%n</pattern>
         </encoder>
@@ -22,8 +22,11 @@
     <logger name="server" level="debug" additivity="false">
         <appender-ref ref="stdout"/>
     </logger>
-    <logger name="model" level="debug" additivity="false">
-        <appender-ref ref="file"/>
+    <logger name="model" level="info" additivity="false">
+        <appender-ref ref="model_logs"/>
+    </logger>
+    <logger name="test" level="debug" additivity="false">
+        <appender-ref ref="stdout"/>
     </logger>
 
     <root level="debug">

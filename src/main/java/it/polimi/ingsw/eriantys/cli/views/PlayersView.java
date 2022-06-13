@@ -5,6 +5,8 @@ import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 
 import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
@@ -12,6 +14,8 @@ import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
 public class PlayersView extends View {
   private final List<Player> players;
   private final RuleBook rules;
+
+  private int maxLenghtRow = 0;
 
   public PlayersView(List<Player> players, RuleBook rules) {
     this.players = players;
@@ -27,7 +31,7 @@ public class PlayersView extends View {
       stringBuilder
           .append("Nickname: ").append(p.getNickname())
           .append(PADDING)
-          .append("Connection Status: ").append(p.isConnected()? "online": "offline")
+          .append("Connection Status: ").append(p.isConnected() ? "online" : "offline")
           .append(PADDING)
           .append("Team: ").append(printColored(p.getColorTeam().toString(), p.getColorTeam()))
           .append(PADDING);
@@ -47,10 +51,15 @@ public class PlayersView extends View {
       stringBuilder.append(System.lineSeparator());
     });
 
+    Arrays.stream(stringBuilder.toString().split(System.lineSeparator()))
+        .map(String::length)
+        .max(Integer::compare)
+        .ifPresent(x -> maxLenghtRow = x);
+
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.append(centredTitle("ASSISTANT CARDS")).append(System.lineSeparator());
+    o.append(centredTitle("Players")).append(System.lineSeparator());
 
     // Write the content
     o.append(stringBuilder);
@@ -60,7 +69,7 @@ public class PlayersView extends View {
   }
 
   private String centredTitle(String title) {
-    int baseRowLength = 25;
+    int baseRowLength = maxLenghtRow;
     int nPadding = (baseRowLength / 2) - (int) (Math.floor((double) title.length() / 2));
 
     return "-".repeat(nPadding) + title + "-".repeat(nPadding - 1);
