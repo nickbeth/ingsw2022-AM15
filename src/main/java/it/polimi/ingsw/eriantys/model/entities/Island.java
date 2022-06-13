@@ -2,7 +2,9 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
@@ -12,6 +14,7 @@ public class Island extends Slot {
   private final TeamsInfluenceTracer teamsInfluence = new TeamsInfluenceTracer(new EnumMap<>(TowerColor.class));
   private Towers towers = new Towers();
   private boolean isLocked = false;
+  private boolean isMerged;
 
   /**
    * Initialize island with a student on
@@ -49,6 +52,13 @@ public class Island extends Slot {
   }
 
   public Students getStudents() {
+//    Students temp = new Students();
+
+//    temp.addStudents(students);
+//    nextIsland.ifPresent(island -> temp.addStudents(island.getStudents()));
+//    previousIsland.ifPresent(island -> temp.addStudents(island.getStudents()));
+//
+//    return temp;
     return students;
   }
 
@@ -80,5 +90,13 @@ public class Island extends Slot {
 
   public TeamsInfluenceTracer getTeamsInfluenceTracer() {
     return teamsInfluence;
+  }
+
+  public boolean isMerged() {
+    return isMerged;
+  }
+
+  public void setMerged() {
+    isMerged = true;
   }
 }

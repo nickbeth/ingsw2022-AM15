@@ -16,7 +16,7 @@ public class PlayingField {
   private final StudentBag studentBag;
   private final ProfessorHolder professorHolder;
   private final List<TowerColor> teams = new ArrayList<>(); // Active tower colors in this game
-  private int motherNaturePosition;
+  private Integer motherNaturePosition;
   private int locks;
   private int bank;
 
@@ -74,32 +74,39 @@ public class PlayingField {
     Island prevIsland = (islandIndex == 0) ? islands.get(islands.size() - 1) : islands.get(islandIndex - 1);
     Island currIsland = islands.get(islandIndex);
 
-    //tries merging next island
-    if (nextIsland.getTowerColor().isPresent())
-      if (nextIsland.getTowerColor().get() == currIsland.getTowerColor().get())
-        merge(currIsland, nextIsland);
+    currIsland.getTowerColor().ifPresent(currColor -> {
+      // Tries merging next island
+      nextIsland.getTowerColor().ifPresent(towerColor -> {
+        if (towerColor.equals(currColor))
+          merge(currIsland, nextIsland);
+      });
 
-    //tries merging prev island
-    if (prevIsland.getTowerColor().isPresent())
-      if (prevIsland.getTowerColor().get() == currIsland.getTowerColor().get())
-        merge(currIsland, prevIsland);
-
+      // Tries merging prev island
+      prevIsland.getTowerColor().ifPresent(towerColor -> {
+        if (towerColor.equals(currColor))
+          merge(currIsland, prevIsland);
+      });
+    });
   }
 
   /**
-   * merges secondIsland onto firstIsland
+   * Merges otherIsland into mainIsland
    */
-  private void merge(Island firstIsland, Island secondIsland) {
-    modelLogger.debug("merging islands: " + islands.indexOf(firstIsland) + " <== " + islands.indexOf(secondIsland));
-    //manage locks , and eventually return them to CC
-    if (secondIsland.isLocked() && firstIsland.isLocked()) {
-      locks++;
-    } else if (secondIsland.isLocked() && !firstIsland.isLocked()) firstIsland.setLocked(true);
+  private void merge(Island mainIsland, Island otherIsland) {
+    modelLogger.info("Merging islands: island[{}] <== island[{}] ", islands.indexOf(mainIsland), islands.indexOf(otherIsland));
 
-    if (islands.indexOf(secondIsland) <= motherNaturePosition) motherNaturePosition--;
-    firstIsland.addStudents(secondIsland.getStudents());
-    firstIsland.setTowerCount(firstIsland.getTowerCount() + secondIsland.getTowerCount());
-    islands.remove(secondIsland);
+    // Manage locks, and eventually return them to CC
+    if (otherIsland.isLocked() && mainIsland.isLocked())
+      locks++;
+    else if (otherIsland.isLocked() && !mainIsland.isLocked())
+      mainIsland.setLocked(true);
+    if (islands.indexOf(otherIsland) <= motherNaturePosition)
+      motherNaturePosition--;
+
+    mainIsland.addStudents(otherIsland.getStudents());
+    mainIsland.setTowerCount(mainIsland.getTowerCount() + otherIsland.getTowerCount());
+    otherIsland.setMerged();
+    islands.remove(otherIsland);
   }
 
   public StudentBag getStudentBag() {
@@ -143,7 +150,7 @@ public class PlayingField {
     motherNaturePosition = (motherNaturePosition + amount) % islands.size();
   }
 
-  public int getMotherNaturePosition() {
+  public Integer getMotherNaturePosition() {
     return motherNaturePosition;
   }
 

@@ -30,7 +30,7 @@ public abstract class MenuGame extends Menu {
   Player me = game.getPlayer(controller.getNickname());
   List<CharacterCard> ccs = game.getPlayingField().getCharacterCards();
   ProfessorHolder professorHolder = game.getPlayingField().getProfessorHolder();
-  int motherPosition = game.getPlayingField().getMotherNaturePosition();
+  Integer motherPosition = game.getPlayingField().getMotherNaturePosition();
 
   public MenuGame() {
     super();
@@ -61,7 +61,6 @@ public abstract class MenuGame extends Menu {
   }
 
   final protected void handleViewOptions(String choice) {
-
     View dashboardsView = new DashboardsView(players, rules, professorHolder);
     View islandsView = new IslandsView(islands, motherPosition);
     View cloudsView = new CloudsView(clouds);
@@ -119,6 +118,8 @@ public abstract class MenuGame extends Menu {
         if (rules.gameMode.equals(GameMode.EXPERT))
           ccView.draw(out);
       }
+
+      case "quitgame" -> controller.sender().sendQuitGame();
 
       // Simply goes on
       default -> {
