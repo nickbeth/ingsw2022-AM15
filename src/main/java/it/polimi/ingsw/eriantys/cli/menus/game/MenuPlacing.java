@@ -6,7 +6,6 @@ import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
@@ -25,7 +24,7 @@ public class MenuPlacing extends MenuGame {
 
   @Override
   protected void showOptions() {
-    int studentsLeft = rules.playableStudentCount - studentMoved;
+    int studentsLeft = rules().playableStudentCount - studentMoved;
 
     showViewOptions(out);
 
@@ -34,7 +33,7 @@ public class MenuPlacing extends MenuGame {
           .format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
       out.println(MessageFormat
           .format("W - Move a student from entrance to dining ({0} left)", studentsLeft));
-      if (rules.gameMode.equals(GameMode.EXPERT) && !ccUsed)
+      if (rules().gameMode.equals(GameMode.EXPERT) && !ccUsed)
         out.println("E - Play a character card");
     }
     out.print("Make option: ");
@@ -56,13 +55,13 @@ public class MenuPlacing extends MenuGame {
           // Move Students from entrance to island
           case "Q", "q" -> {
             // Check of the Turn phase
-//            if (!game.getTurnPhase().equals(TurnPhase.PLACING))
+//            if (!game().getTurnPhase().equals(TurnPhase.PLACING))
 //              break;
 
             chooseColorAndAmount(paramBuilder);
 
             // Shows islands
-            new IslandsView(islands, motherPosition).draw(out);
+            new IslandsView(islands(), motherPosition()).draw(out);
 
             // Take island index input
             out.println("Choose an island: ");
@@ -80,7 +79,7 @@ public class MenuPlacing extends MenuGame {
             studentMoved += paramBuilder.getStudentsToMove().getCount();
 
             // Escape condition
-            int playableStudents = rules.playableStudentCount;
+            int playableStudents = rules().playableStudentCount;
             if (studentMoved == playableStudents)
               return MenuEnum.MOVING;
             else if (studentMoved > playableStudents) {
@@ -93,7 +92,7 @@ public class MenuPlacing extends MenuGame {
           // Move Students from entrance to dining
           case "W", "w" -> {
             // Check of the Turn phase
-//            if (!game.getTurnPhase().equals(TurnPhase.PLACING))
+//            if (!game().getTurnPhase().equals(TurnPhase.PLACING))
 //              break;
 
             chooseColorAndAmount(paramBuilder);
@@ -111,7 +110,7 @@ public class MenuPlacing extends MenuGame {
             studentMoved += paramBuilder.getStudentsToMove().getCount();
 
             // Escape condition
-            int playableStudents = rules.playableStudentCount;
+            int playableStudents = rules().playableStudentCount;
             if (studentMoved == playableStudents)
               return MenuEnum.MOVING;
             else if (studentMoved > playableStudents) {
@@ -159,7 +158,7 @@ public class MenuPlacing extends MenuGame {
     paramBuilder.flushStudentToMove();
 
     // Shows entrance
-    new DashboardView(me, rules, professorHolder).draw(out);
+    new DashboardView(me(), rules(), professorHolder()).draw(out);
 
     // Takes the color
     new MenuStudentColor().show(paramBuilder);
@@ -168,11 +167,11 @@ public class MenuPlacing extends MenuGame {
     while (true) {
       out.print("Amount: ");
       int amount = getNumber();
-      if (amount + studentMoved <= rules.playableStudentCount) {
+      if (amount + studentMoved <= rules().playableStudentCount) {
         paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
         break;
       }
-      out.println("Cannot move that amount. Student left to move: " + (rules.playableStudentCount - studentMoved) + ".");
+      out.println("Cannot move that amount. Student left to move: " + (rules().playableStudentCount - studentMoved) + ".");
     }
   }
 

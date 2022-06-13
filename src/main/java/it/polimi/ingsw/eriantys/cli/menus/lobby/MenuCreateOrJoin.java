@@ -63,7 +63,7 @@ public class MenuCreateOrJoin extends Menu {
           if (!errorEncountered) {
             return MenuEnum.LOBBY;
           }
-          out.println("Gamecode already exists");
+          out.println("Game code already exists");
         }
 
         // Join to a game

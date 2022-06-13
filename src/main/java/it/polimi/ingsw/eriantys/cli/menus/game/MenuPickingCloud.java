@@ -34,11 +34,11 @@ public class MenuPickingCloud extends MenuGame {
       if (isMyTurn()) {
         switch (choice) {
           case "Q", "q" -> {
-//            if (!game.getTurnPhase().equals(TurnPhase.PICKING))
+//            if (!game().getTurnPhase().equals(TurnPhase.PICKING))
 //              break;
 
             // Show clouds
-            new CloudsView(clouds).draw(out);
+            new CloudsView(clouds()).draw(out);
 
             // Gets cloud index
             out.println("Choose cloud index: ");
@@ -50,9 +50,9 @@ public class MenuPickingCloud extends MenuGame {
               return MenuEnum.PICK_ASSISTANT;
             }
             out.println("Invalid input parameters");
+            showOptions();
           }
           default -> {
-
           }
         }
       }

@@ -37,26 +37,26 @@ public class MenuMoving extends MenuGame {
           // Move mother nature a certain amount
           case "T", "t" -> {
             // Check of the Turn phase
-            if (!game.getTurnPhase().equals(TurnPhase.MOVING))
+            if (!game().getTurnPhase().equals(TurnPhase.MOVING))
               break;
 
             // Shows islands
             out.println("Playing Field: ");
-            new IslandsView(islands, motherPosition).draw(out);
+            new IslandsView(islands(), motherPosition()).draw(out);
 
             // Gets the amount
             out.print(
-                MessageFormat.format("Insert the amount of mother nature movements (max {0}): ", me.getMaxMovement()));
+                MessageFormat.format("Insert the amount of mother nature movements (max {0}): ", me().getMaxMovement()));
 
             int amount = getNumber();
 
             // Send action
             if (controller.sender().sendMoveMotherNature(amount)) {
               waitForGreenLight();
-              new IslandsView(islands, motherPosition).draw(out);
+              new IslandsView(islands(), motherPosition()).draw(out);
               return MenuEnum.PICKING_CLOUD;
             }
-            out.println("Invalid input parameters. Valid movement:" + me.getMaxMovement() + ".");
+            out.println("Invalid input parameters. Valid movement:" + me().getMaxMovement() + ".");
             showOptions();
           }
 

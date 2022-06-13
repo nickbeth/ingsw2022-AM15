@@ -21,16 +21,37 @@ import static it.polimi.ingsw.eriantys.controller.EventType.GAME_ENDED;
 
 public abstract class MenuGame extends Menu {
   // Linking the game state to menus
-  GameState game = controller.getGameState();
-  RuleBook rules = game.getRuleBook();
-  List<Island> islands = game.getPlayingField().getIslands();
-  List<Cloud> clouds = game.getPlayingField().getClouds();
-  List<Player> players = game.getPlayers();
-  Player currentPlayer = game.getCurrentPlayer();
-  Player me = game.getPlayer(controller.getNickname());
-  List<CharacterCard> ccs = game.getPlayingField().getCharacterCards();
-  ProfessorHolder professorHolder = game.getPlayingField().getProfessorHolder();
-  Integer motherPosition = game.getPlayingField().getMotherNaturePosition();
+  protected GameState game() {
+    return controller.getGameState();
+  }
+
+  protected RuleBook rules() {
+    return game().getRuleBook();
+  }
+  protected List<Island> islands() {
+    return game().getPlayingField().getIslands();
+  }
+  protected List<Cloud> clouds() {
+    return game().getPlayingField().getClouds();
+  }
+  protected List<Player> players() {
+    return game().getPlayers();
+  }
+  protected Player currentPlayer() {
+    return game().getCurrentPlayer();
+  }
+  protected Player me() {
+    return game().getPlayer(controller.getNickname());
+  }
+  protected List<CharacterCard> ccs() {
+    return game().getPlayingField().getCharacterCards();
+  }
+  protected ProfessorHolder professorHolder() {
+    return game().getPlayingField().getProfessorHolder();
+  }
+  protected Integer motherPosition() {
+    return game().getPlayingField().getMotherNaturePosition();
+  }
 
   public MenuGame() {
     super();
@@ -41,13 +62,12 @@ public abstract class MenuGame extends Menu {
 
   final protected void showViewOptions(PrintStream out) {
     out.println();
-    out.printf("- GamePhase: %s TurnPhase: %s ------------------------------------------------\n", game.getGamePhase().toString(), game.getTurnPhase().toString());
-
+    out.printf("- GamePhase: %s TurnPhase: %s ------------------------------------------------\n", game().getGamePhase().toString(), game().getTurnPhase().toString());
     if (isMyTurn()) {
-      out.println("It's now your turn " + currentPlayer + "(i am actually " + me + ")");
+      out.println("It's now your turn " + currentPlayer() + "(i am actually " + me() + ")");
     } else {
-      out.println("It's now turn of: " + currentPlayer);
-      out.println("Event if it's not your turn, you can see the game.");
+      out.println("It's now turn of: " + currentPlayer());
+      out.println("Event if it's not your turn, you can see the game().");
     }
     out.println("1 - View all");
     out.println("2 - View islands");
@@ -56,16 +76,17 @@ public abstract class MenuGame extends Menu {
     out.println("5 - View my assistant cards");
     out.println("6 - View my dashboard");
     out.println("7 - Show turn orders");
-    if (rules.gameMode.equals(GameMode.EXPERT))
+    out.println("8 - Show players");
+    if (rules().gameMode.equals(GameMode.EXPERT))
       out.println("10 - CharacterCards");
   }
 
   final protected void handleViewOptions(String choice) {
-    View dashboardsView = new DashboardsView(players, rules, professorHolder);
-    View islandsView = new IslandsView(islands, motherPosition);
-    View cloudsView = new CloudsView(clouds);
-    View ccView = new CharacterCardsView(ccs);
-    View playersView = new PlayersView(players, rules);
+    View dashboardsView = new DashboardsView(players(), rules(), professorHolder());
+    View islandsView = new IslandsView(islands(), motherPosition());
+    View cloudsView = new CloudsView(clouds());
+    View ccView = new CharacterCardsView(ccs());
+    View playersView = new PlayersView(players(), rules());
 
     clearConsole();
     switch (choice) {
@@ -76,7 +97,7 @@ public abstract class MenuGame extends Menu {
             .addView(playersView)
             .addView(dashboardsView)
             .addView(cloudsView);
-        if (rules.gameMode.equals(GameMode.EXPERT))
+        if (rules().gameMode.equals(GameMode.EXPERT))
           viewAll.addView(ccView);
         viewAll.draw(out);
       }
@@ -91,22 +112,22 @@ public abstract class MenuGame extends Menu {
       case "4" -> cloudsView.draw(out);
 
       // View my assistant cards
-      case "5" -> new AssistantCardsView(me).draw(out);
+      case "5" -> new AssistantCardsView(me()).draw(out);
 
       // View my dashboard
-      case "6" -> new DashboardView(me, rules, professorHolder).draw(out);
+      case "6" -> new DashboardView(me(), rules(), professorHolder()).draw(out);
 
       // Show turn orders
       case "7" -> {
         out.println("Plan order:");
-        game.getPlanningPhaseOrder()
+        game().getPlanningPhaseOrder()
             .forEach(player -> out.print(player + " -> "));
 
         out.println();
 
-        if (game.getGamePhase().equals(GamePhase.ACTION)) {
+        if (game().getGamePhase().equals(GamePhase.ACTION)) {
           out.println("Action order:");
-          game.getActionPhaseOrder()
+          game().getActionPhaseOrder()
               .forEach(player -> out.print(player + " -> "));
         }
       }
@@ -115,7 +136,7 @@ public abstract class MenuGame extends Menu {
 
       // View all character cards
       case "10" -> {
-        if (rules.gameMode.equals(GameMode.EXPERT))
+        if (rules().gameMode.equals(GameMode.EXPERT))
           ccView.draw(out);
       }
 
@@ -147,6 +168,6 @@ public abstract class MenuGame extends Menu {
    * @return True if so, false otherwise.
    */
   protected boolean isMyTurn() {
-    return game.isTurnOf(controller.getNickname());
+    return game().isTurnOf(controller.getNickname());
   }
 }

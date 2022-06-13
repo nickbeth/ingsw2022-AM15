@@ -42,16 +42,14 @@ public class MenuEffect extends MenuGame {
       if (cc instanceof ColorInputCards) {
         // Get color input
         out.println("Insert color: ");
-        (new MenuStudentColor()).show(paramBuilder);
+        new MenuStudentColor().show(paramBuilder);
         ((ColorInputCards) cc).setColor(paramBuilder.getChosenColor());
       }
 
       // If the card requires island index input
       if (cc instanceof IslandInputCards) {
         // View islands
-        (new IslandsView(controller.getGameState().getPlayingField().getIslands(),
-            controller.getGameState().getPlayingField().getMotherNaturePosition()))
-            .draw(out);
+        new IslandsView(islands(), motherPosition()).draw(out);
         // Get island index input
         out.println("Insert island index: ");
         int index = getNumber();

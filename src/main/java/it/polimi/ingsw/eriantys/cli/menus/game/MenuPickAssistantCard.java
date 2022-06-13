@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
+import it.polimi.ingsw.eriantys.cli.views.PlayersView;
 
 import java.beans.PropertyChangeEvent;
 
@@ -13,6 +14,7 @@ public class MenuPickAssistantCard extends MenuGame {
 
   @Override
   protected void showOptions() {
+    new PlayersView(players(), rules()).draw(out);
     showViewOptions(out);
 
     if (isMyTurn()) {
@@ -35,14 +37,14 @@ public class MenuPickAssistantCard extends MenuGame {
 
           // Choose assistant card
           case "Q", "q" -> {
-            new AssistantCardsView(me).draw(out);
+            new AssistantCardsView(me()).draw(out);
 
             out.print("Choose card index: ");
 
             int index;
             while (true) {
               index = getNumber() - 1;
-              if (index < me.getCards().size() && index >= 0)
+              if (index < me().getCards().size() && index >= 0)
                 break;
               out.print("Choose a valid card: ");
             }

@@ -11,8 +11,6 @@ import it.polimi.ingsw.eriantys.controller.EventType;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.PrintStream;
-import java.util.Scanner;
 
 import static it.polimi.ingsw.eriantys.cli.menus.MenuIterator.MenuFactory.makeMenu;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
@@ -78,7 +76,7 @@ public class MenuIterator implements PropertyChangeListener {
     currentMenu = new MenuConnect();
   }
 
-  public void menuAction(Scanner in, PrintStream out) {
+  public void menuAction() {
     addListeners();
     try {
       nextMenu = currentMenu.show();
