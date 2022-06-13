@@ -11,19 +11,17 @@ import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
 
 public class ServerApp {
-  private final int port;
   private final Server networkServer;
   private final GameServer gameServer;
   private Thread appThread;
 
-  ServerApp(int port) {
-    this.port = port;
+  ServerApp(ServerArgs args) {
     // Create a shared queue between the network server and the game server
     // Received messages will be added to this queue
     // The game server will poll the queue for messages to process
     BlockingQueue<MessageQueueEntry> messageQueue = new LinkedBlockingQueue<>();
-    this.networkServer = new Server(port, messageQueue);
-    this.gameServer = new GameServer(messageQueue);
+    this.networkServer = new Server(args.port, messageQueue);
+    this.gameServer = new GameServer(args.heartbeat, messageQueue);
   }
 
   public void run() {

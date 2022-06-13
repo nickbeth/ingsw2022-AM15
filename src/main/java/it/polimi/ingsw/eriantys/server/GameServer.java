@@ -23,6 +23,10 @@ public class GameServer implements Runnable {
   private static final int HEARTBEAT_INTERVAL_SECONDS = 2;
   private static final int HEARTBEAT_DISCONNECTION_THRESHOLD = 5;
 
+  /**
+   * Whether heartbeat messages should be used to keep track of clients disconnections or not.
+   */
+  private final boolean heartbeat;
   private final BlockingQueue<MessageQueueEntry> messageQueue;
   private final ScheduledExecutorService heartbeatService;
 
@@ -32,7 +36,8 @@ public class GameServer implements Runnable {
 
   private final AtomicBoolean exit = new AtomicBoolean(false);
 
-  public GameServer(BlockingQueue<MessageQueueEntry> messageQueue) {
+  public GameServer(boolean heartbeat, BlockingQueue<MessageQueueEntry> messageQueue) {
+    this.heartbeat = heartbeat;
     this.messageQueue = messageQueue;
     this.heartbeatService = Executors.newScheduledThreadPool(1);
     this.activeGames = new HashMap<>();
@@ -121,7 +126,8 @@ public class GameServer implements Runnable {
     client.attach(new ClientAttachment(nickname));
     serverLogger.info("Nickname '{}' registered for client '{}'", nickname, client);
     send(client, new Message.Builder().type(MessageType.NICKNAME_OK).nickname(nickname).build());
-    initHeartbeat(client);
+    if (heartbeat)
+      initHeartbeat(client);
 
     handleRejoinGame(client, message);
   }

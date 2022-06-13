@@ -32,7 +32,7 @@ public class ServerTest {
 
   @BeforeAll
   static void start() throws IOException {
-    serverApp = new ServerApp(TEST_PORT);
+    serverApp = new ServerApp(new ServerArgs());
     serverThread = new Thread(serverApp::run, "server");
     serverThread.start();
     // Let the server initialize
