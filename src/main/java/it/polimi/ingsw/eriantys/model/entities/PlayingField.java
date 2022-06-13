@@ -6,11 +6,15 @@ import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
-public class PlayingField {
+public class PlayingField implements Serializable {
   private final List<Island> islands;
   private final List<Cloud> clouds;
   private final StudentBag studentBag;

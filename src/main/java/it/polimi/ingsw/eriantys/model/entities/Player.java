@@ -4,13 +4,14 @@ import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static it.polimi.ingsw.eriantys.model.enums.AssistantCard.getFullDeck;
 
-public class Player {
+public class Player implements Serializable {
   private final String nickname;
   private boolean connected;
   private Dashboard dashboard;

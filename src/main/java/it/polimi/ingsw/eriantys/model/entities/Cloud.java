@@ -1,6 +1,8 @@
 package it.polimi.ingsw.eriantys.model.entities;
 
-public class Cloud {
+import java.io.Serializable;
+
+public class Cloud implements Serializable {
   private Students students;
 
   public Cloud(Students students) {

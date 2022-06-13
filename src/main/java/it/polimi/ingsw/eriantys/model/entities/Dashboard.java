@@ -3,9 +3,11 @@ package it.polimi.ingsw.eriantys.model.entities;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
+import java.io.Serializable;
+
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
-public class Dashboard {
+public class Dashboard implements Serializable {
   private final Students entrance;
   private final Students diningHall;
   private final Towers towers = new Towers();

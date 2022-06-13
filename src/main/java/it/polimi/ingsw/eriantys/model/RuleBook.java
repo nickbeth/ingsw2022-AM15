@@ -2,7 +2,9 @@ package it.polimi.ingsw.eriantys.model;
 
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 
-public class RuleBook {
+import java.io.Serializable;
+
+public class RuleBook implements Serializable {
   public final GameMode gameMode;
   public final int cloudCount;
   public final int playableStudentCount;

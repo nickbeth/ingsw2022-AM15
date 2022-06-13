@@ -3,13 +3,14 @@ package it.polimi.ingsw.eriantys.model.entities;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
 
 public record ProfessorHolder(
-    EnumMap<HouseColor, TowerColor> professorHolder) {
+    EnumMap<HouseColor, TowerColor> professorHolder) implements Serializable {
 
   /**
    * Returns true if a certain team has a certain professor

@@ -2,11 +2,12 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
-public class StudentBag {
+public class StudentBag implements Serializable {
   private Students students;
   Random rand = new Random();
 

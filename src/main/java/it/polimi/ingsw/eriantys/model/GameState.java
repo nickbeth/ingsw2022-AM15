@@ -4,13 +4,20 @@ import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
-import it.polimi.ingsw.eriantys.model.enums.*;
+import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
+import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
-public class GameState {
+public class GameState implements Serializable {
   private List<Player> players = new ArrayList<>(); // Players in the game
   private List<Player> actionPhaseOrder = new ArrayList<>(); // List of players sorted by their turn order
   private List<Player> planningPhaseOrder = new ArrayList<>(); // List of players sorted by their turn order

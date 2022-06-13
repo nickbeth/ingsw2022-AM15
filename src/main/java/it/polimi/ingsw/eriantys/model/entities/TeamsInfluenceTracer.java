@@ -3,11 +3,12 @@ package it.polimi.ingsw.eriantys.model.entities;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
-public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) {
+public record TeamsInfluenceTracer(EnumMap<TowerColor, Integer> teamsInfluence) implements Serializable {
 
   public void setInfluence(TowerColor team, int influence) {
     teamsInfluence.put(team, influence);
