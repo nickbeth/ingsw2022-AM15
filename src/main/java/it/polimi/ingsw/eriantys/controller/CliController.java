@@ -34,7 +34,7 @@ public class CliController extends Controller {
   public void run() {
     MenuIterator menus = new MenuIterator();
     while (true) {
-      menus.menuAction(in, out);
+      menus.menuAction();
       menus.goNext();
     }
   }

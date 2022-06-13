@@ -28,7 +28,7 @@ public class MoveMotherNature extends GameAction {
 
     // Moves mother nature
     playingField.moveMotherNature(amount);
-    int motherNaturePos = playingField.getMotherNaturePosition();
+    Integer motherNaturePos = playingField.getMotherNaturePosition();
 
     // Apply her effect
     GameService.applyMotherNatureEffect(motherNaturePos, playingField, players);

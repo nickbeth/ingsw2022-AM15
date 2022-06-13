@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static it.polimi.ingsw.eriantys.model.RuleBook.PLAYABLE_CC_AMOUNT;
 import static it.polimi.ingsw.eriantys.network.MessageType.*;
 
@@ -111,6 +112,7 @@ abstract public class Controller implements Runnable {
     synchronized (gameState) {
       if (action.isValid(gameState)) {
         action.apply(gameState);
+        modelLogger.info("Executed action {}", action.getClass().getSimpleName());
         return true;
       }
     }

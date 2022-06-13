@@ -18,7 +18,7 @@ public class Player implements Serializable {
   private final ArrayList<AssistantCard> cards;
   private final TowerColor team;
   private AssistantCard chosenCard;
-  private int coins;
+  private Integer coins;
 
   private int maxMovement;
 
@@ -64,7 +64,7 @@ public class Player implements Serializable {
     coins += amount;
   }
 
-  public int getCoins() {
+  public Integer getCoins() {
     return coins;
   }
 

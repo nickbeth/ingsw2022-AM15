@@ -127,12 +127,13 @@ public class MenuPlacing extends MenuGame {
             if (ccUsed) break;
 
             // Show playable CC
-            List<CharacterCard> playableCC = controller.getGameState().getPlayingField().getCharacterCards();
-            out.println("Playable character cards: ");
-            (new CharacterCardsView(playableCC)).draw(out);
+            List<CharacterCard> playableCC = ccs();
+            out.println();
+            out.print("Playable character cards: ");
+            new CharacterCardsView(playableCC).draw(out);
 
             // Choose CC
-            out.println("Choose a character card: ");
+            out.print("Choose a character card: ");
             int ccIndex = getNumber();
 
             // Send the action
@@ -142,8 +143,11 @@ public class MenuPlacing extends MenuGame {
               break;
             }
             waitForGreenLight();
-            if ((new MenuEffect()).show() != null)
+            if (new MenuEffect().show() != null) {
               ccUsed = true;
+            } else {
+              showOptions();
+            }
           }
 
           default -> {

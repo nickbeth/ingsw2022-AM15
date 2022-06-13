@@ -30,7 +30,8 @@ public class PickAssistantCard extends GameAction {
     Player lastPlayer = gameState.getPlanningPhaseOrder().get(gameState.getPlanningPhaseOrder().size() - 1);
     if (gameState.getCurrentPlayer().equals(lastPlayer)) {
       gameState.advanceGamePhase();
-    }
+      return; 
+    } 
     gameState.advancePlayer();
   }
 
@@ -54,7 +55,7 @@ public class PickAssistantCard extends GameAction {
       for (AssistantCard c : alreadyPlayedCards) {
         if (chosenCard.equals(c)) {
           modelLogger.debug("{} has already been played", c);
-          // If so, if I have more than one other playable card its not a valid choiche
+          // If so, if I have more than one other playable card it's not a valid choice
           for (AssistantCard myCard : currPlayer.getCards()) {
             modelLogger.trace("Card in my hand: {}", myCard);
             if (!alreadyPlayedCards.contains(myCard)) {

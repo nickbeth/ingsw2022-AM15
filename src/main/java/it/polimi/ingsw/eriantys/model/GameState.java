@@ -21,6 +21,7 @@ public class GameState implements Serializable {
   private List<Player> players = new ArrayList<>(); // Players in the game
   private List<Player> actionPhaseOrder = new ArrayList<>(); // List of players sorted by their turn order
   private List<Player> planningPhaseOrder = new ArrayList<>(); // List of players sorted by their turn order
+
   private Player currentPlayer;
 
   private GamePhase gamePhase; // Current phase of the game
@@ -114,11 +115,13 @@ public class GameState implements Serializable {
         modelLogger.debug("ACTION Phase advances to PLANNING");
         gamePhase = GamePhase.PLANNING;
         prepareOrderForPlanningPhase();
+        currentPlayer = planningPhaseOrder.get(0);
       }
       case PLANNING -> {
         modelLogger.debug("PLANNING Phase advances to ACTION");
         gamePhase = GamePhase.ACTION;
         prepareOrderForActionPhase();
+        currentPlayer = actionPhaseOrder.get(0);
       }
     }
   }
@@ -178,7 +181,7 @@ public class GameState implements Serializable {
   }
 
   /**
-   * returns TowerColor of the player who has less towers in their dashboard
+   * returns TowerColor of the player who has fewer towers in their dashboard
    * - if two player have the same amount of towers it checks the amount of professors
    */
   public Optional<TowerColor> getWinner() {
@@ -204,7 +207,7 @@ public class GameState implements Serializable {
       } else if (Temp.getUnusedTowerCount(p) == towerCount) {
         // If equals number of tower checks held professor count
         if (Temp.getHeldProfessorCount(p, getPlayingField()) > heldProfessorCount) {
-          modelLogger.debug("ora vince lui");
+//          modelLogger.debug("ora vince lui");
           winner = Optional.of(p.getColorTeam());
           heldProfessorCount = Temp.getHeldProfessorCount(p, getPlayingField());
         } else if (Temp.getHeldProfessorCount(p, getPlayingField()) == heldProfessorCount) {
@@ -216,10 +219,6 @@ public class GameState implements Serializable {
     return winner;
   }
 
-
-  public RuleBook getRuleBook() {
-    return ruleBook;
-  }
 
   /**
    * Sorts turnOrder players by their turn priority (in descending order)
@@ -253,6 +252,22 @@ public class GameState implements Serializable {
       planningPhaseOrder.add(players.get((i + offset) % players.size()));
     }
     modelLogger.debug("New planOrder: " + planningPhaseOrder);
+  }
+
+  public RuleBook getRuleBook() {
+    return ruleBook;
+  }
+
+  public boolean isLastPlayer(Player player) {
+    switch (gamePhase) {
+      case PLANNING -> {
+        return player.equals(planningPhaseOrder.get(planningPhaseOrder.size() - 1));
+      }
+      case ACTION -> {
+        return player.equals(actionPhaseOrder.get(actionPhaseOrder.size() - 1));
+      }
+      default -> throw new AssertionError();
+    }
   }
 
   public boolean isTurnOf(String nickname) {

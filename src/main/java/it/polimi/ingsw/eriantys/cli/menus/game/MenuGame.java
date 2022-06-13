@@ -62,9 +62,9 @@ public abstract class MenuGame extends Menu {
 
   final protected void showViewOptions(PrintStream out) {
     out.println();
-    out.printf("- GamePhase: %s TurnPhase: %s ------------------------------------------------\n", game().getGamePhase().toString(), game().getTurnPhase().toString());
+    out.printf("- Player: %s - GamePhase: %s TurnPhase: %s ------------------------------------------------\n", me().getNickname(), game().getGamePhase().toString(), game().getTurnPhase().toString());
     if (isMyTurn()) {
-      out.println("It's now your turn " + currentPlayer() + "(i am actually " + me() + ")");
+      out.println("It's now your turn " + currentPlayer());
     } else {
       out.println("It's now turn of: " + currentPlayer());
       out.println("Event if it's not your turn, you can see the game().");

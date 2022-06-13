@@ -17,6 +17,7 @@ public class MenuEffect extends MenuGame {
   protected void showOptions() {
     CharacterCard cc = controller.getGameState().getPlayingField().getPlayedCharacterCard();
 
+    out.println();
     out.println("Description:");
     out.println(cc.getCardEnum().getDescription());
     out.println("Q - I changed my mind. Undo.");
@@ -28,7 +29,6 @@ public class MenuEffect extends MenuGame {
     CharacterCard cc = controller.getGameState().getPlayingField().getPlayedCharacterCard();
     ParamBuilder paramBuilder = new ParamBuilder();
 
-//    if (cc instanceof NoInputCards) continue;
     while (true) {
 
       // Show CC descriptions

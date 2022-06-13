@@ -16,8 +16,6 @@ public class PickCloud extends GameAction {
     this.cloudIndex = index;
   }
 
-  //todo gestire meglio la disconnessione e testarla
-
   /**
    * Gets students from pickedCloud and puts them onto the players entrance,then advances turnPhase
    * ,if the current player is the last player it advances GamePhase , and then advances player.
@@ -36,12 +34,12 @@ public class PickCloud extends GameAction {
 
     // Make the game advance its phases
     gameState.advanceTurnPhase();
-    Player lastPlayer = gameState.getActionPhaseOrder().get(gameState.getActionPhaseOrder().size() - 1);
-    if (gameState.getCurrentPlayer().equals(lastPlayer)) {
+    gameState.getCurrentPlayer().unsetChosenCard();
+    if (gameState.isLastPlayer(gameState.getCurrentPlayer())) {
       // todo gestione disconnessione random del client prima di pickare la propria cloud
       gameState.advanceGamePhase();
+      return;
     }
-    gameState.getCurrentPlayer().unsetChosenCard();
     gameState.advancePlayer();
   }
 
