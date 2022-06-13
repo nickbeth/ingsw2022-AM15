@@ -76,7 +76,7 @@ public class Client implements Runnable {
         out.reset();
         out.flush();
       } catch (IOException e) {
-        clientLogger.error("Couldn't send message to '{}': {}", this, e.getMessage());
+        clientLogger.error("Couldn't send message to '{}': {}: {}", this, e.getClass().getName(), e.getMessage());
       }
     }
   }

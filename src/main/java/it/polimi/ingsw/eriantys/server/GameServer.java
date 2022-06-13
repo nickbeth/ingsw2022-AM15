@@ -128,10 +128,10 @@ public class GameServer implements Runnable {
     if (heartbeat)
       initHeartbeat(client);
 
-    handleRejoinGame(client, message);
+    tryRejoinGame(client, message);
   }
 
-  private void handleRejoinGame(Client client, Message message) {
+  private boolean tryRejoinGame(Client client, Message message) {
     String nickname = message.nickname();
 
     GameCode gameCode = disconnectedPlayers.get(nickname);
@@ -145,7 +145,9 @@ public class GameServer implements Runnable {
       serverLogger.info("Player '{}' reconnected to game '{}'", nickname, gameCode);
       // TODO: send game state to the reconnected client
       broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_RECONNECTED).nickname(nickname).build());
+      return true;
     }
+    return false;
   }
 
   private void handleCreateGame(Client client, Message message) {
@@ -155,6 +157,13 @@ public class GameServer implements Runnable {
     var attachment = (ClientAttachment) client.attachment();
     if (attachment == null) {
       String errorMessage = "Nickname '" + nickname + "' should register first before creating a game";
+      serverLogger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    if (attachment.gameCode() != null) {
+      String errorMessage = "Nickname '" + nickname + "' is already in a game";
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
@@ -182,6 +191,9 @@ public class GameServer implements Runnable {
     }
 
     if (gameEntry.getGameInfo().isStarted()) {
+      if (tryRejoinGame(client, message))
+        return;
+
       String errorMessage = "Game with code '" + gameCode + "' has already started";
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
@@ -213,16 +225,21 @@ public class GameServer implements Runnable {
   private void handleQuitGame(Client client, Message message) {
     String nickname = message.nickname();
     GameCode gameCode = message.gameCode(); // If the player is not yet in a lobby, this will be null
-    GameEntry gameEntry = activeGames.get(gameCode);
 
-    if (gameEntry == null) {
+    if (gameCode == null) {
       // The player was not in a lobby: remove the player's nickname and close the socket
+      // Following this, the client is to be considered disconnected from the server
       stopHeartbeat(client);
       activeNicknames.remove(nickname);
       client.attach(null);
       client.close();
-    } else if (!gameEntry.isStarted()) {
+      return;
+    }
+
+    GameEntry gameEntry = activeGames.get(gameCode);
+    if (!gameEntry.isStarted()) {
       // The player was in a lobby: remove it from the lobby or delete the lobby if last
+      // Following this, the client is to be considered connected to the server with heartbeat running and nickname still registered
       if (gameEntry.getClients().size() == 1) {
         activeGames.remove(gameCode);
         serverLogger.info("Player '{}' left game '{}' while being alone, the game was deleted", nickname, gameCode);
@@ -233,9 +250,7 @@ public class GameServer implements Runnable {
       }
     } else {
       // The player was playing a game: disconnect it from the game or delete the game if last
-      // remove the player's nickname and close the socket (we don't allow players to be in multiple games at the same time)
-      stopHeartbeat(client);
-
+      // Following this, the client is to be considered connected to the server with heartbeat running and nickname still registered
       if (gameEntry.getClients().size() == 1) {
         deleteGame(gameCode, gameEntry);
         serverLogger.info("Player '{}' left ongoing game '{}' while being alone, the game was deleted", nickname, gameCode);
@@ -245,10 +260,6 @@ public class GameServer implements Runnable {
         serverLogger.info("Player '{}' left ongoing game '{}', marked as disconnected", nickname, gameCode);
         broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
       }
-
-      activeNicknames.remove(nickname);
-      client.attach(null);
-      client.close();
     }
   }
 
@@ -375,8 +386,9 @@ public class GameServer implements Runnable {
    * @apiNote This method should only be called on a client that has a valid attachment
    */
   private void initHeartbeat(Client client) {
-    var heartbeatSchedule = heartbeatService.schedule(new HeartbeatRunnable(client), HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
     var attachment = (ClientAttachment) client.attachment();
+    serverLogger.debug("Initializing heartbeat for player '{}' on client '{}'", attachment.nickname(), client);
+    var heartbeatSchedule = heartbeatService.schedule(new HeartbeatRunnable(client), HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
     // Save the heartbeat schedule in the attachment, so we can cancel it later
     attachment.setHeartbeatSchedule(heartbeatSchedule);
   }
@@ -389,6 +401,7 @@ public class GameServer implements Runnable {
    */
   private void stopHeartbeat(Client client) {
     var attachment = (ClientAttachment) client.attachment();
+    serverLogger.debug("Stopping heartbeat for player '{}' on client '{}'", attachment.nickname(), client);
     // We acquire the lock to avoid cancelling the heartbeat while another thread is scheduling a new one,
     // which would result in cancelling the wrong heartbeat schedule
     attachment.acquireHeartbeatLock();
@@ -430,6 +443,7 @@ public class GameServer implements Runnable {
         }
         return;
       }
+      serverLogger.debug("Failed heartbeat threshold reached for player '{}' on client '{}'", attachment.nickname(), client);
 
       String nickname = attachment.nickname();
       GameCode gameCode = attachment.gameCode();
@@ -449,11 +463,16 @@ public class GameServer implements Runnable {
             broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
           }
         } else {
-          // If the game has started, set the client as disconnected
-          gameEntry.disconnectPlayer(nickname);
-          disconnectedPlayers.put(nickname, gameCode);
-          serverLogger.info("Player '{}' lost connection to ongoing game '{}', marked as disconnected", nickname, gameCode);
-          broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
+          if (!disconnectedPlayers.containsKey(nickname)) {
+            // If the game has started, set the client as disconnected
+            gameEntry.disconnectPlayer(nickname);
+            disconnectedPlayers.put(nickname, gameCode);
+            serverLogger.info("Player '{}' lost connection to ongoing game '{}', marked as disconnected", nickname, gameCode);
+            broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
+          } else {
+            // The player had already disconnected with a QUIT_GAME message, skip marking as disconnected
+            serverLogger.info("Player '{}' lost connection while already disconnected from ongoing game '{}'", nickname, gameCode);
+          }
         }
       }
 

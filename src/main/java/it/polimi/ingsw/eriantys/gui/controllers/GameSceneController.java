@@ -113,7 +113,7 @@ public class GameSceneController extends FXMLController {
   @FXML
   private void quitGameAction() {
     Controller.get().sender().sendQuitGame();
-    gui.setScene(SceneEnum.CONNECTION);
+    gui.setScene(SceneEnum.CREATE_OR_JOIN);
   }
 
   @FXML
