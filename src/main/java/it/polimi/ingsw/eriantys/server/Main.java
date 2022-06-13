@@ -16,7 +16,7 @@ public class Main {
             serverArgs.port = Integer.parseInt(args[i + 1]);
             i++;
           } catch (RuntimeException ignored) {
-            System.out.println("Port argument was specified without a valid port, default (" + serverArgs.port + ") will be used instead");
+            serverLogger.warn("Port argument was specified without a valid port, default {} will be used instead", serverArgs.port);
           }
         }
         case "--no-heartbeat" -> serverArgs.heartbeat = false;
@@ -27,6 +27,8 @@ public class Main {
         default -> serverLogger.info("Unknown command line argument: {}", args[i]);
       }
     }
+    // Print configuration parameters
+    serverLogger.info("Configuration:\n* port: {}\n* heartbeat: {}", serverArgs.port, serverArgs.heartbeat);
 
     ServerApp serverApp = new ServerApp(serverArgs);
     serverApp.run();
