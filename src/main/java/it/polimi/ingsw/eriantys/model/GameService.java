@@ -92,6 +92,7 @@ public interface GameService {
    * @param players     All players playing the game
    */
   static void applyMotherNatureEffect(int islandIndex, PlayingField field, List<Player> players) {
+    // Manages locked island
     if (field.getIsland(islandIndex).isLocked()) {
       modelLogger.info("Island {} is locked. No effect applied", islandIndex);
       field.getIsland(islandIndex).setLocked(false);
@@ -108,32 +109,35 @@ public interface GameService {
       Optional<TowerColor> oldColor = currIsland.getTowerColor();
       currIsland.setTowerColor(bestTeam);
 
-      // If the island was previously empty make tower count = 1
-      if (oldColor.isEmpty()) {
-        modelLogger.info("Island {} is being conquered for the first time by team {}", islandIndex, bestTeam);
-        currIsland.setTowerCount(1);
-      }
-
       oldColor.ifPresentOrElse(oldTeam -> {
             // If a team is being dethroned
             if (!oldTeam.equals(bestTeam)) {
               modelLogger.info("Team {} is dethroning team {} on island {}", bestTeam, oldTeam, islandIndex);
 
               // Updates players dashboards
-              for (Player p : players) {
+              players.forEach(p -> {
                 // Remove towers from conquerors' dashboard
                 if (p.getColorTeam().equals(bestTeam)) {
                   p.getDashboard().removeTowers(currIsland.getTowerCount());
                 }
 
                 // Add towers to conquered dashboard
-                if (p.getColorTeam() == oldTeam) {
+                if (p.getColorTeam().equals(oldTeam)) {
                   p.getDashboard().addTowers(currIsland.getTowerCount());
                 }
-              }
+              });
             }
           },
-          () -> modelLogger.info("Nothing happens when mother nature landed on island {}", islandIndex)
+          () -> {
+            modelLogger.info("Island {} is being conquered for the first time by team {}", islandIndex, bestTeam);
+            currIsland.setTowerCount(1);
+            // Remove towers from conquerors' dashboard
+            players.forEach(p -> {
+              if (p.getColorTeam().equals(bestTeam)) {
+                p.getDashboard().removeTowers(currIsland.getTowerCount());
+              }
+            });
+          }
       );
       field.mergeIslands(islandIndex);
     });
