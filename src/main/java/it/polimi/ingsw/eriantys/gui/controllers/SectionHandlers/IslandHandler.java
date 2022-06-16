@@ -131,20 +131,6 @@ public class IslandHandler extends SectionHandler {
     AnchorPane.setLeftAnchor(blueStudent, 115.0);
     studentLabels.add(blueStudent);
 
-    towerLabel = new Label("×" + island.getTowerCount());
-    islandPane.getChildren().add(towerLabel);
-    AnchorPane.setBottomAnchor(towerLabel, 75.0);
-    AnchorPane.setLeftAnchor(towerLabel, 75.0);
-    towerLabel.setVisible(false);
-
-    lockView = new ImageView(new Image("/assets/realm/lock-icon.png"));
-    lockView.setFitWidth(20);
-    lockView.setPreserveRatio(true);
-    islandPane.getChildren().add(lockView);
-    AnchorPane.setBottomAnchor(lockView, 50.0);
-    AnchorPane.setLeftAnchor(lockView, 63.0);
-    lockView.setVisible(false);
-
     mnView = new ImageView(new Image("/assets/realm/mother-nature.png"));
     mnView.setFitWidth(25);
     mnView.setPreserveRatio(true);
@@ -162,6 +148,21 @@ public class IslandHandler extends SectionHandler {
       db.setDragView(mnView.getImage());
       e.consume();
     });
+    
+    towerLabel = new Label("×" + island.getTowerCount());
+    islandPane.getChildren().add(towerLabel);
+    AnchorPane.setBottomAnchor(towerLabel, 75.0);
+    AnchorPane.setLeftAnchor(towerLabel, 75.0);
+    towerLabel.setVisible(false);
+
+    lockView = new ImageView(new Image("/assets/realm/lock-icon.png"));
+    lockView.setFitWidth(20);
+    lockView.setPreserveRatio(true);
+    islandPane.getChildren().add(lockView);
+    AnchorPane.setBottomAnchor(lockView, 50.0);
+    AnchorPane.setLeftAnchor(lockView, 63.0);
+    lockView.setVisible(false);
+
     islandPane.setOnDragOver(this::dragOverIsland);
     islandPane.setOnDragDropped(this::dragDropOnIsland);
   }
