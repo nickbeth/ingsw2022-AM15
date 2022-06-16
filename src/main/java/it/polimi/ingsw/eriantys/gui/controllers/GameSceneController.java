@@ -6,7 +6,6 @@ import it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers.*;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -64,10 +63,6 @@ public class GameSceneController extends FXMLController {
   private GridPane entranceGrid4;
   @FXML
   private VBox debugScreen;
-  @FXML
-  private Label phase;
-  @FXML
-  private Label currPlayerLabel;
   @FXML
   private VBox cloudBox;
   @FXML
@@ -143,18 +138,10 @@ public class GameSceneController extends FXMLController {
     mainDashboardHandler.update();
     islandsPaneHandler.update();
     cloudBoxHandler.update();
-    updateGameLables();
+    debugScreenHandler.update();
     enemyDashboardHandlers.forEach(SectionHandler::update);
     if (assistCardPanel.isVisible())
       assistCardTilesHandler.update();
-  }
-
-  private void updateGameLables() {
-    String phaseText = "Phase: " + Controller.get().getGameState().getGamePhase();
-    if (Controller.get().getGameState().getGamePhase() == GamePhase.ACTION)
-      phaseText += " -> " + Controller.get().getGameState().getTurnPhase();
-    phase.setText(phaseText);
-    currPlayerLabel.setText("Turn of: " + Controller.get().getGameState().getCurrentPlayer());
   }
 
   @FXML
@@ -178,6 +165,7 @@ public class GameSceneController extends FXMLController {
   @FXML
   private void toggleDebugScreen(KeyEvent event) {
     boolean isVisible = !debugScreen.isVisible();
+    debugScreenHandler.update();
     if (event.getCode() == KeyCode.F3) {
       clientLogger.debug("debug screen is visible: " + isVisible);
       debugScreen.setVisible(isVisible);

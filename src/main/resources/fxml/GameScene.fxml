@@ -115,9 +115,7 @@
                 </ImageView>
             </children>
         </StackPane>
-        <Label fx:id="currPlayerLabel" layoutX="14.0" layoutY="46.0" prefHeight="18.0" prefWidth="166.0" text="Turn Of" AnchorPane.leftAnchor="15.0" />
-        <Label fx:id="phase" layoutX="14.0" layoutY="64.0" text="Phase" AnchorPane.leftAnchor="15.0" />
-      <AnchorPane fx:id="dashboardClient2" layoutX="526.0" visible="false" styleClass="pane-dashboard" AnchorPane.leftAnchor="626.0">
+      <AnchorPane fx:id="dashboardClient2" layoutX="526.0" styleClass="pane-dashboard" visible="false" AnchorPane.leftAnchor="626.0">
          <children>
             <ImageView fitHeight="720.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0">
                <image>
