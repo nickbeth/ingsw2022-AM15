@@ -215,4 +215,12 @@ public class IslandHandler extends SectionHandler {
         debugScreenHandler.showMessage("mother nature was dropped on island " + islandIndex);
     }
   }
+
+  public Island getIsland() {
+    return island;
+  }
+
+  public AnchorPane getPane() {
+    return islandPane;
+  }
 }

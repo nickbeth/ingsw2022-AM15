@@ -22,3 +22,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.63), 10.0, 0, 3.0, 4.0);
 }
 
+.text-debug{
+    -fx-font-family: Georgia;
+}
+

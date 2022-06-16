@@ -3,19 +3,19 @@ package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Island;
+import javafx.application.Platform;
 import javafx.scene.layout.AnchorPane;
 import jfxtras.scene.layout.CircularPane;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
-
 public class IslandsHandler extends SectionHandler {
   private final DebugScreenHandler debugScreenHandler;
   private final CircularPane islandsCircle;
 
   private GameState gameState;
+
   private final List<IslandHandler> islandsHandlers = new ArrayList<>();
 
   public IslandsHandler(CircularPane islandsCircle, DebugScreenHandler debugScreenHandler) {
@@ -24,12 +24,24 @@ public class IslandsHandler extends SectionHandler {
   }
 
   /**
-   * Updates all island Handlers
+   * Updates all island Handlers, if an island is flagged as merged it removes it from {@link #islandsCircle}
    */
   @Override
   protected void refresh() {
+    List<IslandHandler> toRemove = new ArrayList<>();
     debugScreenHandler.showMessage("refreshing islands");
-    islandsHandlers.forEach(SectionHandler::update);
+
+    islandsHandlers.forEach(handler -> {
+      Island island = handler.getIsland();
+      if (island.isMerged()) {
+        int index = gameState.getPlayingField().getIslands().indexOf(island);
+        debugScreenHandler.showMessage("removing island" + index + " from islands circle");
+        islandsCircle.remove(handler.getPane());
+        toRemove.add(handler);
+      } else
+        handler.update();
+    });
+    islandsHandlers.removeAll(toRemove);
   }
 
   @Override
