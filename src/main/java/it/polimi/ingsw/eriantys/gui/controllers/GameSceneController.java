@@ -106,7 +106,7 @@ public class GameSceneController extends FXMLController {
       enemyDashboardHandlers.add(new EnemyDashboardHandler(dashboardClient3, nicknames.get(1), studentHallGrid3, entranceGrid3, profTableGrid3, dashboardTowers3, debugScreenHandler));
       enemyDashboardHandlers.add(new EnemyDashboardHandler(dashboardClient4, nicknames.get(2), studentHallGrid4, entranceGrid4, profTableGrid4, dashboardTowers4, debugScreenHandler));
     } catch (IndexOutOfBoundsException e) {
-      clientLogger.debug("qdded less than 3 enemy dashboard handlers");
+      clientLogger.debug("added less than 3 enemy dashboard handlers");
     }
   }
 

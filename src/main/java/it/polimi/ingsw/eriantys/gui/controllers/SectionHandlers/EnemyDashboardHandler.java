@@ -1,13 +1,13 @@
 package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
-
-import java.awt.*;
+import javafx.scene.text.TextAlignment;
 
 public class EnemyDashboardHandler extends DashboardHandler {
   private final AnchorPane dashboardPane;
@@ -19,8 +19,10 @@ public class EnemyDashboardHandler extends DashboardHandler {
 
   @Override
   protected void refresh() {
-    if (dashboardPane.isVisible())
+    if (dashboardPane.isVisible()) {
+      debugScreenHandler.showMessage("refreshing " + getNickname() + "'s dashboard");
       super.refresh();
+    }
   }
 
   @Override
@@ -43,14 +45,18 @@ public class EnemyDashboardHandler extends DashboardHandler {
 
   private void createNicknameLable() {
     Label dashboardName = new Label(getNickname() + "'s dashboard");
+    dashboardName.getStyleClass().add("label-dashname");
     dashboardPane.getChildren().add(dashboardName);
+    dashboardName.setMaxWidth(Double.MAX_VALUE);
+    dashboardName.setAlignment(Pos.CENTER);
+    dashboardName.setTextAlignment(TextAlignment.CENTER);
     AnchorPane.setTopAnchor(dashboardName, 0.0);
-    AnchorPane.setLeftAnchor(dashboardName, 0.0);
+    AnchorPane.setLeftAnchor(dashboardName, 20.0);
   }
 
-  public void show(){
-    update();
+  public void show() {
     dashboardPane.setVisible(true);
+    update();
   }
 
 }

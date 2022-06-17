@@ -33,7 +33,6 @@ public class LobbyController extends FXMLController {
 
   @FXML
   private void startGameAction(ActionEvent actionEvent) {
-
     if (!Controller.get().sender().sendStartGame()) {
       errorMessage.setText("not enough players with a chosen color to start");
       errorMessage.setVisible(true);
