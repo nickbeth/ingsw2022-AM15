@@ -98,11 +98,6 @@
         <StackPane fx:id="assistCardPanel" layoutX="50.0" layoutY="250.0" prefHeight="460.0" prefWidth="1180.0" stylesheets="@../css/popupstyle.css" visible="false">
             <children>
                 <Region layoutX="6.0" layoutY="4.0" styleClass="region-assistcards" />
-                <TilePane fx:id="assistCards" alignment="CENTER" layoutX="14.0" layoutY="12.0">
-                    <StackPane.margin>
-                        <Insets left="50.0" right="50.0" />
-                    </StackPane.margin>
-                </TilePane>
                 <ImageView fitHeight="34.0" fitWidth="27.0" layoutX="914.0" onMouseClicked="#hideAssistCards" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_RIGHT">
                     <image>
                         <Image url="@../assets/misc/cross-icon.png" />
@@ -114,6 +109,16 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </ImageView>
+                <TilePane fx:id="assistCards" alignment="CENTER" layoutX="14.0" layoutY="12.0" prefHeight="460.0" prefWidth="906.0" StackPane.alignment="CENTER_LEFT">
+                    <StackPane.margin>
+                        <Insets right="225.0" />
+                    </StackPane.margin>
+                </TilePane>
+            <VBox fx:id="playedCardsBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="193.0" StackPane.alignment="TOP_RIGHT">
+               <StackPane.margin>
+                  <Insets right="30.0" />
+               </StackPane.margin>
+            </VBox>
             </children>
         </StackPane>
       <AnchorPane fx:id="dashboardClient2" layoutX="526.0" styleClass="pane-dashboard" visible="false" AnchorPane.leftAnchor="626.0">

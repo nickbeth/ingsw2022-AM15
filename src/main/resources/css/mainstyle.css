@@ -38,3 +38,8 @@
     -fx-stroke: gray;
     -fx-stroke-width: 0.5px;
 }
+
+.text-playedcard {
+    -fx-font-size: 13px;
+    -fx-font-family: "Felix Titling";
+}

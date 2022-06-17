@@ -74,6 +74,8 @@ public class GameSceneController extends FXMLController {
   @FXML
   private TilePane assistCards;
   @FXML
+  private VBox playedCardsBox;
+  @FXML
   private StackPane assistCardPanel;
 
   private PlayerGridHandler playerGridHandler;
@@ -95,7 +97,7 @@ public class GameSceneController extends FXMLController {
     playerGridHandler = new PlayerGridHandler(otherPlayersGrid, debugScreenHandler, enemyDashboardHandlers);
     cloudBoxHandler = new CloudsHandler(cloudBox, debugScreenHandler);
     islandsPaneHandler = new IslandsHandler(islandsPane, debugScreenHandler);
-    assistCardTilesHandler = new AssistCardHandler(assistCards, debugScreenHandler);
+    assistCardTilesHandler = new AssistCardHandler(assistCards, playedCardsBox, debugScreenHandler);
   }
 
   private void buildDashboardHandlers() {
