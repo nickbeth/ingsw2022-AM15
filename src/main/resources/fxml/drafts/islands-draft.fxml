@@ -190,828 +190,829 @@
             </ImageView>
          </children>
       </VBox>
-      <CircularPane clipAwayExcessWhitespace="true" gap="-70.0" prefHeight="0.0" prefWidth="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-50.0">
+      <StackPane layoutX="94.0" layoutY="18.0" prefHeight="800.0" prefWidth="800.0" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="-40.0">
          <children>
-             <AnchorPane prefHeight="150.0" prefWidth="200.0">
-                 <children>
-                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                         <image>
-                             <Image url="@../../assets/realm/island-2.png" />
-                         </image>
-                     </ImageView>
-                     <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                         <graphic>
-                             <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+            <CircularPane fx:id="islandsPane" clipAwayExcessWhitespace="true" gap="-100.0">
+               <children>
+                   <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                       <children>
+                           <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                               <image>
+                                   <Image url="@../../assets/realm/island-2.png" />
+                               </image>
+                           </ImageView>
+                           <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                               <graphic>
+                                   <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                           <Image url="@../../assets/realm/student-BLUE.png" />
+                                       </image>
+                                   </ImageView>
+                               </graphic>
+                           </Label>
+                           <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                               <graphic>
+                                   <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                           <Image url="@../../assets/realm/student-GREEN.png" />
+                                       </image>
+                                   </ImageView>
+                               </graphic>
+                           </Label>
+                           <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                               <graphic>
+                                   <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                           <Image url="@../../assets/realm/student-PINK.png" />
+                                       </image>
+                                   </ImageView>
+                               </graphic>
+                           </Label>
+                           <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                               <graphic>
+                                   <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                           <Image url="@../../assets/realm/student-RED.png" />
+                                       </image>
+                                   </ImageView>
+                               </graphic>
+                           </Label>
+                           <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                               <graphic>
+                                   <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                           <Image url="@../../assets/realm/student-YELLOW.png" />
+                                       </image>
+                                   </ImageView>
+                               </graphic>
+                           </Label>
+                           <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                               <graphic>
+                                   <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                           <Image url="@../../assets/realm/tower-BLACK.png" />
+                                       </image>
+                                   </ImageView>
+                               </graphic>
+                           </Label>
+                           <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+                               <image>
+                                   <Image url="@../../assets/realm/lock-icon.png" />
+                               </image>
+                           </ImageView>
+                       </children>
+                   </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../assets/realm/island-2.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                     <Image url="@../../assets/realm/student-BLUE.png" />
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
                                  </image>
-                             </ImageView>
-                         </graphic>
-                     </Label>
-                     <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                         <graphic>
-                             <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                     <Image url="@../../assets/realm/student-GREEN.png" />
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
                                  </image>
-                             </ImageView>
-                         </graphic>
-                     </Label>
-                     <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                         <graphic>
-                             <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                     <Image url="@../../assets/realm/student-PINK.png" />
+                                    <Image url="@../../assets/realm/student-PINK.png" />
                                  </image>
-                             </ImageView>
-                         </graphic>
-                     </Label>
-                     <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                         <graphic>
-                             <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                     <Image url="@../../assets/realm/student-RED.png" />
+                                    <Image url="@../../assets/realm/student-RED.png" />
                                  </image>
-                             </ImageView>
-                         </graphic>
-                     </Label>
-                     <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                         <graphic>
-                             <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                     <Image url="@../../assets/realm/student-YELLOW.png" />
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
                                  </image>
-                             </ImageView>
-                         </graphic>
-                     </Label>
-                     <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                         <graphic>
-                             <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                     <Image url="@../../assets/realm/tower-BLACK.png" />
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
                                  </image>
-                             </ImageView>
-                         </graphic>
-                     </Label>
-                     <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                         <image>
-                             <Image url="@../../assets/realm/lock-icon.png" />
-                         </image>
-                     </ImageView>
-                 </children>
-             </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
                            <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
+                              <Image url="@../../assets/realm/lock-icon.png" />
                            </image>
                         </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
+                              <Image url="@../../assets/realm/island-2.png" />
                            </image>
                         </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
                            <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
+                              <Image url="@../../assets/realm/lock-icon.png" />
                            </image>
                         </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
+                              <Image url="@../../assets/realm/island-2.png" />
                            </image>
                         </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
                            <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
+                              <Image url="@../../assets/realm/lock-icon.png" />
                            </image>
                         </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
+                              <Image url="@../../assets/realm/island-2.png" />
                            </image>
                         </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+                           <image>
+                              <Image url="@../../assets/realm/lock-icon.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../assets/realm/island-2.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+                           <image>
+                              <Image url="@../../assets/realm/lock-icon.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../assets/realm/island-2.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+                           <image>
+                              <Image url="@../../assets/realm/lock-icon.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../assets/realm/island-2.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+                           <image>
+                              <Image url="@../../assets/realm/lock-icon.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../assets/realm/island-2.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+                           <image>
+                              <Image url="@../../assets/realm/lock-icon.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../assets/realm/island-2.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+                           <image>
+                              <Image url="@../../assets/realm/lock-icon.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../assets/realm/island-2.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+                           <image>
+                              <Image url="@../../assets/realm/lock-icon.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../assets/realm/island-2.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-BLUE.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-GREEN.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-PINK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-RED.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/student-YELLOW.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
+                           <graphic>
+                              <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../assets/realm/tower-BLACK.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+                           <image>
+                              <Image url="@../../assets/realm/lock-icon.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
                </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../assets/realm/island-2.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="x3" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="115.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-BLUE.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x10" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="35.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-GREEN.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x0" AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-PINK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x2" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="30.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-RED.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label text="x11" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/student-YELLOW.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="72.0" layoutY="35.0" text="x3" AnchorPane.leftAnchor="75.0">
-                     <graphic>
-                        <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/realm/tower-BLACK.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
-                     <image>
-                        <Image url="@../../assets/realm/lock-icon.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
+            </CircularPane>
          </children>
-         <padding>
-            <Insets bottom="-20.0" left="-20.0" right="-20.0" />
-         </padding>
-      </CircularPane>
+      </StackPane>
    </children>
 </AnchorPane>

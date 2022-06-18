@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="720.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.RulesController">
-    <Button fx:id="backButton" layoutX="512.0" layoutY="14.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="20.0" prefWidth="73.0" text="Back" />
-    <Button fx:id="nextPage" layoutX="512.0" layoutY="680.0" mnemonicParsing="false" onAction="#goNextPage" prefHeight="20.0" prefWidth="73.0" text="Next" />
-    <Button fx:id="previousPage" layoutX="40.0" layoutY="560.0" mnemonicParsing="false" onAction="#goPreviousPage" prefHeight="20.0" prefWidth="73.0" text="Previous" visible="false" />
+    <Button fx:id="backButton" layoutX="512.0" layoutY="14.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="20.0" prefWidth="73.0" text="Back" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
+    <Button fx:id="nextPage" layoutX="512.0" layoutY="680.0" mnemonicParsing="false" onAction="#goNextPage" prefHeight="20.0" prefWidth="73.0" text="Next" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+    <Button fx:id="previousPage" layoutX="40.0" layoutY="560.0" mnemonicParsing="false" onAction="#goPreviousPage" prefHeight="20.0" prefWidth="73.0" text="Previous" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
    <ScrollPane layoutX="27.0" layoutY="56.0" pannable="true" prefHeight="600.0" prefWidth="615.0" AnchorPane.leftAnchor="25.0">
      <content>
        <AnchorPane minHeight="0.0" minWidth="0.0">
