@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -27,8 +28,10 @@ public class Gui extends Application {
   @Override
   public void start(Stage primaryStage) {
     stage = primaryStage;
+    stage.setTitle("Eriantys");
+    stage.getIcons().add(new Image("/assets/misc/game-icon.png"));
     initializeScenes();
-    //pressing on the red X to close a stage will call the closeApplication method
+    // Pressing on the red X to close a stage will call the closeApplication method
     stage.setOnCloseRequest(e -> closeApplication());
     currScene = SceneEnum.MENU;
     stage.setScene(sceneMap.get(currScene));
@@ -66,6 +69,7 @@ public class Gui extends Application {
 
   /**
    * Displays an alert with the text of the received error.
+   *
    * @param error
    */
   public static void showError(String error) {
@@ -85,6 +89,7 @@ public class Gui extends Application {
 
   /**
    * sets a new scene, updates the next controller, and updates the listener list in action invoker.
+   *
    * @param scene
    * @param eventTag
    */
@@ -95,7 +100,10 @@ public class Gui extends Application {
     FXMLController nextController = controllerMap.get(currScene);
     nextController.start();
     nextController.updateAll();
+    // Showing unminimizing the stage to prevent resize problems
+    stage.setIconified(false);
     stage.setScene(sceneMap.get(currScene));
+    stage.sizeToScene();
     stage.show();
   }
 }
