@@ -22,7 +22,7 @@
                 <Image url="@../assets/realm/island-background.png" />
             </image>
         </ImageView>
-      <StackPane layoutX="84.0" layoutY="8.0" prefHeight="720.0" prefWidth="720.0" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="0.0">
+      <StackPane layoutX="84.0" layoutY="8.0" prefHeight="800.0" prefWidth="800.0" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="-40.0">
               <CircularPane fx:id="islandsPane" clipAwayExcessWhitespace="true" gap="-100.0" />
       </StackPane>
         <AnchorPane fx:id="dashboardClient" layoutX="1000.0" styleClass="pane-dashboard" AnchorPane.rightAnchor="0.0">
@@ -116,7 +116,7 @@
                 </TilePane>
             <VBox fx:id="playedCardsBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="193.0" StackPane.alignment="TOP_RIGHT">
                <StackPane.margin>
-                  <Insets right="30.0" />
+                  <Insets right="30.0" top="10.0" />
                </StackPane.margin>
             </VBox>
             </children>

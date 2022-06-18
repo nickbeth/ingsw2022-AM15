@@ -28,8 +28,8 @@ public class EnemyDashboardHandler extends DashboardHandler {
   @Override
   protected void create() {
     super.create();
-    createCloseButton();
     createNicknameLable();
+    createCloseButton();
   }
 
   private void createCloseButton() {
@@ -47,11 +47,12 @@ public class EnemyDashboardHandler extends DashboardHandler {
     Label dashboardName = new Label(getNickname() + "'s dashboard");
     dashboardName.getStyleClass().add("label-dashname");
     dashboardPane.getChildren().add(dashboardName);
-    dashboardName.setMaxWidth(Double.MAX_VALUE);
+    dashboardName.setPrefWidth(313);
+    dashboardName.setMinWidth(313);
     dashboardName.setAlignment(Pos.CENTER);
     dashboardName.setTextAlignment(TextAlignment.CENTER);
     AnchorPane.setTopAnchor(dashboardName, 0.0);
-    AnchorPane.setLeftAnchor(dashboardName, 20.0);
+    AnchorPane.setLeftAnchor(dashboardName, 0.0);
   }
 
   public void show() {
