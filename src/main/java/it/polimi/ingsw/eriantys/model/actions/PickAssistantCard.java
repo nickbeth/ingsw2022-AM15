@@ -27,11 +27,10 @@ public class PickAssistantCard extends GameAction {
     GameService.pickAssistantCard(gameState.getCurrentPlayer(), cardIndex);
 
     // Manage advance phase
-    Player lastPlayer = gameState.getPlanningPhaseOrder().get(gameState.getPlanningPhaseOrder().size() - 1);
-    if (gameState.getCurrentPlayer().equals(lastPlayer)) {
+    if (gameState.isLastPlayer(gameState.getCurrentPlayer())) {
       gameState.advanceGamePhase();
-      return; 
-    } 
+      return;
+    }
     gameState.advancePlayer();
   }
 

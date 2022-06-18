@@ -69,6 +69,19 @@ class GameStateTest {
 
   }
 
+  @Test
+  void advancePlayerWithDisconnections() {
+    game.addPlayer("gino", TowerColor.BLACK);
+    GameState spyedField = spy(game);
+
+    game.getPlayer("gino").setConnected(false);
+    //tests correct advancement for plan order while one player is disconnected
+    doReturn(GamePhase.PLANNING).when(spyedField).getGamePhase();
+    Player oldPlayerOne = spyedField.getPlanningPhaseOrder().get(0);
+    spyedField.advancePlayer();
+    assertEquals(oldPlayerOne, spyedField.getCurrentPlayer());
+  }
+
 
   @Test
   void advanceGamePhaseToAction() {

@@ -52,13 +52,19 @@ public class GameState implements Serializable {
   }
 
   /**
-   * Sets current player to next in line depending on GamePhase
+   * Sets current player to next in line depending on GamePhase, if the new current player is marked as disconnected
+   * advances player again.
    */
   public void advancePlayer() {
     if (getGamePhase() == GamePhase.PLANNING)
       currentPlayer = planningPhaseOrder.get((planningPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
     if (getGamePhase() == GamePhase.ACTION)
       currentPlayer = actionPhaseOrder.get((actionPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
+
+    //if the new current player is disconnected advances to next player
+    if (!currentPlayer.isConnected()) {
+      advancePlayer();
+    }
   }
 
   public List<Player> getPlayers() {
@@ -88,7 +94,7 @@ public class GameState implements Serializable {
   public List<Dashboard> getDashboards() {
     List<Dashboard> dashes = new ArrayList<>();
     players.forEach(p ->
-        dashes.add(p.getDashboard()));
+            dashes.add(p.getDashboard()));
     return dashes;
   }
 
@@ -170,9 +176,9 @@ public class GameState implements Serializable {
    */
   public boolean checkWinCondition() {
     if (getPlayingField().getStudentBag().isEmpty()
-        || getPlayers().stream().anyMatch(p -> p.getDashboard().noMoreTowers()
-        || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
-        || getPlayingField().getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
+            || getPlayers().stream().anyMatch(p -> p.getDashboard().noMoreTowers()
+            || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
+            || getPlayingField().getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
     ) {
       gamePhase = GamePhase.WIN;
       return true;
@@ -226,13 +232,13 @@ public class GameState implements Serializable {
   private void prepareOrderForActionPhase() {
     modelLogger.info("Updated action turn order.");
     modelLogger.debug("Old action order: "
-        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
+            + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
     );
     actionPhaseOrder.clear();
     actionPhaseOrder.addAll(players);
     actionPhaseOrder.sort(Comparator.comparingInt(Player::getTurnPriority));
     modelLogger.debug("New action order: "
-        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
+            + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
     );
   }
 
@@ -258,13 +264,18 @@ public class GameState implements Serializable {
     return ruleBook;
   }
 
+  /**
+   * Returns the last connected player of the current gamePhase
+   */
   public boolean isLastPlayer(Player player) {
     switch (gamePhase) {
       case PLANNING -> {
-        return player.equals(planningPhaseOrder.get(planningPhaseOrder.size() - 1));
+        List<Player> connectedPlayers = planningPhaseOrder.stream().filter(Player::isConnected).toList();
+        return player.equals(connectedPlayers.get(connectedPlayers.size() - 1));
       }
       case ACTION -> {
-        return player.equals(actionPhaseOrder.get(actionPhaseOrder.size() - 1));
+        List<Player> connectedPlayers = actionPhaseOrder.stream().filter(Player::isConnected).toList();
+        return player.equals(connectedPlayers.get(connectedPlayers.size() - 1));
       }
       default -> throw new AssertionError();
     }
