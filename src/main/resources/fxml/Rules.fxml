@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.RulesController">
-    <ImageView fx:id="view" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
-            <Image fx:id="currImg" url="@../assets/rules/Eriantys_rules-1.png" />
-    </ImageView>
+<AnchorPane prefHeight="720.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.RulesController">
     <Button fx:id="backButton" layoutX="512.0" layoutY="14.0" mnemonicParsing="false" onAction="#backButtonAction" prefHeight="20.0" prefWidth="73.0" text="Back" />
-    <Button fx:id="nextPage" layoutX="512.0" layoutY="560.0" mnemonicParsing="false" onAction="#goNextPage" prefHeight="20.0" prefWidth="73.0" text="Next" />
+    <Button fx:id="nextPage" layoutX="512.0" layoutY="680.0" mnemonicParsing="false" onAction="#goNextPage" prefHeight="20.0" prefWidth="73.0" text="Next" />
     <Button fx:id="previousPage" layoutX="40.0" layoutY="560.0" mnemonicParsing="false" onAction="#goPreviousPage" prefHeight="20.0" prefWidth="73.0" text="Previous" visible="false" />
+   <ScrollPane layoutX="27.0" layoutY="56.0" pannable="true" prefHeight="600.0" prefWidth="615.0" AnchorPane.leftAnchor="25.0">
+     <content>
+       <AnchorPane minHeight="0.0" minWidth="0.0">
+            <children>
+                <ImageView fx:id="view" fitHeight="600.0" pickOnBounds="true" preserveRatio="true">
+                        <Image fx:id="currImg" url="@../assets/rules/Eriantys_rules-1.png" />
+                </ImageView>
+            </children>
+         </AnchorPane>
+     </content>
+   </ScrollPane>
 </AnchorPane>
