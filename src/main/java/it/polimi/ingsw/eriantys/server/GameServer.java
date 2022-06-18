@@ -126,8 +126,7 @@ public class GameServer implements Runnable {
     client.attach(new ClientAttachment(nickname));
     serverLogger.info("Nickname '{}' registered for client '{}'", nickname, client);
     send(client, new Message.Builder().type(MessageType.NICKNAME_OK).nickname(nickname).build());
-    if (heartbeat)
-      initHeartbeat(client);
+    initHeartbeat(client);
 
     tryRejoinGame(client, message);
   }
@@ -391,6 +390,9 @@ public class GameServer implements Runnable {
    * @apiNote This method should only be called on a client that has a valid attachment
    */
   private void initHeartbeat(Client client) {
+    if (!heartbeat)
+      return;
+
     var attachment = (ClientAttachment) client.attachment();
     serverLogger.debug("Initializing heartbeat for player '{}' on client '{}'", attachment.nickname(), client);
     var heartbeatSchedule = heartbeatService.schedule(new HeartbeatRunnable(client), HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
@@ -405,6 +407,9 @@ public class GameServer implements Runnable {
    * @apiNote This method should only be called on a client that has a valid attachment
    */
   private void stopHeartbeat(Client client) {
+    if (!heartbeat)
+      return;
+
     var attachment = (ClientAttachment) client.attachment();
     serverLogger.debug("Stopping heartbeat for player '{}' on client '{}'", attachment.nickname(), client);
     // We acquire the lock to avoid cancelling the heartbeat while another thread is scheduling a new one,
