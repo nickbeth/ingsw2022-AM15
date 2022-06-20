@@ -33,6 +33,9 @@ public class MoveMotherNature extends GameAction {
     // Apply her effect
     GameService.applyMotherNatureEffect(motherNaturePos, playingField, players);
 
+    // Unset any possible previous character card played
+    playingField.setPlayedCharacterCard(null);
+
     gameState.advanceTurnPhase();
   }
 

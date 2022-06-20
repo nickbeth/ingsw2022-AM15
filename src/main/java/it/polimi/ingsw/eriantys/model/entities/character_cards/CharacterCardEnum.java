@@ -1,24 +1,35 @@
 package it.polimi.ingsw.eriantys.model.entities.character_cards;
 
+import java.io.Serializable;
+
 import static it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum.CharacterCardType.*;
 
-public enum CharacterCardEnum {
+public enum CharacterCardEnum implements Serializable {
+  // TODO: give CC descriptions and right cost
   IGNORE_COLOR
-          ("", COLOR_INPUT, 3, true, false),
+          (false, true, 0, COLOR_INPUT,
+              "DESCRIPTION"),
   IGNORE_TOWERS
-          ("", NO_INPUT, 3, false, false),
+          (false, false, 0, NO_INPUT,
+              "DESCRIPTION"),
   ADD_TO_INFLUENCE
-          ("", NO_INPUT, 3, false, false),
+          (false, false, 0, NO_INPUT,
+              "DESCRIPTION"),
   DROP_STUDENTS
-          ("", COLOR_INPUT, 3, true, false),
+          (false, true, 0, COLOR_INPUT,
+              "DESCRIPTION"),
   FORCE_MOTHER_NATURE_EFFECTS
-          ("", ISLAND_INDEX_INPUT, 3, true, false),
+          (false, true, 0, ISLAND_INDEX_INPUT,
+              "DESCRIPTION"),
   ADD_TO_MOTHER_NATURE_MOVES
-          ("", NO_INPUT, 3, false, false),
+          (false, false, 0, NO_INPUT,
+              "DESCRIPTION"),
   LOCK_ISLAND
-          ("", ISLAND_INDEX_INPUT, 3, true, false),
+          (false, true, 0, ISLAND_INDEX_INPUT,
+              "DESCRIPTION"),
   STEAL_PROFESSOR
-          ("", NO_INPUT, 3, false, false),
+          (false, false, 0, NO_INPUT,
+              "DESCRIPTION"),
   ;
 
   public enum CharacterCardType {
@@ -27,13 +38,13 @@ public enum CharacterCardEnum {
     ISLAND_INDEX_INPUT
   }
 
-  String description;
-  CharacterCardType type;
+  final String description;
+  final CharacterCardType type;
   int cost;
-  boolean requiresInput;
+  final boolean requiresInput;
   boolean used;
 
-  CharacterCardEnum(String description, CharacterCardType type, int cost, boolean requiresInput, boolean used) {
+  CharacterCardEnum(boolean used, boolean requiresInput, int cost, CharacterCardType type, String description) {
     this.description = description;
     this.type = type;
     this.cost = cost;

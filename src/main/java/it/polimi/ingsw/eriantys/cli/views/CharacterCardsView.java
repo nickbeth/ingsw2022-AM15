@@ -31,12 +31,11 @@ public class CharacterCardsView extends View {
 //        .min((c1, c2) -> c2.getCardEnum().toString().length() - c1.getCardEnum().toString().length())
 //        .map(c -> c.getCardEnum().toString().length())
 //        .ifPresent(longestName::set);
-
-
+    StringBuilder stringBuilder = new StringBuilder();
 
     for (int i = 0; i < characterCards.size(); i++) {
       CharacterCard card = characterCards.get(i);
-      o
+      stringBuilder
           // First row
           .append("╭─╦──COST───╦─EFFECT──────────────────────────╮")
           .append(System.lineSeparator())
@@ -57,14 +56,22 @@ public class CharacterCardsView extends View {
       if (paddingLeft < 0) clientLogger.warn("CharacterCard cli view needs fixes");
 
       for (int j = 0; j < paddingLeft; j++) {
-        o.append(PADDING);
+        stringBuilder.append(PADDING);
       }
-      o
+      stringBuilder
           .append(VERTICAL.glyph)
           .append(System.lineSeparator())
           .append("╰─╩─────────╩─────────────────────────────────╯")
           .append(System.lineSeparator());
     }
+
+    o.println();
+
+    o.println("-----------------CHARACTER CARDS------------------------");
+
+    o.print(stringBuilder);
+
+    o.println("--------------------------------------------------------");
   }
 
 }

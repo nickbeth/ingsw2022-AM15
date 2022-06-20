@@ -5,6 +5,8 @@ import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
+
 public class ChooseCharacterCard extends GameAction {
   private int ccIndex;
 
@@ -17,16 +19,18 @@ public class ChooseCharacterCard extends GameAction {
   public void apply(GameState gameState) {
     PlayingField p = gameState.getPlayingField();
     p.setPlayedCharacterCard(ccIndex);
-    if (!p.getPlayedCharacterCard().requiresInput()) {
-      p.getPlayedCharacterCard().applyEffect(gameState);
-    }
+    modelLogger.info("Character card {} chosen", ccIndex);
+
+    // Non la deve fare qua
+//    if (!p.getPlayedCharacterCard().requiresInput()) {
+//      p.getPlayedCharacterCard().applyEffect(gameState);
+//    }
   }
 
   /**
-   * @param gameState
-   * @return false:
-   * - If index is outof bounds
-   * - If TurnPhase and ActionPhase aren't PLACING & ACTION
+   * @return False: <br>
+   * - If index is out of bounds <br>
+   * - If TurnPhase and ActionPhase aren't PLACING & ACTION<br>
    */
   @Override
   public boolean isValid(GameState gameState) {

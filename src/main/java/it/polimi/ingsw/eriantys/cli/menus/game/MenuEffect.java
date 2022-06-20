@@ -1,12 +1,14 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
+import it.polimi.ingsw.eriantys.cli.views.CharacterCardsView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 
 import java.beans.PropertyChangeEvent;
+import java.util.List;
 
 public class MenuEffect extends MenuGame {
   public MenuEffect() {
@@ -15,33 +17,29 @@ public class MenuEffect extends MenuGame {
 
   @Override
   protected void showOptions() {
-    CharacterCard cc = controller.getGameState().getPlayingField().getPlayedCharacterCard();
-
-    out.println();
-    out.println("Description:");
-    out.println(cc.getCardEnum().getDescription());
-    out.println("Q - I changed my mind. Undo.");
-    out.println("ANY_KEY - Continue");
   }
 
   @Override
   public MenuEnum show() {
-    CharacterCard cc = controller.getGameState().getPlayingField().getPlayedCharacterCard();
+    // Choose the cards
+    chooseCharacterCard();
+
+    out.println("I'm not stuck in a loop anymore");
+
+    // Show CC descriptions
+    CharacterCard cc = game().getPlayingField().getPlayedCharacterCard();
+    out.println();
+    out.println("Card chosen: " + cc.getCardEnum());
+    out.print("Description: ");
+    out.println(cc.getCardEnum().getDescription());
+
     ParamBuilder paramBuilder = new ParamBuilder();
 
     while (true) {
-
-      // Show CC descriptions
-      showOptions();
-
-      // Escape condition
-      String choice = getNonBlankString();
-      if (choice.equalsIgnoreCase("q")) return null;
-
       // If the card requires color input
       if (cc instanceof ColorInputCards) {
         // Get color input
-        out.println("Insert color: ");
+        out.print("Insert color. ");
         new MenuStudentColor().show(paramBuilder);
         ((ColorInputCards) cc).setColor(paramBuilder.getChosenColor());
       }
@@ -51,17 +49,55 @@ public class MenuEffect extends MenuGame {
         // View islands
         new IslandsView(islands(), motherPosition()).draw(out);
         // Get island index input
-        out.println("Insert island index: ");
-        int index = getNumber();
+        out.print("Insert island index: ");
+        int index = getNumber() - 1;  // Index correction
         ((IslandInputCards) cc).setIslandIndex(index);
       }
 
-      // Send the action
+      // Send the action<
       if (controller.sender().sendActivateEffect(cc)) {
         waitForGreenLight();
-        return MenuEnum.PLACING;
+        out.println("Card activated. ");
+        new CharacterCardsView(List.of(cc)).draw(out);
+        if (studentsLeftToMove() == 0)
+          return MenuEnum.MOVING;
+        else
+          return MenuEnum.PLACING;
       }
-      out.println("Invalid input parameters");
+
+      // Print reasons why action is invalid
+      if (me().getCoins() < cc.getCost())
+        out.println("Not enough coins");
+      else
+        out.println("Invalid input parameters");
+    }
+
+  }
+
+  private int studentsLeftToMove() {
+    int myCount = me().getDashboard().getEntrance().getCount();
+    int finalCount = rules().entranceSize - rules().playableStudentCount;
+    return myCount - finalCount;
+  }
+
+  private void chooseCharacterCard() {
+    // Show playable CC
+    List<CharacterCard> playableCC = ccs();
+    out.println();
+    while (true) {
+      new CharacterCardsView(playableCC).draw(out);
+
+      // Choose CC
+      out.print("Choose a character card: ");
+      int ccIndex = getNumber();
+
+      // Send the action
+      if (controller.sender().sendChooseCharacterCard(ccIndex)) {
+        waitForGreenLight();
+        out.println("Card chosen.");
+        break;
+      }
+      out.println("Choose a valid card");
     }
   }
 

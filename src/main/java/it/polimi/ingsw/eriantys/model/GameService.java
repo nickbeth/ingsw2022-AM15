@@ -73,10 +73,10 @@ public interface GameService {
   /**
    * Refills Clouds with the given students and removes them from the bag
    */
-  static void refillClouds(StudentBag studentBag, List<Cloud> clouds, List<Students> cloudStudentsList) {
+  static void refillClouds(StudentBag studentBag, List<Cloud> clouds, List<Students> newCloudStudents) {
     for (int i = 0; i < clouds.size(); i++) {
-      if (studentBag.removeStudents(cloudStudentsList.get(i)))
-        clouds.get(i).setStudents(cloudStudentsList.get(i));
+      if (studentBag.removeStudents(newCloudStudents.get(i)))
+        clouds.get(i).setStudents(newCloudStudents.get(i));
       modelLogger.debug(clouds.get(i).getStudents().toString());
     }
   }

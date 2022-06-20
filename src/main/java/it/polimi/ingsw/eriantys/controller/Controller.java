@@ -203,9 +203,14 @@ abstract public class Controller implements Runnable {
       // Initiate character cards
       Random rand = new Random();
       List<CharacterCardEnum> chosenCharacterCards = new ArrayList<>();
-      for (int i = 0; i < PLAYABLE_CC_AMOUNT; i++) {
+      int k = 0;
+      while (k < PLAYABLE_CC_AMOUNT) {
         int randomCCIndex = rand.nextInt(0, CharacterCardEnum.values().length);
-        chosenCharacterCards.add(CharacterCardEnum.values()[randomCCIndex]);
+        CharacterCardEnum randCharacterCards = CharacterCardEnum.values()[randomCCIndex];
+        if (!chosenCharacterCards.contains(randCharacterCards)) {
+          chosenCharacterCards.add(randCharacterCards);
+          k++;
+        }
       }
 
       // Initiate students on island
