@@ -84,12 +84,16 @@ public class MenuCreateOrJoin extends Menu {
           if (!errorEncountered) {
             return MenuEnum.LOBBY;
           }
-          out.println("Gamecode does not exist");
+          out.println("Game code does not exist");
         }
 
         // Back button
         case "0" -> {
-          return MenuEnum.NICKNAME;
+          out.println("Disconnecting");
+          out.println();
+          controller.sender().sendQuitGame();
+          controller.disconnect();
+          return MenuEnum.CONNECTION;
         }
         default -> out.println("Invalid choice");
       }

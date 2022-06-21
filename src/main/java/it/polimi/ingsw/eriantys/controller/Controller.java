@@ -306,7 +306,7 @@ abstract public class Controller implements Runnable {
       StudentBag currentBag = gameState.getPlayingField().getStudentBag();
 
       // Populate clouds with random students from bag
-      for (int cloudIter = 0; cloudIter < gameState.getRuleBook().cloudCount; cloudIter++) {
+      for (int cloudIndex = 0; cloudIndex < gameState.getRuleBook().cloudCount; cloudIndex++) {
         for (int cloudSizeIter = 0; cloudSizeIter < gameState.getRuleBook().playableStudentCount; cloudSizeIter++) {
           temp.addStudent(currentBag.takeRandomStudent());
         }
