@@ -53,7 +53,7 @@ public class GameState implements Serializable {
 
   /**
    * Sets current player to next in line depending on GamePhase, if the new current player is marked as disconnected
-   * advances player again.
+   * it advances player again.
    */
   public void advancePlayer() {
     if (getGamePhase() == GamePhase.PLANNING)
@@ -122,12 +122,16 @@ public class GameState implements Serializable {
         gamePhase = GamePhase.PLANNING;
         prepareOrderForPlanningPhase();
         currentPlayer = planningPhaseOrder.get(0);
+        if (!currentPlayer.isConnected())
+          advancePlayer();
       }
       case PLANNING -> {
         modelLogger.debug("PLANNING Phase advances to ACTION");
         gamePhase = GamePhase.ACTION;
         prepareOrderForActionPhase();
         currentPlayer = actionPhaseOrder.get(0);
+        if (!currentPlayer.isConnected())
+          advancePlayer();
       }
     }
   }
@@ -143,14 +147,6 @@ public class GameState implements Serializable {
    * advances to next turnPhase (takes into account gameMode)
    */
   public void advanceTurnPhase() {
-//    if (ruleBook.gameMode == GameMode.EXPERT) {
-//      switch (turnPhase) {
-//        case PLACING -> turnPhase = TurnPhase.EFFECT;
-//        case EFFECT -> turnPhase = TurnPhase.MOVING;
-//        case MOVING -> turnPhase = TurnPhase.PICKING;
-//        case PICKING -> turnPhase = TurnPhase.PLACING;
-//      }
-//    }
     if (ruleBook.gameMode == GameMode.NORMAL) {
       switch (turnPhase) {
         case PLACING -> turnPhase = TurnPhase.MOVING;
@@ -176,9 +172,9 @@ public class GameState implements Serializable {
    */
   public boolean checkWinCondition() {
     if (getPlayingField().getStudentBag().isEmpty()
-            || getPlayers().stream().anyMatch(p -> p.getDashboard().noMoreTowers()
-            || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
-            || getPlayingField().getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
+        || getPlayers().stream().anyMatch(p -> p.getDashboard().noMoreTowers()
+        || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
+        || getPlayingField().getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
     ) {
       gamePhase = GamePhase.WIN;
       return true;
@@ -232,13 +228,13 @@ public class GameState implements Serializable {
   private void prepareOrderForActionPhase() {
     modelLogger.info("Updated action turn order.");
     modelLogger.debug("Old action order: "
-            + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
+        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
     );
     actionPhaseOrder.clear();
     actionPhaseOrder.addAll(players);
     actionPhaseOrder.sort(Comparator.comparingInt(Player::getTurnPriority));
     modelLogger.debug("New action order: "
-            + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
+        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
     );
   }
 
