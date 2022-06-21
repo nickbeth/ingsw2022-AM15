@@ -2,11 +2,19 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.entities.Cloud;
+import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.StudentBag;
 import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
+import javafx.css.Rule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class RefillClouds extends GameAction {
   private final List<Students> clouds;
@@ -39,8 +47,51 @@ public class RefillClouds extends GameAction {
    */
   @Override
   public void apply(GameState gameState) {
+    RuleBook rules = gameState.getRuleBook();
+    List<Cloud> gameClouds = gameState.getPlayingField().getClouds();
+
+    // TODO: test
+    // Fix disconnected player entrances
+    List<Player> players = gameState.getPlayers();
+    players.stream()
+        .map(p -> p.getDashboard().getEntrance())
+        .forEach(entrance -> {
+          int missingStudents = entrance.getCount() - rules.entranceSize;
+          // If the player has black spots in his entrance
+          if (missingStudents > 0) {
+            // Refill his entrance
+            entrance.addStudents(pickStudentsFromCloud(Objects.requireNonNull(firstNonEmptyCloud(gameClouds)), missingStudents));
+          }
+        });
+
     StudentBag studentBag = gameState.getPlayingField().getStudentBag();
-    GameService.refillClouds(studentBag, gameState.getPlayingField().getClouds(), clouds);
+
+    // Refill clouds
+    GameService.refillClouds(studentBag, gameClouds, clouds);
+  }
+
+  private Cloud firstNonEmptyCloud(List<Cloud> gameClouds) {
+    for (var cloud : gameClouds) {
+      if (!cloud.isEmpty()) return cloud;
+    }
+    modelLogger.error("Error implementing fix entrances");
+    return null;
+  }
+
+  private Students pickStudentsFromCloud(Cloud cloud, int amount) {
+    Students temp = new Students();
+    Students cloudStudents = cloud.getStudents();
+
+    for (int i = 0; i < amount; i++) {
+      for (var color : HouseColor.values()) {
+        if (cloudStudents.hasEnough(color, 1)) {
+          temp.addStudent(color);
+          break;
+        }
+      }
+    }
+
+    return temp;
   }
 
   /**

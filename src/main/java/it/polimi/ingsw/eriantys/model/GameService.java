@@ -77,6 +77,8 @@ public interface GameService {
     for (int i = 0; i < clouds.size(); i++) {
       if (studentBag.removeStudents(newCloudStudents.get(i)))
         clouds.get(i).setStudents(newCloudStudents.get(i));
+      else
+        modelLogger.warn("Cannot remove students from the bag");
       modelLogger.debug(clouds.get(i).getStudents().toString());
     }
   }
