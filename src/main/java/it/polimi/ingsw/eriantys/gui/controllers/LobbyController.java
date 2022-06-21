@@ -54,7 +54,7 @@ public class LobbyController extends FXMLController {
   public void propertyChange(PropertyChangeEvent evt) {
     updateAll();
     if (evt.getPropertyName().equals(START_GAME.tag))
-      gui.setScene(SceneEnum.PLANNING);
+      gui.setScene(SceneEnum.GAME);
     else
       updateAll();
   }

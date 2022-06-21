@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.NICKNAME_OK;
+import static it.polimi.ingsw.eriantys.controller.EventType.START_GAME;
 
 public class ConnectionController extends FXMLController {
   @FXML
@@ -62,17 +63,26 @@ public class ConnectionController extends FXMLController {
   public void start() {
     super.start();
     Controller.get().addListener(this, NICKNAME_OK.tag);
+    Controller.get().addListener(this, START_GAME.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
     Controller.get().removeListener(this, NICKNAME_OK.tag);
+    Controller.get().removeListener(this, START_GAME.tag);
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    gui.setScene(SceneEnum.CREATE_OR_JOIN);
+    if (evt.getPropertyName().equals(NICKNAME_OK.tag)){
+      if (evt.getNewValue() == null) {
+        // if there is no attached gameinfo switch to Create or Join scene
+        gui.setScene(SceneEnum.CREATE_OR_JOIN);
+      }
+    } else {
+      gui.setScene(SceneEnum.GAME);
+    }
   }
 
 }

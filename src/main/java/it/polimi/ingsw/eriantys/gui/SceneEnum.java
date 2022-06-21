@@ -6,7 +6,7 @@ public enum SceneEnum {
   CREATE_OR_JOIN("CreateOrJoin.fxml"),
   LOBBY("Lobby.fxml"),
   RULES("Rules.fxml"),
-  PLANNING("GameScene.fxml");
+  GAME("GameScene.fxml");
 
   public final String path;
 
