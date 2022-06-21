@@ -67,7 +67,7 @@ public abstract class MenuGame extends Menu {
       out.println("It's now your turn " + currentPlayer());
     } else {
       out.println("It's now turn of: " + currentPlayer());
-      out.println("Event if it's not your turn, you can see the game().");
+      out.println("Even if it's not your turn, you can see the game.");
     }
     out.println("1 - View all");
     out.println("2 - View islands");

@@ -199,50 +199,52 @@ abstract public class Controller implements Runnable {
       if (!gameInfo.start())
         return false;
 
-      RuleBook rules = RuleBook.makeRules(gameInfo.getMode(), gameInfo.getMaxPlayerCount());
-      // Initiate character cards
-      Random rand = new Random();
-      List<CharacterCardEnum> chosenCharacterCards = new ArrayList<>();
-      int k = 0;
-      while (k < PLAYABLE_CC_AMOUNT) {
-        int randomCCIndex = rand.nextInt(0, CharacterCardEnum.values().length);
-        CharacterCardEnum randCharacterCards = CharacterCardEnum.values()[randomCCIndex];
-        if (!chosenCharacterCards.contains(randCharacterCards)) {
-          chosenCharacterCards.add(randCharacterCards);
-          k++;
-        }
-      }
+//      RuleBook rules = RuleBook.makeRules(gameInfo.getMode(), gameInfo.getMaxPlayerCount());
+//      // Initiate character cards
+//      Random rand = new Random();
+//      List<CharacterCardEnum> chosenCharacterCards = new ArrayList<>();
+//      int k = 0;
+//      while (k < PLAYABLE_CC_AMOUNT) {
+//        int randomCCIndex = rand.nextInt(0, CharacterCardEnum.values().length);
+//        CharacterCardEnum randCharacterCards = CharacterCardEnum.values()[randomCCIndex];
+//        if (!chosenCharacterCards.contains(randCharacterCards)) {
+//          chosenCharacterCards.add(randCharacterCards);
+//          k++;
+//        }
+//      }
+//
+//      // Initiate students on island
+//      StudentBag bag = new StudentBag();
+//      bag.initStudents(RuleBook.STUDENT_PER_COLOR_SETUP);
+//      List<Students> studentsOnIslands = new ArrayList<>();
+//      for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
+//        studentsOnIslands.add(new Students());
+//        if (i != 0 && i != 6)
+//          studentsOnIslands.get(i).addStudent(bag.takeRandomStudent());
+//      }
+//
+//      // Initiate entrances.
+//      bag.initStudents(RuleBook.STUDENT_PER_COLOR - RuleBook.STUDENT_PER_COLOR_SETUP);
+//      List<Students> entrances = new ArrayList<>();
+//      for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
+//        entrances.add(new Students());
+//        for (int j = 0; j < rules.entranceSize; j++) {
+//          entrances.get(i).addStudent(bag.takeRandomStudent());
+//        }
+//      }
+//
+//      // Initiate clouds.
+//      List<Students> cloudsStudents = new ArrayList<>();
+//      for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
+//        cloudsStudents.add(new Students());
+//        for (int j = 0; j < rules.playableStudentCount; j++) {
+//          cloudsStudents.get(i).addStudent(bag.takeRandomStudent());
+//        }
+//      }
 
-      // Initiate students on island
-      StudentBag bag = new StudentBag();
-      bag.initStudents(RuleBook.STUDENT_PER_COLOR_SETUP);
-      List<Students> studentsOnIslands = new ArrayList<>();
-      for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
-        studentsOnIslands.add(new Students());
-        if (i != 0 && i != 6)
-          studentsOnIslands.get(i).addStudent(bag.takeRandomStudent());
-      }
-
-      // Initiate entrances.
-      bag.initStudents(RuleBook.STUDENT_PER_COLOR - RuleBook.STUDENT_PER_COLOR_SETUP);
-      List<Students> entrances = new ArrayList<>();
-      for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
-        entrances.add(new Students());
-        for (int j = 0; j < rules.entranceSize; j++) {
-          entrances.get(i).addStudent(bag.takeRandomStudent());
-        }
-      }
-
-      // Initiate clouds.
-      List<Students> cloudsStudents = new ArrayList<>();
-      for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
-        cloudsStudents.add(new Students());
-        for (int j = 0; j < rules.playableStudentCount; j++) {
-          cloudsStudents.get(i).addStudent(bag.takeRandomStudent());
-        }
-      }
       // Action Creation
-      GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, chosenCharacterCards);
+//      GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, chosenCharacterCards);
+      GameAction action = new InitiateGameEntities(gameInfo);
 
       Message msg = new Message.Builder(START_GAME)
           .action(action)

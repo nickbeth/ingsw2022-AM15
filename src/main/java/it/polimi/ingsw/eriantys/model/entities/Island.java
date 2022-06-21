@@ -53,14 +53,11 @@ public class Island extends Slot implements Serializable {
   }
 
   public Students getStudents() {
-//    Students temp = new Students();
-
-//    temp.addStudents(students);
-//    nextIsland.ifPresent(island -> temp.addStudents(island.getStudents()));
-//    previousIsland.ifPresent(island -> temp.addStudents(island.getStudents()));
-//
-//    return temp;
     return students;
+  }
+
+  public void setStudents(Students students) {
+    this.students.setStudents(students);
   }
 
   public int getTowerCount() {

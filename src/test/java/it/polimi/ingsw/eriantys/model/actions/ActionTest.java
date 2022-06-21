@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
+import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
@@ -196,7 +197,6 @@ public class ActionTest {
 
   @Test
   void pickCloud() {
-
     List<Students> clouds = new ArrayList<>();
     Students s = new Students();
     s.addStudents(HouseColor.GREEN, 4);
@@ -331,7 +331,7 @@ public class ActionTest {
     assertTrue(actionDue.isValid(gameState));
     actionDue.apply(gameState);
     modelLogger.debug(String.valueOf(field.getPlayedCharacterCard().getCardEnum()));
-    assertEquals(0 , gameState.getCurrentPlayer().getCoins());
+    assertEquals(0, gameState.getCurrentPlayer().getCoins());
     assertEquals(4, field.getPlayedCharacterCard().getCost());
     gameState.getCurrentPlayer().addCoins();
     gameState.getCurrentPlayer().addCoins();
@@ -341,7 +341,7 @@ public class ActionTest {
     newCC = field.getCharacterCards().get(0);
     actionDue = new ActivateCCEffect(newCC);
     actionDue.apply(gameState);
-    assertEquals(0 , gameState.getCurrentPlayer().getCoins());
+    assertEquals(0, gameState.getCurrentPlayer().getCoins());
     assertEquals(4, field.getPlayedCharacterCard().getCost());
   }
 
