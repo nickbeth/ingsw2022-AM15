@@ -8,6 +8,7 @@ public enum MenuEnum {
   PLANNING,
   PICK_ASSISTANT,
   PLACING,
+  EFFECT,
   MOVING,
   PICKING_CLOUD
 }

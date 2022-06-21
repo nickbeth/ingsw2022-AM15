@@ -28,6 +28,7 @@ public class MenuIterator implements PropertyChangeListener {
      * @param menuType MenuEnum wanted to be created
      * @return The Menu corresponding to the given type
      */
+
     static Menu makeMenu(MenuEnum menuType) {
       switch (menuType) {
         case CONNECTION -> {
@@ -53,6 +54,9 @@ public class MenuIterator implements PropertyChangeListener {
         }
         case PICKING_CLOUD -> {
           return new MenuPickingCloud();
+        }
+        case EFFECT -> {
+          return new MenuEffect();
         }
         default -> {
           clientLogger.error("Passed a not valid argument");

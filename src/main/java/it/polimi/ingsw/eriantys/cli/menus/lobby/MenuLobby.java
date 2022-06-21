@@ -32,7 +32,7 @@ public class MenuLobby extends Menu {
     out.println("3 - Set GRAY");
     out.println("4 - Start game");
     out.println("0 - Quit Lobby");
-    out.print("Make a choice:");
+    out.print("Make a choice: ");
   }
 
   @Override
@@ -60,6 +60,7 @@ public class MenuLobby extends Menu {
           if (!controller.getGameInfo().isStarted()) {
             if (!controller.sender().sendStartGame()) {
               out.println("There are not enough players with a chosen tower color to start");
+              showOptions();
               break;
             }
             waitForGreenLight();

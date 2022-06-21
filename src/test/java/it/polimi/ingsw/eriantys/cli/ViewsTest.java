@@ -76,6 +76,19 @@ public class ViewsTest {
   }
 
   @Test
+  public void printPlayers() {
+    RuleBook rules = RuleBook.makeRules(GameMode.NORMAL, 2);
+    Player p1 = new Player(rules, "Anna", TowerColor.WHITE, new Students());
+    Player p2 = new Player(rules, "Bruno", TowerColor.WHITE, new Students());
+    Player p3 = new Player(rules, "Carlo", TowerColor.WHITE, new Students());
+
+    p2.setPlayedCard(0);
+    p3.setPlayedCard(9);
+
+    new PlayersView(List.of(p1, p2, p3), rules).draw(out);
+  }
+
+  @Test
   public void printDashboards() {
     RuleBook ruleBook = RuleBook.makeRules(GameMode.NORMAL, 3);
 

@@ -1,39 +1,46 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
-import it.polimi.ingsw.eriantys.cli.views.CharacterCardsView;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
-import java.util.List;
+import java.util.Objects;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class MenuPlacing extends MenuGame {
-  private int studentMoved = 0;
-  private boolean ccUsed = false;
 
   public MenuPlacing() {
     super();
     showOptions();
   }
 
+  private int studentsLeftToMove() {
+    int myCount = me().getDashboard().getEntrance().getCount();
+    int finalCount = rules().entranceSize - rules().playableStudentCount;
+    return myCount - finalCount;
+  }
+
+  private boolean isCharacterCardPlayed() {
+    return game().getPlayingField().getPlayedCharacterCard() != null;
+  }
+
   @Override
   protected void showOptions() {
-    int studentsLeft = rules().playableStudentCount - studentMoved;
-
     showViewOptions(out);
 
     if (isMyTurn()) {
-      out.println(MessageFormat
-          .format("Q - Move a student from entrance to island ({0} left)", studentsLeft));
-      out.println(MessageFormat
-          .format("W - Move a student from entrance to dining ({0} left)", studentsLeft));
-      if (rules().gameMode.equals(GameMode.EXPERT) && !ccUsed)
+      if (studentsLeftToMove() != 0) {
+        out.println(MessageFormat
+            .format("Q - Move a student from entrance to island ({0} left)", studentsLeftToMove()));
+        out.println(MessageFormat
+            .format("W - Move a student from entrance to dining ({0} left)", studentsLeftToMove()));
+      }
+      if (rules().gameMode.equals(GameMode.EXPERT) && !isCharacterCardPlayed())
         out.println("E - Play a character card");
     }
     out.print("Make option: ");
@@ -55,8 +62,8 @@ public class MenuPlacing extends MenuGame {
           // Move Students from entrance to island
           case "Q", "q" -> {
             // Check of the Turn phase
-//            if (!game().getTurnPhase().equals(TurnPhase.PLACING))
-//              break;
+            if (!game().getTurnPhase().equals(TurnPhase.PLACING))
+              break;
 
             chooseColorAndAmount(paramBuilder);
 
@@ -75,25 +82,16 @@ public class MenuPlacing extends MenuGame {
             }
             waitForGreenLight();
 
-            // Update students moved
-            studentMoved += paramBuilder.getStudentsToMove().getCount();
-
-            // Escape condition
-            int playableStudents = rules().playableStudentCount;
-            if (studentMoved == playableStudents)
+            // Advance game condition
+            if (Objects.equals(escapeCondition(), MenuEnum.MOVING))
               return MenuEnum.MOVING;
-            else if (studentMoved > playableStudents) {
-              studentMoved -= paramBuilder.getStudentsToMove().getCount();
-              clientLogger.error("Error implementing placing students");
-              showOptions();
-            }
           }
 
           // Move Students from entrance to dining
           case "W", "w" -> {
             // Check of the Turn phase
-//            if (!game().getTurnPhase().equals(TurnPhase.PLACING))
-//              break;
+            if (!game().getTurnPhase().equals(TurnPhase.PLACING))
+              break;
 
             chooseColorAndAmount(paramBuilder);
 
@@ -106,48 +104,18 @@ public class MenuPlacing extends MenuGame {
 
             waitForGreenLight();
 
-            // Update students moved
-            studentMoved += paramBuilder.getStudentsToMove().getCount();
-
-            // Escape condition
-            int playableStudents = rules().playableStudentCount;
-            if (studentMoved == playableStudents)
+            // Advance game condition
+            if (Objects.equals(escapeCondition(), MenuEnum.MOVING))
               return MenuEnum.MOVING;
-            else if (studentMoved > playableStudents) {
-              studentMoved -= paramBuilder.getStudentsToMove().getCount();
-              clientLogger.error("Error implementing placing students");
-              showOptions();
-            }
           }
 
           // Choose a character card from those in playing field
+          // TODO: sposta il blocco istruzioni in MenuEffect
+          // TODO: testare lo spostamento
           case "E", "e" -> {
-
-            // Check if the card has already been used
-            if (ccUsed) break;
-
-            // Show playable CC
-            List<CharacterCard> playableCC = ccs();
-            out.println();
-            out.print("Playable character cards: ");
-            new CharacterCardsView(playableCC).draw(out);
-
-            // Choose CC
-            out.print("Choose a character card: ");
-            int ccIndex = getNumber();
-
-            // Send the action
-            if (!controller.sender().sendChooseCharacterCard(ccIndex)) {
-              out.println("Invalid input parameters");
-              showOptions();
-              break;
-            }
-            waitForGreenLight();
-            if (new MenuEffect().show() != null) {
-              ccUsed = true;
-            } else {
-              showOptions();
-            }
+            if(!isCharacterCardPlayed())
+              return MenuEnum.EFFECT;
+            out.println("A card was already played");
           }
 
           default -> {
@@ -155,6 +123,32 @@ public class MenuPlacing extends MenuGame {
         }
       }
     }
+  }
+
+  private MenuEnum escapeCondition() {
+//    int playableStudents = rules().playableStudentCount;
+
+    // Condition to continue the game
+    if (studentsLeftToMove() == 0) {
+      // Ask the player if he wants to play and effect before going on with the game
+      if (rules().gameMode.equals(GameMode.EXPERT)) {
+        out.println("\nDo you want to play a character card?");
+        out.println("1 - YES");
+        out.println("ANY_KEY - NO");
+        out.print("Make a choice: ");
+        // If so let him the chance to play a character card
+        if (getKeyboardInput().equals("1")) {
+          showOptions();
+          return null;
+        }
+      }
+      return MenuEnum.MOVING;
+    } else if (studentsLeftToMove() < 0) {
+      clientLogger.error("Error implementing placing students");
+      showOptions();
+    }
+
+    return null;
   }
 
   private void chooseColorAndAmount(ParamBuilder paramBuilder) {
@@ -168,14 +162,15 @@ public class MenuPlacing extends MenuGame {
     new MenuStudentColor().show(paramBuilder);
 
     // Ask for amount
+    out.print("Amount: ");
     while (true) {
-      out.print("Amount: ");
       int amount = getNumber();
-      if (amount + studentMoved <= rules().playableStudentCount) {
+      if (amount <= studentsLeftToMove()) {
         paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
         break;
       }
-      out.println("Cannot move that amount. Student left to move: " + (rules().playableStudentCount - studentMoved) + ".");
+      out.println("Cannot move that amount. Student left to move: " + studentsLeftToMove() + ".");
+      out.print("Insert again: ");
     }
   }
 

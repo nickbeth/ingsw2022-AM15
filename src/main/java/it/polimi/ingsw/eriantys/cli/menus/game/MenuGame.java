@@ -79,6 +79,8 @@ public abstract class MenuGame extends Menu {
     out.println("8 - Show players");
     if (rules().gameMode.equals(GameMode.EXPERT))
       out.println("10 - CharacterCards");
+    if(!isMyTurn())
+      out.println("-------------------------------------------------------------------------------------------------------");
   }
 
   final protected void handleViewOptions(String choice) {

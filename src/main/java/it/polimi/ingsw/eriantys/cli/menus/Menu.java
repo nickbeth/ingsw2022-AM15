@@ -26,14 +26,18 @@ public abstract class Menu implements PropertyChangeListener {
   protected static Scanner in = new Scanner(System.in);
 
   // Events that single menus want to listen to. Every menu listens to 'INTERNAL_SOCKET_ERROR' and 'INPUT_ENTERED'
-  protected List<EventType> eventsToBeListening = new ArrayList<>(
-      List.of(INTERNAL_SOCKET_ERROR, INPUT_ENTERED)
-  );
+  protected List<EventType> eventsToBeListening;
   protected Controller controller = Controller.get();
 
   // Attribute used to block interaction until he receives a message
   protected volatile boolean greenLight = false;
   protected volatile boolean inputGreenLight = false;
+
+  public Menu() {
+    this.eventsToBeListening = new ArrayList<>();
+    eventsToBeListening.add(INTERNAL_SOCKET_ERROR);
+    eventsToBeListening.add(INPUT_ENTERED);
+  }
 
   /**
    * Blocking method until a keyboard input arrives

@@ -52,7 +52,6 @@ public enum IslandPattern {
           {-1, 0, 1, 2, -1},
           {-1, -1, -1, -1, -1},
           {-1, -1, -1, -1, -1}}, 3);
-  //TODO:other patterns for other amounts
   public final int[][] matrix;
   public final int amount;
 

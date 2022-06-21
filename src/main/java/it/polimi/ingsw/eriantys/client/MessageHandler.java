@@ -106,13 +106,13 @@ public class MessageHandler implements Runnable {
   }
 
   private void handlePlayerDisconnected(Client client, Message message) {
-    controller.setPlayerConnected(false, message.nickname());
+    controller.setPlayerConnection(false, message.nickname());
     controller.fireChange(PLAYER_CONNECTION_CHANGED, null, null);
   }
 
   private void handlePlayerReconnected(Client client, Message message) {
     try {
-      controller.setPlayerConnected(true, message.nickname());
+      controller.setPlayerConnection(true, message.nickname());
     } catch (NullPointerException e) {
       clientLogger.error("Cannot set reconnect because this game state does not exists");
     }
