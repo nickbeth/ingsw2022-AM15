@@ -131,7 +131,7 @@ public class IslandHandler extends SectionHandler {
     AnchorPane.setLeftAnchor(blueStudent, 115.0);
     studentLabels.add(blueStudent);
 
-    mnView = new ImageView(new Image("/assets/realm/mother-nature.png"));
+    mnView = new ImageView(new Image("/assets/realm/mother-nature.png", 25, 100,true, false));
     mnView.setFitWidth(25);
     mnView.setPreserveRatio(true);
     islandPane.getChildren().add(mnView);

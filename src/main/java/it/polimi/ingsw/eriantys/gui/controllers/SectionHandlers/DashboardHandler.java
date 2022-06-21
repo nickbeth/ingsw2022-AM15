@@ -152,7 +152,7 @@ public class DashboardHandler extends SectionHandler {
    * Creates a student ImageView containing de icon of given color
    */
   private ImageView createStudent(HouseColor color) {
-    ImageView student = new ImageView(new Image(studentColorToPath.get(color)));
+    ImageView student = new ImageView(new Image(studentColorToPath.get(color), 20, 100,true, false));
     student.setFitWidth(20);
     student.setPreserveRatio(true);
     GridPane.setHalignment(student, HPos.CENTER);
