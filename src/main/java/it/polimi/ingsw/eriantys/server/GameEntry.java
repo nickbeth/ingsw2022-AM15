@@ -44,16 +44,6 @@ public class GameEntry {
     }
   }
 
-  /**
-   * Sends a message to all clients in this lobby.
-   *
-   * @param message The message to broadcast
-   */
-  public void broadcastMessage(Message message) {
-    serverLogger.debug("Broadcasting message to {} clients: '{}'", getClients().size(), message);
-    getClients().forEach(client -> client.send(message));
-  }
-
   public Client getClient(String nickname) {
     return players.get(nickname);
   }

@@ -148,7 +148,7 @@ public class GameServer implements Runnable {
           .gameInfo(gameEntry.getGameInfo())
           .action(new ReInitiateGame(gameEntry.getGameState()))
           .build());
-      gameEntry.broadcastMessage(new Message.Builder().type(MessageType.PLAYER_RECONNECTED).nickname(nickname).build());
+      broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_RECONNECTED).nickname(nickname).build());
       return true;
     }
     return false;
@@ -223,7 +223,7 @@ public class GameServer implements Runnable {
     gameEntry.addPlayer(nickname, client);
 
     serverLogger.info("Player '{}' joined game '{}'", nickname, gameCode);
-    gameEntry.broadcastMessage(new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
 
   private void handleQuitGame(Client client, Message message) {
@@ -251,7 +251,7 @@ public class GameServer implements Runnable {
       } else {
         gameEntry.removePlayer(nickname);
         serverLogger.info("Player '{}' left game '{}'", nickname, gameCode);
-        gameEntry.broadcastMessage(new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+        broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
       }
     } else {
       // The player was playing a game: disconnect it from the game or delete the game if last
@@ -263,7 +263,7 @@ public class GameServer implements Runnable {
         gameEntry.disconnectPlayer(nickname);
         disconnectedPlayers.put(nickname, gameCode);
         serverLogger.info("Player '{}' left ongoing game '{}', marked as disconnected", nickname, gameCode);
-        gameEntry.broadcastMessage(new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
+        broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
       }
     }
     // Always clear this player's game code as it's not actively in a game anymore
@@ -285,7 +285,7 @@ public class GameServer implements Runnable {
 
     gameEntry.setPlayerColor(nickname, chosenTowerColor);
     serverLogger.info("'{}' set to tower color: {}", nickname, chosenTowerColor);
-    gameEntry.broadcastMessage(new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
 
   private void handleStartGame(Client client, Message message) {
@@ -315,7 +315,7 @@ public class GameServer implements Runnable {
     }
 
     serverLogger.info("Game '{}' has started", gameCode);
-    gameEntry.broadcastMessage(new Message.Builder().type(MessageType.START_GAME).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).action(action).build());
+    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.START_GAME).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).action(action).build());
   }
 
   private void handlePlayAction(Client client, Message message) {
@@ -346,7 +346,7 @@ public class GameServer implements Runnable {
     }
 
     serverLogger.info("Player '{}' played action: {}", nickname, action.getClass().getSimpleName());
-    gameEntry.broadcastMessage(new Message.Builder().type(MessageType.GAMEDATA).action(action).build());
+    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEDATA).gameCode(gameCode).action(action).build());
   }
 
   /**
@@ -358,6 +358,17 @@ public class GameServer implements Runnable {
   private void send(Client client, Message message) {
     serverLogger.debug("Sending message: {}", message);
     client.send(message);
+  }
+
+  /**
+   * Sends a message to all clients in the given lobby.
+   *
+   * @param gameEntry The lobby to broadcast to
+   * @param message   The message to broadcast
+   */
+  private void broadcastMessage(GameEntry gameEntry, Message message) {
+    serverLogger.debug("Broadcasting message to {} clients: '{}'", gameEntry.getClients().size(), message);
+    gameEntry.getClients().forEach(client -> client.send(message));
   }
 
   /**
@@ -462,7 +473,7 @@ public class GameServer implements Runnable {
           } else {
             gameEntry.removePlayer(nickname);
             serverLogger.info("Player '{}' lost connection to game '{}'", nickname, gameCode);
-            gameEntry.broadcastMessage(new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+            broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
           }
         } else {
           if (!disconnectedPlayers.containsKey(nickname)) {
@@ -470,7 +481,7 @@ public class GameServer implements Runnable {
             gameEntry.disconnectPlayer(nickname);
             disconnectedPlayers.put(nickname, gameCode);
             serverLogger.info("Player '{}' lost connection to ongoing game '{}', marked as disconnected", nickname, gameCode);
-            gameEntry.broadcastMessage(new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
+            broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
           } else {
             // The player had already disconnected with a QUIT_GAME message, skip marking as disconnected
             serverLogger.info("Player '{}' lost connection while already disconnected from ongoing game '{}'", nickname, gameCode);
