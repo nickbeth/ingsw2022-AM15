@@ -3,11 +3,14 @@ package it.polimi.ingsw.eriantys.model.actions;
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
+
+import java.util.List;
 
 public class MoveStudentsToIsland extends GameAction {
   private Students students;
@@ -44,6 +47,10 @@ public class MoveStudentsToIsland extends GameAction {
   @Override
   public boolean isValid(GameState gameState) {
     Students currEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
+    List<Island> islands = gameState.getPlayingField().getIslands();
+
+    if (islandIndex >= islands.size())
+      return false;
 
     for (var color : HouseColor.values()) {
       if (!currEntrance.hasEnough(color, students.getCount(color)))

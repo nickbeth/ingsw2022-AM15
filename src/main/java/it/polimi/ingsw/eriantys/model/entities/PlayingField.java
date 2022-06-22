@@ -74,8 +74,9 @@ public class PlayingField implements Serializable {
    * - excess locks return to the LockIsland CC<br/>
    */
   public void mergeIslands(int islandIndex) {
-    Island nextIsland = islands.get(islandIndex + 1 % islands.size());
-    Island prevIsland = (islandIndex == 0) ? islands.get(islands.size() - 1) : islands.get(islandIndex - 1);
+//    Island nextIsland = islands.get((islandIndex + 1) % islands.size());
+    Island nextIsland = islandIndex == islands.size() - 1 ? islands.get(0) : islands.get(islandIndex + 1);
+    Island prevIsland = islandIndex == 0 ? islands.get(islands.size() - 1) : islands.get(islandIndex - 1);
     Island currIsland = islands.get(islandIndex);
 
     currIsland.getTowerColor().ifPresent(currColor -> {

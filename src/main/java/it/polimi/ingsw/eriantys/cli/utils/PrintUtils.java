@@ -26,7 +26,7 @@ public class PrintUtils {
       case RED -> Ansi.ansi().fgRed().toString();
       case GREEN -> Ansi.ansi().fgGreen().toString();
       case YELLOW -> Ansi.ansi().fgBrightYellow().toString();
-      case PINK -> Ansi.ansi().fgMagenta().toString();
+      case PINK -> Ansi.ansi().fgBrightMagenta().toString();
     };
   }
 

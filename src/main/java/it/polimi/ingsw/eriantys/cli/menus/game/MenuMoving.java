@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
+import static java.text.MessageFormat.format;
 
 public class MenuMoving extends MenuGame {
   public MenuMoving() {
@@ -49,9 +50,15 @@ public class MenuMoving extends MenuGame {
 
             // Gets the amount
             out.print(
-                MessageFormat.format("Insert the amount of mother nature movements (max {0}): ", me().getMaxMovement()));
+                format("Insert the amount of mother nature movements (max {0}): ", me().getMaxMovement()));
 
-            int amount = getNumber();
+            int amount;
+            while (true) {
+              amount = getNumber();
+              if (amount <= me().getMaxMovement())
+                break;
+              out.print(format("Max movement are {0}. Insert again: ", me().getMaxMovement()));
+            }
 
             // Send action
             if (controller.sender().sendMoveMotherNature(amount)) {
@@ -59,7 +66,7 @@ public class MenuMoving extends MenuGame {
               new IslandsView(islands(), motherPosition()).draw(out);
               return MenuEnum.PICKING_CLOUD;
             }
-            out.println(colored("Invalid input parameters. Valid movement:" + me().getMaxMovement() + ".",RED));
+            out.println(colored("Invalid input parameters. Valid movement:" + me().getMaxMovement() + ".", RED));
             showOptions();
           }
 
