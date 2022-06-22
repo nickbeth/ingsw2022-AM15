@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
+package it.polimi.ingsw.eriantys.gui.controllers.section_handlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.GameState;
@@ -16,7 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;

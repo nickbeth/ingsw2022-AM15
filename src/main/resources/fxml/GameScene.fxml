@@ -94,8 +94,9 @@
             </rowConstraints>
         </GridPane>
         <Button layoutX="12.0" layoutY="14.0" mnemonicParsing="false" onAction="#quitGameAction" text="Quit game" AnchorPane.bottomAnchor="680.4" />
-        <Button fx:id="playCardButton" layoutX="12.0" layoutY="679.0" mnemonicParsing="false" onAction="#showAssistCards" text="play Assistant Card" />
-        <StackPane fx:id="assistCardPanel" layoutX="50.0" layoutY="250.0" prefHeight="460.0" prefWidth="1180.0" stylesheets="@../css/popupstyle.css" visible="false">
+      <Button fx:id="playCCButton" layoutX="14.0" layoutY="648.0" mnemonicParsing="false" onAction="#showCharacterCards" prefHeight="25.0" prefWidth="124.0" text="Play Character Card" visible="false" />
+        <Button fx:id="playCardButton" layoutX="12.0" layoutY="679.0" mnemonicParsing="false" onAction="#showAssistCards" prefHeight="25.0" prefWidth="124.0" text="Play Assistant Card" />
+        <StackPane fx:id="assistCardPanel" layoutX="50.0" layoutY="250.0" prefHeight="460.0" prefWidth="1180.0" stylesheets="@../css/popupstyle.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
             <children>
                 <Region layoutX="6.0" layoutY="4.0" styleClass="region-assistcards" />
                 <ImageView fitHeight="34.0" fitWidth="27.0" layoutX="914.0" onMouseClicked="#hideAssistCards" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_RIGHT">
@@ -290,5 +291,26 @@
          </children>
       </AnchorPane>
         <VBox fx:id="debugScreen" layoutX="630.0" layoutY="520.0" prefHeight="200.0" prefWidth="338.0" visible="false" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="80.0" />
+      <StackPane fx:id="characterCardsPanel" layoutX="60.0" layoutY="260.0" prefHeight="350.0" prefWidth="800.0" stylesheets="@../css/popupstyle.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
+         <children>
+            <Region layoutX="6.0" layoutY="4.0" styleClass="region-assistcards" />
+            <ImageView fitHeight="34.0" fitWidth="27.0" layoutX="914.0" onMouseClicked="#hideCharacterCards" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_RIGHT">
+               <image>
+                  <Image url="@../assets/misc/cross-icon.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <TilePane fx:id="characterCardsTiles" alignment="CENTER" layoutX="14.0" layoutY="12.0" prefHeight="350.0" prefWidth="823.0" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="30.0" right="30.0" />
+               </StackPane.margin>
+            </TilePane>
+         </children>
+      </StackPane>
     </children>
 </AnchorPane>

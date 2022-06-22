@@ -2,13 +2,15 @@ package it.polimi.ingsw.eriantys.gui.controllers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
-import it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers.*;
+import it.polimi.ingsw.eriantys.gui.controllers.section_handlers.*;
 import it.polimi.ingsw.eriantys.model.entities.Player;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
+import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import jfxtras.scene.layout.CircularPane;
 
@@ -21,6 +23,12 @@ import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERRO
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class GameSceneController extends FXMLController {
+  @FXML
+  private TilePane characterCardsTiles;
+  @FXML
+  private Button playCCButton;
+  @FXML
+  private StackPane characterCardsPanel;
   @FXML
   private AnchorPane dashboardClient;
   @FXML
@@ -72,11 +80,11 @@ public class GameSceneController extends FXMLController {
   @FXML
   private GridPane otherPlayersGrid;
   @FXML
+  private StackPane assistCardPanel;
+  @FXML
   private TilePane assistCards;
   @FXML
   private VBox playedCardsBox;
-  @FXML
-  private StackPane assistCardPanel;
 
   private PlayerGridHandler playerGridHandler;
   private DashboardHandler mainDashboardHandler;
@@ -85,6 +93,7 @@ public class GameSceneController extends FXMLController {
   private IslandsHandler islandsPaneHandler;
   private AssistCardHandler assistCardTilesHandler;
   private DebugScreenHandler debugScreenHandler;
+  private CharacterCardsHandler characterCardsHandler;
 
   @Override
   public void start() {
@@ -98,6 +107,8 @@ public class GameSceneController extends FXMLController {
     cloudBoxHandler = new CloudsHandler(cloudBox, debugScreenHandler);
     islandsPaneHandler = new IslandsHandler(islandsPane, debugScreenHandler);
     assistCardTilesHandler = new AssistCardHandler(assistCards, playedCardsBox, debugScreenHandler);
+    if(Controller.get().getGameState().getRuleBook().gameMode == GameMode.EXPERT)
+      buildForExpertMode();
   }
 
   private void buildDashboardHandlers() {
@@ -112,6 +123,10 @@ public class GameSceneController extends FXMLController {
     }
   }
 
+  private void buildForExpertMode() {
+    playCCButton.setVisible(true);
+    characterCardsHandler = new CharacterCardsHandler(characterCardsPanel, characterCardsTiles, debugScreenHandler);
+  }
 
   @Override
   public void finish() {
@@ -144,6 +159,8 @@ public class GameSceneController extends FXMLController {
     enemyDashboardHandlers.forEach(SectionHandler::update);
     if (assistCardPanel.isVisible())
       assistCardTilesHandler.update();
+    if (characterCardsPanel.isVisible())
+      characterCardsHandler.update();
   }
 
   @FXML
@@ -174,4 +191,15 @@ public class GameSceneController extends FXMLController {
     }
   }
 
+  @FXML
+  private void hideCharacterCards(MouseEvent mouseEvent) {
+    characterCardsPanel.setVisible(false);
+  }
+
+  @FXML
+  private void showCharacterCards(ActionEvent actionEvent) {
+    //update coard handerl
+    characterCardsHandler.update();
+    characterCardsPanel.setVisible(true);
+  }
 }

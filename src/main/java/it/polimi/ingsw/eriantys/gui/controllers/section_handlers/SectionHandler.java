@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
+package it.polimi.ingsw.eriantys.gui.controllers.section_handlers;
 
 public abstract class SectionHandler {
   private boolean created = false;

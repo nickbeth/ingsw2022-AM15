@@ -1,33 +1,33 @@
-.gameStage{
+.gameStage {
     -fx-background-color: #ffffff;
 }
 
-.grid-players{
-  -fx-vgap: 10;
-  -fx-hgap: 10;
+.grid-players {
+    -fx-vgap: 10;
+    -fx-hgap: 10;
 }
 
-.image-wizard{
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.63), 10.0, 0, 3.0, 4.0);
+.image-wizard {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.63), 10.0, 0, 3.0, 4.0);
 }
 
-.label-nicknames{
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.30), 5.0, 0, 3.0, 4.0);
+.label-nicknames {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.30), 5.0, 0, 3.0, 4.0);
     -fx-graphic-text-gap: 5;
     -fx-font-weight: bold;
 }
 
-.label-cardamount{
+.label-cardamount {
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.63), 10.0, 0, 3.0, 4.0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.63), 10.0, 0, 3.0, 4.0);
 }
 
-.text-debug{
+.text-debug {
     -fx-font-size: 13px;
     -fx-font-family: Georgia;
 }
 
-.label-dashname{
+.label-dashname {
     -fx-font-weight: bold;
     -fx-font-size: 20px;
     -fx-font-family: "Felix Titling";
@@ -42,4 +42,12 @@
 .text-playedcard {
     -fx-font-size: 13px;
     -fx-font-family: "Felix Titling";
+}
+
+.text-addoncoin {
+    -fx-font-family: Elephant;
+    -fx-font-size: 29px;
+    -fx-fill: black;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
 }

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
+package it.polimi.ingsw.eriantys.gui.controllers.section_handlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.controllers.utils.DataFormats;
@@ -11,16 +11,13 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 
@@ -262,7 +259,8 @@ public class DashboardHandler extends SectionHandler {
    * if the turnPhase is PLACING and its the players turn accepts ANY transfer mode else NONE
    */
   private void dragOverHall(DragEvent e) {
-    if (!gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname())) {
+    if (!gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname()) || !nickname.equals(Controller.get().getNickname())) {
+      // if it's not the clients turn or the client isn't the owner of the dashboard accept no transfer mode
       e.acceptTransferModes(TransferMode.NONE);
       return;
     }

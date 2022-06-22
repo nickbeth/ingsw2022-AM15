@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
+package it.polimi.ingsw.eriantys.gui.controllers.section_handlers;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

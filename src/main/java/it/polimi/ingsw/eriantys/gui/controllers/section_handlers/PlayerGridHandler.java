@@ -1,4 +1,4 @@
-package it.polimi.ingsw.eriantys.gui.controllers.SectionHandlers;
+package it.polimi.ingsw.eriantys.gui.controllers.section_handlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.GameState;
@@ -11,7 +11,6 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
