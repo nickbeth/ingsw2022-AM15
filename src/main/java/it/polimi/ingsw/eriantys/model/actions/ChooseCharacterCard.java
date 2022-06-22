@@ -20,11 +20,6 @@ public class ChooseCharacterCard extends GameAction {
     PlayingField p = gameState.getPlayingField();
     p.setPlayedCharacterCard(ccIndex);
     modelLogger.info("Character card {} chosen", ccIndex);
-
-    // Non la deve fare qua
-//    if (!p.getPlayedCharacterCard().requiresInput()) {
-//      p.getPlayedCharacterCard().applyEffect(gameState);
-//    }
   }
 
   /**

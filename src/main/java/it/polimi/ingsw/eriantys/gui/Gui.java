@@ -84,6 +84,7 @@ public class Gui extends Application {
   public void showSocketError() {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setContentText("a connection error has occured: disconnected from server");
+    alert.setOnCloseRequest(e -> closeApplication());
     alert.showAndWait();
   }
 
@@ -91,7 +92,6 @@ public class Gui extends Application {
    * sets a new scene, updates the next controller, and updates the listener list in action invoker.
    *
    * @param scene
-   * @param eventTag
    */
   public void setScene(SceneEnum scene) {
     prevScene = currScene;
