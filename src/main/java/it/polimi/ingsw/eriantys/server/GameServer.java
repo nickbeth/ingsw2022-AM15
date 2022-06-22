@@ -240,6 +240,7 @@ public class GameServer implements Runnable {
       return;
     }
 
+    ClientAttachment attachment = (ClientAttachment) client.attachment();
     GameEntry gameEntry = activeGames.get(gameCode);
     if (!gameEntry.isStarted()) {
       // The player was in a lobby: remove it from the lobby or delete the lobby if last
@@ -252,11 +253,14 @@ public class GameServer implements Runnable {
         serverLogger.info("Player '{}' left game '{}'", nickname, gameCode);
         gameEntry.broadcastMessage(new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
       }
+      // Always clear this player's game code
+      attachment.setGameCode(null);
     } else {
       // The player was playing a game: disconnect it from the game or delete the game if last
       // Following this, the client is to be considered connected to the server with heartbeat running and nickname still registered
       if (gameEntry.getClients().size() == 1) {
         deleteGame(gameCode, gameEntry);
+        attachment.setGameCode(null);
         serverLogger.info("Player '{}' left ongoing game '{}' while being alone, the game was deleted", nickname, gameCode);
       } else {
         gameEntry.disconnectPlayer(nickname);
