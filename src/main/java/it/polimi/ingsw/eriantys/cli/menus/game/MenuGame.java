@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.*;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
@@ -28,27 +29,35 @@ public abstract class MenuGame extends Menu {
   protected RuleBook rules() {
     return game().getRuleBook();
   }
+
   protected List<Island> islands() {
     return game().getPlayingField().getIslands();
   }
+
   protected List<Cloud> clouds() {
     return game().getPlayingField().getClouds();
   }
+
   protected List<Player> players() {
     return game().getPlayers();
   }
+
   protected Player currentPlayer() {
     return game().getCurrentPlayer();
   }
+
   protected Player me() {
     return game().getPlayer(controller.getNickname());
   }
+
   protected List<CharacterCard> ccs() {
     return game().getPlayingField().getCharacterCards();
   }
+
   protected ProfessorHolder professorHolder() {
     return game().getPlayingField().getProfessorHolder();
   }
+
   protected Integer motherPosition() {
     return game().getPlayingField().getMotherNaturePosition();
   }
@@ -69,6 +78,7 @@ public abstract class MenuGame extends Menu {
       out.println("It's now turn of: " + currentPlayer());
       out.println("Even if it's not your turn, you can see the game.");
     }
+    out.println("QUITGAME - Disconnects from the game");
     out.println("1 - View all");
     out.println("2 - View islands");
     out.println("3 - View dashboards");
@@ -79,7 +89,7 @@ public abstract class MenuGame extends Menu {
     out.println("8 - Show players");
     if (rules().gameMode.equals(GameMode.EXPERT))
       out.println("10 - CharacterCards");
-    if(!isMyTurn())
+    if (!isMyTurn())
       out.println("-------------------------------------------------------------------------------------------------------");
   }
 
@@ -141,8 +151,6 @@ public abstract class MenuGame extends Menu {
         if (rules().gameMode.equals(GameMode.EXPERT))
           ccView.draw(out);
       }
-
-      case "quitgame" -> controller.sender().sendQuitGame();
 
       // Simply goes on
       default -> {

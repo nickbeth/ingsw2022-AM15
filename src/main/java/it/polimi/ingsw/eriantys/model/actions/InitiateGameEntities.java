@@ -73,6 +73,9 @@ public class InitiateGameEntities extends GameAction {
     this.cardsEnum = chosenCharacterCards;
   }
 
+  /**
+   * @deprecated {@link #InitiateGameEntities(GameInfo gameInfo)} should be used instead.
+   */
   public InitiateGameEntities(List<Students> entrancesStudents, List<Students> islandsStudents, List<Students> cloudsStudents, List<CharacterCardEnum> cardsEnum) {
     this.entrancesStudents = entrancesStudents;
     this.islandsStudents = islandsStudents;

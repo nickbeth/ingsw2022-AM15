@@ -84,7 +84,7 @@ public class MenuCreateOrJoin extends Menu {
           if (!errorEncountered) {
             return MenuEnum.LOBBY;
           }
-          out.println("Game code does not exist");
+//          out.println("Game code does not exist");
         }
 
         // Back button

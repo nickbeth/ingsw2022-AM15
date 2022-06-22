@@ -6,6 +6,8 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+
 public class MenuPickingCloud extends MenuGame {
   public MenuPickingCloud() {
     super();
@@ -17,6 +19,8 @@ public class MenuPickingCloud extends MenuGame {
     showViewOptions(out);
 
     if (isMyTurn()) {
+      if (game().isLastPlayer(me()))
+        out.println("You're the last player");
       out.println("Q - Pick cloud");
     }
     out.print("Make a choice: ");
@@ -34,8 +38,10 @@ public class MenuPickingCloud extends MenuGame {
       if (isMyTurn()) {
         switch (choice) {
           case "Q", "q" -> {
-//            if (!game().getTurnPhase().equals(TurnPhase.PICKING))
-//              break;
+            if (!game().getTurnPhase().equals(TurnPhase.PICKING)) {
+              clientLogger.warn("I'm not in right phase");
+              break;
+            }
 
             // Show clouds
             new CloudsView(clouds()).draw(out);
@@ -44,10 +50,12 @@ public class MenuPickingCloud extends MenuGame {
             out.println("Choose cloud index: ");
             int cloudIndex = getNumber() - 1; // Index correction
 
+            boolean amILastPlayer = game().isLastPlayer(me());
             // Send action
             if (controller.sender().sendPickCloud(cloudIndex)) {
               waitForGreenLight();
-              if(game().isLastPlayer(me()))
+              // Send refill cloud
+              if (amILastPlayer)
                 controller.sender().sendRefillCloud();
               return MenuEnum.PICK_ASSISTANT;
             }

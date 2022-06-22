@@ -28,7 +28,7 @@ public class InputHandler implements Runnable {
   @Override
   public void run() {
     // Starting input handler
-    while (!line.equals("quit")) {
+    while (!line.equals("maronn_nun_te_permettere")) {
       line = scanner.nextLine();
       support.firePropertyChange(INPUT_ENTERED.tag, null, line);
       clientLogger.debug("Thrown INPUT_ENTERED event line taken: " + line);

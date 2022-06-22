@@ -3,12 +3,9 @@ package it.polimi.ingsw.eriantys.controller;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.actions.*;
-import it.polimi.ingsw.eriantys.model.entities.StudentBag;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
@@ -17,13 +14,9 @@ import it.polimi.ingsw.eriantys.network.Message;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
-import static it.polimi.ingsw.eriantys.model.RuleBook.PLAYABLE_CC_AMOUNT;
 import static it.polimi.ingsw.eriantys.network.MessageType.*;
 
 /**
@@ -199,51 +192,6 @@ abstract public class Controller implements Runnable {
       if (!gameInfo.start())
         return false;
 
-//      RuleBook rules = RuleBook.makeRules(gameInfo.getMode(), gameInfo.getMaxPlayerCount());
-//      // Initiate character cards
-//      Random rand = new Random();
-//      List<CharacterCardEnum> chosenCharacterCards = new ArrayList<>();
-//      int k = 0;
-//      while (k < PLAYABLE_CC_AMOUNT) {
-//        int randomCCIndex = rand.nextInt(0, CharacterCardEnum.values().length);
-//        CharacterCardEnum randCharacterCards = CharacterCardEnum.values()[randomCCIndex];
-//        if (!chosenCharacterCards.contains(randCharacterCards)) {
-//          chosenCharacterCards.add(randCharacterCards);
-//          k++;
-//        }
-//      }
-//
-//      // Initiate students on island
-//      StudentBag bag = new StudentBag();
-//      bag.initStudents(RuleBook.STUDENT_PER_COLOR_SETUP);
-//      List<Students> studentsOnIslands = new ArrayList<>();
-//      for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
-//        studentsOnIslands.add(new Students());
-//        if (i != 0 && i != 6)
-//          studentsOnIslands.get(i).addStudent(bag.takeRandomStudent());
-//      }
-//
-//      // Initiate entrances.
-//      bag.initStudents(RuleBook.STUDENT_PER_COLOR - RuleBook.STUDENT_PER_COLOR_SETUP);
-//      List<Students> entrances = new ArrayList<>();
-//      for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
-//        entrances.add(new Students());
-//        for (int j = 0; j < rules.entranceSize; j++) {
-//          entrances.get(i).addStudent(bag.takeRandomStudent());
-//        }
-//      }
-//
-//      // Initiate clouds.
-//      List<Students> cloudsStudents = new ArrayList<>();
-//      for (int i = 0; i < gameInfo.getMaxPlayerCount(); i++) {
-//        cloudsStudents.add(new Students());
-//        for (int j = 0; j < rules.playableStudentCount; j++) {
-//          cloudsStudents.get(i).addStudent(bag.takeRandomStudent());
-//        }
-//      }
-
-      // Action Creation
-//      GameAction action = new InitiateGameEntities(entrances, studentsOnIslands, cloudsStudents, chosenCharacterCards);
       GameAction action = new InitiateGameEntities(gameInfo);
 
       Message msg = new Message.Builder(START_GAME)
@@ -303,24 +251,12 @@ abstract public class Controller implements Runnable {
      * Send a message to the server with RefillCloud action
      */
     public void sendRefillCloud() {
-      List<Students> cloudsStudents = new ArrayList<>();
-      Students temp = new Students();
-      StudentBag currentBag = gameState.getPlayingField().getStudentBag();
-
-      // Populate clouds with random students from bag
-      for (int cloudIndex = 0; cloudIndex < gameState.getRuleBook().cloudCount; cloudIndex++) {
-        for (int cloudSizeIter = 0; cloudSizeIter < gameState.getRuleBook().playableStudentCount; cloudSizeIter++) {
-          temp.addStudent(currentBag.takeRandomStudent());
-        }
-        cloudsStudents.add(new Students(temp));
-        temp = new Students(); // clear temp
-      }
-
-      GameAction action = new RefillClouds(cloudsStudents);
+      GameAction action = new RefillClouds(gameState);
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
+          .nickname(nickname)
           .gameCode(gameCode)
-          .gameInfo(gameInfo)
+//          .gameInfo(gameInfo)
           .build());
       clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
     }

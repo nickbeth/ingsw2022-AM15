@@ -8,7 +8,6 @@ import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.StudentBag;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
-import javafx.css.Rule;
 
 import java.util.ArrayList;
 import java.util.List;
