@@ -96,6 +96,10 @@ public class GameEntry {
     gameState.getPlayer(nickname).setConnected(true);
   }
 
+  public String getCurrentPlayer() {
+    return gameState.getCurrentPlayer().getNickname();
+  }
+
   public boolean isFull() {
     return players.size() == gameInfo.getMaxPlayerCount();
   }
