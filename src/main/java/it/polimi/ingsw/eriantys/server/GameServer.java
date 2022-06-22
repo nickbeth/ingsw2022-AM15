@@ -325,13 +325,6 @@ public class GameServer implements Runnable {
     GameEntry gameEntry = activeGames.get(gameCode);
     GameAction action = message.gameAction();
 
-    if (!Objects.equals(nickname, gameEntry.getCurrentPlayer())) {
-      String errorMessage = "'" + nickname + "' played an action in game '" + gameCode + "' when it wasn't his turn";
-      serverLogger.info(errorMessage);
-      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
-      return;
-    }
-
     if (message.gameAction() == null) {
       String errorMessage = "Game with code '" + gameCode + "' received a malformed action";
       serverLogger.info(errorMessage);
