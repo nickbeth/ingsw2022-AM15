@@ -72,9 +72,9 @@ public class CloudsView extends View {
     stringBuilder
         .append(VERTICAL.glyph)
         .append(PADDING)
-        .append(printColored(STUDENT_CHAR, studentsList.poll()))
+        .append(colored(STUDENT_CHAR, studentsList.poll()))
         .append(PADDING)
-        .append(printColored(STUDENT_CHAR, studentsList.poll()))
+        .append(colored(STUDENT_CHAR, studentsList.poll()))
         .append(PADDING)
         .append(VERTICAL.glyph)
         .append(System.lineSeparator());
@@ -82,11 +82,11 @@ public class CloudsView extends View {
     // Third row
     stringBuilder.append(VERTICAL.glyph)
         .append(PADDING)
-        .append(printColored(STUDENT_CHAR, studentsList.poll()))
+        .append(colored(STUDENT_CHAR, studentsList.poll()))
         .append(PADDING);
 
     if (!studentsList.isEmpty()) {
-      stringBuilder.append(printColored(STUDENT_CHAR, studentsList.poll()))
+      stringBuilder.append(colored(STUDENT_CHAR, studentsList.poll()))
           .append(PADDING);
     } else {
       stringBuilder.append(PADDING_DOUBLE);

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
-import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.*;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
@@ -17,8 +16,9 @@ import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
-import static it.polimi.ingsw.eriantys.controller.EventType.GAME_ENDED;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.controller.EventType.*;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public abstract class MenuGame extends Menu {
   // Linking the game state to menus
@@ -66,6 +66,7 @@ public abstract class MenuGame extends Menu {
     super();
     eventsToBeListening.add(GAMEDATA_EVENT);
     eventsToBeListening.add(GAME_ENDED);
+    eventsToBeListening.add(DELIBERATE_DISCONNECTION);
     clearConsole();
   }
 
@@ -152,6 +153,12 @@ public abstract class MenuGame extends Menu {
           ccView.draw(out);
       }
 
+      case "QUITGAME" -> {
+        controller.fireChange(DELIBERATE_DISCONNECTION, null, null);
+        controller.sender().sendQuitGame();
+        return;
+      }
+
       // Simply goes on
       default -> {
       }
@@ -169,6 +176,10 @@ public abstract class MenuGame extends Menu {
       clearConsole();
       out.println(actionDescription);
       showOptions();
+    }
+
+    if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
+      out.println(colored("\nDisconnecting...\n",YELLOW));
     }
   }
 

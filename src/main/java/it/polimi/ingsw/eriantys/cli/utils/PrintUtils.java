@@ -4,6 +4,10 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.fusesource.jansi.Ansi;
 
+import java.awt.*;
+
+import static java.awt.Color.*;
+
 public class PrintUtils {
   public static final char TOWER_CHAR = 'T';
   public static final char STUDENT_CHAR = '*';
@@ -22,7 +26,7 @@ public class PrintUtils {
       case RED -> Ansi.ansi().fgRed().toString();
       case GREEN -> Ansi.ansi().fgGreen().toString();
       case YELLOW -> Ansi.ansi().fgBrightYellow().toString();
-      case PINK -> Ansi.ansi().fgBrightMagenta().toString();
+      case PINK -> Ansi.ansi().fgMagenta().toString();
     };
   }
 
@@ -40,36 +44,37 @@ public class PrintUtils {
   /**
    * Prints a HouseColor as a colored string.
    */
-  public static String printColored(char c, HouseColor color) {
+  public static String colored(char c, HouseColor color) {
     return getColorString(color) + c + Ansi.ansi().reset().toString();
   }
 
   /**
    * Prints a HouseColor as a colored string.
    */
-  public static String printColored(String s, HouseColor color) {
+  public static String colored(String s, HouseColor color) {
     return getColorString(color) + s + Ansi.ansi().reset().toString();
   }
 
   /**
    * Prints a HouseColor as a colored string.
    */
-  public static String printColored(char c, TowerColor color) {
+  public static String colored(char c, TowerColor color) {
     return getColorString(color) + c + Ansi.ansi().reset().toString();
   }
 
   /**
    * Prints a HouseColor as a colored string.
    */
-  public static String printColored(String s, TowerColor color) {
+  public static String colored(String s, TowerColor color) {
     return getColorString(color) + s + Ansi.ansi().reset().toString();
   }
 
   /**
    * Clamps a value between a minimum and a maximum value
+   *
    * @param value The value to clamp
-   * @param min The minimum value
-   * @param max The maximum value
+   * @param min   The minimum value
+   * @param max   The maximum value
    * @return The value if it is between min and max, min or max otherwise
    */
   public static int clamp(int value, int min, int max) {

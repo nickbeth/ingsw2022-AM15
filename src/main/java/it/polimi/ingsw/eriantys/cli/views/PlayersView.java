@@ -34,10 +34,10 @@ public class PlayersView extends View {
           .append(PADDING)
           .append("Connection Status: ")
           .append(p.isConnected() ?
-              printColored("online", HouseColor.GREEN)
-              : printColored("offline", HouseColor.RED))
+              colored("online", HouseColor.GREEN)
+              : colored("offline", HouseColor.RED))
           .append(PADDING)
-          .append("Team: ").append(printColored(p.getColorTeam().toString(), p.getColorTeam()))
+          .append("Team: ").append(colored(p.getColorTeam().toString(), p.getColorTeam()))
           .append(PADDING);
       // Print chosen card if it exists
       p.getChosenCard().ifPresent(card ->

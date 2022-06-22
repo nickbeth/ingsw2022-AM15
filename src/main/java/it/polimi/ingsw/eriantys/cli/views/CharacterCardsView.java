@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.utils.PrintUtils;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.VERTICAL;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING;
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.printColored;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 
@@ -41,13 +42,13 @@ public class CharacterCardsView extends View {
           .append(System.lineSeparator())
 
           // Content
-          .append(printColored(Integer.toString(i), HouseColor.RED))
+          .append(PrintUtils.colored(Integer.toString(i), HouseColor.RED))
           .append(PADDING)
           .append(VERTICAL.glyph)
           .append(PADDING)
-          .append(printColored(Integer.toString(card.getCardEnum().getCost()), HouseColor.YELLOW))
+          .append(PrintUtils.colored(Integer.toString(card.getCardEnum().getCost()), HouseColor.YELLOW))
           .append(PADDING)
-          .append(printColored("coins", HouseColor.YELLOW))
+          .append(PrintUtils.colored("coins", HouseColor.YELLOW))
           .append(PADDING)
           .append(VERTICAL.glyph)
           .append(PADDING)

@@ -28,7 +28,7 @@ public class StudentsView extends View {
                 .append(color.toString()).append(":")
                 .append("\t")
                 .append(printCountStudents(students.getCount(color)));
-        o.append(printColored(s.toString(), color));
+        o.append(colored(s.toString(), color));
       }
     }
   }

@@ -3,8 +3,11 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
 import it.polimi.ingsw.eriantys.cli.views.PlayersView;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
 import java.beans.PropertyChangeEvent;
+
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 
 public class MenuPickAssistantCard extends MenuGame {
   public MenuPickAssistantCard() {
@@ -53,7 +56,7 @@ public class MenuPickAssistantCard extends MenuGame {
               waitForGreenLight();
               return MenuEnum.PLACING;
             }
-            out.println("Someone else already played this card.");
+            out.println(colored("Someone else already played this card.", HouseColor.RED));
             showOptions();
           }
           default -> {

@@ -95,7 +95,7 @@ public class DashboardView extends View {
           else
             out.append(EMPTY_CHAR + PADDING);
         } else {
-          out.append(printColored(STUDENT_CHAR, nextStudent)).append(PADDING);
+          out.append(colored(STUDENT_CHAR, nextStudent)).append(PADDING);
         }
       }
     } else {
@@ -112,7 +112,7 @@ public class DashboardView extends View {
   }
 
   private String getProfOccupation(boolean isProf, HouseColor color) {
-    return printColored(isProf ? PROF_CHAR : EMPTY_CHAR, color);
+    return colored(isProf ? PROF_CHAR : EMPTY_CHAR, color);
   }
 
   private String getTowerOccupation(int row, int towerCount) {
@@ -120,7 +120,7 @@ public class DashboardView extends View {
       int remaining = towerCount - row * 2;
       int emptyRemaining = (row + 1) * 2 - towerCount;
 
-      return ((printColored(TOWER_CHAR, dashboard.towerColor()) + " ").repeat(clamp(remaining, 0, 2))
+      return ((colored(TOWER_CHAR, dashboard.towerColor()) + " ").repeat(clamp(remaining, 0, 2))
           + (EMPTY_CHAR + " ").repeat(clamp(emptyRemaining, 0, 2))).stripTrailing();
     } else {
       return PADDING_TRIPLE;

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
 import it.polimi.ingsw.eriantys.model.entities.Island;
-import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
@@ -47,7 +46,7 @@ public class IslandView extends View {
 
     if (towerCount != 0 && owner.isPresent()) {
       String towerLabel = TOWER_CHAR + "─x" + towerCount;
-      String coloredLabel = printColored(towerLabel, owner.get());
+      String coloredLabel = colored(towerLabel, owner.get());
       int spacesLeftToTheEnd = 3;
       int end = stringBuilder.length() - spacesLeftToTheEnd;
       int start = end - towerLabel.length();
@@ -95,11 +94,11 @@ public class IslandView extends View {
           .append(PADDING_TRIPLE);
     else if (amount < 10)
       stringBuilder
-          .append(printColored(STUDENT_CHAR + " x" + amount, color))
+          .append(colored(STUDENT_CHAR + " x" + amount, color))
           .append(PADDING_DOUBLE);
     else
       stringBuilder
-          .append(printColored(STUDENT_CHAR + " x" + amount, color))
+          .append(colored(STUDENT_CHAR + " x" + amount, color))
           .append(PADDING);
 
     return stringBuilder.toString();

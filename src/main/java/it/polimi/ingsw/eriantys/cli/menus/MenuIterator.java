@@ -13,6 +13,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static it.polimi.ingsw.eriantys.cli.menus.MenuIterator.MenuFactory.makeMenu;
+import static it.polimi.ingsw.eriantys.controller.EventType.DELIBERATE_DISCONNECTION;
+import static it.polimi.ingsw.eriantys.controller.EventType.GAME_ENDED;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class MenuIterator implements PropertyChangeListener {
@@ -81,22 +83,24 @@ public class MenuIterator implements PropertyChangeListener {
   }
 
   public void menuAction() {
-    addListeners();
+    addEventsToBeListened();
     try {
       nextMenu = currentMenu.show();
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
-    removeListeners();
+    removeEventsToBeListened();
   }
 
-  private void addListeners() {
+  // Set the current menu as listener of its list of events
+  private void addEventsToBeListened() {
     currentMenu.getEventsToBeListening().forEach(eventType ->
         controller.addListener(currentMenu, eventType.tag)
     );
   }
 
-  private void removeListeners() {
+  // Removes the current menu as listener of its list of events
+  private void removeEventsToBeListened() {
     currentMenu.getEventsToBeListening().forEach(eventType ->
         controller.removeListener(currentMenu, eventType.tag)
     );
@@ -114,9 +118,15 @@ public class MenuIterator implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName().equals(EventType.GAME_ENDED.tag)) {
+    if (evt.getPropertyName().equals(GAME_ENDED.tag)) {
       System.out.println("GAME_ENDED");
       new MenuEndGame().show();
+    }
+
+    if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
+      removeEventsToBeListened();
+      currentMenu = makeMenu(MenuEnum.CONNECTION);
+      menuAction();
     }
   }
 }
