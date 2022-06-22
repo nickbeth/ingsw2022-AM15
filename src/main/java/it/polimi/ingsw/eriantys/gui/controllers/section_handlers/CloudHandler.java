@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.gui.controllers.utils.ImagePaths.studentColorToPath;
+
 public class CloudHandler extends SectionHandler {
   private final AnchorPane cloudPane;
   private final DebugScreenHandler debugScreenHandler;
@@ -23,14 +25,11 @@ public class CloudHandler extends SectionHandler {
   private final GameState gameState = Controller.get().getGameState();
 
   private final List<Label> studentlabels = new ArrayList<>();
-  private final EnumMap<HouseColor, String> studentColorToPath = new EnumMap<>(HouseColor.class);
 
   public CloudHandler(AnchorPane cloudPane, Cloud cloud, DebugScreenHandler debugScreenHandler) {
     this.cloudPane = cloudPane;
     this.cloud = cloud;
     this.debugScreenHandler = debugScreenHandler;
-    for (HouseColor color : HouseColor.values())
-      studentColorToPath.put(color, "/assets/realm/student-" + color + ".png");
   }
 
   /**

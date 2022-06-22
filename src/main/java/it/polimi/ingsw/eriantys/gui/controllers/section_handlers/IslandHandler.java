@@ -20,8 +20,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
+
+import static it.polimi.ingsw.eriantys.gui.controllers.utils.ImagePaths.*;
 
 public class IslandHandler extends SectionHandler {
   private final DebugScreenHandler debugScreenHandler;
@@ -29,8 +30,6 @@ public class IslandHandler extends SectionHandler {
   private final Island island;
   private final GameState gameState = Controller.get().getGameState();
 
-  private final EnumMap<TowerColor, String> towerColorToPath = new EnumMap<>(TowerColor.class);
-  private final EnumMap<HouseColor, String> studentColorToPath = new EnumMap<>(HouseColor.class);
   private final List<Label> studentLabels = new ArrayList<>();
   private ImageView lockView;
   private ImageView mnView;
@@ -42,7 +41,7 @@ public class IslandHandler extends SectionHandler {
     this.islandPane = islandPane;
     this.island = island;
     this.debugScreenHandler = debugScreenHandler;
-    initMaps();
+
   }
 
   @Override
@@ -165,15 +164,6 @@ public class IslandHandler extends SectionHandler {
 
     islandPane.setOnDragOver(this::dragOverIsland);
     islandPane.setOnDragDropped(this::dragDropOnIsland);
-  }
-
-  private void initMaps() {
-    //initializing path maps
-    for (TowerColor color : TowerColor.values())
-      towerColorToPath.put(color, "/assets/realm/tower-" + color + ".png");
-
-    for (HouseColor color : HouseColor.values())
-      studentColorToPath.put(color, "/assets/realm/student-" + color + ".png");
   }
 
   private void dragOverIsland(DragEvent e) {

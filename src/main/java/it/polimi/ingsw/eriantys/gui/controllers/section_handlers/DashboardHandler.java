@@ -22,8 +22,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
+
+import static it.polimi.ingsw.eriantys.gui.controllers.utils.ImagePaths.*;
 
 public class DashboardHandler extends SectionHandler {
   protected final DebugScreenHandler debugScreenHandler;
@@ -33,19 +34,15 @@ public class DashboardHandler extends SectionHandler {
   private final GridPane entranceGrid;
   private final GridPane professorGrid;
   private final TilePane towerTiles;
-  private GameState gameState = Controller.get().getGameState();
+  private final GameState gameState = Controller.get().getGameState();
 
-  private final EnumMap<TowerColor, String> towerColorToPath = new EnumMap<TowerColor, String>(TowerColor.class);
-  private final EnumMap<HouseColor, String> studentColorToPath = new EnumMap<>(HouseColor.class);
-  private final EnumMap<HouseColor, String> professorColorToPath = new EnumMap<>(HouseColor.class);
+  private final List<ImageView> blueStudents = new ArrayList<>();
+  private final List<ImageView> redStudents = new ArrayList<>();
+  private final List<ImageView> yellowStudents = new ArrayList<>();
+  private final List<ImageView> greenStudents = new ArrayList<>();
+  private final List<ImageView> pinkStudents = new ArrayList<>();
 
-  private List<ImageView> blueStudents = new ArrayList<>();
-  private List<ImageView> redStudents = new ArrayList<>();
-  private List<ImageView> yellowStudents = new ArrayList<>();
-  private List<ImageView> greenStudents = new ArrayList<>();
-  private List<ImageView> pinkStudents = new ArrayList<>();
-
-  private ImageView[] professors = new ImageView[HouseColor.values().length];
+  private final ImageView[] professors = new ImageView[HouseColor.values().length];
 
   public DashboardHandler(String nickname, GridPane studentHallGrid, GridPane entranceGrid, GridPane professorGrid, TilePane towerTiles, DebugScreenHandler debugScreenHandler) {
     this.debugScreenHandler = debugScreenHandler;
@@ -54,7 +51,6 @@ public class DashboardHandler extends SectionHandler {
     this.entranceGrid = entranceGrid;
     this.professorGrid = professorGrid;
     this.towerTiles = towerTiles;
-    initMaps();
   }
 
   @Override
@@ -229,19 +225,6 @@ public class DashboardHandler extends SectionHandler {
       tower.setPreserveRatio(true);
       towerTiles.getChildren().add(tower);
     }
-  }
-
-  private void initMaps() {
-    //initializing path maps
-    for (TowerColor color : TowerColor.values())
-      towerColorToPath.put(color, "/assets/realm/tower-" + color + ".png");
-
-    for (HouseColor color : HouseColor.values())
-      studentColorToPath.put(color, "/assets/realm/student-" + color + ".png");
-
-    for (HouseColor color : HouseColor.values())
-      professorColorToPath.put(color, "/assets/realm/professor-" + color + ".png");
-
   }
 
   private void dragDropOnHall(DragEvent e) {
