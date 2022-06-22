@@ -18,6 +18,7 @@ import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public abstract class MenuGame extends Menu {
@@ -174,12 +175,12 @@ public abstract class MenuGame extends Menu {
     if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag)) {
       String actionDescription = (String) evt.getNewValue();
       clearConsole();
-      out.println(actionDescription);
+      out.println(colored(actionDescription, GREEN));
       showOptions();
     }
 
     if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
-      out.println(colored("\nDisconnecting...\n",YELLOW));
+      out.println(colored("\nDisconnecting...\n", YELLOW));
     }
   }
 

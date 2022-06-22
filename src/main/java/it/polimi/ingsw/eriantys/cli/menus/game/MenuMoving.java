@@ -7,6 +7,9 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
 
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
+
 public class MenuMoving extends MenuGame {
   public MenuMoving() {
     super();
@@ -56,7 +59,7 @@ public class MenuMoving extends MenuGame {
               new IslandsView(islands(), motherPosition()).draw(out);
               return MenuEnum.PICKING_CLOUD;
             }
-            out.println("Invalid input parameters. Valid movement:" + me().getMaxMovement() + ".");
+            out.println(colored("Invalid input parameters. Valid movement:" + me().getMaxMovement() + ".",RED));
             showOptions();
           }
 

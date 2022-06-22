@@ -10,6 +10,10 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
+
 public class MenuEffect extends MenuGame {
   public MenuEffect() {
     super();
@@ -67,9 +71,9 @@ public class MenuEffect extends MenuGame {
 
       // Print reasons why action is invalid
       if (me().getCoins() < cc.getCost())
-        out.println("Not enough coins");
+        out.println(colored("Not enough coins", YELLOW));
       else
-        out.println("Invalid input parameters");
+        out.println(colored("Invalid input parameters", RED));
     }
 
   }

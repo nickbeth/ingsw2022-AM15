@@ -8,6 +8,7 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 public class MenuPickAssistantCard extends MenuGame {
   public MenuPickAssistantCard() {
@@ -56,7 +57,7 @@ public class MenuPickAssistantCard extends MenuGame {
               waitForGreenLight();
               return MenuEnum.PLACING;
             }
-            out.println(colored("Someone else already played this card.", HouseColor.RED));
+            out.println(colored("Someone else already played this card.", RED));
             showOptions();
           }
           default -> {

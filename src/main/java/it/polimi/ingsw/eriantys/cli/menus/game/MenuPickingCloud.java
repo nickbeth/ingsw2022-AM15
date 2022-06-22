@@ -6,7 +6,9 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 public class MenuPickingCloud extends MenuGame {
   public MenuPickingCloud() {
@@ -59,7 +61,7 @@ public class MenuPickingCloud extends MenuGame {
                 controller.sender().sendRefillCloud();
               return MenuEnum.PICK_ASSISTANT;
             }
-            out.println("Invalid input parameters");
+            out.println(colored("Invalid input parameters", RED));
             showOptions();
           }
           default -> {

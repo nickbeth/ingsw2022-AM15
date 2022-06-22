@@ -4,13 +4,16 @@ import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
 import java.util.Objects;
 
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 public class MenuPlacing extends MenuGame {
 
@@ -76,7 +79,7 @@ public class MenuPlacing extends MenuGame {
 
             // Send actions
             if (!controller.sender().sendMoveStudentsToIsland(paramBuilder.getStudentsToMove(), islandIndex)) {
-              out.println("Invalid input parameters");
+              out.println(colored("Invalid input parameters", RED));
               showOptions();
               break;
             }
@@ -97,7 +100,7 @@ public class MenuPlacing extends MenuGame {
 
             // Send actions
             if (!controller.sender().sendMoveStudentsToDiningHall(paramBuilder.getStudentsToMove())) {
-              out.println("Invalid input parameters");
+              out.println(colored("Invalid input parameters", RED));
               showOptions();
               break;
             }
@@ -110,12 +113,10 @@ public class MenuPlacing extends MenuGame {
           }
 
           // Choose a character card from those in playing field
-          // TODO: sposta il blocco istruzioni in MenuEffect
-          // TODO: testare lo spostamento
           case "E", "e" -> {
-            if(!isCharacterCardPlayed())
+            if (!isCharacterCardPlayed())
               return MenuEnum.EFFECT;
-            out.println("A card was already played");
+            out.println(colored("A card was already played", RED));
           }
 
           default -> {
@@ -126,7 +127,6 @@ public class MenuPlacing extends MenuGame {
   }
 
   private MenuEnum escapeCondition() {
-//    int playableStudents = rules().playableStudentCount;
 
     // Condition to continue the game
     if (studentsLeftToMove() == 0) {
@@ -169,7 +169,7 @@ public class MenuPlacing extends MenuGame {
         paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
         break;
       }
-      out.println("Cannot move that amount. Student left to move: " + studentsLeftToMove() + ".");
+      out.println(colored("Cannot move that amount. Student left to move: " + studentsLeftToMove() + ".",RED));
       out.print("Insert again: ");
     }
   }
