@@ -443,7 +443,7 @@ public class GameServer implements Runnable {
 
       String nickname = attachment.nickname();
       GameCode gameCode = attachment.gameCode();
-      GameEntry gameEntry = activeGames.get(gameCode);
+      GameEntry gameEntry = gameCode != null ? activeGames.get(gameCode) : null;
 
       // If game entry is null, the player disconnected before joining a lobby or game
       if (gameEntry != null) {
