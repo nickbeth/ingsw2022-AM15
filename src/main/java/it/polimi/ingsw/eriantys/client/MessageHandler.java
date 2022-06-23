@@ -8,8 +8,12 @@ import it.polimi.ingsw.eriantys.network.MessageType;
 
 import java.util.concurrent.BlockingQueue;
 
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
+import static java.text.MessageFormat.format;
 
 public class MessageHandler implements Runnable {
   Controller controller;
@@ -107,16 +111,18 @@ public class MessageHandler implements Runnable {
 
   private void handlePlayerDisconnected(Client client, Message message) {
     controller.setPlayerConnection(false, message.nickname());
-    controller.fireChange(PLAYER_CONNECTION_CHANGED, null, null);
+    String evtMsg = colored(format("Player \"{0}\" disconnected", message.nickname()), RED);
+    controller.fireChange(PLAYER_CONNECTION_CHANGED, null, evtMsg);
   }
 
   private void handlePlayerReconnected(Client client, Message message) {
     try {
       controller.setPlayerConnection(true, message.nickname());
+      String evtMsg = colored(format("Player \"{0}\" reconnected", message.nickname()), GREEN);
+      controller.fireChange(PLAYER_CONNECTION_CHANGED, null, evtMsg);
     } catch (NullPointerException e) {
       clientLogger.debug("Tried to reconnect player before the game state was initialized");
     }
-    controller.fireChange(PLAYER_CONNECTION_CHANGED, null, null);
   }
 
   private void handleError(Client client, Message message) {

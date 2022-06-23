@@ -22,6 +22,12 @@ import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public abstract class MenuGame extends Menu {
+  protected View dashboardsView = new DashboardsView(players(), rules(), professorHolder());
+  protected View islandsView = new IslandsView(islands(), motherPosition());
+  protected View cloudsView = new CloudsView(clouds());
+  protected View characterCardsView = new CharacterCardsView(ccs());
+  protected View playersView = new PlayersView(players(), rules());
+
   // Linking the game state to menus
   protected GameState game() {
     return controller.getGameState();
@@ -66,6 +72,7 @@ public abstract class MenuGame extends Menu {
   public MenuGame() {
     super();
     eventsToBeListening.add(GAMEDATA_EVENT);
+    eventsToBeListening.add(PLAYER_CONNECTION_CHANGED);
     eventsToBeListening.add(GAME_ENDED);
     eventsToBeListening.add(DELIBERATE_DISCONNECTION);
     clearConsole();
@@ -78,9 +85,8 @@ public abstract class MenuGame extends Menu {
       out.println("It's now your turn " + currentPlayer());
     } else {
       out.println("It's now turn of: " + currentPlayer());
-      out.println("Even if it's not your turn, you can see the game.");
     }
-    out.println("QUITGAME - Disconnects from the game");
+      out.println("0000 - Quit the game and disconnect");
     out.println("1 - View all");
     out.println("2 - View islands");
     out.println("3 - View dashboards");
@@ -96,11 +102,6 @@ public abstract class MenuGame extends Menu {
   }
 
   final protected void handleViewOptions(String choice) {
-    View dashboardsView = new DashboardsView(players(), rules(), professorHolder());
-    View islandsView = new IslandsView(islands(), motherPosition());
-    View cloudsView = new CloudsView(clouds());
-    View ccView = new CharacterCardsView(ccs());
-    View playersView = new PlayersView(players(), rules());
 
     clearConsole();
     switch (choice) {
@@ -112,7 +113,7 @@ public abstract class MenuGame extends Menu {
             .addView(dashboardsView)
             .addView(cloudsView);
         if (rules().gameMode.equals(GameMode.EXPERT))
-          viewAll.addView(ccView);
+          viewAll.addView(characterCardsView);
         viewAll.draw(out);
       }
 
@@ -151,12 +152,12 @@ public abstract class MenuGame extends Menu {
       // View all character cards
       case "10" -> {
         if (rules().gameMode.equals(GameMode.EXPERT))
-          ccView.draw(out);
+          characterCardsView.draw(out);
       }
 
-      case "QUITGAME" -> {
-        controller.fireChange(DELIBERATE_DISCONNECTION, null, null);
+      case "0000" -> {
         controller.sender().sendQuitGame();
+        controller.fireChange(DELIBERATE_DISCONNECTION, null, null);
         return;
       }
 
@@ -179,8 +180,10 @@ public abstract class MenuGame extends Menu {
       showOptions();
     }
 
-    if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
-      out.println(colored("\nDisconnecting...\n", YELLOW));
+    if (evt.getPropertyName().equals(PLAYER_CONNECTION_CHANGED.tag)) {
+      out.println();
+      out.println((String) evt.getNewValue());
+      showOptions();
     }
   }
 

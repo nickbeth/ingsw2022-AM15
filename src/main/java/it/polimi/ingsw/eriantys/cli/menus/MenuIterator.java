@@ -7,15 +7,16 @@ import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuConnect;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuCreateOrJoin;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuLobby;
 import it.polimi.ingsw.eriantys.controller.Controller;
-import it.polimi.ingsw.eriantys.controller.EventType;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static it.polimi.ingsw.eriantys.cli.menus.MenuIterator.MenuFactory.makeMenu;
-import static it.polimi.ingsw.eriantys.controller.EventType.DELIBERATE_DISCONNECTION;
-import static it.polimi.ingsw.eriantys.controller.EventType.GAME_ENDED;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
+import static java.lang.System.out;
 
 public class MenuIterator implements PropertyChangeListener {
   private final Controller controller = Controller.get();
@@ -70,7 +71,9 @@ public class MenuIterator implements PropertyChangeListener {
 
   public MenuIterator() {
     // Setting events MenuIterator has to listen to
-    controller.addListener(this, EventType.START_GAME.tag);
+    controller.addListener(this, START_GAME.tag);
+    controller.addListener(this, DELIBERATE_DISCONNECTION.tag);
+    controller.addListener(this, GAME_ENDED.tag);
 
     // Set common event to listen to
 //    controller.addListener(this, GAMEDATA_EVENT.tag);
@@ -119,13 +122,15 @@ public class MenuIterator implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName().equals(GAME_ENDED.tag)) {
-      System.out.println("GAME_ENDED");
+      out.println("GAME_ENDED");
       new MenuEndGame().show();
     }
 
     if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
+//      out.println(colored("\nDisconnecting...\n", YELLOW));
       removeEventsToBeListened();
-      currentMenu = makeMenu(MenuEnum.CONNECTION);
+      currentMenu = makeMenu(MenuEnum.NICKNAME);
+      out.println(colored("\nDisconnected.", YELLOW));
       menuAction();
     }
   }
