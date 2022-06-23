@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.server;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
 public class GameEntry {
@@ -35,6 +37,7 @@ public class GameEntry {
       if (action.isValid(gameState)) {
         action.apply(gameState);
         serverLogger.debug("Action {} applied to game ", action.getClass().getSimpleName());
+        gameState.checkWinCondition();
         return true;
       }
       return false;
