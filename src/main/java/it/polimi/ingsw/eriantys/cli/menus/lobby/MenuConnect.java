@@ -10,9 +10,9 @@ import it.polimi.ingsw.eriantys.network.Client;
 public class MenuConnect extends Menu {
   @Override
   protected void showOptions() {
-    out.println("\nChoose server:");
+    out.println("\nConnect to a server:");
     out.println("1 - Manually configure socket");
-    out.println("ANY_KEY - Use default options (localhost:1234)");
+    out.println("ANY_KEY - Use default socket options (localhost:1234)");
   }
 
   /**

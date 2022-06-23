@@ -194,9 +194,9 @@ class GameStateTest {
   void getTowerWinner() {
     game.addPlayer("GINO", TowerColor.BLACK);
     List<Player> players = new ArrayList<>();
-    GameState spyedGame = spy(game);
-    Player p1 = spy(spyedGame.getPlayers().get(0));
-    Player p2 = spy(spyedGame.getPlayers().get(1));
+    GameState spiedGame = spy(game);
+    Player p1 = spy(spiedGame.getPlayers().get(0));
+    Player p2 = spy(spiedGame.getPlayers().get(1));
     players.add(p1);
     players.add(p2);
 
@@ -204,10 +204,9 @@ class GameStateTest {
     p1.getDashboard().getTowers().count = 3;
     p2.getDashboard().getTowers().count = 2;
 
-    doReturn(players).when(spyedGame).getPlayers();
+    doReturn(players).when(spiedGame).getPlayers();
 
-    assertEquals(TowerColor.BLACK, spyedGame.getWinner().get());
-
+    assertEquals(TowerColor.BLACK, spiedGame.getWinner().get());
   }
 
   @Test

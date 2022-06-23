@@ -187,8 +187,8 @@ public class GameState implements Serializable {
    * - if two player have the same amount of towers it checks the amount of professors
    */
   public Optional<TowerColor> getWinner() {
-    class Temp {
-      private static int getUnusedTowerCount(Player player) {
+    class Tmp {
+      private static int getNonUsedTowerCount(Player player) {
         return player.getDashboard().getTowers().count;
       }
 
@@ -202,17 +202,16 @@ public class GameState implements Serializable {
 
     for (Player p : getPlayers()) {
       // If the player has fewer towers in his dashboard he's the winner
-      if (Temp.getUnusedTowerCount(p) < towerCount) {
-        towerCount = Temp.getUnusedTowerCount(p);
+      if (Tmp.getNonUsedTowerCount(p) < towerCount) {
+        towerCount = Tmp.getNonUsedTowerCount(p);
         winner = Optional.of(p.getColorTeam());
-        heldProfessorCount = Temp.getHeldProfessorCount(p, getPlayingField());
-      } else if (Temp.getUnusedTowerCount(p) == towerCount) {
-        // If equals number of tower checks held professor count
-        if (Temp.getHeldProfessorCount(p, getPlayingField()) > heldProfessorCount) {
-//          modelLogger.debug("ora vince lui");
+        heldProfessorCount = Tmp.getHeldProfessorCount(p, getPlayingField());
+      } else if (Tmp.getNonUsedTowerCount(p) == towerCount) {
+        // If equals number of tower => checks held professor count
+        if (Tmp.getHeldProfessorCount(p, getPlayingField()) > heldProfessorCount) {
           winner = Optional.of(p.getColorTeam());
-          heldProfessorCount = Temp.getHeldProfessorCount(p, getPlayingField());
-        } else if (Temp.getHeldProfessorCount(p, getPlayingField()) == heldProfessorCount) {
+          heldProfessorCount = Tmp.getHeldProfessorCount(p, getPlayingField());
+        } else if (Tmp.getHeldProfessorCount(p, getPlayingField()) == heldProfessorCount) {
           winner = Optional.empty();
         }
       }

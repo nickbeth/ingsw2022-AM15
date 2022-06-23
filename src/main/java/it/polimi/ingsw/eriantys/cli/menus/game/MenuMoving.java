@@ -46,7 +46,7 @@ public class MenuMoving extends MenuGame {
 
             // Shows islands
             out.println("Playing Field: ");
-            new IslandsView(islands(), motherPosition()).draw(out);
+            islandsView.draw(out);
 
             // Gets the amount
             out.print(
@@ -63,7 +63,7 @@ public class MenuMoving extends MenuGame {
             // Send action
             if (controller.sender().sendMoveMotherNature(amount)) {
               waitForGreenLight();
-              new IslandsView(islands(), motherPosition()).draw(out);
+              islandsView.draw(out);
               return MenuEnum.PICKING_CLOUD;
             }
             out.println(colored("Invalid input parameters. Valid movement:" + me().getMaxMovement() + ".", RED));

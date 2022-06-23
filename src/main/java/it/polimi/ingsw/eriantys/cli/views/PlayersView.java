@@ -60,8 +60,6 @@ public class PlayersView extends View {
         .max(Integer::compare)
         .ifPresent(x -> maxLengthRow = x);
 
-    o.append(System.lineSeparator());
-
     // Title of the section
     o.append(centredTitle("Players")).append(System.lineSeparator());
 

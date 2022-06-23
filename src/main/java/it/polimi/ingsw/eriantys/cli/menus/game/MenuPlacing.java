@@ -71,7 +71,7 @@ public class MenuPlacing extends MenuGame {
             chooseColorAndAmount(paramBuilder);
 
             // Shows islands
-            new IslandsView(islands(), motherPosition()).draw(out);
+            islandsView.draw(out);
 
             // Take island index input
             out.println("Choose an island: ");

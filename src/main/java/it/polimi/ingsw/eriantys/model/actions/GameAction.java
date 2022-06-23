@@ -1,8 +1,11 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 
 import java.io.Serializable;
+
+import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 
 // TODO: Create AdvanceToNextConnectedPlayer
