@@ -166,7 +166,7 @@ public class GameServer implements Runnable {
       return;
     }
 
-    if (attachment.gameCode() != null) {
+    if (attachment.gameCode() != null || disconnectedPlayers.containsKey(nickname)) {
       String errorMessage = "Nickname '" + nickname + "' is already in a game";
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
@@ -253,14 +253,11 @@ public class GameServer implements Runnable {
         serverLogger.info("Player '{}' left game '{}'", nickname, gameCode);
         gameEntry.broadcastMessage(new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
       }
-      // Always clear this player's game code
-      attachment.setGameCode(null);
     } else {
       // The player was playing a game: disconnect it from the game or delete the game if last
       // Following this, the client is to be considered connected to the server with heartbeat running and nickname still registered
       if (gameEntry.getClients().size() == 1) {
         deleteGame(gameCode, gameEntry);
-        attachment.setGameCode(null);
         serverLogger.info("Player '{}' left ongoing game '{}' while being alone, the game was deleted", nickname, gameCode);
       } else {
         gameEntry.disconnectPlayer(nickname);
@@ -269,6 +266,8 @@ public class GameServer implements Runnable {
         gameEntry.broadcastMessage(new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
       }
     }
+    // Always clear this player's game code as it's not actively in a game anymore
+    attachment.setGameCode(null);
   }
 
   private void handleSelectTower(Client client, Message message) {
