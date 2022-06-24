@@ -16,48 +16,26 @@ import java.util.EnumMap;
 
 public class Gui extends Application {
   private Stage stage;
-  private SceneEnum prevScene;
   private SceneEnum currScene;
+  private FXMLController controller;
   private EnumMap<SceneEnum, Scene> sceneMap = new EnumMap<>(SceneEnum.class);
   private EnumMap<SceneEnum, FXMLController> controllerMap = new EnumMap<>(SceneEnum.class);
 
   /**
    * the start method is called at the beggining of the application life cycle,
-   * this method calls {@link #initializeScenes()},setups the stage and sets the first scene
+   * this method calls ,setups the stage and sets the first scene
    */
   @Override
   public void start(Stage primaryStage) {
     stage = primaryStage;
     stage.setTitle("Eriantys");
     stage.getIcons().add(new Image("/assets/misc/game-icon.png"));
-    initializeScenes();
     // Pressing on the red X to close a stage will call the closeApplication method
     stage.setOnCloseRequest(e -> closeApplication());
     currScene = SceneEnum.MENU;
-    stage.setScene(sceneMap.get(currScene));
+    setScene(currScene);
     stage.setResizable(false);
     stage.show();
-  }
-
-  /**
-   * This method initalizes the sceneMap and controllerMap by loading them from the .fxml files
-   * it also passes a reference of the gui to the controller.
-   */
-  private void initializeScenes() {
-    for (SceneEnum scene : SceneEnum.values()) {
-      FXMLLoader loader = new FXMLLoader();
-      URL url = getClass().getResource("/fxml/" + scene.path);
-      try {
-        loader.setLocation(url);
-        Parent root = loader.load();
-        FXMLController controller = loader.getController();
-        controller.setGui(this);
-        controllerMap.put(scene, controller);
-        sceneMap.put(scene, new Scene(root));
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
   }
 
   /**
@@ -89,20 +67,32 @@ public class Gui extends Application {
   }
 
   /**
-   * sets a new scene, updates the next controller, and updates the listener list in action invoker.
+   * Calls finish on old scene controller, loads the next scene, calls start and updatAll on the next scene controller
    *
-   * @param scene
    */
   public void setScene(SceneEnum scene) {
-    prevScene = currScene;
+    if (controller != null)
+      controller.finish();
+
+    FXMLLoader loader = new FXMLLoader();
+    Parent root;
+    URL url = getClass().getResource(scene.path);
+    try {
+      loader.setLocation(url);
+      root = loader.load();
+      controller = loader.getController();
+      controller.setGui(this);
+      controllerMap.put(scene, controller);
+    } catch (IOException e) {
+      e.printStackTrace();
+      return;
+    }
     currScene = scene;
-    controllerMap.get(prevScene).finish();
-    FXMLController nextController = controllerMap.get(currScene);
-    nextController.start();
-    nextController.updateAll();
-    // Showing unminimizing the stage to prevent resize problems
+    controller.start();
+    controller.updateAll();
+    // unminimizing the stage to prevent resize problems
     stage.setIconified(false);
-    stage.setScene(sceneMap.get(currScene));
+    stage.setScene(new Scene(root));
     stage.sizeToScene();
     stage.show();
   }
