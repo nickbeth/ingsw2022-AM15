@@ -396,10 +396,10 @@ public class GameServer implements Runnable {
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
 
     GameState gameState = gameEntry.getGameState();
-    // We need special handling if the disconnected player was the last one of the current game phase
-    if (gameState.isTurnOf(nickname) && gameState.isLastPlayer(gameState.getPlayer(nickname))) {
+    // We need special handling if the disconnected player was the current player
+    if (gameState.isTurnOf(nickname)) {
       // If the player was the last of the action phase, we need to refill clouds
-      if (gameState.getGamePhase() == GamePhase.ACTION) {
+      if (gameState.getGamePhase() == GamePhase.ACTION && gameState.isLastPlayer(gameState.getPlayer(nickname))) {
         GameAction refillAction = new RefillClouds(gameState);
         gameEntry.executeAction(refillAction);
         broadcastMessage(gameEntry, new Message.Builder()
