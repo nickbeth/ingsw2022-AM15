@@ -12,6 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import jfxtras.scene.layout.CircularPane;
 
 import java.beans.PropertyChangeEvent;
@@ -22,6 +23,8 @@ import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class GameSceneController extends FXMLController {
+  @FXML
+  private Text promptText;
   @FXML
   private TilePane characterCardsTiles;
   @FXML
@@ -93,6 +96,7 @@ public class GameSceneController extends FXMLController {
   private AssistCardHandler assistCardTilesHandler;
   private DebugScreenHandler debugScreenHandler;
   private CharacterCardsHandler characterCardsHandler;
+  private PromptTextHandler promptTextHandler;
 
   @Override
   public void start() {
@@ -107,6 +111,7 @@ public class GameSceneController extends FXMLController {
     cloudBoxHandler = new CloudsHandler(cloudBox, debugScreenHandler);
     islandsPaneHandler = new IslandsHandler(islandsPane, debugScreenHandler);
     assistCardTilesHandler = new AssistCardHandler(assistCards, playedCardsBox, debugScreenHandler);
+    promptTextHandler = new PromptTextHandler(promptText);
     if (Controller.get().getGameState().getRuleBook().gameMode == GameMode.EXPERT)
       buildForExpertMode();
   }
@@ -160,6 +165,7 @@ public class GameSceneController extends FXMLController {
     cloudBoxHandler.update();
     debugScreenHandler.update();
     enemyDashboardHandlers.forEach(SectionHandler::update);
+    promptTextHandler.update();
     if (assistCardPanel.isVisible())
       assistCardTilesHandler.update();
     if (characterCardsPanel.isVisible())

@@ -51,3 +51,9 @@
     -fx-stroke: black;
     -fx-stroke-width: 1;
 }
+
+.text-prompt {
+    -fx-font-family: "Roboto";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}

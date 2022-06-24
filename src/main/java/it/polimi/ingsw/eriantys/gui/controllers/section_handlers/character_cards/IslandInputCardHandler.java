@@ -46,6 +46,7 @@ public class IslandInputCardHandler extends CharacterCardHandler {
   protected void create() {
     super.create();
     draggableItem = new Label();
+    draggableItem.getStyleClass().add("text-addoncoin");
     ImageView graphic = new ImageView();
     graphic.setFitWidth(40);
     graphic.setPreserveRatio(true);
