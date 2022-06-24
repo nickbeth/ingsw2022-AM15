@@ -2,17 +2,13 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
-import it.polimi.ingsw.eriantys.cli.views.IslandsView;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
-import java.util.Objects;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
-import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 public class MenuPlacing extends MenuGame {
@@ -86,8 +82,7 @@ public class MenuPlacing extends MenuGame {
             waitForGreenLight();
 
             // Advance game condition
-            if (Objects.equals(escapeCondition(), MenuEnum.MOVING))
-              return MenuEnum.MOVING;
+            return escapeCondition();
           }
 
           // Move Students from entrance to dining
@@ -108,8 +103,7 @@ public class MenuPlacing extends MenuGame {
             waitForGreenLight();
 
             // Advance game condition
-            if (Objects.equals(escapeCondition(), MenuEnum.MOVING))
-              return MenuEnum.MOVING;
+            return escapeCondition();
           }
 
           // Choose a character card from those in playing field
@@ -127,28 +121,25 @@ public class MenuPlacing extends MenuGame {
   }
 
   private MenuEnum escapeCondition() {
-
     // Condition to continue the game
     if (studentsLeftToMove() == 0) {
       // Ask the player if he wants to play and effect before going on with the game
-      if (rules().gameMode.equals(GameMode.EXPERT)) {
+      if (rules().gameMode.equals(GameMode.EXPERT) && !isCharacterCardPlayed()) {
         out.println("\nDo you want to play a character card?");
         out.println("1 - YES");
         out.println("ANY_KEY - NO");
         out.print("Make a choice: ");
-        // If so let him the chance to play a character card
+
+        // Go to Menu Effect
         if (getKeyboardInput().equals("1")) {
-          showOptions();
-          return null;
+          return MenuEnum.EFFECT;
         }
       }
       return MenuEnum.MOVING;
-    } else if (studentsLeftToMove() < 0) {
-      clientLogger.error("Error implementing placing students");
-      showOptions();
     }
 
-    return null;
+    showOptions();
+    return MenuEnum.PLACING;
   }
 
   private void chooseColorAndAmount(ParamBuilder paramBuilder) {
@@ -169,7 +160,7 @@ public class MenuPlacing extends MenuGame {
         paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
         break;
       }
-      out.println(colored("Cannot move that amount. Student left to move: " + studentsLeftToMove() + ".",RED));
+      out.println(colored("Cannot move that amount. Student left to move: " + studentsLeftToMove() + ".", RED));
       out.print("Insert again: ");
     }
   }

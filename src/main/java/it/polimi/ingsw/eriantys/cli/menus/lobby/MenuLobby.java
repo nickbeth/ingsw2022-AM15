@@ -10,8 +10,10 @@ import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 public class MenuLobby extends Menu {
   private String choice;
@@ -25,9 +27,8 @@ public class MenuLobby extends Menu {
 
   @Override
   protected void showOptions() {
-    out.println(controller.getNickname() + ".");
     (new GameLobbyView(controller.getGameInfo(), controller.getGameCode())).draw(out);
-    out.println("\n1 - Set WHITE");
+    out.println("1 - Set WHITE");
     out.println("2 - Set BLACK");
     out.println("3 - Set GRAY");
     out.println("4 - Start game");
@@ -48,7 +49,7 @@ public class MenuLobby extends Menu {
         // Choose a tower color for the lobby
         case "1", "2", "3" -> {
           if (!controller.sender().sendSelectTower(getTowerColor(choice))) {
-            out.printf("Cannot choose %s.", getTowerColor(choice));
+            out.printf(colored("Cannot choose %s.", getTowerColor(choice)), RED);
             showOptions();
             break;
           }
@@ -59,7 +60,7 @@ public class MenuLobby extends Menu {
         case "4" -> {
           if (!controller.getGameInfo().isStarted()) {
             if (!controller.sender().sendStartGame()) {
-              out.println("There are not enough players with a chosen tower color to start");
+              out.println(colored("There are not enough players with a chosen tower color to start", RED));
               showOptions();
               break;
             }
