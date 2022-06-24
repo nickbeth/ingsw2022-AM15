@@ -210,11 +210,12 @@ public class PlayingField implements Serializable {
   public void setPlayedCharacterCard(CharacterCard cc) {
     playedCharacterCard = cc;
 
-    for (int i = 0; i < characterCards.size(); i++) {
-      if (cc.getCardEnum().equals(characterCards.get(i).getCardEnum()))
-        characterCards.set(i, cc);
+    if (cc != null) {
+      for (int i = 0; i < characterCards.size(); i++) {
+        if (cc.getCardEnum().equals(characterCards.get(i).getCardEnum()))
+          characterCards.set(i, cc);
+      }
     }
-
   }
 
 
