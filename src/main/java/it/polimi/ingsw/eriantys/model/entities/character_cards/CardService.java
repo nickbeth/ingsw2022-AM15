@@ -23,7 +23,7 @@ public interface CardService {
     List<TeamsInfluenceTracer> teamsInfluenceList = new ArrayList<>();
 
     islands.forEach((island) ->
-            teamsInfluenceList.add(island.getTeamsInfluenceTracer()));
+        teamsInfluenceList.add(island.getTeamsInfluenceTracer()));
 
     teamsInfluenceList.forEach((teamsInfluence) -> {
       int modifiedValue = teamsInfluence.getInfluence(currTeam) + amount;
@@ -99,33 +99,48 @@ public interface CardService {
     if (field.getIsland(islandIndex).isLocked()) {
       field.getIsland(islandIndex).setLocked(false);
       field.setLocks(field.getLocks() + 1);
-    } else {
-      Optional<TowerColor> mostInfluentialTeam = field.getMostInfluential(islandIndex);
-      Island currIsland = field.getIsland(islandIndex);
-
-      if (mostInfluentialTeam.isPresent()) {
-        // Set tower color
-        TowerColor oldColor = currIsland.getTowerColor().get();
-        currIsland.setTowerColor(mostInfluentialTeam.get());
-
-        // If old color != new color => manage player towers
-        if (!oldColor.equals(mostInfluentialTeam.get())) {
-          for (Player p : players) {
-
-            // Remove towers from conquerors' dashboard
-            if (p.getColorTeam() == mostInfluentialTeam.get()) {
-              p.getDashboard().removeTowers(currIsland.getTowerCount());
-            }
-
-            // Add towers to conquered dashboard
-            if (p.getColorTeam() == oldColor) {
-              p.getDashboard().addTowers(currIsland.getTowerCount());
-            }
-          }
-        }
-        field.mergeIslands(islandIndex);
-      }
+      return;
     }
+    Optional<TowerColor> mostInfluentialTeam = field.getMostInfluential(islandIndex);
+    Island currIsland = field.getIsland(islandIndex);
+
+    mostInfluentialTeam.ifPresent(bestTeam -> {
+      // Set tower color
+      Optional<TowerColor> oldColor = currIsland.getTowerColor();
+      currIsland.setTowerColor(bestTeam);
+
+      oldColor.ifPresentOrElse(oldTeam -> {
+            // If a team is being dethroned
+            if (!oldTeam.equals(bestTeam)) {
+              modelLogger.info("Team {} is dethroning team {} on island {}", bestTeam, oldTeam, islandIndex);
+
+              // Updates players dashboards
+              players.forEach(p -> {
+                // Remove towers from conquerors' dashboard
+                if (p.getColorTeam().equals(bestTeam)) {
+                  p.getDashboard().removeTowers(currIsland.getTowerCount());
+                }
+
+                // Add towers to conquered dashboard
+                if (p.getColorTeam().equals(oldTeam)) {
+                  p.getDashboard().addTowers(currIsland.getTowerCount());
+                }
+              });
+            }
+          },
+          () -> {
+            modelLogger.info("Island {} is being conquered for the first time by team {}", islandIndex, bestTeam);
+            currIsland.setTowerCount(1);
+            // Remove towers from conquerors' dashboard
+            players.forEach(p -> {
+              if (p.getColorTeam().equals(bestTeam)) {
+                p.getDashboard().removeTowers(currIsland.getTowerCount());
+              }
+            });
+          }
+      );
+      field.mergeIslands(islandIndex);
+    });
   }
 
   /**
@@ -160,8 +175,8 @@ public interface CardService {
 
         // If the curr player has the same amount of students in the dining hall of the other player
         if (currDashboard.getDiningHall().getCount(color) == dash.getDiningHall().getCount(color)
-                // and that player had that specific professor
-                && professorHolder.hasProfessor(dash.getTowers().color, color)) {
+            // and that player had that specific professor
+            && professorHolder.hasProfessor(dash.getTowers().color, color)) {
           // The curr player steals the professor
           professorHolder.setProfessorHolder(currDashboard.getTowers().color, color);
         }
