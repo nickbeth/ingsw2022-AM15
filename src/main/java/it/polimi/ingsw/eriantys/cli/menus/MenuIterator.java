@@ -75,9 +75,6 @@ public class MenuIterator implements PropertyChangeListener {
     controller.addListener(this, DELIBERATE_DISCONNECTION.tag);
     controller.addListener(this, GAME_ENDED.tag);
 
-    // Set common event to listen to
-//    controller.addListener(this, GAMEDATA_EVENT.tag);
-
     // Starting input handler
     new Thread(inputHandler, "InputHandler").start();
 
@@ -128,8 +125,9 @@ public class MenuIterator implements PropertyChangeListener {
 
     if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
 //      out.println(colored("\nDisconnecting...\n", YELLOW));
+      controller.disconnect();
       removeEventsToBeListened();
-      currentMenu = makeMenu(MenuEnum.NICKNAME);
+      currentMenu = makeMenu(MenuEnum.CREATE_OR_JOIN);
       out.println(colored("\nDisconnected.", YELLOW));
       menuAction();
     }
