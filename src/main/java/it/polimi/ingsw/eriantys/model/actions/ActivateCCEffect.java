@@ -16,7 +16,6 @@ public class ActivateCCEffect extends GameAction {
 
   /**
    * Activate the effect of the played character card
-   * Todo: Gestire il caso di carta già utilizzata sopra. Il chiamante deve già fornire una CC usata
    */
   @Override
   public void apply(GameState gameState) {
@@ -27,9 +26,9 @@ public class ActivateCCEffect extends GameAction {
   }
 
   /**
-   * Checks:
-   * - If the CC passed is purchasable and playable
-   * - If the gamePhase and TurnPhase are ACTION & EFFECT
+   * Checks:<br>
+   * - If the CC passed is purchasable and playable<br>
+   * - If the gamePhase is ACTION
    */
   @Override
   public boolean isValid(GameState gameState) {
