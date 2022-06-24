@@ -94,7 +94,7 @@ public class GameState implements Serializable {
   public List<Dashboard> getDashboards() {
     List<Dashboard> dashes = new ArrayList<>();
     players.forEach(p ->
-            dashes.add(p.getDashboard()));
+        dashes.add(p.getDashboard()));
     return dashes;
   }
 
@@ -147,12 +147,10 @@ public class GameState implements Serializable {
    * advances to next turnPhase (takes into account gameMode)
    */
   public void advanceTurnPhase() {
-    if (ruleBook.gameMode == GameMode.NORMAL) {
-      switch (turnPhase) {
-        case PLACING -> turnPhase = TurnPhase.MOVING;
-        case MOVING -> turnPhase = TurnPhase.PICKING;
-        case PICKING -> turnPhase = TurnPhase.PLACING;
-      }
+    switch (turnPhase) {
+      case PLACING -> turnPhase = TurnPhase.MOVING;
+      case MOVING -> turnPhase = TurnPhase.PICKING;
+      case PICKING -> turnPhase = TurnPhase.PLACING;
     }
   }
 
@@ -264,6 +262,25 @@ public class GameState implements Serializable {
    */
   public boolean isLastPlayer(Player player) {
     switch (gamePhase) {
+      case PLANNING -> {
+        List<Player> connectedPlayers = planningPhaseOrder.stream().filter(Player::isConnected).toList();
+        return player.equals(connectedPlayers.get(connectedPlayers.size() - 1));
+      }
+      case ACTION -> {
+        List<Player> connectedPlayers = actionPhaseOrder.stream().filter(Player::isConnected).toList();
+        return player.equals(connectedPlayers.get(connectedPlayers.size() - 1));
+      }
+      default -> throw new AssertionError();
+    }
+  }
+  /**
+   * Overload of method {@link #isLastPlayer(Player)}. <br>
+   * Returns the last connected player of the given gamePhase
+   * @param player player who's wanted to know
+   * @param phase GamePhase
+   */
+  public boolean isLastPlayer(Player player, GamePhase phase) {
+    switch (phase) {
       case PLANNING -> {
         List<Player> connectedPlayers = planningPhaseOrder.stream().filter(Player::isConnected).toList();
         return player.equals(connectedPlayers.get(connectedPlayers.size() - 1));
