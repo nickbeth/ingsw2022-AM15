@@ -2,9 +2,9 @@ package it.polimi.ingsw.eriantys.server;
 
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
-import it.polimi.ingsw.eriantys.model.actions.GameAction;
-import it.polimi.ingsw.eriantys.model.actions.InitiateGameEntities;
-import it.polimi.ingsw.eriantys.model.actions.ReInitiateGame;
+import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.actions.*;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
@@ -260,7 +260,7 @@ public class GameServer implements Runnable {
         deleteGame(gameCode, gameEntry);
         serverLogger.info("Player '{}' left ongoing game '{}' while being alone, the game was deleted", nickname, gameCode);
       } else {
-        gameEntry.disconnectPlayer(nickname);
+        disconnectPlayer(gameEntry, nickname);
         disconnectedPlayers.put(nickname, gameCode);
         serverLogger.info("Player '{}' left ongoing game '{}', marked as disconnected", nickname, gameCode);
         broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
@@ -372,6 +372,42 @@ public class GameServer implements Runnable {
   }
 
   /**
+   * Disconnects the given player from the given game.
+   *
+   * @param gameEntry The game to disconnect the player from
+   * @param nickname  The nickname of the player to disconnect
+   */
+  private void disconnectPlayer(GameEntry gameEntry, String nickname) {
+    gameEntry.disconnectPlayer(nickname);
+    // Send the disconnection message to the client
+    broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
+
+    GameState gameState = gameEntry.getGameState();
+    // We need special handling if the disconnected player was the last one of the current game phase
+    if (gameState.isTurnOf(nickname) && gameState.isLastPlayer(gameState.getPlayer(nickname))) {
+      // If the player was the last of the action phase, we need to refill clouds
+      if (gameState.getGamePhase() == GamePhase.ACTION) {
+        GameAction refillAction = new RefillClouds(gameState);
+        gameEntry.executeAction(refillAction);
+        broadcastMessage(gameEntry, new Message.Builder()
+            .type(MessageType.GAMEDATA)
+            .action(refillAction)
+            .build()
+        );
+      }
+
+      // Advance to the next connected player
+      GameAction advanceAction = new AdvanceToNextConnectedPlayer();
+      gameEntry.executeAction(advanceAction);
+      broadcastMessage(gameEntry, new Message.Builder()
+          .type(MessageType.GAMEDATA)
+          .action(advanceAction)
+          .build()
+      );
+    }
+  }
+
+  /**
    * Deletes a game from the active games list and cleans up its related disconnected players
    *
    * @param gameCode  The game code to delete
@@ -478,10 +514,9 @@ public class GameServer implements Runnable {
         } else {
           if (!disconnectedPlayers.containsKey(nickname)) {
             // If the game has started, set the client as disconnected
-            gameEntry.disconnectPlayer(nickname);
+            disconnectPlayer(gameEntry, nickname);
             disconnectedPlayers.put(nickname, gameCode);
             serverLogger.info("Player '{}' lost connection to ongoing game '{}', marked as disconnected", nickname, gameCode);
-            broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
           } else {
             // The player had already disconnected with a QUIT_GAME message, skip marking as disconnected
             serverLogger.info("Player '{}' lost connection while already disconnected from ongoing game '{}'", nickname, gameCode);
