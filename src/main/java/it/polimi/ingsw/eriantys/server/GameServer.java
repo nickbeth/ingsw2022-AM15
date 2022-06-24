@@ -13,6 +13,7 @@ import it.polimi.ingsw.eriantys.network.MessageType;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -347,6 +348,18 @@ public class GameServer implements Runnable {
 
     serverLogger.info("Player '{}' played action: {}", nickname, action.getClass().getSimpleName());
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEDATA).gameCode(gameCode).action(action).build());
+
+    // Check win condition
+    if (gameEntry.checkWinCondition()) {
+      Optional<TowerColor> winner = gameEntry.getGameState().getWinner();
+
+      String logMessage = winner.isEmpty() ?
+          "Game '" + gameCode + "' has ended in a tie" :
+          "Game '" + gameCode + "' has ended with winner: " + winner.get();
+
+      serverLogger.info(logMessage);
+      broadcastMessage(gameEntry, new Message.Builder().type(MessageType.END_GAME).gameCode(gameCode).build());
+    }
   }
 
   /**

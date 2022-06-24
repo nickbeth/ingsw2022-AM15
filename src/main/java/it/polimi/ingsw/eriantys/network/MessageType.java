@@ -21,7 +21,7 @@ public enum MessageType {
   CREATE_GAME,
   JOIN_GAME,
   SELECT_TOWER,
-  // Only sent by clients while still in the lobby
+  // Sent by clients to quit from a game
   QUIT_GAME,
   // Lobby data
   GAMEINFO,
@@ -33,6 +33,8 @@ public enum MessageType {
   PLAY_ACTION,
   // Game data
   GAMEDATA,
+  // Game has ended, win condition was verified
+  END_GAME,
 
   // Player disconnection management
   PLAYER_DISCONNECTED,

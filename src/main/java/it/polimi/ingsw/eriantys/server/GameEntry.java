@@ -35,11 +35,14 @@ public class GameEntry {
       if (action.isValid(gameState)) {
         action.apply(gameState);
         serverLogger.debug("Action {} applied to game ", action.getClass().getSimpleName());
-        gameState.checkWinCondition();
         return true;
       }
       return false;
     }
+  }
+
+  public boolean checkWinCondition() {
+    return gameState.checkWinCondition();
   }
 
   public Client getClient(String nickname) {
