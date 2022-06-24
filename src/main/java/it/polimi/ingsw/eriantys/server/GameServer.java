@@ -515,7 +515,7 @@ public class GameServer implements Runnable {
       if (gameEntry != null) {
         if (!gameEntry.isStarted()) {
           // If the game has not started, remove the client from the lobby
-          // If there was only one client in the lobby, remove the game
+          // If there was only one client in the lobby, delete the game
           if (gameEntry.getClients().size() == 1) {
             activeGames.remove(gameCode);
             serverLogger.info("Player '{}' lost connection to game '{}' while being alone, the game was deleted", nickname, gameCode);
@@ -527,9 +527,15 @@ public class GameServer implements Runnable {
         } else {
           if (!disconnectedPlayers.containsKey(nickname)) {
             // If the game has started, set the client as disconnected
-            disconnectPlayer(gameEntry, nickname);
-            disconnectedPlayers.put(nickname, gameCode);
-            serverLogger.info("Player '{}' lost connection to ongoing game '{}', marked as disconnected", nickname, gameCode);
+            // If there was only one client in the lobby, delete the game
+            if (gameEntry.getClients().size() == 1) {
+              deleteGame(gameCode, gameEntry);
+              serverLogger.info("Player '{}' lost connection to ongoing game '{}' while being alone, the game was deleted", nickname, gameCode);
+            } else {
+              disconnectPlayer(gameEntry, nickname);
+              disconnectedPlayers.put(nickname, gameCode);
+              serverLogger.info("Player '{}' lost connection to ongoing game '{}', marked as disconnected", nickname, gameCode);
+            }
           } else {
             // The player had already disconnected with a QUIT_GAME message, skip marking as disconnected
             serverLogger.info("Player '{}' lost connection while already disconnected from ongoing game '{}'", nickname, gameCode);
