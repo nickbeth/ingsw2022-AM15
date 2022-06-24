@@ -2,7 +2,7 @@ package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.model.GameState;
 
-public class AdvanceToNextConnected extends GameAction {
+public class AdvanceToNextConnectedPlayer extends GameAction {
   @Override
   public void apply(GameState gameState) {
     gameState.advancePlayer();
