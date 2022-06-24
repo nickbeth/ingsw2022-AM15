@@ -17,8 +17,7 @@ public class PickCloud extends GameAction {
   }
 
   /**
-   * Gets students from pickedCloud and puts them onto the players entrance,then advances turnPhase
-   * ,if the current player is the last player it advances GamePhase , and then advances player.
+   * Gets students from pickedCloud and puts them onto the players entrance.
    *
    * @param gameState
    */
@@ -31,15 +30,7 @@ public class PickCloud extends GameAction {
     if (cloud.getStudents().getCount() + dashboard.getEntrance().getCount() == gameState.getRuleBook().entranceSize) {
       GameService.pickCloud(cloud, dashboard);
     }
-
-    // Make the game advance its phases
-    gameState.advanceTurnPhase();
     gameState.getCurrentPlayer().unsetChosenCard();
-    if (gameState.isLastPlayer(gameState.getCurrentPlayer())) {
-      gameState.advanceGamePhase();
-      return;
-    }
-    gameState.advancePlayer();
   }
 
   /**

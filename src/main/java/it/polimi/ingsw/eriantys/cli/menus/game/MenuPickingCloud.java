@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.CloudsView;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
@@ -52,13 +53,25 @@ public class MenuPickingCloud extends MenuGame {
             out.println("Choose cloud index: ");
             int cloudIndex = getNumber() - 1; // Index correction
 
-            boolean amILastPlayer = game().isLastPlayer(me());
-            // Send action
+            // Send action PickCloud
             if (controller.sender().sendPickCloud(cloudIndex)) {
               waitForGreenLight();
+
               // Send refill cloud
-              if (amILastPlayer)
+              if (amILastPlayer()) {
                 controller.sender().sendRefillCloud();
+                waitForGreenLight();
+              }
+
+              // Send GoToNextRound
+              controller.sender().sendGoToNextRound();
+
+              // Send AdvanceToNextConnectedPlayer
+              if (!amILastPlayer()) {
+                controller.sender().sendAdvanceToNextConnectedPlayer();
+                waitForGreenLight();
+              }
+
               return MenuEnum.PICK_ASSISTANT;
             }
             out.println(colored("Invalid input parameters", RED));
@@ -69,6 +82,10 @@ public class MenuPickingCloud extends MenuGame {
         }
       }
     }
+  }
+
+  private boolean amILastPlayer() {
+    return game().isLastPlayer(me(), GamePhase.ACTION);
   }
 
   @Override
