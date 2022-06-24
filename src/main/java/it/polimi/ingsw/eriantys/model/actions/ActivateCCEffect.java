@@ -16,11 +16,12 @@ public class ActivateCCEffect extends GameAction {
 
   /**
    * Activate the effect of the played character card
-   * todo Gestire il caso di carta già utilizzata sopra. Il chiamante deve già fornire una CC usata
+   * Todo: Gestire il caso di carta già utilizzata sopra. Il chiamante deve già fornire una CC usata
    */
   @Override
   public void apply(GameState gameState) {
     PlayingField p = gameState.getPlayingField();
+
     p.setPlayedCharacterCard(cc);
     p.getPlayedCharacterCard().applyEffect(gameState);
   }
@@ -32,7 +33,7 @@ public class ActivateCCEffect extends GameAction {
    */
   @Override
   public boolean isValid(GameState gameState) {
-    return gameState.getPlayingField().getPlayedCharacterCard().isValid(gameState) &&
+    return cc.isValid(gameState) &&
         gameState.getGamePhase() == GamePhase.ACTION;
   }
 }
