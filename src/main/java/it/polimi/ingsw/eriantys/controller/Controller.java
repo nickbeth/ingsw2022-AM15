@@ -272,6 +272,7 @@ abstract public class Controller implements Runnable {
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
+          .nickname(nickname)
           .gameCode(gameCode)
           .gameInfo(gameInfo)
           .build());

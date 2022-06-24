@@ -18,8 +18,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
-import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
+import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class GameSceneController extends FXMLController {
@@ -99,6 +98,7 @@ public class GameSceneController extends FXMLController {
   public void start() {
     super.start();
     Controller.get().addListener(this, GAMEDATA_EVENT.tag);
+    Controller.get().addListener(this, PLAYER_CONNECTION_CHANGED.tag);
     Controller.get().addListener(this, INTERNAL_SOCKET_ERROR.tag);
     debugScreenHandler = new DebugScreenHandler(debugScreen);
     mainDashboardHandler = new DashboardHandler(Controller.get().getNickname(), studentHallGrid, entranceGrid, profTableGrid, dashboardTowers, debugScreenHandler);
@@ -107,7 +107,7 @@ public class GameSceneController extends FXMLController {
     cloudBoxHandler = new CloudsHandler(cloudBox, debugScreenHandler);
     islandsPaneHandler = new IslandsHandler(islandsPane, debugScreenHandler);
     assistCardTilesHandler = new AssistCardHandler(assistCards, playedCardsBox, debugScreenHandler);
-    if(Controller.get().getGameState().getRuleBook().gameMode == GameMode.EXPERT)
+    if (Controller.get().getGameState().getRuleBook().gameMode == GameMode.EXPERT)
       buildForExpertMode();
   }
 
@@ -132,6 +132,7 @@ public class GameSceneController extends FXMLController {
   public void finish() {
     super.finish();
     Controller.get().removeListener(this, GAMEDATA_EVENT.tag);
+    Controller.get().removeListener(this, PLAYER_CONNECTION_CHANGED.tag);
     Controller.get().removeListener(this, INTERNAL_SOCKET_ERROR.tag);
   }
 
@@ -141,7 +142,9 @@ public class GameSceneController extends FXMLController {
       debugScreenHandler.showMessage((String) evt.getNewValue());
     if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
       updateAll();
-    else {
+    else if (evt.getPropertyName().equals(PLAYER_CONNECTION_CHANGED.tag)) {
+      playerGridHandler.update();
+    } else {
       quitGameAction();
       gui.showSocketError();
     }
@@ -189,11 +192,6 @@ public class GameSceneController extends FXMLController {
       clientLogger.debug("debug screen is visible: " + isVisible);
       debugScreen.setVisible(isVisible);
     }
-  }
-
-  @FXML
-  private void hideCharacterCards(MouseEvent mouseEvent) {
-    characterCardsPanel.setVisible(false);
   }
 
   @FXML

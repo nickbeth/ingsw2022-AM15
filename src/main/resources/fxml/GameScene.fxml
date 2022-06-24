@@ -294,17 +294,6 @@
       <StackPane fx:id="characterCardsPanel" layoutX="60.0" layoutY="260.0" prefHeight="350.0" prefWidth="800.0" stylesheets="@../css/popupstyle.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
          <children>
             <Region layoutX="6.0" layoutY="4.0" styleClass="region-assistcards" />
-            <ImageView fitHeight="34.0" fitWidth="27.0" layoutX="914.0" onMouseClicked="#hideCharacterCards" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_RIGHT">
-               <image>
-                  <Image url="@../assets/misc/cross-icon.png" />
-               </image>
-               <StackPane.margin>
-                  <Insets />
-               </StackPane.margin>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ImageView>
             <TilePane fx:id="characterCardsTiles" alignment="CENTER" layoutX="14.0" layoutY="12.0" prefHeight="350.0" prefWidth="823.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
                   <Insets left="30.0" right="30.0" />

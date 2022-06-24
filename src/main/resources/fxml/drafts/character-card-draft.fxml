@@ -10,7 +10,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.drafts.CharacterCardDraft">
    <children>
       <StackPane layoutX="200.0" layoutY="125.0">
@@ -33,18 +32,55 @@
                   <Font name="Elephant" size="29.0" />
                </font>
             </Text>
-            <ScrollPane hbarPolicy="NEVER" prefHeight="111.0" prefWidth="202.0" StackPane.alignment="CENTER">
+            <ScrollPane hbarPolicy="NEVER" prefHeight="111.0" prefWidth="202.0" visible="false" StackPane.alignment="CENTER">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0">
-                     <children>
-                        <Text layoutX="1.0" layoutY="-13.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You may exchange up to 2 Students between your Entrance and your Dining Room.In Setup, draw 6 Students and place them on this card. EFFECT: You may take up to 3 Students from this card and replace them with the same number of Students from your Entrance.Text" wrappingWidth="200.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" />
               </content>
                <StackPane.margin>
                   <Insets bottom="50.0" top="120.0" />
                </StackPane.margin>
             </ScrollPane>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="You may exchange up to 2 Students between your Entrance and your Dining Room.In Setup, draw 6 Students and place them on this card. EFFECT: You may take up to 3 Students from this card and replace them with the same number of Students from your Entrance.Text" visible="false" wrappingWidth="200.0" />
+            <ImageView fitHeight="150.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+               <image>
+                  <Image url="@../../assets/realm/student-RED.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets left="4.0" />
+               </StackPane.margin>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+               <image>
+                  <Image url="@../../assets/realm/student-RED.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets left="43.0" />
+               </StackPane.margin>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT">
+               <image>
+                  <Image url="@../../assets/realm/student-RED.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets right="43.0" />
+               </StackPane.margin>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT">
+               <image>
+                  <Image url="@../../assets/realm/student-RED.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets right="4.0" />
+               </StackPane.margin>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+               <image>
+                  <Image url="@../../assets/realm/student-RED.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets left="83.0" />
+               </StackPane.margin>
+            </ImageView>
          </children>
       </StackPane>
    </children>

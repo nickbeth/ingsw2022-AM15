@@ -6,6 +6,8 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -51,7 +53,7 @@ public class IslandHandler extends SectionHandler {
 
     if (gameState.getGamePhase() == GamePhase.ACTION) {
       // if tower is present on island make it visible
-      if (island.getTowerColor().isPresent() ) {
+      if (island.getTowerColor().isPresent()) {
         towerLabel.setVisible(true);
         towerLabel.setText("×" + island.getTowerCount());
         // if towerColor changed change graphic
@@ -130,7 +132,7 @@ public class IslandHandler extends SectionHandler {
     AnchorPane.setLeftAnchor(blueStudent, 115.0);
     studentLabels.add(blueStudent);
 
-    mnView = new ImageView(new Image("/assets/realm/mother-nature.png", 25, 100,true, false));
+    mnView = new ImageView(new Image("/assets/realm/mother-nature.png", 25, 100, true, false));
     mnView.setFitWidth(25);
     mnView.setPreserveRatio(true);
     islandPane.getChildren().add(mnView);
@@ -147,7 +149,7 @@ public class IslandHandler extends SectionHandler {
       db.setDragView(mnView.getImage());
       e.consume();
     });
-    
+
     towerLabel = new Label("×" + island.getTowerCount());
     islandPane.getChildren().add(towerLabel);
     AnchorPane.setBottomAnchor(towerLabel, 75.0);
@@ -167,24 +169,34 @@ public class IslandHandler extends SectionHandler {
   }
 
   private void dragOverIsland(DragEvent e) {
-    //if its not the right gamePhase or player doesn't accept any transfer mode
     if (!gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname()) ||
             gameState.getGamePhase() != GamePhase.ACTION) {
+      // if its not the right gamePhase or player doesn't accept any transfer mode
       e.acceptTransferModes(TransferMode.NONE);
       return;
     }
 
     if (gameState.getTurnPhase() == TurnPhase.PLACING &&
-            e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format))
-      if(island.isLocked())
-        e.acceptTransferModes(TransferMode.NONE);
-      else
+            e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format)) {
+      if (!island.isLocked()) {
         e.acceptTransferModes(TransferMode.ANY);
-    else if (gameState.getTurnPhase() == TurnPhase.MOVING &&
-            e.getDragboard().getContentTypes().contains(DataFormats.MOTHER_NATURE.format))
+        return;
+      }
+    }
+
+    if (gameState.getTurnPhase() == TurnPhase.MOVING &&
+            e.getDragboard().getContentTypes().contains(DataFormats.MOTHER_NATURE.format)) {
       e.acceptTransferModes(TransferMode.ANY);
-    else
-      e.acceptTransferModes(TransferMode.NONE);
+      return;
+    }
+
+    if (gameState.getTurnPhase() != TurnPhase.PICKING &&
+            e.getDragboard().getContentTypes().contains(DataFormats.CARD_TO_ISLAND.format)) {
+      e.acceptTransferModes(TransferMode.MOVE);
+      return;
+    }
+
+    e.acceptTransferModes(TransferMode.NONE);
   }
 
   private void dragDropOnIsland(DragEvent e) {
@@ -198,13 +210,31 @@ public class IslandHandler extends SectionHandler {
         debugScreenHandler.showMessage("invalid " + color.toString() + "student drop on island " + islandIndex);
       else
         debugScreenHandler.showMessage(color.toString() + " student was dropped on island " + islandIndex);
-    } else if (db.getContentTypes().contains(DataFormats.MOTHER_NATURE.format)) {
+      return;
+    }
+
+    if (db.getContentTypes().contains(DataFormats.MOTHER_NATURE.format)) {
       int startIndex = (int) db.getContent(DataFormats.MOTHER_NATURE.format);
       if (!Controller.get().sender().sendMoveMotherNature(islandIndex - startIndex))
         debugScreenHandler.showMessage("invalid mother nature drop on island " + islandIndex);
       else
         debugScreenHandler.showMessage("mother nature was dropped on island " + islandIndex);
+      return;
     }
+
+    if (db.getContentTypes().contains(DataFormats.CARD_TO_ISLAND.format)) {
+      IslandInputCards card = (IslandInputCards) Controller.get().getGameState().getPlayingField().getPlayedCharacterCard();
+      card.setIslandIndex(islandIndex);
+      if (!Controller.get().sender().sendActivateEffect(card)){
+        e.acceptTransferModes(TransferMode.NONE);
+        debugScreenHandler.showMessage("invalid " + card.getCardEnum() + " effect drop on island " + islandIndex);
+      }
+      else {
+        e.acceptTransferModes(TransferMode.MOVE);
+        debugScreenHandler.showMessage(card.getCardEnum() + " effect was applied on island " + islandIndex);
+      }
+    }
+
   }
 
   public Island getIsland() {

@@ -16,18 +16,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
-import java.beans.PropertyChangeListener;
-
-public abstract class CharacterCardHandler extends SectionHandler implements PropertyChangeListener {
+public class CharacterCardHandler extends SectionHandler {
   protected final StackPane cardPane;
   protected final CharacterCard card;
+  protected final ImageView crossImg;
+
   private Text addonCoin;
   private ScrollPane descrPane;
   protected ImageView cardImg;
 
   protected final DebugScreenHandler debug;
 
-  public CharacterCardHandler(StackPane cardPane, CharacterCard card, DebugScreenHandler debug) {
+  public CharacterCardHandler(StackPane cardPane, CharacterCard card, ImageView crossImg, DebugScreenHandler debug) {
+    this.crossImg = crossImg;
     this.cardPane = cardPane;
     this.card = card;
     this.debug = debug;
@@ -38,13 +39,18 @@ public abstract class CharacterCardHandler extends SectionHandler implements Pro
    */
   @Override
   protected void refresh() {
+    crossImg.setVisible(true);
     addonCoin.setVisible(card.isUsed());
     GamePhase gamePhase = Controller.get().getGameState().getGamePhase();
     TurnPhase turnPhase = Controller.get().getGameState().getTurnPhase();
-    if ( gamePhase == GamePhase.ACTION  && turnPhase != TurnPhase.PICKING)
+    if ( gamePhase == GamePhase.ACTION  && turnPhase != TurnPhase.PICKING) {
+      cardImg.setOnMouseClicked(e -> playCard());
       cardImg.setCursor(Cursor.HAND);
-    else
+    }
+    else {
+      cardImg.setOnMouseClicked(null);
       cardImg.setCursor(Cursor.DEFAULT);
+    }
   }
 
   /**
@@ -83,7 +89,18 @@ public abstract class CharacterCardHandler extends SectionHandler implements Pro
   }
 
   private void toggleDescription() {
+    descrPane.toFront();
     descrPane.setVisible(!descrPane.isVisible());
+  }
+
+  /**
+   * Sends a choose CC message
+   */
+  protected void playCard() {
+    debug.showMessage("playing card " + card.getCardEnum());
+    int cardIndex = Controller.get().getGameState().getPlayingField().getCharacterCards().indexOf(card);
+    if (!Controller.get().sender().sendChooseCharacterCard(cardIndex))
+      debug.showMessage("invalid chosen CC");
   }
 
 }

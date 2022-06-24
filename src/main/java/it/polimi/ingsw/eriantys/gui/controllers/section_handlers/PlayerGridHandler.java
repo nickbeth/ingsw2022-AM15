@@ -26,7 +26,7 @@ public class PlayerGridHandler extends SectionHandler {
   private final HashMap<Label, Player> cardAmounts = new HashMap<>();
   private final HashMap<Label, Player> towerAmounts = new HashMap<>();
   private final HashMap<Label, Player> coinAmounts = new HashMap<>();
-  private List<EnemyDashboardHandler> dashboardHandlers;
+  private final List<EnemyDashboardHandler> dashboardHandlers;
 
   public PlayerGridHandler(GridPane playerGrid, DebugScreenHandler debugScreenHandler, List<EnemyDashboardHandler> dashboardHandlers) {
     this.playerGrid = playerGrid;
@@ -82,8 +82,8 @@ public class PlayerGridHandler extends SectionHandler {
         nickname.setContentDisplay(ContentDisplay.RIGHT);
         //makes trasparent parts not clickable
         nickname.setPickOnBounds(false);
-        EnemyDashboardHandler dashboardHandlerandler = dashboardHandlers.stream().filter(handler -> handler.getNickname().equals(player.getNickname())).findFirst().get();
-        nickname.setOnMouseClicked(e -> dashboardHandlerandler.show());
+        EnemyDashboardHandler dashboardHandler = dashboardHandlers.stream().filter(handler -> handler.getNickname().equals(player.getNickname())).findFirst().get();
+        nickname.setOnMouseClicked(e -> dashboardHandler.show());
         playerGrid.add(nickname, 0, i);
         GridPane.setHalignment(nickname, HPos.RIGHT);
 
