@@ -3,17 +3,20 @@ package it.polimi.ingsw.eriantys.cli.menus.lobby;
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.model.GameCode;
+import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.ERROR;
-import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.EXPERT;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.NORMAL;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 /**
  * Asks the user for server's address and port
@@ -58,7 +61,7 @@ public class MenuCreateOrJoin extends Menu {
 
         // Create a new game
         case "1" -> {
-          chooseGameSettings(in, out);
+          chooseGameSettings();
           waitForGreenLight();
           if (!errorEncountered) {
             return MenuEnum.LOBBY;
@@ -76,11 +79,11 @@ public class MenuCreateOrJoin extends Menu {
               controller.sender().sendJoinGame(code);
               break;
             } catch (GameCode.GameCodeException e) {
-              out.println("Not a valid gameCode. Error message: " + e.getMessage());
+              out.println(colored("Not a valid gameCode. Error message: " + e.getMessage(), RED));
             }
           }
-
           waitForGreenLight();
+
           if (!errorEncountered) {
             return MenuEnum.LOBBY;
           }
@@ -100,7 +103,7 @@ public class MenuCreateOrJoin extends Menu {
     }
   }
 
-  private void chooseGameSettings(Scanner in, PrintStream out) {
+  private void chooseGameSettings() {
     boolean invalid;
     GameMode mode;
     int playersCount;

@@ -260,21 +260,6 @@ abstract public class Controller implements Runnable {
       clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
     }
 
-    public boolean sendGoToNextRound() {
-      GameAction action = new GoToNextRound();
-
-      if (!action.isValid(gameState))
-        return false;
-
-      networkClient.send(new Message.Builder(PLAY_ACTION)
-          .action(action)
-          .gameCode(gameCode)
-          .nickname(nickname)
-          .build());
-      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
-
-      return true;
-    }
 
     /**
      * Send a message to the server with ActivateEffect action
@@ -338,15 +323,20 @@ abstract public class Controller implements Runnable {
       return true;
     }
 
-    public void sendAdvanceToNextConnectedPlayer() {
-      GameAction action = new AdvanceToNextConnectedPlayer();
+    public boolean sendAdvanceState() {
+      GameAction action = new AdvanceState();
+
+      if (!action.isValid(gameState))
+        return false;
 
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
           .gameCode(gameCode)
           .nickname(nickname)
           .build());
-      clientLogger.info("Sent action {}", action.getClass().getSimpleName());
+      clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());
+
+      return true;
     }
 
     /**

@@ -3,7 +3,6 @@ package it.polimi.ingsw.eriantys.model.actions;
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.Slot;
@@ -12,8 +11,6 @@ import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
-
-import java.util.List;
 
 public class MoveStudentsToDiningHall extends GameAction {
   private final Students students;
@@ -51,7 +48,7 @@ public class MoveStudentsToDiningHall extends GameAction {
     RuleBook rules = gameState.getRuleBook();
 
     if (entrance.getCount() == rules.entranceSize - rules.playableStudentCount)
-      gameState.advanceTurnPhase();
+      gameState.advance();
   }
 
   /**

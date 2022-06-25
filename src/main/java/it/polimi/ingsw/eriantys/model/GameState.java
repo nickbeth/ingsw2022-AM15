@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
+import static it.polimi.ingsw.eriantys.model.enums.GamePhase.ACTION;
+import static it.polimi.ingsw.eriantys.model.enums.GamePhase.PLANNING;
 
 public class GameState implements Serializable {
   private List<Player> players = new ArrayList<>(); // Players in the game
@@ -58,7 +60,7 @@ public class GameState implements Serializable {
   public void advancePlayer() {
     if (getGamePhase() == GamePhase.PLANNING)
       currentPlayer = planningPhaseOrder.get((planningPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
-    if (getGamePhase() == GamePhase.ACTION)
+    if (getGamePhase() == ACTION)
       currentPlayer = actionPhaseOrder.get((actionPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
 
     //if the new current player is disconnected advances to next player
@@ -127,12 +129,260 @@ public class GameState implements Serializable {
       }
       case PLANNING -> {
         modelLogger.debug("PLANNING Phase advances to ACTION");
-        gamePhase = GamePhase.ACTION;
+        gamePhase = ACTION;
         prepareOrderForActionPhase();
         currentPlayer = actionPhaseOrder.get(0);
         if (!currentPlayer.isConnected())
           advancePlayer();
       }
+    }
+  }
+
+  public void advance() {
+    boolean isLastTurnPhase = turnPhase.equals(TurnPhase.PICKING);
+    boolean wasPlanning = gamePhase.equals(GamePhase.PLANNING);
+    boolean wasAction = gamePhase.equals(ACTION);
+    boolean wasCurrentPlayerConnected = currentPlayer.isConnected();
+
+    int currentPlayerPlanningIndex = planningPhaseOrder.indexOf(currentPlayer);
+    int currentPlayerActionIndex = actionPhaseOrder.indexOf(currentPlayer);
+
+    boolean isCurrentPlayerLast =
+        wasAction ?
+            currentPlayerActionIndex == (actionPhaseOrder.size() - 1) :
+            currentPlayerPlanningIndex == (planningPhaseOrder.size() - 1);
+
+    // planning phase advances the same if the current player is connected or not
+    if (wasPlanning) {
+      // If it was the last player
+      if (isCurrentPlayerLast) {
+        simpleAdvanceGamePhase();
+        prepareOrderForActionPhase();
+        currentPlayer = firstOfPhase(ACTION);
+        return;
+      }
+
+      // if there are no remaining CONNECTED players after the current one
+      if (!advancePlanningPlayer()) {
+        simpleAdvanceGamePhase();
+        prepareOrderForActionPhase();
+        currentPlayer = firstOfPhase(ACTION);
+      }
+      return;
+    }
+
+    // planning phase advances the same if the current player is connected or not
+    if (wasAction) {
+      if (isLastTurnPhase) {
+        // If is last player prepare next phase.
+        if (isCurrentPlayerLast) {
+          simpleAdvanceGamePhase();
+          prepareOrderForPlanningPhase();
+          currentPlayer = firstOfPhase(PLANNING);
+        } else if (!advanceActionPlayer()) {
+          simpleAdvanceGamePhase();
+          prepareOrderForPlanningPhase();
+          currentPlayer = firstOfPhase(PLANNING);
+        }
+      }
+
+      // if the player was connected advance turn phase
+      if (wasCurrentPlayerConnected) {
+        simpleAdvanceTurnPhase();
+        return;
+      }
+      // if the player isn't connected, prepare state for the next player
+      turnPhase = TurnPhase.PLACING;
+      if (!isLastTurnPhase) {
+        if (isCurrentPlayerLast) {
+          prepareOrderForPlanningPhase();
+          currentPlayer = firstOfPhase(PLANNING);
+          return;
+        }
+        if (!advanceActionPlayer()) {
+          prepareOrderForPlanningPhase();
+          currentPlayer = firstOfPhase(PLANNING);
+          return;
+        }
+        return;
+      }
+    }
+
+    // originale
+//    if (currentPlayer.isConnected()) {
+//      switch (gamePhase) {
+//        case ACTION -> {
+//          simpleAdvanceTurnPhase();
+//          if (isLastTurnPhase) {
+//            if (isCurrentPlayerLast) {
+//              prepareOrderForPlanningPhase();
+//              currentPlayer = firstOfPlanning();
+//              return;
+//            }
+//            if (!advanceActionPlayer()) {
+//              prepareOrderForPlanningPhase();
+//              currentPlayer = firstOfPlanning();
+//              return;
+//            }
+//          }
+//        }
+//      }
+//    } else {
+//      // Case current player not connected
+//      switch (gamePhase) {
+//        case ACTION -> {
+//          turnPhase = TurnPhase.PLACING;
+//          if (isLastTurnPhase) {
+//            if (isCurrentPlayerLast) {
+//              prepareOrderForPlanningPhase();
+//              currentPlayer = firstOfPlanning();
+//            } else {
+//              advanceActionPlayer();
+//              return;
+//            }
+//          } else {
+//            if (isCurrentPlayerLast) {
+//              prepareOrderForPlanningPhase();
+//              currentPlayer = firstOfPlanning();
+//              return;
+//            }
+//            advanceActionPlayer();
+//            return;
+//          }
+//        }
+//      }
+//    }
+//
+//    if (!currentPlayer.isConnected()) {
+//      if (isPlanning) {
+//        if (isCurrentPlayerLast) {
+//          simpleAdvanceGamePhase();
+//          prepareOrderForActionPhase();
+//          currentPlayer = firstOfAction();
+//        } else {
+//          advancePlanningPlayer();
+//        }
+//        return;
+//      }
+//      if (isActionPhase) {
+//        turnPhase = TurnPhase.PLACING;
+//        if (isLastTurnPhase) {
+//          if (isCurrentPlayerLast) {
+//            simpleAdvanceGamePhase();
+//            prepareOrderForPlanningPhase();
+//            currentPlayer = firstOfPlanning();
+//          } else {
+//            advanceActionPlayer();
+//            return;
+//          }
+//        } else {
+//          if (isCurrentPlayerLast) {
+//            simpleAdvanceGamePhase();
+//            prepareOrderForPlanningPhase();
+//            currentPlayer = firstOfPlanning();
+//            return;
+//          } else {
+//            advanceActionPlayer();
+//            return;
+//          }
+//        }
+//      }
+//    }
+  }
+
+  /**
+   * @return The first CONNECTED player that should play in the given GamePhase
+   */
+  private Player firstOfPhase(GamePhase phase) {
+    switch (phase) {
+      case PLANNING -> {
+        int i = 0;
+
+        while (!planningPhaseOrder.get(i).isConnected()) {
+          i++;
+        }
+        return planningPhaseOrder.get(i);
+      }
+      case ACTION -> {
+        int i = 0;
+
+        while (!actionPhaseOrder.get(i).isConnected()) {
+          i++;
+        }
+        return actionPhaseOrder.get(i);
+      }
+      default -> {
+        return null;
+      }
+    }
+  }
+
+  /**
+   * Advance to the first CONNECTED player that should play in PLANNING phase
+   *
+   * @return False if the remaining player are all disconnected
+   */
+  private boolean advancePlanningPlayer() {
+    int currentPlayerPlanningIndex = planningPhaseOrder.indexOf(currentPlayer);
+    try {
+      currentPlayer = planningPhaseOrder.get(currentPlayerPlanningIndex + 1);
+    } catch (IndexOutOfBoundsException e) {
+      // Remaining players are all disconnected
+      return false;
+    }
+    if (!currentPlayer.isConnected())
+      return advancePlanningPlayer();
+    return true;
+  }
+
+  /**
+   * Advances to the first CONNECTED player that should play in ACTION phase
+   *
+   * @return False if the remaining player are all disconnected
+   */
+  private boolean advanceActionPlayer() {
+    int currentPlayerActionIndex = actionPhaseOrder.indexOf(currentPlayer);
+    try {
+      currentPlayer = actionPhaseOrder.get(currentPlayerActionIndex + 1);
+    } catch (IndexOutOfBoundsException e) {
+      return false;
+    }
+    if (!currentPlayer.isConnected())
+      return advanceActionPlayer();
+    return true;
+  }
+
+  /**
+   * Sorts turnOrder players by their turn priority (in ascending order)
+   */
+  private void prepareOrderForActionPhase() {
+    modelLogger.info("Updated action turn order.");
+    modelLogger.debug("Old action order: "
+        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
+    );
+    actionPhaseOrder.clear();
+    actionPhaseOrder.addAll(players);
+    actionPhaseOrder.sort(Comparator.comparingInt(Player::getTurnPriority));
+    modelLogger.debug("New action order: "
+        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
+    );
+  }
+
+  private void simpleAdvanceGamePhase() {
+    switch (gamePhase) {
+      case ACTION -> gamePhase = GamePhase.PLANNING;
+      case PLANNING -> gamePhase = ACTION;
+    }
+  }
+
+  /**
+   * Advances to next turnPhase (takes into account gameMode)
+   */
+  public void simpleAdvanceTurnPhase() {
+    switch (turnPhase) {
+      case PLACING -> turnPhase = TurnPhase.MOVING;
+      case MOVING -> turnPhase = TurnPhase.PICKING;
+      case PICKING -> turnPhase = TurnPhase.PLACING;
     }
   }
 
@@ -143,14 +393,9 @@ public class GameState implements Serializable {
     return turnPhase;
   }
 
-  /**
-   * advances to next turnPhase (takes into account gameMode)
-   */
-  public void advanceTurnPhase() {
-    switch (turnPhase) {
-      case PLACING -> turnPhase = TurnPhase.MOVING;
-      case MOVING -> turnPhase = TurnPhase.PICKING;
-      case PICKING -> turnPhase = TurnPhase.PLACING;
+  public void advanceIfDisconnected(String disconnectingPlayer) {
+    if (currentPlayer.equals(this.getPlayer(disconnectingPlayer))) {
+      advancePlayer();
     }
   }
 
@@ -220,22 +465,6 @@ public class GameState implements Serializable {
 
 
   /**
-   * Sorts turnOrder players by their turn priority (in descending order)
-   */
-  private void prepareOrderForActionPhase() {
-    modelLogger.info("Updated action turn order.");
-    modelLogger.debug("Old action order: "
-        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
-    );
-    actionPhaseOrder.clear();
-    actionPhaseOrder.addAll(players);
-    actionPhaseOrder.sort(Comparator.comparingInt(Player::getTurnPriority));
-    modelLogger.debug("New action order: "
-        + actionPhaseOrder.stream().map(player -> player.getNickname() + " " + player.getTurnPriority() + " -> ").toList()
-    );
-  }
-
-  /**
    * Sorts planOrder players clockwise starting from the first of turnOrder
    */
   private void prepareOrderForPlanningPhase() {
@@ -273,11 +502,13 @@ public class GameState implements Serializable {
       default -> throw new AssertionError();
     }
   }
+
   /**
    * Overload of method {@link #isLastPlayer(Player)}. <br>
    * Returns the last connected player of the given gamePhase
+   *
    * @param player player who's wanted to know
-   * @param phase GamePhase
+   * @param phase  GamePhase
    */
   public boolean isLastPlayer(Player player, GamePhase phase) {
     switch (phase) {

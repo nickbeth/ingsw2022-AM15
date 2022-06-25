@@ -31,6 +31,6 @@ public class ReInitiateGame extends GameAction {
 
   @Override
   public boolean isValid(GameState gameState) {
-    return false;
+    return true;
   }
 }

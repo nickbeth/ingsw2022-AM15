@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
+import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.*;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
@@ -15,11 +16,11 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
-import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public abstract class MenuGame extends Menu {
   protected View dashboardsView = new DashboardsView(players(), rules(), professorHolder());
@@ -80,13 +81,14 @@ public abstract class MenuGame extends Menu {
 
   final protected void showViewOptions(PrintStream out) {
     out.println();
-    out.printf("- Player: %s - GamePhase: %s TurnPhase: %s ------------------------------------------------\n", me().getNickname(), game().getGamePhase().toString(), game().getTurnPhase().toString());
+    String openingRow = " - GameCode: %s - Player: %s - GamePhase: %s TurnPhase: %s --------------------------------\n";
+    out.printf(openingRow, controller.getGameCode(), me().getNickname(), game().getGamePhase().toString(), game().getTurnPhase().toString());
     if (isMyTurn()) {
       out.println("It's now your turn " + currentPlayer());
     } else {
       out.println("It's now turn of: " + currentPlayer());
     }
-      out.println("0000 - Quit the game and disconnect");
+    out.println("0000 - Quit the game and disconnect");
     out.println("1 - View all");
     out.println("2 - View islands");
     out.println("3 - View dashboards");
@@ -101,6 +103,11 @@ public abstract class MenuGame extends Menu {
       out.println("-------------------------------------------------------------------------------------------------------");
   }
 
+  /**
+   * Handle common view options of the GameState
+   *
+   * @param choice
+   */
   final protected void handleViewOptions(String choice) {
 
     clearConsole();
@@ -155,11 +162,11 @@ public abstract class MenuGame extends Menu {
           characterCardsView.draw(out);
       }
 
-      case "0000" -> {
-        controller.sender().sendQuitGame();
-        controller.fireChange(DELIBERATE_DISCONNECTION, null, null);
-        return;
-      }
+//      case "0000" -> {
+//        controller.sender().sendQuitGame();
+//        controller.fireChange(DELIBERATE_DISCONNECTION, null, null);
+//        return true;
+//      }
 
       // Simply goes on
       default -> {
@@ -167,6 +174,22 @@ public abstract class MenuGame extends Menu {
     }
     showOptions();
   }
+
+  /**
+   * Handle common view options of the GameState
+   *
+   * @param choice
+   * @return True if deliberate disconnection is wanted, False otherwise
+   */
+  final protected boolean handleDisconnection(String choice) {
+    if (choice.equals("0000")) {
+      controller.sender().sendQuitGame();
+      controller.fireChange(DELIBERATE_DISCONNECTION, null, null);
+      return true;
+    }
+    return false;
+  }
+
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
@@ -188,7 +211,7 @@ public abstract class MenuGame extends Menu {
   }
 
   /**
-   * Checks if i amd the current player
+   * Checks if I am amd the current player
    *
    * @return True if so, false otherwise.
    */

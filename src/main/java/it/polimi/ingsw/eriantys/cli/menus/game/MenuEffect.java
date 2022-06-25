@@ -11,8 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
-import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
-import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
 public class MenuEffect extends MenuGame {
   public MenuEffect() {
@@ -27,8 +26,6 @@ public class MenuEffect extends MenuGame {
   public MenuEnum show() {
     // Choose the cards
     chooseCharacterCard();
-
-    out.println("I'm not stuck in a loop anymore");
 
     // Show CC descriptions
     CharacterCard cc = game().getPlayingField().getPlayedCharacterCard();
@@ -61,7 +58,7 @@ public class MenuEffect extends MenuGame {
       // Send the action<
       if (controller.sender().sendActivateEffect(cc)) {
         waitForGreenLight();
-        out.println("Card activated. ");
+        out.println(colored("Card activated. ", GREEN));
         new CharacterCardsView(List.of(cc)).draw(out);
         if (studentsLeftToMove() == 0)
           return MenuEnum.MOVING;
@@ -88,6 +85,7 @@ public class MenuEffect extends MenuGame {
     // Show playable CC
     out.println();
     while (true) {
+      playersView.draw(out);
       characterCardsView.draw(out);
 
       // Choose CC
@@ -97,10 +95,10 @@ public class MenuEffect extends MenuGame {
       // Send the action
       if (controller.sender().sendChooseCharacterCard(ccIndex)) {
         waitForGreenLight();
-        out.println("Card chosen.");
+        out.println(colored("Card chosen.", GREEN));
         break;
       }
-      out.println(colored("Choose a valid card",RED));
+      out.println(colored("Choose a valid card", RED));
     }
   }
 

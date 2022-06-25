@@ -410,7 +410,7 @@ public class GameServer implements Runnable {
       }
 
       // Advance to the next connected player
-      GameAction advanceAction = new AdvanceToNextConnectedPlayer();
+      GameAction advanceAction = new AdvanceState();
       gameEntry.executeAction(advanceAction);
       broadcastMessage(gameEntry, new Message.Builder()
           .type(MessageType.GAMEDATA)

@@ -38,7 +38,7 @@ public class MoveStudentsToIsland extends GameAction {
     RuleBook rules = gameState.getRuleBook();
 
     if (entrance.getCount() == rules.entranceSize - rules.playableStudentCount)
-      gameState.advanceTurnPhase();
+      gameState.advance();
   }
 
   /**

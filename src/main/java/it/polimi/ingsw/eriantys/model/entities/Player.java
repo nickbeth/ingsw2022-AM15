@@ -53,7 +53,7 @@ public class Player implements Serializable {
   }
 
   public int getTurnPriority() {
-    return chosenCard != null ? chosenCard.value : 0;
+    return chosenCard != null ? chosenCard.value : 100;
   }
 
   public void addCoins() {

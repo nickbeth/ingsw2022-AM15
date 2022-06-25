@@ -35,6 +35,8 @@ public class MenuMoving extends MenuGame {
       String choice = getNonBlankString();
 
       handleViewOptions(choice);
+      if (handleDisconnection(choice))
+        return MenuEnum.CREATE_OR_JOIN;
 
       if (isMyTurn()) {
         switch (choice) {
