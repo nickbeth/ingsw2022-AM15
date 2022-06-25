@@ -157,11 +157,11 @@ public class IslandHandler extends SectionHandler {
     towerLabel.setVisible(false);
 
     lockView = new ImageView(new Image("/assets/realm/lock-icon.png"));
-    lockView.setFitWidth(60);
+    lockView.setFitWidth(50);
     lockView.setPreserveRatio(true);
     islandPane.getChildren().add(lockView);
     AnchorPane.setBottomAnchor(lockView, 50.0);
-    AnchorPane.setLeftAnchor(lockView, 63.0);
+    AnchorPane.setLeftAnchor(lockView, 60.0);
     lockView.setVisible(false);
 
     islandPane.setOnDragOver(this::dragOverIsland);
@@ -226,11 +226,11 @@ public class IslandHandler extends SectionHandler {
       IslandInputCards card = (IslandInputCards) Controller.get().getGameState().getPlayingField().getPlayedCharacterCard();
       card.setIslandIndex(islandIndex);
       if (!Controller.get().sender().sendActivateEffect(card)){
-        e.acceptTransferModes(TransferMode.NONE);
+        e.setDropCompleted(true);
+        e.consume();
         debugScreenHandler.showMessage("invalid " + card.getCardEnum() + " effect drop on island " + islandIndex);
       }
       else {
-        e.acceptTransferModes(TransferMode.MOVE);
         debugScreenHandler.showMessage(card.getCardEnum() + " effect was applied on island " + islandIndex);
       }
     }

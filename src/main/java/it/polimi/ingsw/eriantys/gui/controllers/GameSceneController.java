@@ -3,8 +3,10 @@ package it.polimi.ingsw.eriantys.gui.controllers;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.gui.controllers.section_handlers.*;
+import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -170,6 +172,8 @@ public class GameSceneController extends FXMLController {
       assistCardTilesHandler.update();
     if (characterCardsPanel.isVisible())
       characterCardsHandler.update();
+    if (Controller.get().getGameState().getRuleBook().gameMode == GameMode.EXPERT)
+      playCCButton.setVisible(isCCButtonVisible());
   }
 
   @FXML
@@ -205,5 +209,13 @@ public class GameSceneController extends FXMLController {
     //update coard handerl
     characterCardsHandler.update();
     characterCardsPanel.setVisible(true);
+  }
+
+  private boolean isCCButtonVisible() {
+    GameState gameState = Controller.get().getGameState();
+
+    return gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname()) &&
+            gameState.getPlayingField().getPlayedCharacterCard() == null &&
+            gameState.getTurnPhase() != TurnPhase.PICKING;
   }
 }

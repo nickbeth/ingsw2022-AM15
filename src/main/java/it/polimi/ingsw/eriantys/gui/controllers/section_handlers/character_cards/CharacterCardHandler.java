@@ -3,9 +3,9 @@ package it.polimi.ingsw.eriantys.gui.controllers.section_handlers.character_card
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.controllers.section_handlers.DebugScreenHandler;
 import it.polimi.ingsw.eriantys.gui.controllers.section_handlers.SectionHandler;
+import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -35,21 +35,28 @@ public class CharacterCardHandler extends SectionHandler {
   }
 
   /**
-   * Refreshes addon coin visibility and cursor type
+   * Refreshes addon coin visibility and card clickability
    */
   @Override
   protected void refresh() {
     crossImg.setVisible(true);
     addonCoin.setVisible(card.isUsed());
-    GamePhase gamePhase = Controller.get().getGameState().getGamePhase();
-    TurnPhase turnPhase = Controller.get().getGameState().getTurnPhase();
-    if ( gamePhase == GamePhase.ACTION  && turnPhase != TurnPhase.PICKING) {
+    CharacterCard playedCard = Controller.get().getGameState().getPlayingField().getPlayedCharacterCard();
+    GameState gameState = Controller.get().getGameState();
+    // if the player isn't current the card is not clickable
+    if (!Controller.get().getNickname().equals(gameState.getCurrentPlayer().getNickname())) {
+      makeNotClickable();
+      return;
+    }
+    if (gameState.getGamePhase() == GamePhase.PLANNING) {
+      makeNotClickable();
+      return;
+    }
+    if (playedCard == null) {
       cardImg.setOnMouseClicked(e -> playCard());
       cardImg.setCursor(Cursor.HAND);
-    }
-    else {
-      cardImg.setOnMouseClicked(null);
-      cardImg.setCursor(Cursor.DEFAULT);
+    } else {
+      makeNotClickable();
     }
   }
 
@@ -101,6 +108,11 @@ public class CharacterCardHandler extends SectionHandler {
     int cardIndex = Controller.get().getGameState().getPlayingField().getCharacterCards().indexOf(card);
     if (!Controller.get().sender().sendChooseCharacterCard(cardIndex))
       debug.showMessage("invalid chosen CC");
+  }
+
+  public void makeNotClickable() {
+    cardImg.setOnMouseClicked(null);
+    cardImg.setCursor(Cursor.DEFAULT);
   }
 
 }

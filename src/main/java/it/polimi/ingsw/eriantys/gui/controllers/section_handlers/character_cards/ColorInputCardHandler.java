@@ -29,18 +29,23 @@ public class ColorInputCardHandler extends CharacterCardHandler {
     this.cardsPanel = cardsPanel;
   }
 
+  /**
+   * - Calls super.refresh()<br>
+   * - Refreshes visibility of the student Images and the red "close window" cross.<br>
+   */
   @Override
   protected void refresh() {
     super.refresh();
     GameState gameState = Controller.get().getGameState();
-    if (Controller.get().getNickname().equals(gameState.getCurrentPlayer().getNickname())) {
-      CharacterCard playedCard = gameState.getPlayingField().getPlayedCharacterCard();
-      if (playedCard != null && playedCard.getCardEnum() == card.getCardEnum()) {
-        crossImg.setVisible(false);
-        cardImg.setCursor(Cursor.DEFAULT);
-        cardImg.setOnMouseClicked(null);
-        studentImgs.forEach(img -> img.setVisible(true));
-      }
+    if (!Controller.get().getNickname().equals(gameState.getCurrentPlayer().getNickname())) {
+      studentImgs.forEach(img -> img.setVisible(false));
+      return;
+    }
+
+    CharacterCard playedCard = gameState.getPlayingField().getPlayedCharacterCard();
+    if (playedCard != null && playedCard.getCardEnum() == card.getCardEnum()) {
+      crossImg.setVisible(false);
+      studentImgs.forEach(img -> img.setVisible(true));
     }
   }
 
@@ -52,6 +57,7 @@ public class ColorInputCardHandler extends CharacterCardHandler {
       image.setFitWidth(35);
       image.setPreserveRatio(true);
       image.setVisible(false);
+      image.setCursor(Cursor.HAND);
       image.setOnMouseClicked(e -> chooseColor(color));
       studentImgs.add(image);
       cardPane.getChildren().add(image);
@@ -73,7 +79,6 @@ public class ColorInputCardHandler extends CharacterCardHandler {
     ColorInputCards playedCard = (ColorInputCards) Controller.get().getGameState().getPlayingField().getPlayedCharacterCard();
     playedCard.setColor(color);
     if (Controller.get().sender().sendActivateEffect(playedCard)) {
-      crossImg.setVisible(true);
       studentImgs.forEach(img -> img.setVisible(false));
       cardsPanel.setVisible(false);
       cardImg.setCursor(Cursor.HAND);

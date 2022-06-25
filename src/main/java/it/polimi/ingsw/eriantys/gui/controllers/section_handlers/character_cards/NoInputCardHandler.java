@@ -9,25 +9,32 @@ import javafx.scene.layout.StackPane;
 
 public class NoInputCardHandler extends CharacterCardHandler {
   private final StackPane cardsPanel;
+  private boolean isActivateEffectSent;
 
   public NoInputCardHandler(StackPane cardPane, CharacterCard card, ImageView crossImg, StackPane cardsPanel, DebugScreenHandler debug) {
     super(cardPane, card, crossImg, debug);
     this.cardsPanel = cardsPanel;
   }
 
+  /**
+   * calls super.refresh() and if needed sends activate effect action
+   */
   @Override
   protected void refresh() {
     super.refresh();
     GameState gameState = Controller.get().getGameState();
-    if (Controller.get().getNickname().equals(gameState.getCurrentPlayer().getNickname())) {
-      CharacterCard playedCard = gameState.getPlayingField().getPlayedCharacterCard();
-      if (playedCard != null && playedCard.getCardEnum() == card.getCardEnum()) {
-        if (Controller.get().sender().sendActivateEffect(playedCard))
-          cardsPanel.setVisible(false);
-        else debug.showMessage("invalid " + playedCard.getCardEnum() + " apply effect");
-      }
+    CharacterCard playedCard = gameState.getPlayingField().getPlayedCharacterCard();
+    if (playedCard == null) {
+      isActivateEffectSent = false;
     }
-
+    // if activate effect wasn't already sent and this is the played card
+    if (!isActivateEffectSent && playedCard != null && playedCard.getCardEnum() == card.getCardEnum()) {
+      //try sending activate effect
+      if (Controller.get().sender().sendActivateEffect(playedCard)) {
+        cardsPanel.setVisible(false);
+        isActivateEffectSent = true;
+      } else debug.showMessage("invalid " + playedCard.getCardEnum() + " apply effect");
+    }
   }
 
   @Override

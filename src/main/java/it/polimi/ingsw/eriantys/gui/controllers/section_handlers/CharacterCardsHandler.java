@@ -2,14 +2,17 @@ package it.polimi.ingsw.eriantys.gui.controllers.section_handlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.controllers.section_handlers.character_cards.CardHandlerCreator;
-import javafx.fxml.FXML;
+import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +22,7 @@ public class CharacterCardsHandler extends SectionHandler {
   private final TilePane characterCards;
 
   private final DebugScreenHandler debug;
-  private List<SectionHandler> cardHandlers = new ArrayList<>();
+  private final List<SectionHandler> cardHandlers = new ArrayList<>();
 
 
   public CharacterCardsHandler(StackPane characterCardsPanel, TilePane characterCards, DebugScreenHandler debug) {
@@ -47,16 +50,16 @@ public class CharacterCardsHandler extends SectionHandler {
     CardHandlerCreator creator = new CardHandlerCreator();
     Controller.get().getGameState().getPlayingField().getCharacterCards().forEach(card -> {
       StackPane cardPane = new StackPane();
-      SectionHandler cardHandler = creator.getCardHandler(card, cardPane, closeButton,characterCardsPanel, debug);
+      SectionHandler cardHandler = creator.getCardHandler(card, cardPane, closeButton, characterCardsPanel, debug);
       cardHandler.update();
       cardHandlers.add(cardHandler);
       characterCards.getChildren().add(cardPane);
     });
   }
 
-  @FXML
   private void hideCharacterCards(MouseEvent mouseEvent) {
     debug.showMessage("clicked on red cross");
     characterCardsPanel.setVisible(false);
   }
+
 }

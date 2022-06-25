@@ -25,28 +25,39 @@ public class IslandInputCardHandler extends CharacterCardHandler {
     this.cardsPanel = cardsPanel;
   }
 
+  /**
+   * - Calls super.refresh()<br>
+   * - Refreshes visibility of the draggable icon and the red "close window" cross.<br>
+   * - If there is an attached text to the icon it refreshes it
+   */
   @Override
   protected void refresh() {
     super.refresh();
     GameState gameState = Controller.get().getGameState();
-    if (Controller.get().getNickname().equals(gameState.getCurrentPlayer().getNickname())) {
-      CharacterCard playedCard = gameState.getPlayingField().getPlayedCharacterCard();
-      if (playedCard != null && playedCard.getCardEnum() == card.getCardEnum()) {
-        crossImg.setVisible(false);
-        cardImg.setCursor(Cursor.DEFAULT);
-        cardImg.setOnMouseClicked(null);
-        draggableItem.setVisible(true);
-      }
+    if (!Controller.get().getNickname().equals(gameState.getCurrentPlayer().getNickname())) {
+      draggableItem.setVisible(false);
+      return;
     }
-    if (card.getCardEnum() == CharacterCardEnum.LOCK_ISLAND)
+
+    CharacterCard playedCard = gameState.getPlayingField().getPlayedCharacterCard();
+    if (playedCard != null && playedCard.getCardEnum() == card.getCardEnum()) {
+      crossImg.setVisible(false);
+      draggableItem.setVisible(true);
+    }
+    if (card.getCardEnum() == CharacterCardEnum.LOCK_ISLAND) {
+      draggableItem.getStyleClass().add("text-addoncoin");
       draggableItem.setText("×" + Controller.get().getGameState().getPlayingField().getLocks());
+    }
   }
 
+  /**
+   * Creates a draggable item and creates drag event handlers
+   */
   @Override
   protected void create() {
     super.create();
     draggableItem = new Label();
-    draggableItem.getStyleClass().add("label-addoncoin");
+    draggableItem.getStyleClass().add("text-addoncoin");
     ImageView graphic = new ImageView();
     graphic.setFitWidth(60);
     graphic.setPreserveRatio(true);
@@ -60,7 +71,7 @@ public class IslandInputCardHandler extends CharacterCardHandler {
 
     draggableItem.setOnDragDetected((e) -> {
       debug.showMessage(card.getCardEnum() + " drag detected");
-      Dragboard db = graphic.startDragAndDrop(TransferMode.ANY);
+      Dragboard db = graphic.startDragAndDrop(TransferMode.MOVE);
       ClipboardContent content = new ClipboardContent();
       content.put(DataFormats.CARD_TO_ISLAND.format, card.getCardEnum());
       db.setContent(content);
@@ -71,8 +82,7 @@ public class IslandInputCardHandler extends CharacterCardHandler {
 
     // show character card panel at the end of a drag event
     draggableItem.setOnDragDone((e) -> {
-      if (e.getAcceptedTransferMode() != TransferMode.MOVE)
-        cardsPanel.setVisible(true);
+      cardsPanel.setVisible(e.isDropCompleted());
     });
     draggableItem.setGraphic(graphic);
     cardPane.getChildren().add(draggableItem);
