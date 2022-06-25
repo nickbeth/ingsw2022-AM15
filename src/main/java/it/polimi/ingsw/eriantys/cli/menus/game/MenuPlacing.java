@@ -8,6 +8,7 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
+import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
@@ -60,6 +61,9 @@ public class MenuPlacing extends MenuGame {
 
       if (isMyTurn()) {
         switch (choice) {
+          case "forced_advancement_to_next_menu" -> {
+            return null;
+          }
 
           // Move Students from entrance to island
           case "Q", "q" -> {
@@ -111,8 +115,10 @@ public class MenuPlacing extends MenuGame {
 
           // Choose a character card from those in playing field
           case "E", "e" -> {
-            if (!isCharacterCardPlayed())
+            if (!isCharacterCardPlayed()) {
+              new MenuEffect().show();
               return MenuEnum.EFFECT;
+            }
             out.println(colored("A card was already played", RED));
           }
 

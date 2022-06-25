@@ -4,6 +4,8 @@ import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.View;
 import it.polimi.ingsw.eriantys.cli.views.ViewGroup;
 
+import java.util.Optional;
+
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 

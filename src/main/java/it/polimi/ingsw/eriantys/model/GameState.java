@@ -352,6 +352,20 @@ public class GameState implements Serializable {
     }
   }
 
+  /**
+   * @param player1 First player involved
+   * @param player2 Second player involved
+   * @return True if player1 comes after player2 in turn order.
+   */
+  public Boolean comesAfter(Player player1, Player player2) {
+    switch (gamePhase) {
+      case PLANNING -> {return planningPhaseOrder.indexOf(player1) > planningPhaseOrder.indexOf(player2);}
+      case ACTION -> {return actionPhaseOrder.indexOf(player1) > actionPhaseOrder.indexOf(player2);}
+    }
+    return null;
+  }
+
+
   public boolean isTurnOf(String nickname) {
     return currentPlayer.getNickname().equals(nickname);
   }

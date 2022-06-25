@@ -4,18 +4,19 @@ import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
-import java.io.PrintStream;
-import java.util.Scanner;
+import java.util.Optional;
 
+import static it.polimi.ingsw.eriantys.cli.menus.MenuEnum.*;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.EXPERT;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.NORMAL;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 /**
@@ -23,9 +24,11 @@ import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
  */
 public class MenuCreateOrJoin extends Menu {
   private boolean errorEncountered = false;
+  private boolean isGameAlreadyStarted = false;
 
   public MenuCreateOrJoin() {
     eventsToBeListening.add(GAMEINFO_EVENT);
+    eventsToBeListening.add(START_GAME);
     eventsToBeListening.add(ERROR);
   }
 
@@ -47,7 +50,7 @@ public class MenuCreateOrJoin extends Menu {
       showOptions();
       out.print("Make a choice: ");
       choice = getKeyboardInput();
-      clientLogger.debug("Handling choice");
+
       switch (choice) {
 
         // Use default config
@@ -84,6 +87,10 @@ public class MenuCreateOrJoin extends Menu {
           }
           waitForGreenLight();
 
+          if (isGameAlreadyStarted) {
+            return PICK_ASSISTANT;
+          }
+
           if (!errorEncountered) {
             return MenuEnum.LOBBY;
           }
@@ -102,6 +109,26 @@ public class MenuCreateOrJoin extends Menu {
       }
     }
   }
+
+  private boolean isYourTurnPassed() {
+    GameState game = controller.getGameState();
+    Player me = game.getPlayer(controller.getNickname());
+    Player currentPlayer = game.getCurrentPlayer();
+
+    return !game.comesAfter(me, currentPlayer);
+  }
+
+  private MenuEnum nextGameMenu() {
+    GameState game = controller.getGameState();
+    MenuEnum nextMenu = null;
+
+    switch (game.getGamePhase()) {
+      case PLANNING -> nextMenu = isYourTurnPassed() ? PLACING : PICK_ASSISTANT;
+      case ACTION -> nextMenu = isYourTurnPassed() ? PICK_ASSISTANT : PLACING;
+    }
+    return nextMenu;
+  }
+
 
   private void chooseGameSettings() {
     boolean invalid;
@@ -134,6 +161,12 @@ public class MenuCreateOrJoin extends Menu {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     super.propertyChange(evt);
+
+    if (evt.getPropertyName().equals(START_GAME.tag)) {
+      out.print(colored("\nConnected to the game " + controller.getGameCode() + ".", GREEN));
+      isGameAlreadyStarted = true;
+    }
+
     if (evt.getPropertyName().equals(GAMEINFO_EVENT.tag)) {
       clientLogger.debug("Message from server. Valid option");
       errorEncountered = false;

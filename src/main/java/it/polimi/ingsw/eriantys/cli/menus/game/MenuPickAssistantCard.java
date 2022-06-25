@@ -1,13 +1,19 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
+import it.polimi.ingsw.eriantys.cli.InputHandler;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.AssistantCardsView;
 import it.polimi.ingsw.eriantys.cli.views.PlayersView;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Arrays;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.controller.EventType.GAMEDATA_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.PLAYER_CONNECTION_CHANGED;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 public class MenuPickAssistantCard extends MenuGame {
@@ -23,6 +29,7 @@ public class MenuPickAssistantCard extends MenuGame {
 
     if (isMyTurn()) {
       out.println("Q - Choose assistant card");
+      out.println("-------------------------------------------------------------------------------------------------------");
     }
     out.print("Make option: ");
   }
@@ -31,8 +38,9 @@ public class MenuPickAssistantCard extends MenuGame {
   public MenuEnum show() {
 
     while (true) {
+      String choice;
 
-      String choice = getNonBlankString();
+      choice = getNonBlankString();
 
       handleViewOptions(choice);
       if (handleDisconnection(choice))
@@ -40,9 +48,16 @@ public class MenuPickAssistantCard extends MenuGame {
 
       if (isMyTurn()) {
         switch (choice) {
+          case "forced_advancement_to_next_menu" -> {
+            return null;
+          }
 
           // Choose assistant card
           case "Q", "q" -> {
+            if (!turnPhase().equals(TurnPhase.PLACING) || !gamePhase().equals(GamePhase.PLANNING)) {
+              out.println(colored("You're in the wrong phase.", RED));
+              break;
+            }
             new AssistantCardsView(me()).draw(out);
 
             out.print("Choose card index: ");

@@ -6,6 +6,7 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 

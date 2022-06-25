@@ -32,10 +32,30 @@ public class CliController extends Controller {
 
   @Override
   public void run() {
-    MenuIterator menus = new MenuIterator();
+    MenuIterator iterator = new MenuIterator();
+
     while (true) {
-      menus.menuAction();
-      menus.goNext();
+      preGame(iterator);
+      inGame(iterator);
+    }
+
+//    out.println("Game ended");
+//    out.println("Application shutdown");
+  }
+
+  private void inGame(MenuIterator iterator) {
+    boolean escape = false;
+
+    while (!escape) {
+      if (iterator.menuAction()) {
+        escape = true;
+      }
+    }
+  }
+
+  private void preGame(MenuIterator iterator) {
+    while (!iterator.menuPreGame()) {
+      iterator.goNext();
     }
   }
 }

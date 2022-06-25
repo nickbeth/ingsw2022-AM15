@@ -6,6 +6,7 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
+import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
@@ -40,6 +41,10 @@ public class MenuMoving extends MenuGame {
 
       if (isMyTurn()) {
         switch (choice) {
+          case "forced_advancement_to_next_menu" -> {
+            return null;
+          }
+
           // Move mother nature a certain amount
           case "T", "t" -> {
             // Check of the Turn phase

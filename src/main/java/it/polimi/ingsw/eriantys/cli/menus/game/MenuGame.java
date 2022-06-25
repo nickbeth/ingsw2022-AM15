@@ -1,7 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
+import it.polimi.ingsw.eriantys.cli.InputHandler;
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
-import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.*;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
@@ -12,11 +12,12 @@ import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
+import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
@@ -32,6 +33,14 @@ public abstract class MenuGame extends Menu {
   // Linking the game state to menus
   protected GameState game() {
     return controller.getGameState();
+  }
+
+  protected GamePhase gamePhase() {
+    return game().getGamePhase();
+  }
+
+  protected TurnPhase turnPhase() {
+    return game().getTurnPhase();
   }
 
   protected RuleBook rules() {
@@ -152,6 +161,7 @@ public abstract class MenuGame extends Menu {
           game().getActionPhaseOrder()
               .forEach(player -> out.print(player + " -> "));
         }
+        out.println();
       }
 
       case "8" -> playersView.draw(out);
@@ -161,14 +171,6 @@ public abstract class MenuGame extends Menu {
         if (rules().gameMode.equals(GameMode.EXPERT))
           characterCardsView.draw(out);
       }
-
-//      case "0000" -> {
-//        controller.sender().sendQuitGame();
-//        controller.fireChange(DELIBERATE_DISCONNECTION, null, null);
-//        return true;
-//      }
-
-      // Simply goes on
       default -> {
       }
     }
@@ -195,12 +197,17 @@ public abstract class MenuGame extends Menu {
   public void propertyChange(PropertyChangeEvent evt) {
     super.propertyChange(evt);
 
+    if (Arrays.asList(GAMEDATA_EVENT.tag, PLAYER_CONNECTION_CHANGED.tag).contains(evt.getPropertyName())) {
+      InputHandler.get().setLine("forced_advancement_to_next_menu");
+      inputGreenLight = true;
+    }
+
     // Refresh view and print what's happened
     if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag)) {
       String actionDescription = (String) evt.getNewValue();
       clearConsole();
       out.println(colored(actionDescription, GREEN));
-      showOptions();
+//      showOptions();
     }
 
     if (evt.getPropertyName().equals(PLAYER_CONNECTION_CHANGED.tag)) {

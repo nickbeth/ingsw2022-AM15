@@ -8,7 +8,6 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Optional;
-import java.util.Stack;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
@@ -54,15 +53,13 @@ public class MenuChooseNickname extends Menu {
           controller.sender().sendNickname("Baolo");
           waitForGreenLight();
 
-          if (isNicknameOk) {
-            if (!gameAlreadyStarted)
-              return MenuEnum.CREATE_OR_JOIN;
-            else {
-              out.println("Loading the game...");
-              waitForGreenLight();
+          if (gameAlreadyStarted) {
+            out.println("Loading the game...");
+            return MenuEnum.PICK_ASSISTANT;
+          }
 
-              return currentMenu();
-            }
+          if (isNicknameOk) {
+            return MenuEnum.CREATE_OR_JOIN;
           }
         }
 
@@ -76,22 +73,13 @@ public class MenuChooseNickname extends Menu {
 
           waitForGreenLight();
 
+          if (gameAlreadyStarted) {
+            out.println("Loading the game...");
+            return MenuEnum.PICK_ASSISTANT;
+          }
+
           if (isNicknameOk) {
-            if (!gameAlreadyStarted)
-              return MenuEnum.CREATE_OR_JOIN;
-            else {
-              out.println("You were already playing. Do you want to connect to the previous game?");
-              out.println("ANY_KEY - Yes");
-              out.println("N - No");
-
-              if (getNonBlankString().equalsIgnoreCase("n"))
-                break;
-
-              out.println("Loading the game...");
-              waitForGreenLight();
-
-              return currentMenu();
-            }
+            return MenuEnum.CREATE_OR_JOIN;
           }
         }
         // Go back
@@ -132,6 +120,4 @@ public class MenuChooseNickname extends Menu {
 
     greenLight = true;
   }
-
-
 }

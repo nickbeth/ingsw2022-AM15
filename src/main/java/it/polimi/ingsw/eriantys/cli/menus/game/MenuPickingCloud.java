@@ -42,6 +42,8 @@ public class MenuPickingCloud extends MenuGame {
 
       if (isMyTurn()) {
         switch (choice) {
+          case "forced_advancement_to_next_menu" -> {return null;}
+
           case "Q", "q" -> {
             if (!game().getTurnPhase().equals(TurnPhase.PICKING)) {
               clientLogger.warn("I'm not in right phase");
@@ -68,10 +70,6 @@ public class MenuPickingCloud extends MenuGame {
         }
       }
     }
-  }
-
-  private boolean amILastPlayer() {
-    return game().isLastPlayer(me(), GamePhase.ACTION);
   }
 
   @Override

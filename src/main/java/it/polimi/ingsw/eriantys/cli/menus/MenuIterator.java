@@ -8,15 +8,18 @@ import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuCreateOrJoin;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuLobby;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
+import java.util.List;
 
+import static it.polimi.ingsw.eriantys.cli.menus.MenuEnum.*;
 import static it.polimi.ingsw.eriantys.cli.menus.MenuIterator.MenuFactory.makeMenu;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
-import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 import static java.lang.System.out;
 
@@ -33,7 +36,6 @@ public class MenuIterator implements PropertyChangeListener {
      * @param menuType MenuEnum wanted to be created
      * @return The Menu corresponding to the given type
      */
-
     static Menu makeMenu(MenuEnum menuType) {
       switch (menuType) {
         case CONNECTION -> {
@@ -84,28 +86,72 @@ public class MenuIterator implements PropertyChangeListener {
     currentMenu = new MenuConnect();
   }
 
-  public void menuAction() {
-    addEventsToBeListened();
+  /**
+   * Handle PreGame menus
+   *
+   * @return True if a game is started.
+   */
+  public boolean menuPreGame() {
+    addEventsToBeListened(currentMenu);
     try {
       nextMenu = currentMenu.show();
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
-    removeEventsToBeListened();
+    removeEventsToBeListened(currentMenu);
+
+    return Arrays.asList(
+        PICK_ASSISTANT,
+        PLACING,
+        EFFECT,
+        MOVING,
+        PICKING_CLOUD).contains(nextMenu);
   }
 
-  // Set the current menu as listener of its list of events
-  private void addEventsToBeListened() {
-    currentMenu.getEventsToBeListening().forEach(eventType ->
-        controller.addListener(currentMenu, eventType.tag)
-    );
+  /**
+   * Handle InGame menus
+   * @return True if a game is ended or the player disconnects.
+   */
+  public boolean menuAction() {
+    currentMenu = currentGameMenu();
+    addEventsToBeListened(currentMenu);
+    try {
+      MenuEnum nextPossibleMenu = currentMenu.show();
+      if (nextPossibleMenu != null) {
+        if (nextPossibleMenu.equals(CREATE_OR_JOIN)) {
+          currentMenu = makeMenu(CREATE_OR_JOIN);
+          return true;
+        }
+      }
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    removeEventsToBeListened(currentMenu);
+
+    return controller.getGameState().getGamePhase().equals(GamePhase.WIN);
   }
 
-  // Removes the current menu as listener of its list of events
-  private void removeEventsToBeListened() {
-    currentMenu.getEventsToBeListening().forEach(eventType ->
-        controller.removeListener(currentMenu, eventType.tag)
-    );
+  private Menu currentGameMenu() {
+    GameState game = controller.getGameState();
+    switch (game.getGamePhase()) {
+      case PLANNING -> {
+        return makeMenu(MenuEnum.PICK_ASSISTANT);
+      }
+      case ACTION -> {
+        switch (game.getTurnPhase()) {
+          case PLACING -> {
+            return makeMenu(MenuEnum.PLACING);
+          }
+          case MOVING -> {
+            return makeMenu(MenuEnum.MOVING);
+          }
+          case PICKING -> {
+            return makeMenu(MenuEnum.PICKING_CLOUD);
+          }
+        }
+      }
+    }
+    return makeMenu(CONNECTION);
   }
 
   /**
@@ -118,30 +164,22 @@ public class MenuIterator implements PropertyChangeListener {
     return nextMenu;
   }
 
-  private MenuEnum gamePhaseToMenu() {
-    GameState game = controller.getGameState();
-    switch (game.getGamePhase()) {
-      case PLANNING:
-        return MenuEnum.PICK_ASSISTANT;
-      case ACTION:
-        switch (game.getTurnPhase()) {
-          case PLACING:
-            return MenuEnum.PLACING;
-          case MOVING:
-            return MenuEnum.MOVING;
-          case PICKING:
-            return MenuEnum.PICKING_CLOUD;
-        }
-    }
-    return MenuEnum.CONNECTION;
+  // Set the current menu as listener of its list of events
+  private void addEventsToBeListened(Menu menu) {
+    menu.getEventsToBeListening().forEach(eventType ->
+        controller.addListener(menu, eventType.tag)
+    );
+  }
+
+  // Removes the current menu as listener of its list of events
+  private void removeEventsToBeListened(Menu menu) {
+    menu.getEventsToBeListening().forEach(eventType ->
+        controller.removeListener(menu, eventType.tag)
+    );
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName().equals(START_GAME.tag)) {
-      nextMenu = gamePhaseToMenu();
-      out.print(colored("\nConnected to the game " + controller.getGameCode() + ".", GREEN));
-    }
 
     if (evt.getPropertyName().equals(GAME_ENDED.tag)) {
       out.println("GAME_ENDED");
