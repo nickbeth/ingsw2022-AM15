@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.gui.controllers.section_handlers;
 
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -37,6 +38,7 @@ public class EnemyDashboardHandler extends DashboardHandler {
     closeIcon.setPreserveRatio(true);
     closeIcon.setFitWidth(27.0);
     closeIcon.setPickOnBounds(false);
+    closeIcon.setCursor(Cursor.HAND);
     closeIcon.setOnMouseClicked(e -> dashboardPane.setVisible(false));
     dashboardPane.getChildren().add(closeIcon);
     AnchorPane.setTopAnchor(closeIcon, 0.0);

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.eriantys.gui.controllers.section_handlers;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.model.GameState;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
@@ -24,16 +26,19 @@ public class PromptTextHandler extends SectionHandler {
   }
 
   private String generatePrompt() {
-    GamePhase gamePhase = Controller.get().getGameState().getGamePhase();
-    TurnPhase turnPhase = Controller.get().getGameState().getTurnPhase();
-    String currentPlayer = Controller.get().getGameState().getCurrentPlayer().getNickname();
+    GameState gameState = Controller.get().getGameState();
+    GamePhase gamePhase = gameState.getGamePhase();
+    TurnPhase turnPhase = gameState.getTurnPhase();
+    String currentPlayer = gameState.getCurrentPlayer().getNickname();
+    CharacterCard playedCard = gameState.getPlayingField().getPlayedCharacterCard();
+
     String expertAddon = "";
     if (Controller.get().getNickname().equals(currentPlayer))
       currentPlayer = "YOUR";
     else
       currentPlayer += "'S";
 
-    if (Controller.get().getGameInfo().getMode() == GameMode.EXPERT)
+    if (Controller.get().getGameInfo().getMode() == GameMode.EXPERT && playedCard == null)
       expertAddon = " OR PLAY A CHARACTER CARD";
 
     if (gamePhase == GamePhase.PLANNING)
@@ -42,7 +47,7 @@ public class PromptTextHandler extends SectionHandler {
       if (turnPhase == TurnPhase.PLACING)
         return "IT'S " + currentPlayer.toUpperCase() + " TURN TO PLACE STUDENTS" + expertAddon;
       if (turnPhase == TurnPhase.MOVING)
-        return "IT'S " + currentPlayer.toUpperCase() + " TURN TO MOVE MOTHER NATURE OR PLAY A CHARACTER CARD" + expertAddon;
+        return "IT'S " + currentPlayer.toUpperCase() + " TURN TO MOVE MOTHER NATURE" + expertAddon;
       if (turnPhase == TurnPhase.PICKING)
         return "IT'S " + currentPlayer.toUpperCase() + " TURN TO PICK A CLOUD";
     }
