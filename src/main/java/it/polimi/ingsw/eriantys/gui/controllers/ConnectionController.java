@@ -75,11 +75,8 @@ public class ConnectionController extends FXMLController {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName().equals(NICKNAME_OK.tag)){
-      if (evt.getNewValue() == null) {
-        // if there is no attached gameinfo switch to Create or Join scene
-        gui.setScene(SceneEnum.CREATE_OR_JOIN);
-      }
+    if (evt.getPropertyName().equals(NICKNAME_OK.tag)) {
+      gui.setScene(SceneEnum.CREATE_OR_JOIN);
     } else {
       gui.setScene(SceneEnum.GAME);
     }

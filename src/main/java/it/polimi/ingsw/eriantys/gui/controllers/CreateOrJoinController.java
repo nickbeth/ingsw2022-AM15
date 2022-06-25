@@ -15,6 +15,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.GAMEINFO_EVENT;
+import static it.polimi.ingsw.eriantys.controller.EventType.START_GAME;
 
 
 public class CreateOrJoinController extends FXMLController implements PropertyChangeListener {
@@ -116,6 +117,9 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName().equals(GAMEINFO_EVENT.tag))
       gui.setScene(SceneEnum.LOBBY);
+    else {
+      gui.setScene(SceneEnum.GAME);
+    }
   }
 
   @Override
@@ -123,11 +127,13 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
     super.start();
     setDefaultValues();
     Controller.get().addListener(this, GAMEINFO_EVENT.tag);
+    Controller.get().addListener(this, START_GAME.tag);
   }
 
   @Override
   public void finish() {
     super.finish();
     Controller.get().removeListener(this, GAMEINFO_EVENT.tag);
+    Controller.get().removeListener(this, START_GAME.tag);
   }
 }
