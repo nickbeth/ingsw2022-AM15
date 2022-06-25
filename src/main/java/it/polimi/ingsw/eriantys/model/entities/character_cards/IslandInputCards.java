@@ -40,6 +40,9 @@ public class IslandInputCards implements CharacterCard {
   
   @Override
   public boolean isValid(GameState gameState) {
+    if (card == CharacterCardEnum.LOCK_ISLAND && gameState.getPlayingField().getLocks() <= 0) {
+     return false;
+    }
     return card.isPurchasable(gameState.getCurrentPlayer().getCoins())
             && islandIndex >= 0
             && islandIndex < gameState.getPlayingField().getIslandsAmount();
