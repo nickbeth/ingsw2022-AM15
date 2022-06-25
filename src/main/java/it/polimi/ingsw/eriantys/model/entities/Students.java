@@ -17,7 +17,7 @@ public class Students extends Slot implements Serializable {
    */
   public Students() {
     Arrays.stream((HouseColor.values()))
-            .forEach(color -> students.put(color, 0));
+        .forEach(color -> students.put(color, 0));
   }
 
   /**
@@ -27,7 +27,7 @@ public class Students extends Slot implements Serializable {
    */
   public Students(Students s) {
     Arrays.stream((HouseColor.values()))
-            .forEach(color -> students.put(color, s.getCount(color)));
+        .forEach(color -> students.put(color, s.getCount(color)));
   }
 
   /**
@@ -37,7 +37,7 @@ public class Students extends Slot implements Serializable {
    */
   public void addStudents(Students s) {
     students.forEach(((color, value)
-            -> students.put(color, value + s.getCount(color))));
+        -> students.put(color, value + s.getCount(color))));
   }
 
   /**
@@ -92,7 +92,7 @@ public class Students extends Slot implements Serializable {
 
   public void setStudents(Students s) {
     students.forEach(((color, amount) ->
-            students.put(color, s.getCount(color))));
+        students.put(color, s.getCount(color))));
   }
 
   /**
@@ -140,8 +140,8 @@ public class Students extends Slot implements Serializable {
   @Override
   public String toString() {
     StringBuilder s = new StringBuilder();
-    students.forEach((c, v) ->
-            s.append("\n").append(c).append(" - ").append(v));
+    students.forEach((color, amount) ->
+        s.append("\n").append(color.toString(), 0, 3).append(" - ").append(amount));
     return s.toString();
   }
 

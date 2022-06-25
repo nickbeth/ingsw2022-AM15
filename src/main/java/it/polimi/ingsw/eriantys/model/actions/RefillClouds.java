@@ -55,7 +55,7 @@ public class RefillClouds extends GameAction {
     players.stream()
         .map(p -> p.getDashboard().getEntrance())
         .forEach(entrance -> {
-          int missingStudents = entrance.getCount() - rules.entranceSize;
+          int missingStudents = rules.entranceSize - entrance.getCount();
           // If the player has black spots in his entrance
           if (missingStudents > 0) {
             // Refill his entrance
