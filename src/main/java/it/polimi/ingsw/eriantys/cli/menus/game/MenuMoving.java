@@ -48,8 +48,10 @@ public class MenuMoving extends MenuGame {
           // Move mother nature a certain amount
           case "T", "t" -> {
             // Check of the Turn phase
-            if (!game().getTurnPhase().equals(TurnPhase.MOVING))
+            if (turnPhase().equals(TurnPhase.MOVING)) {
+              out.println(colored("You're in the wrong phase.", RED));
               break;
+            }
 
             // Shows islands
             out.println("Playing Field: ");

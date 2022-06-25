@@ -54,7 +54,7 @@ public class MenuPickAssistantCard extends MenuGame {
 
           // Choose assistant card
           case "Q", "q" -> {
-            if (!turnPhase().equals(TurnPhase.PLACING) || !gamePhase().equals(GamePhase.PLANNING)) {
+            if (!gamePhase().equals(GamePhase.PLANNING)) {
               out.println(colored("You're in the wrong phase.", RED));
               break;
             }

@@ -8,7 +8,6 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
-import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
@@ -67,9 +66,12 @@ public class MenuPlacing extends MenuGame {
 
           // Move Students from entrance to island
           case "Q", "q" -> {
+
             // Check of the Turn phase
-            if (!game().getTurnPhase().equals(TurnPhase.PLACING) && game().getGamePhase().equals(GamePhase.ACTION))
+            if (!turnPhase().equals(TurnPhase.PLACING) || !gamePhase().equals(GamePhase.ACTION)){
+              out.println(colored("You're in the wrong phase.", RED));
               break;
+            }
 
             chooseColorAndAmount(paramBuilder);
 
