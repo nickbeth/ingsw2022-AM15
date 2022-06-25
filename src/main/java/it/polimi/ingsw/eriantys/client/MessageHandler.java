@@ -64,6 +64,8 @@ public class MessageHandler implements Runnable {
       case PLAYER_DISCONNECTED -> handlePlayerDisconnected(client, message);
       case PLAYER_RECONNECTED -> handlePlayerReconnected(client, message);
 
+      case END_GAME -> handleEndGame(client, message);
+
       case ERROR -> handleError(client, message);
 
       case INTERNAL_SOCKET_ERROR -> handleSocketError(client, message);
@@ -123,6 +125,10 @@ public class MessageHandler implements Runnable {
     } catch (NullPointerException e) {
       clientLogger.debug("Tried to reconnect player before the game state was initialized");
     }
+  }
+
+  private void handleEndGame(Client client, Message message) {
+    controller.fireChange(END_GAME, null, null);
   }
 
   private void handleError(Client client, Message message) {

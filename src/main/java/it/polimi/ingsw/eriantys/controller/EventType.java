@@ -15,6 +15,8 @@ public enum EventType {
 
   PLAYER_CONNECTION_CHANGED("player_connection_changed"),
 
+  END_GAME("end_game"),
+
   INPUT_ENTERED("input_entered")
 
 
