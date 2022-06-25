@@ -71,9 +71,10 @@ public class PlayerGridHandler extends SectionHandler {
         wizardIcon.getStyleClass().add("image-wizard");
         icon.getChildren().add(wizardIcon);
         ImageView discIcon = new ImageView(new Image("/assets/misc/disconnected-icon.png"));
-        discIcon.setFitWidth(10);
+        discIcon.setFitWidth(30);
         discIcon.setPreserveRatio(true);
         discIcon.setVisible(false);
+        discIcon.getStyleClass().add("image-disconnected");
         icon.getChildren().add(discIcon);
         discIcons.put(discIcon, player);
         Label nickname = new Label(player.getNickname(), icon);
