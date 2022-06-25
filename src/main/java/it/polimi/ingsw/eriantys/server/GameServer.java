@@ -391,15 +391,17 @@ public class GameServer implements Runnable {
    * @param nickname  The nickname of the player to disconnect
    */
   private void disconnectPlayer(GameEntry gameEntry, String nickname) {
+    GameState gameState = gameEntry.getGameState();
+    boolean disconnectedPlayerWasLast = gameState.isLastPlayer(gameState.getPlayer(nickname));
+
     gameEntry.disconnectPlayer(nickname);
     // Send the disconnection message to the client
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
 
-    GameState gameState = gameEntry.getGameState();
     // We need special handling if the disconnected player was the current player
     if (gameState.isTurnOf(nickname)) {
       // If the player was the last of the action phase, we need to refill clouds
-      if (gameState.getGamePhase() == GamePhase.ACTION && gameState.isLastPlayer(gameState.getPlayer(nickname))) {
+      if (gameState.getGamePhase() == GamePhase.ACTION && disconnectedPlayerWasLast) {
         GameAction refillAction = new RefillClouds(gameState);
         gameEntry.executeAction(refillAction);
         broadcastMessage(gameEntry, new Message.Builder()
