@@ -95,7 +95,6 @@ public class InitiateGameEntities extends GameAction {
 
     // Initiate players entrances
     List<Player> players = gameState.getPlayers();
-
     for (int i = 0; i < entrancesStudents.size(); i++) {
       players.get(i).getDashboard().getEntrance().setStudents(entrancesStudents.get(i));
       studentBag.removeStudents(entrancesStudents.get(i));

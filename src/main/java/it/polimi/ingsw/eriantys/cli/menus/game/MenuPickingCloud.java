@@ -37,6 +37,8 @@ public class MenuPickingCloud extends MenuGame {
       String choice = getNonBlankString();
 
       handleViewOptions(choice);
+      if (handleDisconnection(choice))
+        return MenuEnum.CREATE_OR_JOIN;
 
       if (isMyTurn()) {
         switch (choice) {
@@ -63,14 +65,8 @@ public class MenuPickingCloud extends MenuGame {
                 waitForGreenLight();
               }
 
-              // Send GoToNextRound
-              controller.sender().sendGoToNextRound();
-
-              // Send AdvanceToNextConnectedPlayer
-              if (!amILastPlayer()) {
-                controller.sender().sendAdvanceToNextConnectedPlayer();
-                waitForGreenLight();
-              }
+              // Send Advance
+              controller.sender().sendAdvanceState();
 
               return MenuEnum.PICK_ASSISTANT;
             }

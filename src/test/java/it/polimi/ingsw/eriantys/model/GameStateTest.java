@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static it.polimi.ingsw.eriantys.loggers.Loggers.testLogger;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -223,7 +222,6 @@ class GameStateTest {
     p1.getDashboard().getTowers().count = 2;
     p2.getDashboard().getTowers().count = 2;
 
-
     doReturn(players).when(spyedGame).getPlayers();
     doReturn(field).when(spyedGame).getPlayingField();
     when(field.getHeldProfessorCount(TowerColor.WHITE)).thenReturn(2);
@@ -260,12 +258,72 @@ class GameStateTest {
   void advanceTurnPhase() {
     game.addPlayer("gino", TowerColor.BLACK);
 
-    game.advanceTurnPhase();
+    game.simpleAdvanceTurnPhase();
     assertEquals(TurnPhase.MOVING, game.getTurnPhase());
-    game.advanceTurnPhase();
+    game.simpleAdvanceTurnPhase();
     assertEquals(TurnPhase.PICKING, game.getTurnPhase());
-    game.advanceTurnPhase();
+    game.simpleAdvanceTurnPhase();
     assertEquals(TurnPhase.PLACING, game.getTurnPhase());
 
+  }
+
+  @Test
+  void advance() {
+    game.addPlayer("gino", TowerColor.BLACK);
+    Player franco = game.getPlayer("franco");
+    Player gino = game.getPlayer("gino");
+    game.setPlanningPhaseOrder(new ArrayList<>(List.of(franco, gino))); // franco -> gino
+    game.setActionPhaseOrder(new ArrayList<>(List.of(gino, franco)));   // gino -> franco
+
+    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
+    assertEquals(game.getCurrentPlayer(), franco);
+
+    game.advance(); // PLANNING - gino
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    game.advance(); // ACTION - PLACING - gino
+    assertEquals(game.getGamePhase(), GamePhase.ACTION);
+    assertEquals(game.getTurnPhase(), TurnPhase.PLACING);
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    game.advance(); // ACTION - MOVING - gino
+    assertEquals(game.getGamePhase(), GamePhase.ACTION);
+    assertEquals(game.getTurnPhase(), TurnPhase.MOVING);
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    game.advance(); // ACTION - PICKING - gino
+    assertEquals(game.getGamePhase(), GamePhase.ACTION);
+    assertEquals(game.getTurnPhase(), TurnPhase.PICKING);
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    game.advance(); // ACTION - PLACING - franco
+    assertEquals(game.getGamePhase(), GamePhase.ACTION);
+    assertEquals(game.getTurnPhase(), TurnPhase.PLACING);
+    assertEquals(game.getCurrentPlayer(), franco);
+
+    game.advance(); // ACTION - MOVING - franco
+    game.advance(); // ACTION - PICKING - franco
+    game.advance(); // PLANNING - gino
+    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    // Disconnect gino, gino should be skipped and should now be turn of franco
+    gino.setConnected(false);
+    game.advance(); // PLANNING - franco
+    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
+    assertEquals(game.getCurrentPlayer(), franco);
+
+    gino.setConnected(true);
+    game.advance(); // ACTION - PLACING - gino
+    game.advance(); // ACTION - MOVING - gino
+    game.advance(); // ACTION - PICKING - gino
+
+    // Disconnect franco, it should be skipped entirely and go to planning
+    // franco should also be skipped in the planning phase
+    // Should result in gino playing in the planning phase
+    franco.setConnected(false);
+    game.advance(); // PLANNING - gino
+    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
+    assertEquals(game.getCurrentPlayer(), gino);
   }
 }
