@@ -188,6 +188,8 @@ public class Client implements Runnable {
    */
   @Override
   public String toString() {
+    if (socket == null)
+      return "uninitialized";
     return socket.getRemoteSocketAddress().toString();
   }
 }
