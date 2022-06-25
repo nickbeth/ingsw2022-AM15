@@ -39,7 +39,7 @@ public class IslandView extends View {
     // Put motherNatureLabel if motherNature is present
     if (motherNaturePos == index - 1) {
       String motherNatureLabel = "MOTHER─NATURE";
-      int start = 10;
+      int start = 11;
 
       stringBuilder.replace(start, start + motherNatureLabel.length(), motherNatureLabel);
     }

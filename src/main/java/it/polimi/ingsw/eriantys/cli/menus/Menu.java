@@ -81,7 +81,7 @@ public abstract class Menu implements PropertyChangeListener {
     }
 
     if (evt.getPropertyName().equals(INTERNAL_SOCKET_ERROR.tag)) {
-      clientLogger.error("Internal socket error occurred, server might be down");
+//      clientLogger.error("Internal socket error occurred, server might be down");
     }
   }
 

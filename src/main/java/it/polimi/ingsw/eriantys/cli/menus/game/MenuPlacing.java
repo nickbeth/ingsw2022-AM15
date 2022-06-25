@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
@@ -54,6 +55,8 @@ public class MenuPlacing extends MenuGame {
       String choice = getNonBlankString();
 
       handleViewOptions(choice);
+      if (handleDisconnection(choice))
+        return MenuEnum.CREATE_OR_JOIN;
 
       if (isMyTurn()) {
         switch (choice) {
@@ -61,7 +64,7 @@ public class MenuPlacing extends MenuGame {
           // Move Students from entrance to island
           case "Q", "q" -> {
             // Check of the Turn phase
-            if (!game().getTurnPhase().equals(TurnPhase.PLACING))
+            if (!game().getTurnPhase().equals(TurnPhase.PLACING) && game().getGamePhase().equals(GamePhase.ACTION))
               break;
 
             chooseColorAndAmount(paramBuilder);

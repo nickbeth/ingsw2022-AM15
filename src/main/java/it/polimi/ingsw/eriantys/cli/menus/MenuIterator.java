@@ -7,6 +7,7 @@ import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuConnect;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuCreateOrJoin;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuLobby;
 import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.model.GameState;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -15,6 +16,7 @@ import static it.polimi.ingsw.eriantys.cli.menus.MenuIterator.MenuFactory.makeMe
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 import static java.lang.System.out;
 
@@ -116,20 +118,38 @@ public class MenuIterator implements PropertyChangeListener {
     return nextMenu;
   }
 
+  private MenuEnum gamePhaseToMenu() {
+    GameState game = controller.getGameState();
+    switch (game.getGamePhase()) {
+      case PLANNING:
+        return MenuEnum.PICK_ASSISTANT;
+      case ACTION:
+        switch (game.getTurnPhase()) {
+          case PLACING:
+            return MenuEnum.PLACING;
+          case MOVING:
+            return MenuEnum.MOVING;
+          case PICKING:
+            return MenuEnum.PICKING_CLOUD;
+        }
+    }
+    return MenuEnum.CONNECTION;
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+    if (evt.getPropertyName().equals(START_GAME.tag)) {
+      nextMenu = gamePhaseToMenu();
+      out.print(colored("\nConnected to the game " + controller.getGameCode() + ".", GREEN));
+    }
+
     if (evt.getPropertyName().equals(GAME_ENDED.tag)) {
       out.println("GAME_ENDED");
       new MenuEndGame().show();
     }
 
     if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
-//      out.println(colored("\nDisconnecting...\n", YELLOW));
-      controller.disconnect();
-      removeEventsToBeListened();
-      currentMenu = makeMenu(MenuEnum.CREATE_OR_JOIN);
-      out.println(colored("\nDisconnected.", YELLOW));
-      menuAction();
+      out.print(colored("\nDisconnected.", YELLOW));
     }
   }
 }
