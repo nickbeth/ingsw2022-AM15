@@ -58,16 +58,6 @@ public class MenuPickingCloud extends MenuGame {
             // Send action PickCloud
             if (controller.sender().sendPickCloud(cloudIndex)) {
               waitForGreenLight();
-
-              // Send refill cloud
-              if (amILastPlayer()) {
-                controller.sender().sendRefillClouds();
-                waitForGreenLight();
-              }
-
-              // Send Advance
-              controller.sender().sendAdvanceState();
-
               return MenuEnum.PICK_ASSISTANT;
             }
             out.println(colored("Invalid input parameters", RED));
