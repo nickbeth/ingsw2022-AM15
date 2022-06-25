@@ -61,7 +61,6 @@ public class ServerTest {
     assertFalse(serverThread.isAlive());
   }
 
-  @Test()
   @Order(1)
   public void nicknameCollision() throws InterruptedException {
     var clientPair = clients.get(0);
@@ -79,7 +78,6 @@ public class ServerTest {
     assertEquals(messageQueue2.take().message(), new Message.Builder().type(MessageType.ERROR).error("Nickname 'test1' is already in use").build());
   }
 
-  @Test()
   @Order(2)
   public void createGame() throws InterruptedException {
     var clientPair = clients.get(0);
@@ -96,7 +94,6 @@ public class ServerTest {
     assertDoesNotThrow(() -> validateGameCode(reply.gameCode().toString()));
   }
 
-  @Test
   @Order(3)
   public void createAnotherGame() throws InterruptedException {
     if (CLIENT_COUNT < 2)
