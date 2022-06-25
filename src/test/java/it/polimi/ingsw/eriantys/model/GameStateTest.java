@@ -37,6 +37,69 @@ class GameStateTest {
   }
 
   @Test
+  void advance() {
+    game.addPlayer("gino", TowerColor.BLACK);
+    Player franco = game.getPlayer("franco");
+    Player gino = game.getPlayer("gino");
+    gino.setPlayedCard(0); // Play card (1, 1)
+    franco.setPlayedCard(1); // Play card (2, 1)
+    // Expected order:
+    // Planning phase: franco -> gino
+    // Action phase: gino -> franco
+
+    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
+    assertEquals(game.getCurrentPlayer(), franco);
+
+    game.advance(); // PLANNING - gino
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    game.advance(); // ACTION - PLACING - gino
+    assertEquals(game.getGamePhase(), GamePhase.ACTION);
+    assertEquals(game.getTurnPhase(), TurnPhase.PLACING);
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    game.advance(); // ACTION - MOVING - gino
+    assertEquals(game.getGamePhase(), GamePhase.ACTION);
+    assertEquals(game.getTurnPhase(), TurnPhase.MOVING);
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    game.advance(); // ACTION - PICKING - gino
+    assertEquals(game.getGamePhase(), GamePhase.ACTION);
+    assertEquals(game.getTurnPhase(), TurnPhase.PICKING);
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    game.advance(); // ACTION - PLACING - franco
+    assertEquals(game.getGamePhase(), GamePhase.ACTION);
+    assertEquals(game.getTurnPhase(), TurnPhase.PLACING);
+    assertEquals(game.getCurrentPlayer(), franco);
+
+    game.advance(); // ACTION - MOVING - franco
+    game.advance(); // ACTION - PICKING - franco
+    game.advance(); // PLANNING - gino
+    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
+    assertEquals(game.getCurrentPlayer(), gino);
+
+    // Disconnect gino, gino should be skipped and should now be turn of franco
+    gino.setConnected(false);
+    game.advance(); // PLANNING - franco
+    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
+    assertEquals(game.getCurrentPlayer(), franco);
+
+    gino.setConnected(true);
+    game.advance(); // ACTION - PLACING - gino
+    game.advance(); // ACTION - MOVING - gino
+    game.advance(); // ACTION - PICKING - gino
+
+    // Disconnect franco, it should be skipped entirely and go to planning
+    // franco should also be skipped in the planning phase
+    // Should result in gino playing in the planning phase
+    franco.setConnected(false);
+    game.advance(); // PLANNING - gino
+    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
+    assertEquals(game.getCurrentPlayer(), gino);
+  }
+
+  @Test
   void advancePlayer() {
     game.addPlayer("gino", TowerColor.BLACK);
     GameState spyedField = spy(game);
@@ -44,28 +107,33 @@ class GameStateTest {
     //tests correct advancement for plan order
     doReturn(GamePhase.PLANNING).when(spyedField).getGamePhase();
     Player oldPlayerTwo = spyedField.getPlanningPhaseOrder().get(1);
-    spyedField.advancePlayer();
+    spyedField.advance();
     assertEquals(oldPlayerTwo, spyedField.getCurrentPlayer());
 
-    //tests correct advancement for action phase order
-    spyedField.advancePlayer();
-
+    // Tests correct setup of action phase order
     spyedField.getPlayer("gino").setPlayedCard(5);
     spyedField.getPlayer("franco").setPlayedCard(1);
-    spyedField.advanceGamePhase();
-    assertEquals(List.of("franco","gino"),spyedField.getActionPhaseOrder().stream().map(Player::getNickname).toList());
+    spyedField.advance();
+    assertEquals(List.of("franco", "gino"), spyedField.getActionPhaseOrder().stream().map(Player::getNickname).toList());
 
-    spyedField.advanceGamePhase();
-    assertEquals(List.of("franco","gino"),spyedField.getPlanningPhaseOrder().stream().map(Player::getNickname).toList());
+    // Advance to PLANNING phase
+    // We need to advance 3 (turn phase count) times 2 (number of players): 6 times
+    for (int i = 0; i < 6; i++)
+      spyedField.advance();
+    assertEquals(List.of("franco", "gino"), spyedField.getPlanningPhaseOrder().stream().map(Player::getNickname).toList());
 
     spyedField.getPlayer("gino").setPlayedCard(0);
     spyedField.getPlayer("franco").setPlayedCard(5);
-    spyedField.advanceGamePhase();
-    assertEquals(List.of("gino","franco"),spyedField.getActionPhaseOrder().stream().map(Player::getNickname).toList());
+    // Advance to ACTION phase
+    spyedField.advance();
+    spyedField.advance();
+    assertEquals(List.of("gino", "franco"), spyedField.getActionPhaseOrder().stream().map(Player::getNickname).toList());
 
-    spyedField.advanceGamePhase();
-    assertEquals(List.of("gino","franco"),spyedField.getPlanningPhaseOrder().stream().map(Player::getNickname).toList());
-
+    // Advance to PLANNING phase
+    // We need to advance 3 (turn phase count) times 2 (number of players): 6 times
+    for (int i = 0; i < 6; i++)
+      spyedField.advance();
+    assertEquals(List.of("gino", "franco"), spyedField.getPlanningPhaseOrder().stream().map(Player::getNickname).toList());
   }
 
   @Test
@@ -77,43 +145,81 @@ class GameStateTest {
     //tests correct advancement for plan order while one player is disconnected
     doReturn(GamePhase.PLANNING).when(spyedField).getGamePhase();
     Player oldPlayerOne = spyedField.getPlanningPhaseOrder().get(0);
-    spyedField.advancePlayer();
+    spyedField.advance();
     assertEquals(oldPlayerOne, spyedField.getCurrentPlayer());
   }
-
 
   @Test
   void advanceGamePhaseToAction() {
     game.addPlayer("gino", TowerColor.BLACK);
-    game.getPlayers().get(0).setPlayedCard(4);
-    game.getPlayers().get(1).setPlayedCard(9);
-    Player oldSecond = game.getPlayers().get(1);
-    Player oldFirst = game.getPlayers().get(0);
-    game.advanceGamePhase();
+    Player franco = game.getPlayers().get(0);
+    Player gino = game.getPlayers().get(1);
+    franco.setPlayedCard(4); // franco plays (4, 2)
+    gino.setPlayedCard(9); // gino plays (9, 5)
+    // Advance to ACTION phase
+    game.advance();
+    game.advance();
 
-    assertEquals(oldSecond, game.getActionPhaseOrder().get(0));
-    assertEquals(oldFirst, game.getActionPhaseOrder().get(1));
+    // Expected order:
+    // franco -> gino
+    assertEquals(franco, game.getActionPhaseOrder().get(0));
+    assertEquals(gino, game.getActionPhaseOrder().get(1));
+
+    // Advance to PLANNING phase
+    // We need to advance 3 (turn phase count) times 2 (number of players): 6 times
+    for (int i = 0; i < 6; i++)
+      game.advance();
+    franco.setPlayedCard(8); // franco plays (8, 4)
+    gino.setPlayedCard(2); // gino plays (2, 1)
+    game.advance();
+    game.advance();
+    // Expected order:
+    // gino -> franco
+    assertEquals(gino, game.getActionPhaseOrder().get(0));
+    assertEquals(franco, game.getActionPhaseOrder().get(1));
   }
 
   @Test
   void advanceGamePhaseToPlanning() {
     threePlayerGame.addPlayer("gino", TowerColor.BLACK);
-    threePlayerGame.getPlayers().get(0).setPlayedCard(4);
-    threePlayerGame.getPlayers().get(1).setPlayedCard(9);
-    threePlayerGame.getPlayers().get(2).setPlayedCard(2);
-    Player oldFirst = threePlayerGame.getPlayers().get(0);
-    Player oldSecond = threePlayerGame.getPlayers().get(1);
-    Player oldThird = threePlayerGame.getPlayers().get(2);
-    threePlayerGame.advanceGamePhase();
+    Player franco = threePlayerGame.getPlayers().get(0);
+    Player sberg = threePlayerGame.getPlayers().get(1);
+    Player gino = threePlayerGame.getPlayers().get(2);
+    franco.setPlayedCard(4); // franco plays (4, 2)
+    sberg.setPlayedCard(9); // sberg plays (9, 5)
+    gino.setPlayedCard(2); // gino plays (2, 1)
+    // Advance to ACTION phase to trigger initialization of action phase order
+    threePlayerGame.advance();
+    threePlayerGame.advance();
+    threePlayerGame.advance();
 
-    assertEquals(oldSecond, threePlayerGame.getActionPhaseOrder().get(0));
-    assertEquals(oldFirst, threePlayerGame.getActionPhaseOrder().get(1));
-    assertEquals(oldThird, threePlayerGame.getActionPhaseOrder().get(2));
+    // Expected order:
+    // gino -> franco -> sberg
+    assertEquals(gino, threePlayerGame.getActionPhaseOrder().get(0));
+    assertEquals(franco, threePlayerGame.getActionPhaseOrder().get(1));
+    assertEquals(sberg, threePlayerGame.getActionPhaseOrder().get(2));
 
-    threePlayerGame.advanceGamePhase();
-    assertEquals(oldSecond, threePlayerGame.getPlanningPhaseOrder().get(0));
-    assertEquals(oldThird, threePlayerGame.getPlanningPhaseOrder().get(1));
-    assertEquals(oldFirst, threePlayerGame.getPlanningPhaseOrder().get(2));
+    // Advance to PLANNING phase to trigger an update of the planning phase order
+    // We need to advance 3 (turn phase count) times 3 (number of players): 9 times
+    for (int i = 0; i < 9; i++)
+      threePlayerGame.advance();
+    // Expected order:
+    // gino -> franco -> sberg
+    assertEquals(gino, threePlayerGame.getPlanningPhaseOrder().get(0));
+    assertEquals(franco, threePlayerGame.getPlanningPhaseOrder().get(1));
+    assertEquals(sberg, threePlayerGame.getPlanningPhaseOrder().get(2));
+  }
+
+  @Test
+  void simpleAdvanceTurnPhase() {
+    game.addPlayer("gino", TowerColor.BLACK);
+
+    game.simpleAdvanceTurnPhase();
+    assertEquals(TurnPhase.MOVING, game.getTurnPhase());
+    game.simpleAdvanceTurnPhase();
+    assertEquals(TurnPhase.PICKING, game.getTurnPhase());
+    game.simpleAdvanceTurnPhase();
+    assertEquals(TurnPhase.PLACING, game.getTurnPhase());
   }
 
   @Test
@@ -252,78 +358,5 @@ class GameStateTest {
     when(field.getHeldProfessorCount(TowerColor.BLACK)).thenReturn(2);
 
     assertEquals(Optional.empty(), spyedGame.getWinner());
-  }
-
-  @Test
-  void advanceTurnPhase() {
-    game.addPlayer("gino", TowerColor.BLACK);
-
-    game.simpleAdvanceTurnPhase();
-    assertEquals(TurnPhase.MOVING, game.getTurnPhase());
-    game.simpleAdvanceTurnPhase();
-    assertEquals(TurnPhase.PICKING, game.getTurnPhase());
-    game.simpleAdvanceTurnPhase();
-    assertEquals(TurnPhase.PLACING, game.getTurnPhase());
-
-  }
-
-  @Test
-  void advance() {
-    game.addPlayer("gino", TowerColor.BLACK);
-    Player franco = game.getPlayer("franco");
-    Player gino = game.getPlayer("gino");
-    game.setPlanningPhaseOrder(new ArrayList<>(List.of(franco, gino))); // franco -> gino
-    game.setActionPhaseOrder(new ArrayList<>(List.of(gino, franco)));   // gino -> franco
-
-    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
-    assertEquals(game.getCurrentPlayer(), franco);
-
-    game.advance(); // PLANNING - gino
-    assertEquals(game.getCurrentPlayer(), gino);
-
-    game.advance(); // ACTION - PLACING - gino
-    assertEquals(game.getGamePhase(), GamePhase.ACTION);
-    assertEquals(game.getTurnPhase(), TurnPhase.PLACING);
-    assertEquals(game.getCurrentPlayer(), gino);
-
-    game.advance(); // ACTION - MOVING - gino
-    assertEquals(game.getGamePhase(), GamePhase.ACTION);
-    assertEquals(game.getTurnPhase(), TurnPhase.MOVING);
-    assertEquals(game.getCurrentPlayer(), gino);
-
-    game.advance(); // ACTION - PICKING - gino
-    assertEquals(game.getGamePhase(), GamePhase.ACTION);
-    assertEquals(game.getTurnPhase(), TurnPhase.PICKING);
-    assertEquals(game.getCurrentPlayer(), gino);
-
-    game.advance(); // ACTION - PLACING - franco
-    assertEquals(game.getGamePhase(), GamePhase.ACTION);
-    assertEquals(game.getTurnPhase(), TurnPhase.PLACING);
-    assertEquals(game.getCurrentPlayer(), franco);
-
-    game.advance(); // ACTION - MOVING - franco
-    game.advance(); // ACTION - PICKING - franco
-    game.advance(); // PLANNING - gino
-    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
-    assertEquals(game.getCurrentPlayer(), gino);
-
-    // Disconnect gino, gino should be skipped and should now be turn of franco
-    gino.setConnected(false);
-    game.advance(); // PLANNING - franco
-    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
-    assertEquals(game.getCurrentPlayer(), franco);
-
-    gino.setConnected(true);
-    game.advance(); // ACTION - PLACING - gino
-    game.advance(); // ACTION - MOVING - gino
-    game.advance(); // ACTION - PICKING - gino
-
-    // Disconnect franco, it should be skipped entirely and go to planning
-    // franco should also be skipped in the planning phase
-    // Should result in gino playing in the planning phase
-    franco.setConnected(false);
-    game.advance(); // PLANNING - gino
-    assertEquals(game.getGamePhase(), GamePhase.PLANNING);
-    assertEquals(game.getCurrentPlayer(), gino);
   }
 }
