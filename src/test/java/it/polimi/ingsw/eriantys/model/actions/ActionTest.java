@@ -1,9 +1,10 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
-import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
+import it.polimi.ingsw.eriantys.model.entities.Island;
+import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
@@ -41,7 +42,7 @@ public class ActionTest {
     GameAction action = new MoveMotherNature(3);
     normalGame.getPlayingField().moveMotherNature(11);
     normalGame.setTurnPhase(TurnPhase.MOVING);
-    normalGame.advanceGamePhase();
+    normalGame.setGamePhase(GamePhase.ACTION);
     normalGame.getCurrentPlayer().addToMaxMovement(3);
 
     assertTrue(action.isValid(normalGame));
@@ -68,7 +69,7 @@ public class ActionTest {
 
     GameAction action = new MoveStudentsToDiningHall(s);
     normalGame.setTurnPhase(TurnPhase.PLACING);
-    normalGame.advanceGamePhase();
+    normalGame.setGamePhase(GamePhase.ACTION);
 
     assertTrue(action.isValid(normalGame));
     action.apply(normalGame);
@@ -102,7 +103,7 @@ public class ActionTest {
 
     GameAction action = new MoveStudentsToIsland(s, 0);
     normalGame.setTurnPhase(TurnPhase.PLACING);
-    normalGame.advanceGamePhase();
+    normalGame.setGamePhase(GamePhase.ACTION);
 
     assertTrue(action.isValid(normalGame));
     action.apply(normalGame);
@@ -187,7 +188,7 @@ public class ActionTest {
   void chooseCC() {
     normalGame.getPlayingField().getCharacterCards().add(0, CharacterCardCreator.create(CharacterCardEnum.IGNORE_TOWERS));
     normalGame.setTurnPhase(TurnPhase.PLACING);
-    normalGame.advanceGamePhase();
+    normalGame.setGamePhase(GamePhase.ACTION);
 
     GameAction action = new ChooseCharacterCard(0);
     assertTrue(action.isValid(normalGame));
@@ -212,14 +213,30 @@ public class ActionTest {
     s.addStudents(HouseColor.YELLOW, 5);
     entrances.add(new Students(s));
     entrances.add(new Students(s));
-    GameAction action = new InitiateGameEntities(entrances, new ArrayList<>(), clouds, new ArrayList<>());
+    List<Students> islandStudents = new ArrayList<>();
+    for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
+      islandStudents.add(new Students());
+    }
+    GameAction action = new InitiateGameEntities(
+        entrances,
+        islandStudents,
+        clouds,
+        new ArrayList<>()
+    );
 
     //second to last player
     action.apply(normalGame);
+    Player one = normalGame.getPlayers().get(0);
+    Player two = normalGame.getPlayers().get(1);
+    Player three = normalGame.getPlayers().get(2);
+    one.setPlayedCard(0);
+    two.setPlayedCard(1);
+    three.setPlayedCard(2);
+
     action = new PickCloud(0);
-    normalGame.advanceGamePhase();
-    normalGame.setTurnPhase(TurnPhase.PICKING);
-    normalGame.advancePlayer();
+    // Advance from PLANNING to ACTION - PICKING of player 2
+    for (int i = 0; i < 5; i++)
+      normalGame.advance();
     assertTrue(action.isValid(normalGame));
     action.apply(normalGame);
     assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
@@ -304,15 +321,14 @@ public class ActionTest {
 
     GameAction action = new InitiateGameEntities(entrances, islands, clouds, cards);
 
-    //doReturn(field).when(gameState).getPlayingField();
-    //doNothing().when(sCC).applyEffect(any());
-    //doReturn(sCC).when(field).getPlayedCharacterCard();
     action.apply(gameState);
     modelLogger.debug(String.valueOf(field.getCharacterCards().get(0)));
 
     gameState.getPlayingField().setPlayedCharacterCard(0);
     gameState.setTurnPhase(TurnPhase.EFFECT);
-    gameState.advanceGamePhase();
+    for (int i = 0; i < 4; i++)
+      gameState.advance();
+    // Add coins to current player (p1)
     gameState.getCurrentPlayer().addCoins();
     gameState.getCurrentPlayer().addCoins();
     field.getIslands().forEach(is -> is.updateInfluences(field.getProfessorHolder()));
@@ -331,8 +347,9 @@ public class ActionTest {
     assertTrue(actionDue.isValid(gameState));
     actionDue.apply(gameState);
     modelLogger.debug(String.valueOf(field.getPlayedCharacterCard().getCardEnum()));
-    assertEquals(0, gameState.getCurrentPlayer().getCoins());
-    assertEquals(4, field.getPlayedCharacterCard().getCost());
+    assertEquals(RuleBook.INITIAL_COINS + 2, gameState.getCurrentPlayer().getCoins());
+    assertEquals(RuleBook.INITIAL_COINS, field.getPlayedCharacterCard().getCost());
+    // Add 4 coins to current player (p1): should result in 7 coins
     gameState.getCurrentPlayer().addCoins();
     gameState.getCurrentPlayer().addCoins();
     gameState.getCurrentPlayer().addCoins();
@@ -341,9 +358,7 @@ public class ActionTest {
     newCC = field.getCharacterCards().get(0);
     actionDue = new ActivateCCEffect(newCC);
     actionDue.apply(gameState);
-    assertEquals(0, gameState.getCurrentPlayer().getCoins());
+    assertEquals(6, gameState.getCurrentPlayer().getCoins());
     assertEquals(4, field.getPlayedCharacterCard().getCost());
   }
-
-
 }

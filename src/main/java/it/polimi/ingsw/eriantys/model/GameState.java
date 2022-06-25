@@ -240,48 +240,6 @@ public class GameState implements Serializable {
   }
 
   /**
-   * Sets current player to next in line depending on GamePhase, if the new current player is marked as disconnected
-   * it advances player again.
-   * @deprecated Use {@link #advance()} instead, this is only here for unit tests
-   */
-  public void advancePlayer() {
-    if (getGamePhase() == GamePhase.PLANNING)
-      currentPlayer = planningPhaseOrder.get((planningPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
-    if (getGamePhase() == ACTION)
-      currentPlayer = actionPhaseOrder.get((actionPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
-
-    //if the new current player is disconnected advances to next player
-    if (!currentPlayer.isConnected()) {
-      advancePlayer();
-    }
-  }
-
-  /**
-   * advances to next gamePhase prepares the corresponding player order
-   * @deprecated Use {@link #advance()} instead, this is only here for unit tests
-   */
-  public void advanceGamePhase() {
-    switch (gamePhase) {
-      case ACTION -> {
-        modelLogger.debug("ACTION Phase advances to PLANNING");
-        gamePhase = GamePhase.PLANNING;
-        prepareOrderForPlanningPhase();
-        currentPlayer = planningPhaseOrder.get(0);
-        if (!currentPlayer.isConnected())
-          advancePlayer();
-      }
-      case PLANNING -> {
-        modelLogger.debug("PLANNING Phase advances to ACTION");
-        gamePhase = ACTION;
-        prepareOrderForActionPhase();
-        currentPlayer = actionPhaseOrder.get(0);
-        if (!currentPlayer.isConnected())
-          advancePlayer();
-      }
-    }
-  }
-
-  /**
    * Checks:<br>
    * - if there are still students in the student Bag<br>
    * - if every player still has towers<br>

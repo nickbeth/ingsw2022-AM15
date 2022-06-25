@@ -28,11 +28,6 @@ public class PickAssistantCard extends GameAction {
 
     // Manage advance phase
     gameState.advance();
-//    if (gameState.isLastPlayer(gameState.getCurrentPlayer())) {
-//      gameState.advanceGamePhase();
-//      return;
-//    }
-//    gameState.advancePlayer();
   }
 
   // todo javadoc
