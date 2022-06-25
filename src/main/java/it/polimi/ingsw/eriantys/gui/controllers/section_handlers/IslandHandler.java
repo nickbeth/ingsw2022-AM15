@@ -157,7 +157,7 @@ public class IslandHandler extends SectionHandler {
     towerLabel.setVisible(false);
 
     lockView = new ImageView(new Image("/assets/realm/lock-icon.png"));
-    lockView.setFitWidth(20);
+    lockView.setFitWidth(60);
     lockView.setPreserveRatio(true);
     islandPane.getChildren().add(lockView);
     AnchorPane.setBottomAnchor(lockView, 50.0);

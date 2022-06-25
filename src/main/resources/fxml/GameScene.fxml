@@ -265,7 +265,7 @@
             </GridPane>
          </children>
       </AnchorPane>
-      <Text fx:id="promptText" layoutX="20.0" layoutY="716.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-prompt" text="I'M HERE TO TELL YOU HOW TO MOVE" textAlignment="CENTER" wrappingWidth="713.13671875" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="200.0" />
+      <Text fx:id="promptText" layoutX="173.0" layoutY="716.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-prompt" text="I'M HERE TO TELL YOU HOW TO MOVE" textAlignment="CENTER" wrappingWidth="740.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="173.0" />
         <StackPane fx:id="assistCardPanel" layoutX="50.0" layoutY="250.0" prefHeight="460.0" prefWidth="1180.0" stylesheets="@../css/popupstyle.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
             <children>
                 <Region layoutX="6.0" layoutY="4.0" styleClass="region-assistcards" />

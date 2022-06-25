@@ -68,7 +68,7 @@
                   </ImageView>
                </graphic>
             </Label>
-            <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0" AnchorPane.topAnchor="50.0">
+            <ImageView fitHeight="50.0" fitWidth="60.0" layoutX="63.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="63.0">
                <image>
                   <Image url="@../../assets/realm/lock-icon.png" />
                </image>

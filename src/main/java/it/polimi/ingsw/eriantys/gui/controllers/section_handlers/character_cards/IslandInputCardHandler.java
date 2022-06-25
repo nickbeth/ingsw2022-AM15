@@ -46,17 +46,17 @@ public class IslandInputCardHandler extends CharacterCardHandler {
   protected void create() {
     super.create();
     draggableItem = new Label();
-    draggableItem.getStyleClass().add("text-addoncoin");
+    draggableItem.getStyleClass().add("label-addoncoin");
     ImageView graphic = new ImageView();
-    graphic.setFitWidth(40);
+    graphic.setFitWidth(60);
     graphic.setPreserveRatio(true);
     draggableItem.setVisible(false);
 
     if (card.getCardEnum() == CharacterCardEnum.LOCK_ISLAND) {
-      graphic.setImage(new Image("/assets/realm/lock-icon.png", 40, 0, true, false));
+      graphic.setImage(new Image("/assets/realm/lock-icon.png", 60, 0, true, false));
       draggableItem.setText("×" + Controller.get().getGameState().getPlayingField().getLocks());
     } else
-      graphic.setImage(new Image("/assets/realm/mother-nature.png", 40, 0, true, false));
+      graphic.setImage(new Image("/assets/realm/mother-nature.png", 60, 0, true, false));
 
     draggableItem.setOnDragDetected((e) -> {
       debug.showMessage(card.getCardEnum() + " drag detected");
@@ -71,10 +71,9 @@ public class IslandInputCardHandler extends CharacterCardHandler {
 
     // show character card panel at the end of a drag event
     draggableItem.setOnDragDone((e) -> {
-      if (e.getTransferMode() != TransferMode.MOVE)
+      if (e.getAcceptedTransferMode() != TransferMode.MOVE)
         cardsPanel.setVisible(true);
     });
-
     draggableItem.setGraphic(graphic);
     cardPane.getChildren().add(draggableItem);
   }
