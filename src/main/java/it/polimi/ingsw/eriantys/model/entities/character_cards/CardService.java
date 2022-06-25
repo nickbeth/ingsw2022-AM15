@@ -154,12 +154,13 @@ public interface CardService {
   }
 
   /**
-   * Lock the given island
-   *
+   * Lock the given island and remove locks from playing field
    * @param island
+   * @param playingField
    */
-  static void lockIsland(Island island) {
+  static void lockIsland(Island island, PlayingField playingField) {
     island.setLocked(true);
+    playingField.setLocks(playingField.getLocks() - 1);
   }
 
   /**

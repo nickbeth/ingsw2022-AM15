@@ -8,14 +8,14 @@ import java.util.List;
 
 
 public class CharacterCardCreator {
-  
+
   public static CharacterCard create(CharacterCardEnum playedCard) {
     switch (playedCard) {
       case IGNORE_COLOR -> {
         return new ColorInputCards(((gameState, color) -> {
           List<Island> islands = gameState.getPlayingField().getIslands();
           islands.forEach(island -> island.updateInfluences(gameState.getPlayingField().getProfessorHolder()));
-          
+
           CardService.ignoreColor(islands, color, gameState.getPlayingField().getProfessorHolder().getPossessorOfColor(color));
         }), playedCard);
       }
@@ -23,7 +23,7 @@ public class CharacterCardCreator {
         return new NoInputCards(((gameState) -> {
           List<Island> islands = gameState.getPlayingField().getIslands();
           islands.forEach(island -> island.updateInfluences(gameState.getPlayingField().getProfessorHolder()));
-          
+
           CardService.ignoreTowers(islands);
         }), playedCard);
       }
@@ -31,7 +31,7 @@ public class CharacterCardCreator {
         return new NoInputCards((gameState) -> {
           final int ADD_INFLUENCE = 2;
           TowerColor currTeam = gameState.getCurrentPlayer().getColorTeam();
-          
+
           CardService.addToInfluence(ADD_INFLUENCE, gameState.getPlayingField().getIslands(), currTeam);
         }, playedCard);
       }
@@ -41,7 +41,7 @@ public class CharacterCardCreator {
           StudentBag studentBag = gameState.getPlayingField().getStudentBag();
           List<Students> diningHalls = new ArrayList<>();
           gameState.getPlayers().forEach(x -> diningHalls.add(x.getDashboard().getDiningHall()));
-          
+
           CardService.dropStudents(diningHalls, color, DROP_AMOUNT, studentBag);
         }), playedCard);
       }
@@ -55,20 +55,21 @@ public class CharacterCardCreator {
         return new NoInputCards((gameState) -> {
           final int ADD_MOVEMENT = 2;
           Player currentPlayer = gameState.getCurrentPlayer();
-          
+
           CardService.addToMotherNatureMoves(currentPlayer, ADD_MOVEMENT);
         }, playedCard);
       }
       case LOCK_ISLAND -> {
-        return new IslandInputCards(((gameState, islandIndex) ->
-                CardService.lockIsland(gameState.getPlayingField().getIsland(islandIndex))), playedCard);
+        return new IslandInputCards((gameState, islandIndex) -> {
+          CardService.lockIsland(gameState.getPlayingField().getIsland(islandIndex), gameState.getPlayingField());
+        }, playedCard);
       }
       case STEAL_PROFESSOR -> {
         return new NoInputCards(gameState -> {
           Dashboard currentDashboard = gameState.getCurrentPlayer().getDashboard();
           List<Dashboard> dashboards = new ArrayList<>();
           gameState.getPlayers().forEach(x -> dashboards.add(x.getDashboard()));
-          
+
           CardService.stealProfessor(currentDashboard, dashboards, gameState.getPlayingField().getProfessorHolder());
         }, playedCard);
       }

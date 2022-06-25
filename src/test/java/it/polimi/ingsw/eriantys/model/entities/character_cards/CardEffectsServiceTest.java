@@ -39,7 +39,7 @@ public class CardEffectsServiceTest {
 
     islands.forEach(island -> modelLogger.debug(String.valueOf(island.getTeamsInfluenceTracer())));
     islands.forEach(island ->
-        assertEquals(2, island.getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE)));
+            assertEquals(2, island.getTeamsInfluenceTracer().getInfluence(TowerColor.WHITE)));
   }
 
   @Test
@@ -168,7 +168,8 @@ public class CardEffectsServiceTest {
   @Test
   void lockIsland() {
     Island island = new Island();
-    CardService.lockIsland(island);
+    PlayingField playingField = new PlayingField(RuleBook.makeRules(GameMode.EXPERT, 2));
+    CardService.lockIsland(island, playingField);
     assertTrue(island.isLocked());
   }
 
