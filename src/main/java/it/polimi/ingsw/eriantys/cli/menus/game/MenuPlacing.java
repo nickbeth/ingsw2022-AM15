@@ -25,8 +25,8 @@ public class MenuPlacing extends MenuGame {
     return myCount - finalCount;
   }
 
-  private boolean isCharacterCardPlayed() {
-    return game().getPlayingField().getPlayedCharacterCard() != null;
+  private boolean isCharacterCardUnplayed() {
+    return game().getPlayingField().getPlayedCharacterCard() == null;
   }
 
   @Override
@@ -40,7 +40,7 @@ public class MenuPlacing extends MenuGame {
         out.println(MessageFormat
             .format("W - Move a student from entrance to dining ({0} left)", studentsLeftToMove()));
       }
-      if (rules().gameMode.equals(GameMode.EXPERT) && !isCharacterCardPlayed())
+      if (rules().gameMode.equals(GameMode.EXPERT) && isCharacterCardUnplayed())
         out.println("E - Play a character card");
     }
     out.print("Make option: ");
@@ -68,7 +68,7 @@ public class MenuPlacing extends MenuGame {
           case "Q", "q" -> {
 
             // Check of the Turn phase
-            if (!turnPhase().equals(TurnPhase.PLACING) || !gamePhase().equals(GamePhase.ACTION)){
+            if (!turnPhase().equals(TurnPhase.PLACING) || !gamePhase().equals(GamePhase.ACTION)) {
               out.println(colored("You're in the wrong phase.", RED));
               break;
             }
@@ -117,7 +117,7 @@ public class MenuPlacing extends MenuGame {
 
           // Choose a character card from those in playing field
           case "E", "e" -> {
-            if (!isCharacterCardPlayed()) {
+            if (!isCharacterCardUnplayed()) {
               new MenuEffect().show();
               return MenuEnum.EFFECT;
             }
@@ -135,7 +135,7 @@ public class MenuPlacing extends MenuGame {
     // Condition to continue the game
     if (studentsLeftToMove() == 0) {
       // Ask the player if he wants to play and effect before going on with the game
-      if (rules().gameMode.equals(GameMode.EXPERT) && !isCharacterCardPlayed()) {
+      if (rules().gameMode.equals(GameMode.EXPERT) && !isCharacterCardUnplayed()) {
         out.println("\nDo you want to play a character card?");
         out.println("1 - YES");
         out.println("ANY_KEY - NO");

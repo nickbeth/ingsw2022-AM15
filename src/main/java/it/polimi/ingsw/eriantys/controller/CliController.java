@@ -1,6 +1,8 @@
 package it.polimi.ingsw.eriantys.controller;
 
+import it.polimi.ingsw.eriantys.cli.InputHandler;
 import it.polimi.ingsw.eriantys.cli.menus.MenuIterator;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.network.Client;
 import org.fusesource.jansi.Ansi;
 
@@ -9,7 +11,6 @@ import java.util.Scanner;
 
 public class CliController extends Controller {
   PrintStream out = System.out;
-  Scanner in = new Scanner(System.in);
 
   public CliController(Client networkClient) {
     super(networkClient);
@@ -33,14 +34,19 @@ public class CliController extends Controller {
   @Override
   public void run() {
     MenuIterator iterator = new MenuIterator();
+    // Starting input handler
+    new Thread(InputHandler.get(), "InputHandler").start();
 
     while (true) {
       preGame(iterator);
       inGame(iterator);
+      if (gameState.getGamePhase().equals(GamePhase.WIN)) {
+        out.println("Game ended");
+        break;
+      }
     }
 
-//    out.println("Game ended");
-//    out.println("Application shutdown");
+    out.println("Closing application...");
   }
 
   private void inGame(MenuIterator iterator) {

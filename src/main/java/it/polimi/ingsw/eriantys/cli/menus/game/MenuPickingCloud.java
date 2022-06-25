@@ -2,13 +2,11 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.CloudsView;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
-import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 public class MenuPickingCloud extends MenuGame {
@@ -42,7 +40,9 @@ public class MenuPickingCloud extends MenuGame {
 
       if (isMyTurn()) {
         switch (choice) {
-          case "forced_advancement_to_next_menu" -> {return null;}
+          case "forced_advancement_to_next_menu" -> {
+            return null;
+          }
 
           case "Q", "q" -> {
             if (!turnPhase().equals(TurnPhase.PICKING)) {

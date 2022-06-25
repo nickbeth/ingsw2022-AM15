@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
-import it.polimi.ingsw.eriantys.cli.InputHandler;
 import it.polimi.ingsw.eriantys.cli.menus.game.*;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuChooseNickname;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuConnect;
@@ -13,7 +12,6 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
-import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.menus.MenuEnum.*;
 import static it.polimi.ingsw.eriantys.cli.menus.MenuIterator.MenuFactory.makeMenu;
@@ -25,7 +23,6 @@ import static java.lang.System.out;
 
 public class MenuIterator implements PropertyChangeListener {
   private final Controller controller = Controller.get();
-  private InputHandler inputHandler = InputHandler.get();
   private MenuEnum nextMenu;
   private Menu currentMenu;
 
@@ -78,9 +75,6 @@ public class MenuIterator implements PropertyChangeListener {
     controller.addListener(this, START_GAME.tag);
     controller.addListener(this, DELIBERATE_DISCONNECTION.tag);
     controller.addListener(this, GAME_ENDED.tag);
-
-    // Starting input handler
-    new Thread(inputHandler, "InputHandler").start();
 
     // Setting starting menu
     currentMenu = new MenuConnect();

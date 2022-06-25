@@ -114,8 +114,6 @@ public abstract class MenuGame extends Menu {
 
   /**
    * Handle common view options of the GameState
-   *
-   * @param choice
    */
   final protected void handleViewOptions(String choice) {
 
@@ -180,7 +178,6 @@ public abstract class MenuGame extends Menu {
   /**
    * Handle common view options of the GameState
    *
-   * @param choice
    * @return True if deliberate disconnection is wanted, False otherwise
    */
   final protected boolean handleDisconnection(String choice) {

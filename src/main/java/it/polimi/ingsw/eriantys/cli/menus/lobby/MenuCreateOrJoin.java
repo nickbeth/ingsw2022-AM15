@@ -3,14 +3,11 @@ package it.polimi.ingsw.eriantys.cli.menus.lobby;
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.model.GameCode;
-import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 
 import java.beans.PropertyChangeEvent;
-import java.util.Optional;
 
-import static it.polimi.ingsw.eriantys.cli.menus.MenuEnum.*;
+import static it.polimi.ingsw.eriantys.cli.menus.MenuEnum.PICK_ASSISTANT;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
@@ -109,26 +106,6 @@ public class MenuCreateOrJoin extends Menu {
       }
     }
   }
-
-  private boolean isYourTurnPassed() {
-    GameState game = controller.getGameState();
-    Player me = game.getPlayer(controller.getNickname());
-    Player currentPlayer = game.getCurrentPlayer();
-
-    return !game.comesAfter(me, currentPlayer);
-  }
-
-  private MenuEnum nextGameMenu() {
-    GameState game = controller.getGameState();
-    MenuEnum nextMenu = null;
-
-    switch (game.getGamePhase()) {
-      case PLANNING -> nextMenu = isYourTurnPassed() ? PLACING : PICK_ASSISTANT;
-      case ACTION -> nextMenu = isYourTurnPassed() ? PICK_ASSISTANT : PLACING;
-    }
-    return nextMenu;
-  }
-
 
   private void chooseGameSettings() {
     boolean invalid;

@@ -2,24 +2,18 @@ package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
-import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
-import java.util.Optional;
 
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 
 
 public class MenuChooseNickname extends Menu {
   private boolean isNicknameOk = false;
   private boolean gameAlreadyStarted = false;
-
-  private GameState game() {
-    return controller.getGameState();
-  }
 
   public MenuChooseNickname() {
     eventsToBeListening.add(NICKNAME_OK);
@@ -74,7 +68,7 @@ public class MenuChooseNickname extends Menu {
           waitForGreenLight();
 
           if (gameAlreadyStarted) {
-            out.println("Loading the game...");
+            out.println(colored("Loading the game...", GREEN));
             return MenuEnum.PICK_ASSISTANT;
           }
 
@@ -90,19 +84,6 @@ public class MenuChooseNickname extends Menu {
         default -> out.print("Choose a valid option: ");
       }
     }
-  }
-
-  private MenuEnum currentMenu() {
-    TurnPhase turnPhase = game().getTurnPhase();
-    GamePhase gamePhase = game().getGamePhase();
-
-    if (gamePhase.equals(GamePhase.PLANNING)) return MenuEnum.PICK_ASSISTANT;
-
-    if (turnPhase.equals(TurnPhase.PLACING)) return MenuEnum.PLACING;
-    if (turnPhase.equals(TurnPhase.MOVING)) return MenuEnum.MOVING;
-    if (turnPhase.equals(TurnPhase.PICKING)) return MenuEnum.PICKING_CLOUD;
-
-    return null;
   }
 
   @Override

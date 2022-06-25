@@ -16,7 +16,6 @@ import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 public class MenuLobby extends Menu {
-  private String choice;
 
   public MenuLobby() {
     eventsToBeListening.add(GAMEINFO_EVENT);
@@ -40,8 +39,7 @@ public class MenuLobby extends Menu {
   public MenuEnum show() throws InterruptedException {
 
     while (true) {
-//      out.print("Make a choice: ");
-      choice = getKeyboardInput();
+      String choice = getKeyboardInput();
       clientLogger.debug("Handling choice");
 
       switch (choice) {

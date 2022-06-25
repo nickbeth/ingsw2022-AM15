@@ -11,10 +11,10 @@ import java.beans.PropertyChangeListener;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
-import static it.polimi.ingsw.eriantys.controller.EventType.*;
+import static it.polimi.ingsw.eriantys.controller.EventType.INPUT_ENTERED;
+import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 /**
@@ -81,9 +81,9 @@ public abstract class Menu implements PropertyChangeListener {
       return;
     }
 
-//    if (evt.getPropertyName().equals(INTERNAL_SOCKET_ERROR.tag)) {
-//      clientLogger.error("Internal socket error occurred, server might be down");
-//    }
+    if (evt.getPropertyName().equals(INTERNAL_SOCKET_ERROR.tag)) {
+      clientLogger.error("Internal socket error occurred, server might be down");
+    }
   }
 
   public List<EventType> getEventsToBeListening() {
