@@ -54,26 +54,6 @@ public class GameState implements Serializable {
   }
 
   /**
-   * Sets current player to next in line depending on GamePhase, if the new current player is marked as disconnected
-   * it advances player again.
-   */
-  public void advancePlayer() {
-    if (getGamePhase() == GamePhase.PLANNING)
-      currentPlayer = planningPhaseOrder.get((planningPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
-    if (getGamePhase() == ACTION)
-      currentPlayer = actionPhaseOrder.get((actionPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
-
-    //if the new current player is disconnected advances to next player
-    if (!currentPlayer.isConnected()) {
-      advancePlayer();
-    }
-  }
-
-  public List<Player> getPlayers() {
-    return players;
-  }
-
-  /**
    * @return The player corresponding to the given Nickname, or null if none is found
    */
   public Player getPlayer(String nickname) {
@@ -84,15 +64,6 @@ public class GameState implements Serializable {
     return null;
   }
 
-  /**
-   * returns the current player of current gamePhase
-   *
-   * @return Player
-   */
-  public Player getCurrentPlayer() {
-    return currentPlayer;
-  }
-
   public List<Dashboard> getDashboards() {
     List<Dashboard> dashes = new ArrayList<>();
     players.forEach(p ->
@@ -101,43 +72,8 @@ public class GameState implements Serializable {
   }
 
   /**
-   * @return the playing field of this game
+   * Handles advancement to the next turn phase/game phase/player based on the current game conditions
    */
-  public PlayingField getPlayingField() {
-    return playingField;
-  }
-
-  /**
-   * @return the current phase of the game
-   */
-  public GamePhase getGamePhase() {
-    return gamePhase;
-  }
-
-  /**
-   * advances to next gamePhase prepares the corresponding player order
-   */
-  public void advanceGamePhase() {
-    switch (gamePhase) {
-      case ACTION -> {
-        modelLogger.debug("ACTION Phase advances to PLANNING");
-        gamePhase = GamePhase.PLANNING;
-        prepareOrderForPlanningPhase();
-        currentPlayer = planningPhaseOrder.get(0);
-        if (!currentPlayer.isConnected())
-          advancePlayer();
-      }
-      case PLANNING -> {
-        modelLogger.debug("PLANNING Phase advances to ACTION");
-        gamePhase = ACTION;
-        prepareOrderForActionPhase();
-        currentPlayer = actionPhaseOrder.get(0);
-        if (!currentPlayer.isConnected())
-          advancePlayer();
-      }
-    }
-  }
-
   public void advance() {
     boolean isLastTurnPhase = turnPhase.equals(TurnPhase.PICKING);
     boolean wasPlanning = gamePhase.equals(GamePhase.PLANNING);
@@ -202,92 +138,9 @@ public class GameState implements Serializable {
         if (!advanceActionPlayer()) {
           prepareOrderForPlanningPhase();
           currentPlayer = firstOfPhase(PLANNING);
-          return;
         }
-        return;
       }
     }
-
-    // originale
-//    if (currentPlayer.isConnected()) {
-//      switch (gamePhase) {
-//        case ACTION -> {
-//          simpleAdvanceTurnPhase();
-//          if (isLastTurnPhase) {
-//            if (isCurrentPlayerLast) {
-//              prepareOrderForPlanningPhase();
-//              currentPlayer = firstOfPlanning();
-//              return;
-//            }
-//            if (!advanceActionPlayer()) {
-//              prepareOrderForPlanningPhase();
-//              currentPlayer = firstOfPlanning();
-//              return;
-//            }
-//          }
-//        }
-//      }
-//    } else {
-//      // Case current player not connected
-//      switch (gamePhase) {
-//        case ACTION -> {
-//          turnPhase = TurnPhase.PLACING;
-//          if (isLastTurnPhase) {
-//            if (isCurrentPlayerLast) {
-//              prepareOrderForPlanningPhase();
-//              currentPlayer = firstOfPlanning();
-//            } else {
-//              advanceActionPlayer();
-//              return;
-//            }
-//          } else {
-//            if (isCurrentPlayerLast) {
-//              prepareOrderForPlanningPhase();
-//              currentPlayer = firstOfPlanning();
-//              return;
-//            }
-//            advanceActionPlayer();
-//            return;
-//          }
-//        }
-//      }
-//    }
-//
-//    if (!currentPlayer.isConnected()) {
-//      if (isPlanning) {
-//        if (isCurrentPlayerLast) {
-//          simpleAdvanceGamePhase();
-//          prepareOrderForActionPhase();
-//          currentPlayer = firstOfAction();
-//        } else {
-//          advancePlanningPlayer();
-//        }
-//        return;
-//      }
-//      if (isActionPhase) {
-//        turnPhase = TurnPhase.PLACING;
-//        if (isLastTurnPhase) {
-//          if (isCurrentPlayerLast) {
-//            simpleAdvanceGamePhase();
-//            prepareOrderForPlanningPhase();
-//            currentPlayer = firstOfPlanning();
-//          } else {
-//            advanceActionPlayer();
-//            return;
-//          }
-//        } else {
-//          if (isCurrentPlayerLast) {
-//            simpleAdvanceGamePhase();
-//            prepareOrderForPlanningPhase();
-//            currentPlayer = firstOfPlanning();
-//            return;
-//          } else {
-//            advanceActionPlayer();
-//            return;
-//          }
-//        }
-//      }
-//    }
   }
 
   /**
@@ -387,23 +240,46 @@ public class GameState implements Serializable {
   }
 
   /**
-   * @return the current turn phase
+   * Sets current player to next in line depending on GamePhase, if the new current player is marked as disconnected
+   * it advances player again.
+   * @deprecated Use {@link #advance()} instead, this is only here for unit tests
    */
-  public TurnPhase getTurnPhase() {
-    return turnPhase;
-  }
+  public void advancePlayer() {
+    if (getGamePhase() == GamePhase.PLANNING)
+      currentPlayer = planningPhaseOrder.get((planningPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
+    if (getGamePhase() == ACTION)
+      currentPlayer = actionPhaseOrder.get((actionPhaseOrder.indexOf(currentPlayer) + 1) % players.size());
 
-  public void advanceIfDisconnected(String disconnectingPlayer) {
-    if (currentPlayer.equals(this.getPlayer(disconnectingPlayer))) {
+    //if the new current player is disconnected advances to next player
+    if (!currentPlayer.isConnected()) {
       advancePlayer();
     }
   }
 
-  public void setTurnPhase(TurnPhase turnPhase) {
-    this.turnPhase = turnPhase;
+  /**
+   * advances to next gamePhase prepares the corresponding player order
+   * @deprecated Use {@link #advance()} instead, this is only here for unit tests
+   */
+  public void advanceGamePhase() {
+    switch (gamePhase) {
+      case ACTION -> {
+        modelLogger.debug("ACTION Phase advances to PLANNING");
+        gamePhase = GamePhase.PLANNING;
+        prepareOrderForPlanningPhase();
+        currentPlayer = planningPhaseOrder.get(0);
+        if (!currentPlayer.isConnected())
+          advancePlayer();
+      }
+      case PLANNING -> {
+        modelLogger.debug("PLANNING Phase advances to ACTION");
+        gamePhase = ACTION;
+        prepareOrderForActionPhase();
+        currentPlayer = actionPhaseOrder.get(0);
+        if (!currentPlayer.isConnected())
+          advancePlayer();
+      }
+    }
   }
-
-  //TODO la win condition deve fare altre cose credo?
 
   /**
    * Checks:<br>
@@ -463,7 +339,6 @@ public class GameState implements Serializable {
     return winner;
   }
 
-
   /**
    * Sorts planOrder players clockwise starting from the first of turnOrder
    */
@@ -472,7 +347,6 @@ public class GameState implements Serializable {
     modelLogger.debug("Old planOrder: " + planningPhaseOrder);
     planningPhaseOrder.clear();
 
-    //planOrder.add(turnOrder.get(0));
     // Prepare turns for the next round.
     // First player is the first who played in the previous action phase
     int offset = players.indexOf(actionPhaseOrder.get(0));
@@ -480,10 +354,6 @@ public class GameState implements Serializable {
       planningPhaseOrder.add(players.get((i + offset) % players.size()));
     }
     modelLogger.debug("New planOrder: " + planningPhaseOrder);
-  }
-
-  public RuleBook getRuleBook() {
-    return ruleBook;
   }
 
   /**
@@ -528,40 +398,67 @@ public class GameState implements Serializable {
     return currentPlayer.getNickname().equals(nickname);
   }
 
-  public void setPlayers(List<Player> players) {
-    this.players = players;
-  }
-
-  public void setActionPhaseOrder(List<Player> actionPhaseOrder) {
-    this.actionPhaseOrder = actionPhaseOrder;
-  }
-
-  public void setPlanningPhaseOrder(List<Player> planningPhaseOrder) {
-    this.planningPhaseOrder = planningPhaseOrder;
-  }
-
-  public List<Player> getActionPhaseOrder() {
-    return actionPhaseOrder;
-  }
-
-  public List<Player> getPlanningPhaseOrder() {
-    return planningPhaseOrder;
+  public Player getCurrentPlayer() {
+    return currentPlayer;
   }
 
   public void setCurrentPlayer(Player currentPlayer) {
     this.currentPlayer = currentPlayer;
   }
 
-  public void setGamePhase(GamePhase gamePhase) {
-    this.gamePhase = gamePhase;
+  public List<Player> getPlayers() {
+    return players;
   }
 
-  public void setRuleBook(RuleBook ruleBook) {
-    this.ruleBook = ruleBook;
+  public void setPlayers(List<Player> players) {
+    this.players = players;
+  }
+
+  public List<Player> getActionPhaseOrder() {
+    return actionPhaseOrder;
+  }
+
+  public void setActionPhaseOrder(List<Player> actionPhaseOrder) {
+    this.actionPhaseOrder = actionPhaseOrder;
+  }
+
+  public List<Player> getPlanningPhaseOrder() {
+    return planningPhaseOrder;
+  }
+
+  public void setPlanningPhaseOrder(List<Player> planningPhaseOrder) {
+    this.planningPhaseOrder = planningPhaseOrder;
+  }
+
+  public PlayingField getPlayingField() {
+    return playingField;
   }
 
   public void setPlayingField(PlayingField playingField) {
     this.playingField = playingField;
   }
 
+  public GamePhase getGamePhase() {
+    return gamePhase;
+  }
+
+  public void setGamePhase(GamePhase gamePhase) {
+    this.gamePhase = gamePhase;
+  }
+
+  public TurnPhase getTurnPhase() {
+    return turnPhase;
+  }
+
+  public void setTurnPhase(TurnPhase turnPhase) {
+    this.turnPhase = turnPhase;
+  }
+
+  public RuleBook getRuleBook() {
+    return ruleBook;
+  }
+
+  public void setRuleBook(RuleBook ruleBook) {
+    this.ruleBook = ruleBook;
+  }
 }
