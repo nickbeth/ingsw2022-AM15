@@ -148,7 +148,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <StackPane fx:id="assistCardPanel" prefHeight="460.0" prefWidth="1180.0" stylesheets="@../../css/popupstyle.css" visible="false">
+      <StackPane fx:id="assistCardPanel" prefHeight="460.0" prefWidth="1180.0" stylesheets="@../../css/mainstyle.css" visible="false">
          <children>
             <Region layoutX="6.0" layoutY="4.0" styleClass="region-assistcards" />
             <TilePane fx:id="assistCards" alignment="CENTER" layoutX="14.0" layoutY="12.0">

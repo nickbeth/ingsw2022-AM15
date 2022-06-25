@@ -266,7 +266,7 @@
          </children>
       </AnchorPane>
       <Text fx:id="promptText" layoutX="173.0" layoutY="716.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-prompt" text="I'M HERE TO TELL YOU HOW TO MOVE" textAlignment="CENTER" wrappingWidth="740.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="173.0" />
-        <StackPane fx:id="assistCardPanel" layoutX="50.0" layoutY="250.0" prefHeight="460.0" prefWidth="1180.0" stylesheets="@../css/popupstyle.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+        <StackPane fx:id="assistCardPanel" layoutX="50.0" layoutY="250.0" prefHeight="460.0" prefWidth="1180.0" stylesheets="@../css/mainstyle.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
             <children>
                 <Region layoutX="6.0" layoutY="4.0" styleClass="region-assistcards" />
                 <ImageView fitHeight="34.0" fitWidth="27.0" layoutX="914.0" onMouseClicked="#hideAssistCards" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_RIGHT">
@@ -293,7 +293,7 @@
             </children>
         </StackPane>
         <VBox fx:id="debugScreen" layoutX="630.0" layoutY="520.0" prefHeight="200.0" prefWidth="338.0" visible="false" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="80.0" />
-      <StackPane fx:id="characterCardsPanel" layoutX="60.0" layoutY="260.0" prefHeight="350.0" prefWidth="800.0" stylesheets="@../css/popupstyle.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
+      <StackPane fx:id="characterCardsPanel" layoutX="60.0" layoutY="260.0" prefHeight="350.0" prefWidth="800.0" stylesheets="@../css/mainstyle.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
          <children>
             <Region layoutX="6.0" layoutY="4.0" styleClass="region-assistcards" />
             <TilePane fx:id="characterCardsTiles" alignment="CENTER" layoutX="14.0" layoutY="12.0" prefHeight="350.0" prefWidth="823.0" StackPane.alignment="CENTER_LEFT">
