@@ -50,7 +50,7 @@ public class RefillClouds extends GameAction {
     List<Cloud> gameClouds = gameState.getPlayingField().getClouds();
 
     // TODO: test
-    // Fix disconnected player entrances
+    // fill disconnected player entrances
     List<Player> players = gameState.getPlayers();
     players.stream()
         .map(p -> p.getDashboard().getEntrance())

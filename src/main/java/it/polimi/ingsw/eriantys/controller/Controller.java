@@ -232,7 +232,7 @@ abstract public class Controller implements Runnable {
      * @param cloudIndex Index of the position of the chosen island
      */
     public boolean sendPickCloud(int cloudIndex) {
-      GameAction action = new PickCloud(cloudIndex);
+      GameAction action = new PickCloud(gameState, cloudIndex);
 
       if (!action.isValid(gameState))
         return false;
@@ -250,11 +250,11 @@ abstract public class Controller implements Runnable {
     /**
      * Send a message to the server with RefillCloud action
      */
-    public void sendRefillCloud() {
+    public void sendRefillClouds() {
       GameAction action = new RefillClouds(gameState);
       networkClient.send(new Message.Builder(PLAY_ACTION)
           .action(action)
-          .nickname(nickname)
+          .nickname(gameState.getCurrentPlayer().getNickname())
           .gameCode(gameCode)
           .build());
       clientLogger.info("Sent action {} to the server", action.getClass().getSimpleName());

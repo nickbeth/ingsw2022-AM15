@@ -22,7 +22,6 @@ public class CloudsHandler extends SectionHandler {
    */
   @Override
   protected void refresh() {
-    //TODO: check in wich gamePhase refillClouds Action gets called
     debugScreenHandler.showMessage("refreshing clouds");
     cloudHandlers.forEach(SectionHandler::update);
   }

@@ -61,7 +61,7 @@ public class MenuPickingCloud extends MenuGame {
 
               // Send refill cloud
               if (amILastPlayer()) {
-                controller.sender().sendRefillCloud();
+                controller.sender().sendRefillClouds();
                 waitForGreenLight();
               }
 
