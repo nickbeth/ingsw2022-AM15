@@ -15,6 +15,10 @@ public class StudentBag implements Serializable {
     students = new Students();
   }
 
+  public StudentBag(StudentBag bag) {
+    students = bag.getStudents();
+  }
+
   /**
    * Initializes the amount of students in the bag to a certain amount for every color
    *

@@ -1,12 +1,10 @@
 package it.polimi.ingsw.eriantys.model.actions;
 
 import it.polimi.ingsw.eriantys.cli.views.IslandsView;
+import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
-import it.polimi.ingsw.eriantys.model.entities.Island;
-import it.polimi.ingsw.eriantys.model.entities.Player;
-import it.polimi.ingsw.eriantys.model.entities.PlayingField;
-import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardCreator;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
@@ -16,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
@@ -198,67 +197,51 @@ public class ActionTest {
 
   @Test
   void pickCloud() {
-    List<Students> clouds = new ArrayList<>();
-    Students s = new Students();
-    s.addStudents(HouseColor.GREEN, 4);
-    for (int i = 0; i < normalGame.getRuleBook().cloudCount; i++) {
-      clouds.add(new Students(s));
+    int playersCount = 2;
+    GameMode mode = GameMode.NORMAL;
+    GameState game = new GameState(playersCount, mode);
+    GameAction initiate = new InitiateGameEntities(new GameInfo(playersCount, mode));
+
+    class Tmp {
+      public static Students entrance(Player p) {
+        return p.getDashboard().getEntrance();
+      }
     }
-    List<Students> entrances = new ArrayList<>();
-    //initiate game entities
-    s.setStudents(new Students());
-    s.addStudents(HouseColor.RED, 9);
-    entrances.add(new Students(s));
-    s.setStudents(new Students());
-    s.addStudents(HouseColor.YELLOW, 5);
-    entrances.add(new Students(s));
-    entrances.add(new Students(s));
-    List<Students> islandStudents = new ArrayList<>();
-    for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
-      islandStudents.add(new Students());
-    }
-    GameAction action = new InitiateGameEntities(
-        entrances,
-        islandStudents,
-        clouds,
-        new ArrayList<>()
-    );
 
-    //second to last player
-    action.apply(normalGame);
-    Player one = normalGame.getPlayers().get(0);
-    Player two = normalGame.getPlayers().get(1);
-    Player three = normalGame.getPlayers().get(2);
-    one.setPlayedCard(0);
-    two.setPlayedCard(1);
-    three.setPlayedCard(2);
+    // Initiate game
+    game.addPlayer("Paolo", TowerColor.WHITE);
+    game.addPlayer("Alice", TowerColor.WHITE);
+    initiate.apply(game);
 
-    action = new PickCloud(0);
-    // Advance from PLANNING to ACTION - PICKING of player 2
-    for (int i = 0; i < 5; i++)
-      normalGame.advance();
-    assertTrue(action.isValid(normalGame));
-    action.apply(normalGame);
-    assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
-    assertEquals(GamePhase.ACTION, normalGame.getGamePhase());
-    assertEquals(normalGame.getActionPhaseOrder().get(2), normalGame.getCurrentPlayer());
+    // Get players
+    Player p1 = game.getPlayer("Paolo");
+    Player p2 = game.getPlayer("Alice");
 
-    //last player
-    action = new PickCloud(1);
-    normalGame.setTurnPhase(TurnPhase.PICKING);
-    assertTrue(action.isValid(normalGame));
+    // Empty players entrances
+    Arrays.stream(HouseColor.values()).forEach(color -> {
+      for (int i = 0; i < game.getRuleBook().entranceSize; i++) {
+        Tmp.entrance(p1).tryRemoveStudent(color);
+        Tmp.entrance(p2).tryRemoveStudent(color);
+      }
+    });
+    int studentsLeftInEntrace = game.getRuleBook().entranceSize - game.getRuleBook().playableStudentCount;
+    // this needs to pick a cloud
+    p1.getDashboard().getEntrance().addStudents(HouseColor.PINK, studentsLeftInEntrace);
+    // this needs to have fixed his dashboard
+    p2.getDashboard().getEntrance().addStudents(HouseColor.PINK, studentsLeftInEntrace + 1);
 
-    action.apply(normalGame);
-    assertEquals(TurnPhase.PLACING, normalGame.getTurnPhase());
-    assertEquals(GamePhase.PLANNING, normalGame.getGamePhase());
-    assertEquals(normalGame.getPlanningPhaseOrder().get(0), normalGame.getCurrentPlayer());
+    game.setCurrentPlayer(p1);
+    Students oldCloudStudents = game.getPlayingField().getCloud(0).getStudents();
+    new PickCloud(game, 0).apply(game);
 
-    //is valid tests
-    action = new PickCloud(6);
-    assertFalse(action.isValid(normalGame));
+    assertTrue(Tmp.entrance(p1).contains(oldCloudStudents));
 
-    action = new PickCloud(0);
-    assertFalse(action.isValid(normalGame));
+
+    game.setCurrentPlayer(p2);
+//    oldCloudStudents = game.getPlayingField().getCloud(1).getStudents();
+    new PickCloud(game, 1).apply(game);
+
+    assertEquals(game.getRuleBook().entranceSize, Tmp.entrance(p2).getCount());
   }
 
   @Test
@@ -337,6 +320,7 @@ public class ActionTest {
     //gameState.getPlayingField().getIslands().forEach(island -> modelLogger.debug(island.getTeamsInfluenceTracer()));
 
     CharacterCard newCC = CharacterCardCreator.create(CharacterCardEnum.IGNORE_COLOR);
+    int oldCardCost = field.getPlayedCharacterCard().getCost();
     ((ColorInputCards) newCC).setColor(HouseColor.RED);
 
     GameAction actionDue = new ActivateCCEffect(newCC);
@@ -359,6 +343,6 @@ public class ActionTest {
     actionDue = new ActivateCCEffect(newCC);
     actionDue.apply(gameState);
     assertEquals(6, gameState.getCurrentPlayer().getCoins());
-    assertEquals(4, field.getPlayedCharacterCard().getCost());
+    assertEquals(oldCardCost + 1, field.getPlayedCharacterCard().getCost());
   }
 }

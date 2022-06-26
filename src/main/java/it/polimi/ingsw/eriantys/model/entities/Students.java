@@ -90,6 +90,22 @@ public class Students extends Slot implements Serializable {
     return students.get(color) >= amount;
   }
 
+  public boolean containsExactly(Students s) {
+    for (var color : HouseColor.values()) {
+      if (getCount(color) != s.getCount(color))
+        return false;
+    }
+    return true;
+  }
+
+  public boolean contains(Students s) {
+    for (var color : HouseColor.values()) {
+      if (getCount(color) < s.getCount(color))
+        return false;
+    }
+    return true;
+  }
+
   public void setStudents(Students s) {
     students.forEach(((color, amount) ->
         students.put(color, s.getCount(color))));

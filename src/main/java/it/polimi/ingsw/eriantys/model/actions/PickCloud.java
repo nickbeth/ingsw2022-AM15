@@ -27,7 +27,7 @@ public class PickCloud extends GameAction {
     if (shouldRefill) {
       List<Students> cloudsStudents = new ArrayList<>();
       Students temp = new Students();
-      StudentBag currentBag = gameState.getPlayingField().getStudentBag();
+      StudentBag currentBag = new StudentBag(gameState.getPlayingField().getStudentBag());
 
       // Populate clouds with random students from bag
       for (int cloudIter = 0; cloudIter < gameState.getRuleBook().cloudCount; cloudIter++) {
@@ -49,6 +49,7 @@ public class PickCloud extends GameAction {
    * Gets students from pickedCloud and puts them onto the players entrance. <br>
    * If player is the last connected one refill clouds.<br>
    * Calls advance().
+   *
    * @param gameState
    */
   @Override
@@ -62,23 +63,23 @@ public class PickCloud extends GameAction {
     }
     gameState.getCurrentPlayer().unsetChosenCard();
 
+    shouldRefill = gameState.isLastPlayer(gameState.getCurrentPlayer());
     if (shouldRefill) {
       RuleBook rules = gameState.getRuleBook();
       List<Cloud> gameClouds = gameState.getPlayingField().getClouds();
 
-      // TODO: test
-      // fill disconnected player entrances
+      // Eventually refill disconnected player entrances
       List<Player> players = gameState.getPlayers();
       players.stream()
-              .map(p -> p.getDashboard().getEntrance())
-              .forEach(entrance -> {
-                int missingStudents = rules.entranceSize - entrance.getCount();
-                // If the player has black spots in his entrance
-                if (missingStudents > 0) {
-                  // Refill his entrance
-                  entrance.addStudents(pickStudentsFromCloud(Objects.requireNonNull(firstNonEmptyCloud(gameClouds)), missingStudents));
-                }
-              });
+          .map(p -> p.getDashboard().getEntrance())
+          .forEach(entrance -> {
+            int missingStudents = rules.entranceSize - entrance.getCount();
+            // If the player has black spots in his entrance
+            if (missingStudents > 0) {
+              // Refill his entrance
+              entrance.addStudents(pickStudentsFromCloud(Objects.requireNonNull(firstNonEmptyCloud(gameClouds)), missingStudents));
+            }
+          });
 
       StudentBag studentBag = gameState.getPlayingField().getStudentBag();
 
@@ -113,13 +114,12 @@ public class PickCloud extends GameAction {
 
   /**
    * If the clouds need to be refilled<br>
-   *    Checks: <br/>
-   *    - If the list of given students is the right size <br/>
-   *    - If the given students are the right amount<br>
+   * Checks: <br/>
+   * - If the list of given students is the right size <br/>
+   * - If the given students are the right amount<br>
    * Then checks:<br>
    * - If the cloud index is allowed<br>
    * - If the picked cloud is empty<br>
-   *
    */
   @Override
   public boolean isValid(GameState gameState) {
