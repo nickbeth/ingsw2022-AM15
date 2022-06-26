@@ -26,6 +26,38 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.63), 10.0, 0, 3.0, 4.0);
 }
 
+.label-addoncoin {
+    -fx-font-family: Elephant;
+    -fx-font-size: 29px;
+    -fx-fill: white;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+.label-cc-item {
+    -fx-font-family: Elephant;
+    -fx-font-size: 29px;
+    -fx-fill: black;
+    -fx-stroke: white;
+    -fx-stroke-width: 1;
+}
+.lobbytext{
+    -fx-fill: white;
+}
+
+.label-lobby.label {
+    -fx-fill: white;
+    -fx-font-family: "Roboto";
+}
+
+.label-coins.label{
+    -fx-font-family: "Roboto";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+.image-coins {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.9), 10.0, 0, 3.0, 4.0);
+}
+
 .text-debug {
     -fx-font-size: 13px;
     -fx-font-family: Georgia;
@@ -46,14 +78,6 @@
 .text-playedcard {
     -fx-font-size: 13px;
     -fx-font-family: "Felix Titling";
-}
-
-.text-addoncoin {
-    -fx-font-family: Elephant;
-    -fx-font-size: 29px;
-    -fx-fill: black;
-    -fx-stroke: white;
-    -fx-stroke-width: 1;
 }
 
 .text-prompt {

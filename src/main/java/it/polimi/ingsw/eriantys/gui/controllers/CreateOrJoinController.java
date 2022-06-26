@@ -62,7 +62,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
       GameCode gameCode = GameCode.parseCode(gameUidField.getText());
       Controller.get().sender().sendJoinGame(gameCode);
     } catch (GameCode.GameCodeException e) {
-      errorMessage.setText("please insert a gameCode to start the game");
+      errorMessage.setText("please insert a valid gameCode to start the game");
       errorMessage.setVisible(true);
     }
   }

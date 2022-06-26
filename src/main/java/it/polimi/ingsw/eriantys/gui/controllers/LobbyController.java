@@ -80,6 +80,7 @@ public class LobbyController extends FXMLController {
         towerColorChoice.getItems().add(color);
     }
     towerColorChoice.getItems().add(null);
+    setDefaultValues();
   }
 
   private void setDefaultValues() {

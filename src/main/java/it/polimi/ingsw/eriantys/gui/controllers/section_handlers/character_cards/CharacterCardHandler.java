@@ -79,7 +79,7 @@ public class CharacterCardHandler extends SectionHandler {
     StackPane.setMargin(showDescrButton, new Insets(0, 5, 5, 0));
 
     addonCoin = new Text("+1");
-    addonCoin.getStyleClass().add("text-addonCoin");
+    addonCoin.getStyleClass().add("label-addoncoin");
     cardPane.getChildren().add(addonCoin);
     StackPane.setAlignment(addonCoin, Pos.TOP_LEFT);
     StackPane.setMargin(addonCoin, new Insets(12, 0, 0, 30));

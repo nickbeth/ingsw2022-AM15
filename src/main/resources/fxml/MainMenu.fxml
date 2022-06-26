@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.effect.SepiaTone?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.eriantys.gui.controllers.MainMenuController">
     <children>
+        <ImageView fitHeight="400.0" fitWidth="600.0" opacity="0.5" preserveRatio="true">
+            <image>
+                <Image url="@../assets/misc/background.jpg" />
+            </image>
+            <effect>
+                <SepiaTone />
+            </effect>
+        </ImageView>
         <Button fx:id="playButton" layoutX="264.0" layoutY="157.0" mnemonicParsing="false" onAction="#playButtonAction" prefHeight="20.0" prefWidth="73.0" text="Play" />
         <Button fx:id="rulesButton" layoutX="264.0" layoutY="188.0" mnemonicParsing="false" onAction="#rulesButtonAction" prefHeight="20.0" prefWidth="73.0" text="Rules" />
         <Button fx:id="quitButton" layoutX="264.0" layoutY="219.0" mnemonicParsing="false" onAction="#quitButtonAction" prefHeight="20.0" prefWidth="73.0" text="Quit" />

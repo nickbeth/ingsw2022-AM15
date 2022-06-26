@@ -45,7 +45,6 @@ public class IslandInputCardHandler extends CharacterCardHandler {
       draggableItem.setVisible(true);
     }
     if (card.getCardEnum() == CharacterCardEnum.LOCK_ISLAND) {
-      draggableItem.getStyleClass().add("text-addoncoin");
       draggableItem.setText("×" + Controller.get().getGameState().getPlayingField().getLocks());
     }
   }
@@ -57,7 +56,6 @@ public class IslandInputCardHandler extends CharacterCardHandler {
   protected void create() {
     super.create();
     draggableItem = new Label();
-    draggableItem.getStyleClass().add("text-addoncoin");
     ImageView graphic = new ImageView();
     graphic.setFitWidth(60);
     graphic.setPreserveRatio(true);
@@ -66,6 +64,7 @@ public class IslandInputCardHandler extends CharacterCardHandler {
     if (card.getCardEnum() == CharacterCardEnum.LOCK_ISLAND) {
       graphic.setImage(new Image("/assets/realm/lock-icon.png", 60, 0, true, false));
       draggableItem.setText("×" + Controller.get().getGameState().getPlayingField().getLocks());
+      draggableItem.getStyleClass().add("label-cc-item");
     } else
       graphic.setImage(new Image("/assets/realm/mother-nature.png", 60, 0, true, false));
 

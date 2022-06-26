@@ -6,10 +6,12 @@ import it.polimi.ingsw.eriantys.gui.controllers.section_handlers.*;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -25,6 +27,10 @@ import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 public class GameSceneController extends FXMLController {
+  @FXML
+  private Text codeText;
+  @FXML
+  private Label coinLabel;
   @FXML
   private Text promptText;
   @FXML
@@ -116,6 +122,7 @@ public class GameSceneController extends FXMLController {
     promptTextHandler = new PromptTextHandler(promptText);
     if (Controller.get().getGameState().getRuleBook().gameMode == GameMode.EXPERT)
       buildForExpertMode();
+    codeText.setText("CODE: " + Controller.get().getGameCode().code);
   }
 
   private void buildDashboardHandlers() {
@@ -132,7 +139,34 @@ public class GameSceneController extends FXMLController {
 
   private void buildForExpertMode() {
     playCCButton.setVisible(true);
+    coinLabel.setVisible(true);
     characterCardsHandler = new CharacterCardsHandler(characterCardsPanel, characterCardsTiles, debugScreenHandler);
+  }
+
+  @Override
+  public void updateAll() {
+    super.updateAll();
+    playerGridHandler.update();
+    mainDashboardHandler.update();
+    islandsPaneHandler.update();
+    cloudBoxHandler.update();
+    debugScreenHandler.update();
+    enemyDashboardHandlers.forEach(SectionHandler::update);
+    promptTextHandler.update();
+    if (assistCardPanel.isVisible())
+      assistCardTilesHandler.update();
+    if (characterCardsPanel.isVisible())
+      characterCardsHandler.update();
+    if (Controller.get().getGameState().getRuleBook().gameMode == GameMode.EXPERT) {
+      playCCButton.setVisible(isCCButtonVisible());
+      updateCoinAmount();
+    }
+  }
+
+  private void updateCoinAmount() {
+    String nickname = Controller.get().getNickname();
+    GameState gameState = Controller.get().getGameState();
+    coinLabel.setText("×" + gameState.getPlayer(nickname).getCoins());
   }
 
   @Override
@@ -157,25 +191,6 @@ public class GameSceneController extends FXMLController {
     }
   }
 
-
-  @Override
-  public void updateAll() {
-    super.updateAll();
-    playerGridHandler.update();
-    mainDashboardHandler.update();
-    islandsPaneHandler.update();
-    cloudBoxHandler.update();
-    debugScreenHandler.update();
-    enemyDashboardHandlers.forEach(SectionHandler::update);
-    promptTextHandler.update();
-    if (assistCardPanel.isVisible())
-      assistCardTilesHandler.update();
-    if (characterCardsPanel.isVisible())
-      characterCardsHandler.update();
-    if (Controller.get().getGameState().getRuleBook().gameMode == GameMode.EXPERT)
-      playCCButton.setVisible(isCCButtonVisible());
-  }
-
   @FXML
   private void quitGameAction() {
     Controller.get().sender().sendQuitGame();
@@ -195,6 +210,12 @@ public class GameSceneController extends FXMLController {
   }
 
   @FXML
+  private void showCharacterCards(ActionEvent actionEvent) {
+    characterCardsHandler.update();
+    characterCardsPanel.setVisible(true);
+  }
+
+  @FXML
   private void toggleDebugScreen(KeyEvent event) {
     boolean isVisible = !debugScreen.isVisible();
     debugScreenHandler.update();
@@ -204,18 +225,12 @@ public class GameSceneController extends FXMLController {
     }
   }
 
-  @FXML
-  private void showCharacterCards(ActionEvent actionEvent) {
-    //update coard handerl
-    characterCardsHandler.update();
-    characterCardsPanel.setVisible(true);
-  }
-
   private boolean isCCButtonVisible() {
     GameState gameState = Controller.get().getGameState();
 
     return gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname()) &&
             gameState.getPlayingField().getPlayedCharacterCard() == null &&
+            gameState.getGamePhase() != GamePhase.PLANNING &&
             gameState.getTurnPhase() != TurnPhase.PICKING;
   }
 }
