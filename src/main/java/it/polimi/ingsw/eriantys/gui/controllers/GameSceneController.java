@@ -111,7 +111,6 @@ public class GameSceneController extends FXMLController {
     super.start();
     Controller.get().addListener(this, GAMEDATA_EVENT.tag);
     Controller.get().addListener(this, PLAYER_CONNECTION_CHANGED.tag);
-    Controller.get().addListener(this, INTERNAL_SOCKET_ERROR.tag);
     debugScreenHandler = new DebugScreenHandler(debugScreen);
     mainDashboardHandler = new DashboardHandler(Controller.get().getNickname(), studentHallGrid, entranceGrid, profTableGrid, dashboardTowers, debugScreenHandler);
     buildDashboardHandlers();
@@ -174,7 +173,6 @@ public class GameSceneController extends FXMLController {
     super.finish();
     Controller.get().removeListener(this, GAMEDATA_EVENT.tag);
     Controller.get().removeListener(this, PLAYER_CONNECTION_CHANGED.tag);
-    Controller.get().removeListener(this, INTERNAL_SOCKET_ERROR.tag);
   }
 
   @Override
@@ -185,9 +183,6 @@ public class GameSceneController extends FXMLController {
       updateAll();
     else if (evt.getPropertyName().equals(PLAYER_CONNECTION_CHANGED.tag)) {
       playerGridHandler.update();
-    } else {
-      quitGameAction();
-      gui.showSocketError();
     }
   }
 

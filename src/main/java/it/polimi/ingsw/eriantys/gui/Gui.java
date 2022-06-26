@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.gui;
 
+import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.controllers.FXMLController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,12 +10,16 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.EnumMap;
 
+import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
 
-public class Gui extends Application {
+
+public class Gui extends Application implements PropertyChangeListener {
   private Stage stage;
   private SceneEnum currScene;
   private FXMLController controller;
@@ -27,6 +32,7 @@ public class Gui extends Application {
    */
   @Override
   public void start(Stage primaryStage) {
+    Controller.get().addListener(this, INTERNAL_SOCKET_ERROR.tag);
     stage = primaryStage;
     stage.setTitle("Eriantys");
     stage.getIcons().add(new Image("/assets/misc/game-icon.png"));
@@ -42,6 +48,7 @@ public class Gui extends Application {
    * closes the current stage
    */
   public void closeApplication() {
+    Controller.get().removeListener(this, INTERNAL_SOCKET_ERROR.tag);
     stage.close();
   }
 
@@ -95,5 +102,10 @@ public class Gui extends Application {
     stage.setScene(new Scene(root));
     stage.sizeToScene();
     stage.show();
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    setScene(SceneEnum.MENU);
   }
 }
