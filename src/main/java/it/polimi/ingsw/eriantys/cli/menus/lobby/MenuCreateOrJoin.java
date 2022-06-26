@@ -13,8 +13,7 @@ import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.EXPERT;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.NORMAL;
-import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
-import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
 /**
  * Asks the user for server's address and port
@@ -101,7 +100,7 @@ public class MenuCreateOrJoin extends Menu {
 
         // Back button
         case "0" -> {
-          out.println("Disconnecting");
+          out.println(colored("Disconnecting", YELLOW));
           out.println();
           controller.sender().sendQuitGame();
           controller.disconnect();
