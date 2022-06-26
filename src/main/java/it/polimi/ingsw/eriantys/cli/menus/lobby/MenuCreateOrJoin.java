@@ -44,9 +44,14 @@ public class MenuCreateOrJoin extends Menu {
     while (true) {
       errorEncountered = true;
 
+
       showOptions();
       out.print("Make a choice: ");
       choice = getKeyboardInput();
+
+      if (isGameAlreadyStarted) {
+        return PICK_ASSISTANT;
+      }
 
       switch (choice) {
 
@@ -142,6 +147,7 @@ public class MenuCreateOrJoin extends Menu {
     if (evt.getPropertyName().equals(START_GAME.tag)) {
       out.print(colored("\nConnected to the game " + controller.getGameCode() + ".", GREEN));
       isGameAlreadyStarted = true;
+      inputGreenLight = true;
     }
 
     if (evt.getPropertyName().equals(GAMEINFO_EVENT.tag)) {

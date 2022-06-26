@@ -141,7 +141,7 @@ public class MessageHandler implements Runnable {
     if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
       return;
 
-    String errorMessage = "Lost connection to the server";
+    String errorMessage = "\nLost connection to the server";
     if (message.error() != null)
       errorMessage += ": " + message.error();
 

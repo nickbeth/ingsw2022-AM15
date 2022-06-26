@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
+import it.polimi.ingsw.eriantys.model.GameInfo;
 
 import java.beans.PropertyChangeEvent;
 
@@ -48,7 +49,8 @@ public class MenuChooseNickname extends Menu {
           waitForGreenLight();
 
           if (gameAlreadyStarted) {
-            out.println("Loading the game...");
+            out.println(colored("Auto reconnection.", GREEN));
+            out.println(colored("Loading the game...", GREEN));
             return MenuEnum.PICK_ASSISTANT;
           }
 
@@ -68,6 +70,7 @@ public class MenuChooseNickname extends Menu {
           waitForGreenLight();
 
           if (gameAlreadyStarted) {
+            out.println(colored("Auto reconnection.", GREEN));
             out.println(colored("Loading the game...", GREEN));
             return MenuEnum.PICK_ASSISTANT;
           }
@@ -93,10 +96,6 @@ public class MenuChooseNickname extends Menu {
     if (evt.getPropertyName().equals(NICKNAME_OK.tag)) {
       clientLogger.debug("Message from server. Nickname is ok");
       isNicknameOk = true;
-      if (evt.getNewValue() != null) {
-        out.println("You were already in a game.");
-        gameAlreadyStarted = true;
-      }
     }
 
     greenLight = true;
