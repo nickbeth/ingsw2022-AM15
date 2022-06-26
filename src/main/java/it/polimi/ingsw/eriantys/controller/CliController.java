@@ -24,6 +24,7 @@ public class CliController extends Controller {
   @Override
   public void showNetworkError(String error) {
     out.println(Ansi.ansi().fgRed().a(error).reset());
+    out.println(Ansi.ansi().fgRed().a("Please restart the application.").reset());
   }
 
   @Override
