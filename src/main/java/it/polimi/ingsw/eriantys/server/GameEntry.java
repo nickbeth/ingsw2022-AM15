@@ -5,7 +5,6 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.GameAction;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.network.Client;
-import it.polimi.ingsw.eriantys.network.Message;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,12 +13,12 @@ import java.util.Map;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
 public class GameEntry {
-  private final GameInfo gameInfo;
-  private final HashMap<String, Client> players;
-  private final GameState gameState;
+  private final GameInfo gameInfo; //!< GameInfo of this game
+  private final HashMap<String, Client> clients; //!< A map of clients connected to this game and their respective names
+  private final GameState gameState; //!< GameState of this game
 
   public GameEntry(GameInfo gameInfo) {
-    this.players = new HashMap<>();
+    this.clients = new HashMap<>();
     this.gameInfo = gameInfo;
     this.gameState = new GameState(gameInfo.getMaxPlayerCount(), gameInfo.getMode());
   }
@@ -46,24 +45,24 @@ public class GameEntry {
   }
 
   public Client getClient(String nickname) {
-    return players.get(nickname);
+    return clients.get(nickname);
   }
 
   public Collection<Client> getClients() {
-    return players.values();
+    return clients.values();
   }
 
   public boolean hasPlayer(String nickname) {
-    return players.containsKey(nickname);
+    return clients.containsKey(nickname);
   }
 
   public void addPlayer(String nickname, Client client) {
-    players.put(nickname, client);
+    clients.put(nickname, client);
     gameInfo.addPlayer(nickname);
   }
 
   public void removePlayer(String nickname) {
-    players.remove(nickname);
+    clients.remove(nickname);
     gameInfo.removePlayer(nickname);
   }
 
@@ -78,12 +77,12 @@ public class GameEntry {
   }
 
   public void disconnectPlayer(String nickname) {
-    players.remove(nickname);
+    clients.remove(nickname);
     gameState.getPlayer(nickname).setConnected(false);
   }
 
   public void reconnectPlayer(String nickname, Client client) {
-    players.put(nickname, client);
+    clients.put(nickname, client);
     gameState.getPlayer(nickname).setConnected(true);
   }
 
@@ -92,7 +91,7 @@ public class GameEntry {
   }
 
   public boolean isFull() {
-    return players.size() == gameInfo.getMaxPlayerCount();
+    return clients.size() == gameInfo.getMaxPlayerCount();
   }
 
   public boolean isStarted() {
