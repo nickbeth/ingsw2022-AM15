@@ -132,6 +132,7 @@ public class GameState implements Serializable {
       if (!isLastTurnPhase) {
         if (isCurrentPlayerLast) {
           prepareOrderForPlanningPhase();
+          simpleAdvanceGamePhase();
           currentPlayer = firstOfPhase(PLANNING);
           return;
         }
