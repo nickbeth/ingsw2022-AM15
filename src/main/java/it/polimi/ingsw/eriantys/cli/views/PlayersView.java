@@ -37,7 +37,7 @@ public class PlayersView extends View {
               colored("online", HouseColor.GREEN)
               : colored("offline", HouseColor.RED))
           .append(PADDING)
-          .append("Team: ").append(colored(p.getColorTeam().toString(), p.getColorTeam()))
+          .append("Team: ").append(p.getColorTeam().toString())
           .append(PADDING);
       // Print chosen card if it exists
       p.getChosenCard().ifPresent(card ->

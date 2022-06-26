@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.CloudsView;
+import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
@@ -31,6 +32,10 @@ public class MenuPickingCloud extends MenuGame {
   public MenuEnum show() {
 
     while (true) {
+      if (!turnPhase().equals(TurnPhase.PICKING)) {
+        // out.println(colored("You're in the wrong phase.", RED));
+        return null;
+      }
 
       String choice = getNonBlankString();
 
@@ -50,11 +55,13 @@ public class MenuPickingCloud extends MenuGame {
               break;
             }
 
+            // Show my dashboard
+            new DashboardView(me(), rules(), professorHolder()).draw(out);
             // Show clouds
-            new CloudsView(clouds()).draw(out);
+            cloudsView().draw(out);
 
             // Gets cloud index
-            out.println("Choose cloud index: ");
+            out.print("Choose cloud index: ");
             int cloudIndex = getNumber() - 1; // Index correction
 
             // Send action PickCloud

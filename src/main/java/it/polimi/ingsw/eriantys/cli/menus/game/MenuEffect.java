@@ -7,6 +7,7 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Arrays;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
@@ -21,17 +22,17 @@ public class MenuEffect extends MenuGame {
   protected void showOptions() {
   }
 
+  /**
+   * @return MenuEnum.PLACING if a character card was played
+   */
   @Override
   public MenuEnum show() {
     // Choose the cards
-    chooseCharacterCard();
+    if (!chooseCharacterCard())
+      return null;
 
     // Show CC descriptions
     CharacterCard cc = game().getPlayingField().getPlayedCharacterCard();
-    out.println();
-    out.println("Card chosen: " + cc.getCardEnum());
-    out.print("Description: ");
-    out.println(cc.getCardEnum().getDescription());
 
     ParamBuilder paramBuilder = new ParamBuilder();
 
@@ -80,7 +81,7 @@ public class MenuEffect extends MenuGame {
     return myCount - finalCount;
   }
 
-  private void chooseCharacterCard() {
+  private boolean chooseCharacterCard() {
     // Show playable CC
     out.println();
     while (true) {
@@ -91,11 +92,26 @@ public class MenuEffect extends MenuGame {
       out.print("Choose a character card: ");
       int ccIndex = getNumber();
 
+      out.println("Card chosen: ");
+      new CharacterCardsView(List.of(ccs().get(ccIndex))).draw(out);
+      out.print("Description: ");
+      out.println(ccs().get(ccIndex).getCardEnum().getDescription());
+      out.println();
+
+      String choice;
+      do {
+        out.print("Continue (y/n)? ");
+        choice = getNonBlankString();
+      } while (!choice.equalsIgnoreCase("y") && !choice.equalsIgnoreCase("n"));
+
+      if (choice.equalsIgnoreCase("n"))
+        return false;
+
       // Send the action
       if (controller.sender().sendChooseCharacterCard(ccIndex)) {
         waitForGreenLight();
         out.println(colored("Card chosen.", GREEN));
-        break;
+        return true;
       }
       out.println(colored("Choose a valid card", RED));
     }

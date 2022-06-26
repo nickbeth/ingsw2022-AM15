@@ -28,7 +28,12 @@ public class MenuMoving extends MenuGame {
   @Override
   public MenuEnum show() {
 
+
     while (true) {
+      if (!turnPhase().equals(TurnPhase.MOVING)) {
+        // out.println(colored("You're in the wrong phase.", RED));
+        return null;
+      }
 
       String choice = getNonBlankString();
 

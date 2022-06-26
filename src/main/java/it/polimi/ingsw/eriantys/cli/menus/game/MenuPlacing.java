@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
+import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
@@ -51,6 +52,10 @@ public class MenuPlacing extends MenuGame {
     ParamBuilder paramBuilder = new ParamBuilder();
 
     while (true) {
+      if (!turnPhase().equals(TurnPhase.PLACING) || !gamePhase().equals(GamePhase.ACTION)) {
+        // out.println(colored("You're in the wrong phase.", RED));
+        return null;
+      }
 
       String choice = getNonBlankString();
 
@@ -117,11 +122,11 @@ public class MenuPlacing extends MenuGame {
 
           // Choose a character card from those in playing field
           case "E", "e" -> {
-            if (!isCharacterCardUnplayed()) {
+            if (isCharacterCardUnplayed()) {
               new MenuEffect().show();
               return MenuEnum.EFFECT;
             }
-            out.println(colored("A card was already played", RED));
+            out.println(colored("\nA card was already played", RED));
           }
 
           default -> {

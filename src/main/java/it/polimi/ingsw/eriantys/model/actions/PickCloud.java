@@ -61,7 +61,7 @@ public class PickCloud extends GameAction {
     if (cloud.getStudents().getCount() + dashboard.getEntrance().getCount() == gameState.getRuleBook().entranceSize) {
       GameService.pickCloud(cloud, dashboard);
     }
-    gameState.getCurrentPlayer().unsetChosenCard();
+    gameState.getCurrentPlayer().unsetAssistantChosenCard();
 
     shouldRefill = gameState.isLastPlayer(gameState.getCurrentPlayer());
     if (shouldRefill) {
