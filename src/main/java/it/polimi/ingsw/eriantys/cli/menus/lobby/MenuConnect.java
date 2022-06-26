@@ -2,7 +2,10 @@ package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.network.Client;
+
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 
 /**
  * Asks the user for server's address and port
@@ -42,9 +45,10 @@ public class MenuConnect extends Menu {
 
       // If it succeeds to connect goes on
       if (controller.connect(address, port)) {
+        out.println(colored("Connected", HouseColor.GREEN));
         return MenuEnum.NICKNAME;
       } else {
-        out.println("Failed to connect to the server");
+        out.println(colored("Failed to connect to the server", HouseColor.YELLOW));
       }
     }
   }

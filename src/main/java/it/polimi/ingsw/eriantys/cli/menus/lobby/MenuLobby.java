@@ -91,7 +91,7 @@ public class MenuLobby extends Menu {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     super.propertyChange(evt);
-    clearConsole();
+
 
     if (evt.getPropertyName().equals(START_GAME.tag)) {
       InputHandler.get().setLine("4");

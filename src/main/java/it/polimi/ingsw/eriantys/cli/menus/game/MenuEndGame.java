@@ -24,9 +24,9 @@ public class MenuEndGame extends MenuGame {
     out.println();
     out.println("Game ended");
     View endScreen = new ViewGroup()
-        .addView(islandsView)
-        .addView(dashboardsView)
-        .addView(playersView);
+        .addView(islandsView())
+        .addView(dashboardsView())
+        .addView(playersView());
 
     endScreen.draw(out);
 

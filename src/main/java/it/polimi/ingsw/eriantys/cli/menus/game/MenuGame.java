@@ -24,11 +24,25 @@ import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 
 public abstract class MenuGame extends Menu {
-  protected View dashboardsView = new DashboardsView(players(), rules(), professorHolder());
-  protected View islandsView = new IslandsView(islands(), motherPosition());
-  protected View cloudsView = new CloudsView(clouds());
-  protected View characterCardsView = new CharacterCardsView(ccs());
-  protected View playersView = new PlayersView(players(), rules());
+  protected View dashboardsView() {
+    return new DashboardsView(players(), rules(), professorHolder());
+  }
+
+  protected View islandsView() {
+    return new IslandsView(islands(), motherPosition());
+  }
+
+  protected View cloudsView() {
+    return new CloudsView(clouds());
+  }
+
+  protected View characterCardsView() {
+    return new CharacterCardsView(ccs());
+  }
+
+  protected View playersView() {
+    return new PlayersView(players(), rules());
+  }
 
   // Linking the game state to menus
   protected GameState game() {
@@ -85,7 +99,6 @@ public abstract class MenuGame extends Menu {
     eventsToBeListening.add(PLAYER_CONNECTION_CHANGED);
     eventsToBeListening.add(GAME_ENDED);
     eventsToBeListening.add(DELIBERATE_DISCONNECTION);
-    clearConsole();
   }
 
   final protected void showViewOptions(PrintStream out) {
@@ -117,28 +130,27 @@ public abstract class MenuGame extends Menu {
    */
   final protected void handleViewOptions(String choice) {
 
-    clearConsole();
     switch (choice) {
       // View all field
       case "1" -> {
         ViewGroup viewAll = new ViewGroup()
-            .addView(islandsView)
-            .addView(playersView)
-            .addView(dashboardsView)
-            .addView(cloudsView);
+            .addView(islandsView())
+            .addView(playersView())
+            .addView(dashboardsView())
+            .addView(cloudsView());
         if (rules().gameMode.equals(GameMode.EXPERT))
-          viewAll.addView(characterCardsView);
+          viewAll.addView(characterCardsView());
         viewAll.draw(out);
       }
 
       // View all islands
-      case "2" -> islandsView.draw(out);
+      case "2" -> islandsView().draw(out);
 
       // View all dashboards
-      case "3" -> dashboardsView.draw(out);
+      case "3" -> dashboardsView().draw(out);
 
       // View all character cards
-      case "4" -> cloudsView.draw(out);
+      case "4" -> cloudsView().draw(out);
 
       // View my assistant cards
       case "5" -> new AssistantCardsView(me()).draw(out);
@@ -162,12 +174,12 @@ public abstract class MenuGame extends Menu {
         out.println();
       }
 
-      case "8" -> playersView.draw(out);
+      case "8" -> playersView().draw(out);
 
       // View all character cards
       case "10" -> {
         if (rules().gameMode.equals(GameMode.EXPERT))
-          characterCardsView.draw(out);
+          characterCardsView().draw(out);
       }
       default -> {
       }
@@ -202,7 +214,6 @@ public abstract class MenuGame extends Menu {
     // Refresh view and print what's happened
     if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag)) {
       String actionDescription = (String) evt.getNewValue();
-      clearConsole();
       out.println(colored(actionDescription, GREEN));
 //      showOptions();
     }

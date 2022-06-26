@@ -47,7 +47,7 @@ public class MenuEffect extends MenuGame {
       // If the card requires island index input
       if (cc instanceof IslandInputCards) {
         // View islands
-        islandsView.draw(out);
+        islandsView().draw(out);
         // Get island index input
         out.print("Insert island index: ");
         int index = getNumber() - 1;  // Index correction
@@ -84,8 +84,8 @@ public class MenuEffect extends MenuGame {
     // Show playable CC
     out.println();
     while (true) {
-      playersView.draw(out);
-      characterCardsView.draw(out);
+      playersView().draw(out);
+      characterCardsView().draw(out);
 
       // Choose CC
       out.print("Choose a character card: ");

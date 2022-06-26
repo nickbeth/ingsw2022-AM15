@@ -118,11 +118,4 @@ public abstract class Menu implements PropertyChangeListener {
       }
     }
   }
-
-  final protected void clearConsole() {
-    // Clear screen
-    out.print("\033[H\033[2J");
-    out.println(Ansi.ansi().eraseScreen());
-    out.flush();
-  }
 }
