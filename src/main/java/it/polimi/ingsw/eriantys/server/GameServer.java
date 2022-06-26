@@ -11,10 +11,7 @@ import it.polimi.ingsw.eriantys.network.Message;
 import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
 import it.polimi.ingsw.eriantys.network.MessageType;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -429,12 +426,28 @@ public class GameServer implements Runnable {
    * @param gameEntry The game entry to delete
    */
   private void deleteGame(GameCode gameCode, GameEntry gameEntry) {
+    StringBuilder message = new StringBuilder("Game '" + gameCode + "' has been deleted");
+
     // Clean up disconnected players
+    ArrayList<String> cleanedUpPlayers = new ArrayList<>(4);
     GameInfo gameInfo = gameEntry.getGameInfo();
-    for (String player : gameInfo.getJoinedPlayers())
-      disconnectedPlayers.remove(player);
+    for (String player : gameInfo.getJoinedPlayers()) {
+      GameCode removedPlayer = disconnectedPlayers.remove(player);
+      if (removedPlayer != null)
+        cleanedUpPlayers.add(player);
+    }
+
+    // Log cleaned up players
+    if (!cleanedUpPlayers.isEmpty()) {
+      message.append(", disconnected players were cleaned up: ");
+      cleanedUpPlayers.forEach(player -> message.append(player).append(", "));
+      message.setLength(message.length() - 2);
+    } else {
+      message.append(", no disconnected players were cleaned up");
+    }
 
     activeGames.remove(gameCode);
+    serverLogger.info(message.toString());
   }
 
   /**
