@@ -44,13 +44,12 @@ public class AssistCardHandler extends SectionHandler {
     if (gamePhase == GamePhase.PLANNING) {
       isFirstActionTurn = false;
       createAssistCards();
-      createPlayedCards();
     }
     if (gamePhase == GamePhase.ACTION && !isFirstActionTurn) {
       isFirstActionTurn = true;
       createAssistCards();
-      createPlayedCards();
     }
+    createPlayedCards();
   }
 
   @Override

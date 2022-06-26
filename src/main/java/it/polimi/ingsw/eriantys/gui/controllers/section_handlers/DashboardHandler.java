@@ -56,8 +56,6 @@ public class DashboardHandler extends SectionHandler {
   @Override
   protected void refresh() {
     GamePhase gamePhase = gameState.getGamePhase();
-    Students entrance = gameState.getPlayer(nickname).getDashboard().getEntrance();
-    ProfessorHolder professors = gameState.getPlayingField().getProfessorHolder();
     if (gamePhase == GamePhase.ACTION) {
       refreshDiningHall();
       refreshTowers();
@@ -196,7 +194,6 @@ public class DashboardHandler extends SectionHandler {
     int count = 0;
     for (HouseColor color : HouseColor.values()) {
       for (int i = 0; i < entrance.getCount(color); i++) {
-        count++;
         ImageView student = createStudent(color);
         student.setOnDragDetected((e) -> {
           debugScreenHandler.showMessage(color.toString() + " student drag detected");
@@ -212,6 +209,7 @@ public class DashboardHandler extends SectionHandler {
         } else {
           entranceGrid.add(student, 9 - count, 1);
         }
+        count++;
       }
     }
   }
@@ -239,7 +237,7 @@ public class DashboardHandler extends SectionHandler {
   }
 
   /**
-   * if the turnPhase is PLACING and its the players turn accepts ANY transfer mode else NONE
+   * if the turnPhase is PLACING and it's the players turn accepts ANY transfer mode else NONE
    */
   private void dragOverHall(DragEvent e) {
     if (!gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname()) || !nickname.equals(Controller.get().getNickname())) {

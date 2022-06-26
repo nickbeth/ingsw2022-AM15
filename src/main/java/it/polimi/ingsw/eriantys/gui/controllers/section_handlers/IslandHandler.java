@@ -6,7 +6,6 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.Students;
-import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
@@ -21,10 +20,10 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumMap;
 
-import static it.polimi.ingsw.eriantys.gui.controllers.utils.ImagePaths.*;
+import static it.polimi.ingsw.eriantys.gui.controllers.utils.ImagePaths.studentColorToPath;
+import static it.polimi.ingsw.eriantys.gui.controllers.utils.ImagePaths.towerColorToPath;
 
 public class IslandHandler extends SectionHandler {
   private final DebugScreenHandler debugScreenHandler;
@@ -32,7 +31,8 @@ public class IslandHandler extends SectionHandler {
   private final Island island;
   private final GameState gameState = Controller.get().getGameState();
 
-  private final List<Label> studentLabels = new ArrayList<>();
+  private final EnumMap<HouseColor, Label> colorToStudentLabel = new EnumMap<>(HouseColor.class);
+
   private ImageView lockView;
   private ImageView mnView;
 
@@ -68,9 +68,17 @@ public class IslandHandler extends SectionHandler {
       //refresh lock visibility
       lockView.setVisible(island.isLocked());
 
-      //refresh student counters
+      //refresh student counters and visibility
       for (HouseColor color : HouseColor.values()) {
-        studentLabels.get(color.ordinal()).setText("×" + island.getStudents().getCount(color));
+        int studentCount = island.getStudents().getCount(color);
+        Label studentLabel = colorToStudentLabel.get(color);
+
+        if (studentCount == 0)
+          colorToStudentLabel.get(color).setVisible(false);
+        else {
+          colorToStudentLabel.get(color).setVisible(true);
+          studentLabel.setText("×" + island.getStudents().getCount(color));
+        }
       }
     }
   }
@@ -86,51 +94,33 @@ public class IslandHandler extends SectionHandler {
     islandImg.setPreserveRatio(true);
     islandPane.getChildren().add(islandImg);
 
-    ImageView red = new ImageView(new Image(studentColorToPath.get(HouseColor.RED)));
-    ImageView blue = new ImageView(new Image(studentColorToPath.get(HouseColor.BLUE)));
-    ImageView green = new ImageView(new Image(studentColorToPath.get(HouseColor.GREEN)));
-    ImageView yellow = new ImageView(new Image(studentColorToPath.get(HouseColor.YELLOW)));
-    ImageView pink = new ImageView(new Image(studentColorToPath.get(HouseColor.PINK)));
-    red.setFitWidth(20);
-    red.setPreserveRatio(true);
-    blue.setFitWidth(20);
-    blue.setPreserveRatio(true);
-    green.setFitWidth(20);
-    green.setPreserveRatio(true);
-    yellow.setFitWidth(20);
-    yellow.setPreserveRatio(true);
-    pink.setFitWidth(20);
-    pink.setPreserveRatio(true);
+    for (HouseColor color : HouseColor.values()) {
+      ImageView studentImg = new ImageView(new Image(studentColorToPath.get(color)));
+      studentImg.setFitWidth(20);
+      studentImg.setPreserveRatio(true);
+      int studentCount = island.getStudents().getCount(color);
+      Label studentLabel = new Label("×" + studentCount, studentImg);
+      studentLabel.getStyleClass().add("label-counter");
+      islandPane.getChildren().add(studentLabel);
+      colorToStudentLabel.put(color, studentLabel);
+      if (studentCount == 0)
+        colorToStudentLabel.get(color).setVisible(false);
+    }
+    // postions of students on the island
+    AnchorPane.setBottomAnchor(colorToStudentLabel.get(HouseColor.GREEN), 60.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.GREEN), 35.0);
 
-    Label greenStudent = new Label("×" + island.getStudents().getCount(HouseColor.GREEN), green);
-    islandPane.getChildren().add(greenStudent);
-    AnchorPane.setBottomAnchor(greenStudent, 60.0);
-    AnchorPane.setLeftAnchor(greenStudent, 35.0);
-    studentLabels.add(greenStudent);
+    AnchorPane.setTopAnchor(colorToStudentLabel.get(HouseColor.RED), 30.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.RED), 35.0);
 
-    Label redStudent = new Label("×" + island.getStudents().getCount(HouseColor.RED), red);
-    islandPane.getChildren().add(redStudent);
-    AnchorPane.setTopAnchor(redStudent, 30.0);
-    AnchorPane.setLeftAnchor(redStudent, 35.0);
-    studentLabels.add(redStudent);
+    AnchorPane.setBottomAnchor(colorToStudentLabel.get(HouseColor.YELLOW), 30.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.YELLOW), 75.0);
 
-    Label yellowStudent = new Label("×" + island.getStudents().getCount(HouseColor.YELLOW), yellow);
-    islandPane.getChildren().add(yellowStudent);
-    AnchorPane.setBottomAnchor(yellowStudent, 30.0);
-    AnchorPane.setLeftAnchor(yellowStudent, 75.0);
-    studentLabels.add(yellowStudent);
+    AnchorPane.setTopAnchor(colorToStudentLabel.get(HouseColor.PINK), 30.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.PINK), 115.0);
 
-    Label pinkStudent = new Label("×" + island.getStudents().getCount(HouseColor.PINK), pink);
-    islandPane.getChildren().add(pinkStudent);
-    AnchorPane.setTopAnchor(pinkStudent, 30.0);
-    AnchorPane.setLeftAnchor(pinkStudent, 115.0);
-    studentLabels.add(pinkStudent);
-
-    Label blueStudent = new Label("×" + island.getStudents().getCount(HouseColor.BLUE), blue);
-    islandPane.getChildren().add(blueStudent);
-    AnchorPane.setBottomAnchor(blueStudent, 60.0);
-    AnchorPane.setLeftAnchor(blueStudent, 115.0);
-    studentLabels.add(blueStudent);
+    AnchorPane.setBottomAnchor(colorToStudentLabel.get(HouseColor.BLUE), 60.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.BLUE), 115.0);
 
     mnView = new ImageView(new Image("/assets/realm/mother-nature.png", 25, 100, true, false));
     mnView.setFitWidth(25);
@@ -151,6 +141,7 @@ public class IslandHandler extends SectionHandler {
     });
 
     towerLabel = new Label("×" + island.getTowerCount());
+    towerLabel.getStyleClass().add("label-counter");
     islandPane.getChildren().add(towerLabel);
     AnchorPane.setBottomAnchor(towerLabel, 75.0);
     AnchorPane.setLeftAnchor(towerLabel, 75.0);

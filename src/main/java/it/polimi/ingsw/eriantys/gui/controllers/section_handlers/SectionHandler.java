@@ -4,7 +4,7 @@ public abstract class SectionHandler {
   private boolean created = false;
 
   /**
-   * If {@link #created} is false calls {@link #create()} method.<br>
+   * If {@link #created} is false calls {@link #create()} method and sets created to true.<br>
    * Then calls {@link #refresh()} method.
    */
   public void update() {

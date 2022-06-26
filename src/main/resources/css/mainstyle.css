@@ -44,6 +44,10 @@
     -fx-fill: white;
 }
 
+.label-counter {
+    -fx-font-weight: bold;
+}
+
 .label-lobby.label {
     -fx-fill: white;
     -fx-font-family: "Roboto";

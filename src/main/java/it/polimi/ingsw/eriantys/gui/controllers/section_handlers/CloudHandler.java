@@ -24,7 +24,7 @@ public class CloudHandler extends SectionHandler {
   private final Cloud cloud;
   private final GameState gameState = Controller.get().getGameState();
 
-  private final List<Label> studentlabels = new ArrayList<>();
+  private final EnumMap<HouseColor, Label> colorToStudentLabel = new EnumMap<>(HouseColor.class);
 
   public CloudHandler(AnchorPane cloudPane, Cloud cloud, DebugScreenHandler debugScreenHandler) {
     this.cloudPane = cloudPane;
@@ -43,8 +43,18 @@ public class CloudHandler extends SectionHandler {
       cloudPane.setCursor(Cursor.DEFAULT);
 
     for (HouseColor color : HouseColor.values()) {
-      studentlabels.get(color.ordinal()).setText("×" + cloud.getStudents().getCount(color));
+      int studentCount = cloud.getStudents().getCount(color);
+      Label studentLabel = colorToStudentLabel.get(color);
+
+      if (studentCount == 0)
+        colorToStudentLabel.get(color).setVisible(false);
+      else {
+        colorToStudentLabel.get(color).setVisible(true);
+        studentLabel.setText("×" + cloud.getStudents().getCount(color));
+      }
     }
+    //make cloud invisible if there are no students on it
+    cloudPane.setVisible(cloud.getStudents().getCount() > 0);
   }
 
   /**
@@ -60,53 +70,30 @@ public class CloudHandler extends SectionHandler {
     cloudImg.setPreserveRatio(true);
     cloudPane.getChildren().add(cloudImg);
 
-    //TODO: write this code in a less verbose way
-    ImageView red = new ImageView(new Image(studentColorToPath.get(HouseColor.RED)));
-    ImageView blue = new ImageView(new Image(studentColorToPath.get(HouseColor.BLUE)));
-    ImageView green = new ImageView(new Image(studentColorToPath.get(HouseColor.GREEN)));
-    ImageView yellow = new ImageView(new Image(studentColorToPath.get(HouseColor.YELLOW)));
-    ImageView pink = new ImageView(new Image(studentColorToPath.get(HouseColor.PINK)));
-    red.setFitWidth(20);
-    red.setPreserveRatio(true);
-    blue.setFitWidth(20);
-    blue.setPreserveRatio(true);
-    green.setFitWidth(20);
-    green.setPreserveRatio(true);
-    yellow.setFitWidth(20);
-    yellow.setPreserveRatio(true);
-    pink.setFitWidth(20);
-    pink.setPreserveRatio(true);
+    for (HouseColor color : HouseColor.values()) {
+      ImageView studentImg = new ImageView(new Image(studentColorToPath.get(color)));
+      studentImg.setFitWidth(20);
+      studentImg.setPreserveRatio(true);
+      Label studentLabel = new Label("×" + cloud.getStudents().getCount(color), studentImg);
+      studentLabel.getStyleClass().add("label-counter");
+      cloudPane.getChildren().add(studentLabel);
+      colorToStudentLabel.put(color, studentLabel);
+    }
 
-    Label greenStudent = new Label("×" + cloud.getStudents().getCount(HouseColor.GREEN), green);
-    cloudPane.getChildren().add(greenStudent);
-    AnchorPane.setBottomAnchor(greenStudent, 40.0);
-    AnchorPane.setLeftAnchor(greenStudent, 20.0);
-    studentlabels.add(greenStudent);
+    AnchorPane.setBottomAnchor(colorToStudentLabel.get(HouseColor.GREEN), 40.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.GREEN), 20.0);
 
-    Label redStudent = new Label("×" + cloud.getStudents().getCount(HouseColor.RED), red);
-    cloudPane.getChildren().add(redStudent);
-    AnchorPane.setTopAnchor(redStudent, 20.0);
-    AnchorPane.setLeftAnchor(redStudent, 20.0);
-    studentlabels.add(redStudent);
+    AnchorPane.setTopAnchor(colorToStudentLabel.get(HouseColor.RED), 20.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.RED), 20.0);
 
-    Label yellowStudent = new Label("×" + cloud.getStudents().getCount(HouseColor.YELLOW), yellow);
-    cloudPane.getChildren().add(yellowStudent);
-    AnchorPane.setBottomAnchor(yellowStudent, 20.0);
-    AnchorPane.setLeftAnchor(yellowStudent, 42.0);
-    studentlabels.add(yellowStudent);
+    AnchorPane.setBottomAnchor(colorToStudentLabel.get(HouseColor.YELLOW), 20.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.YELLOW), 42.0);
 
-    Label pinkStudent = new Label("×" + cloud.getStudents().getCount(HouseColor.PINK), pink);
-    cloudPane.getChildren().add(pinkStudent);
-    AnchorPane.setTopAnchor(pinkStudent, 20.0);
-    AnchorPane.setLeftAnchor(pinkStudent, 62.0);
-    studentlabels.add(pinkStudent);
+    AnchorPane.setTopAnchor(colorToStudentLabel.get(HouseColor.PINK), 20.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.PINK), 62.0);
 
-    Label blueStudent = new Label("×" + cloud.getStudents().getCount(HouseColor.BLUE), blue);
-    cloudPane.getChildren().add(blueStudent);
-    AnchorPane.setBottomAnchor(blueStudent, 40.0);
-
-    AnchorPane.setLeftAnchor(blueStudent, 62.0);
-    studentlabels.add(blueStudent);
+    AnchorPane.setBottomAnchor(colorToStudentLabel.get(HouseColor.BLUE), 40.0);
+    AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.BLUE), 62.0);
 
     cloudPane.setOnMouseClicked(e -> pickCloud());
   }

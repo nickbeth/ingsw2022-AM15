@@ -145,12 +145,12 @@ public class GameSceneController extends FXMLController {
   @Override
   public void updateAll() {
     super.updateAll();
+    enemyDashboardHandlers.forEach(SectionHandler::update);
     playerGridHandler.update();
     mainDashboardHandler.update();
     islandsPaneHandler.update();
     cloudBoxHandler.update();
     debugScreenHandler.update();
-    enemyDashboardHandlers.forEach(SectionHandler::update);
     promptTextHandler.update();
     if (assistCardPanel.isVisible())
       assistCardTilesHandler.update();
