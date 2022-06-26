@@ -215,7 +215,12 @@ public class IslandHandler extends SectionHandler {
 
     if (db.getContentTypes().contains(DataFormats.MOTHER_NATURE.format)) {
       int startIndex = (int) db.getContent(DataFormats.MOTHER_NATURE.format);
-      if (!Controller.get().sender().sendMoveMotherNature(islandIndex - startIndex))
+      int islandsSize = gameState.getPlayingField().getIslandsAmount();
+      int movements = islandIndex - startIndex;
+      if (islandIndex < startIndex) {
+        movements += islandsSize;
+      }
+      if (!Controller.get().sender().sendMoveMotherNature(movements))
         debugScreenHandler.showMessage("invalid mother nature drop on island " + islandIndex);
       else
         debugScreenHandler.showMessage("mother nature was dropped on island " + islandIndex);
@@ -225,12 +230,11 @@ public class IslandHandler extends SectionHandler {
     if (db.getContentTypes().contains(DataFormats.CARD_TO_ISLAND.format)) {
       IslandInputCards card = (IslandInputCards) Controller.get().getGameState().getPlayingField().getPlayedCharacterCard();
       card.setIslandIndex(islandIndex);
-      if (!Controller.get().sender().sendActivateEffect(card)){
+      if (!Controller.get().sender().sendActivateEffect(card)) {
         e.setDropCompleted(true);
         e.consume();
         debugScreenHandler.showMessage("invalid " + card.getCardEnum() + " effect drop on island " + islandIndex);
-      }
-      else {
+      } else {
         debugScreenHandler.showMessage(card.getCardEnum() + " effect was applied on island " + islandIndex);
       }
     }
