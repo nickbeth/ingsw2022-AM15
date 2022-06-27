@@ -483,6 +483,12 @@ public class GameServer implements Runnable {
     // Save the action to print to logs
     String logAction = heartbeatFailed ? "lost connection to" : "left";
 
+    // The player was not in any game
+    if (gameCode == null) {
+      serverLogger.info("Player '{}' {} the server", nickname, logAction);
+      return;
+    }
+
     GameEntry gameEntry = activeGames.get(gameCode);
     // The game doesn't exist, warn and ignore
     if (gameEntry == null) {
