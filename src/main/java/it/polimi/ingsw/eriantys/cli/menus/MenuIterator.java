@@ -23,6 +23,7 @@ import static java.lang.System.out;
 
 public class MenuIterator implements PropertyChangeListener {
   private final Controller controller = Controller.get();
+//  private boolean isGameEnded = false;
   private MenuEnum nextMenu;
   private Menu currentMenu;
 
@@ -62,6 +63,9 @@ public class MenuIterator implements PropertyChangeListener {
         case EFFECT -> {
           return new MenuEffect();
         }
+        case END -> {
+          return new MenuEndGame();
+        }
         default -> {
           clientLogger.error("Passed a not valid argument");
           return null;
@@ -74,7 +78,7 @@ public class MenuIterator implements PropertyChangeListener {
     // Setting events MenuIterator has to listen to
     controller.addListener(this, START_GAME.tag);
     controller.addListener(this, DELIBERATE_DISCONNECTION.tag);
-    controller.addListener(this, GAME_ENDED.tag);
+//    controller.addListener(this, END_GAME.tag);
 
     // Setting starting menu
     currentMenu = new MenuConnect();
@@ -104,6 +108,7 @@ public class MenuIterator implements PropertyChangeListener {
 
   /**
    * Handle InGame menus
+   *
    * @return True if a game is ended or the player disconnects.
    */
   public boolean menuAction() {
@@ -144,6 +149,10 @@ public class MenuIterator implements PropertyChangeListener {
           }
         }
       }
+      // Todo: test WIN screen update
+      case WIN -> {
+        return makeMenu(MenuEnum.END);
+      }
     }
     return makeMenu(CONNECTION);
   }
@@ -175,10 +184,10 @@ public class MenuIterator implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
 
-    if (evt.getPropertyName().equals(GAME_ENDED.tag)) {
-      out.println("GAME_ENDED");
-      new MenuEndGame().show();
-    }
+//    if (evt.getPropertyName().equals(END_GAME.tag)) {
+//      out.println("GAME_ENDED");
+//      isGameEnded = true;
+//    }
 
     if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
       out.print(colored("\nDisconnected.", YELLOW));

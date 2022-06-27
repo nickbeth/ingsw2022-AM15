@@ -4,6 +4,8 @@ import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.View;
 import it.polimi.ingsw.eriantys.cli.views.ViewGroup;
 
+import java.beans.PropertyChangeEvent;
+
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 
@@ -34,14 +36,24 @@ public class MenuEndGame extends MenuGame {
     game().getWinner().ifPresentOrElse(
         winner -> result
             .append(colored("TEAM ", GREEN))
-            .append(colored(winner.toString(), winner))
+            .append(winner)
             .append(" HAS WON THE GAME"),
         () ->
             result.append("IT'S A TIE")
     );
 
+    out.println("Game ended, see the game above.");
     out.print(result);
+    out.println();
+
+    out.println("PRESS ANY KEY CONTINUE.");
+    getNonBlankString();
 
     return MenuEnum.CREATE_OR_JOIN;
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    super.propertyChange(evt);
   }
 }

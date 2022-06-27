@@ -97,7 +97,7 @@ public abstract class MenuGame extends Menu {
     super();
     eventsToBeListening.add(GAMEDATA_EVENT);
     eventsToBeListening.add(PLAYER_CONNECTION_CHANGED);
-    eventsToBeListening.add(GAME_ENDED);
+    eventsToBeListening.add(END_GAME);
     eventsToBeListening.add(DELIBERATE_DISCONNECTION);
   }
 
@@ -206,7 +206,11 @@ public abstract class MenuGame extends Menu {
   public void propertyChange(PropertyChangeEvent evt) {
     super.propertyChange(evt);
 
-    if (Arrays.asList(GAMEDATA_EVENT.tag, PLAYER_CONNECTION_CHANGED.tag).contains(evt.getPropertyName())) {
+    // Force the return of the menus
+    if (Arrays.asList(GAMEDATA_EVENT.tag,
+        PLAYER_CONNECTION_CHANGED.tag,
+        END_GAME.tag)
+        .contains(evt.getPropertyName())) {
       InputHandler.get().setLine("forced_advancement_to_next_menu");
       inputGreenLight = true;
     }

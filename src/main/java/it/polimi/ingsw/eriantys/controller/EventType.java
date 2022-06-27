@@ -7,7 +7,6 @@ public enum EventType {
 
   GAMEINFO_EVENT("gameinfo"),
   GAMEDATA_EVENT("gamedata"),
-  GAME_ENDED("game_ended"),
   DELIBERATE_DISCONNECTION("deliberate_disconnection"),
 
   INTERNAL_SOCKET_ERROR("internal_socket_error"),

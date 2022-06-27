@@ -12,5 +12,6 @@ public enum MenuEnum {
   PLACING,
   EFFECT,
   MOVING,
-  PICKING_CLOUD
+  PICKING_CLOUD,
+  END
 }
