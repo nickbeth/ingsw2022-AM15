@@ -12,6 +12,7 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -131,6 +132,9 @@ public class IslandHandler extends SectionHandler {
     mnView.setVisible(false);
     mnView.setOnDragDetected(e -> {
       debugScreenHandler.showMessage("mother nature drag detected");
+      ColorAdjust grayEffect = new ColorAdjust();
+      grayEffect.setSaturation(-1);
+      mnView.setEffect(grayEffect);
       Dragboard db = mnView.startDragAndDrop(TransferMode.ANY);
       ClipboardContent content = new ClipboardContent();
       int startIndex = Controller.get().getGameState().getPlayingField().getIslands().indexOf(island);
@@ -139,6 +143,7 @@ public class IslandHandler extends SectionHandler {
       db.setDragView(mnView.getImage());
       e.consume();
     });
+    mnView.setOnDragDone(e -> mnView.setEffect(null));
 
     towerLabel = new Label("×" + island.getTowerCount());
     towerLabel.getStyleClass().add("label-counter");

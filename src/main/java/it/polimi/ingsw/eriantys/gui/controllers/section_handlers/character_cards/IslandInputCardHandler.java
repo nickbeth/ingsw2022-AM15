@@ -8,6 +8,7 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -70,6 +71,9 @@ public class IslandInputCardHandler extends CharacterCardHandler {
 
     draggableItem.setOnDragDetected((e) -> {
       debug.showMessage(card.getCardEnum() + " drag detected");
+      ColorAdjust grayEffect = new ColorAdjust();
+      grayEffect.setSaturation(-1);
+      draggableItem.setEffect(grayEffect);
       Dragboard db = graphic.startDragAndDrop(TransferMode.MOVE);
       ClipboardContent content = new ClipboardContent();
       content.put(DataFormats.CARD_TO_ISLAND.format, card.getCardEnum());
@@ -81,6 +85,7 @@ public class IslandInputCardHandler extends CharacterCardHandler {
 
     // show character card panel at the end of a drag event
     draggableItem.setOnDragDone((e) -> {
+      draggableItem.setEffect(null);
       cardsPanel.setVisible(e.isDropCompleted());
     });
     draggableItem.setGraphic(graphic);

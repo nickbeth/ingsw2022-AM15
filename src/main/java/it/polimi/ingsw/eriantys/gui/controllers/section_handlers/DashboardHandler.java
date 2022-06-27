@@ -12,6 +12,8 @@ import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -196,6 +198,9 @@ public class DashboardHandler extends SectionHandler {
       for (int i = 0; i < entrance.getCount(color); i++) {
         ImageView student = createStudent(color);
         student.setOnDragDetected((e) -> {
+          ColorAdjust grayEffect = new ColorAdjust();
+          grayEffect.setSaturation(-1);
+          student.setEffect(grayEffect);
           debugScreenHandler.showMessage(color.toString() + " student drag detected");
           Dragboard db = student.startDragAndDrop(TransferMode.ANY);
           ClipboardContent content = new ClipboardContent();
@@ -204,6 +209,8 @@ public class DashboardHandler extends SectionHandler {
           db.setDragView(student.getImage());
           e.consume();
         });
+        student.setOnDragDone((e) -> student.setEffect(null));
+
         if (count < 5) {
           entranceGrid.add(student, count, 0);
         } else {
@@ -213,6 +220,7 @@ public class DashboardHandler extends SectionHandler {
       }
     }
   }
+
 
   private void createTowers() {
     Player player = gameState.getPlayer(nickname);
