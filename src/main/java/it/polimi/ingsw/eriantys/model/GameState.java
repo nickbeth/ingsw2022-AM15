@@ -360,12 +360,21 @@ public class GameState implements Serializable {
    */
   public Boolean comesAfter(Player player1, Player player2) {
     switch (gamePhase) {
-      case PLANNING -> {return planningPhaseOrder.indexOf(player1) > planningPhaseOrder.indexOf(player2);}
-      case ACTION -> {return actionPhaseOrder.indexOf(player1) > actionPhaseOrder.indexOf(player2);}
+      case PLANNING -> {
+        return planningPhaseOrder.indexOf(player1) > planningPhaseOrder.indexOf(player2);
+      }
+      case ACTION -> {
+        return actionPhaseOrder.indexOf(player1) > actionPhaseOrder.indexOf(player2);
+      }
     }
     return null;
   }
 
+  public boolean notEnoughConnectedPlayer() {
+    return players.stream()
+        .filter(Player::isConnected)
+        .count() <= 1;
+  }
 
   public boolean isTurnOf(String nickname) {
     return currentPlayer.getNickname().equals(nickname);
