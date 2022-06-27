@@ -7,7 +7,6 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 
 import java.beans.PropertyChangeEvent;
-import java.util.Arrays;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;

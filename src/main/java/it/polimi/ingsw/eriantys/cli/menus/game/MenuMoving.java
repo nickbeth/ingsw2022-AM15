@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
@@ -30,7 +31,7 @@ public class MenuMoving extends MenuGame {
 
 
     while (true) {
-      if (!turnPhase().equals(TurnPhase.MOVING)) {
+      if (!turnPhase().equals(TurnPhase.MOVING) || !gamePhase().equals(GamePhase.ACTION)) {
         // out.println(colored("You're in the wrong phase.", RED));
         return null;
       }

@@ -36,7 +36,9 @@ public class CliController extends Controller {
   public void run() {
     MenuIterator iterator = new MenuIterator();
     // Starting input handler
-    new Thread(InputHandler.get(), "InputHandler").start();
+    Thread inputHandler = new Thread(InputHandler.get(), "InputHandler");
+    inputHandler.setDaemon(true);
+    inputHandler.start();
 
     while (true) {
       preGame(iterator);
