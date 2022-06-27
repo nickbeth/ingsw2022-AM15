@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.client;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.network.Client;
 import it.polimi.ingsw.eriantys.network.Message;
 import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
@@ -128,6 +129,7 @@ public class MessageHandler implements Runnable {
   }
 
   private void handleEndGame(Client client, Message message) {
+    controller.getGameState().setGamePhase(GamePhase.WIN);
     controller.fireChange(END_GAME, null, null);
   }
 

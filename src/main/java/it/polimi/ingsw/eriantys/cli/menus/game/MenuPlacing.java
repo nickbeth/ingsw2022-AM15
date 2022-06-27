@@ -53,7 +53,6 @@ public class MenuPlacing extends MenuGame {
 
     while (true) {
       if (!turnPhase().equals(TurnPhase.PLACING) || !gamePhase().equals(GamePhase.ACTION)) {
-        // out.println(colored("You're in the wrong phase.", RED));
         return null;
       }
 

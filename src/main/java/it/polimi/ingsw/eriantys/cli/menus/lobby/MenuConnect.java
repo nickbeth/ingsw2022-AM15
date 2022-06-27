@@ -42,7 +42,7 @@ public class MenuConnect extends Menu {
         out.print("Enter the port the server is running on: ");
         port = getNumber();
       }
-
+      out.println(colored("Reaching server...", HouseColor.YELLOW));
       // If it succeeds to connect goes on
       if (controller.connect(address, port)) {
         out.println(colored("Connected", HouseColor.GREEN));

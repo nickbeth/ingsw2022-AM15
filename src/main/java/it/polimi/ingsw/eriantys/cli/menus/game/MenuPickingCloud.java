@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
-import it.polimi.ingsw.eriantys.cli.views.CloudsView;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 

@@ -20,7 +20,7 @@ public class Player implements Serializable {
   private AssistantCard chosenCard;
   private Integer coins;
 
-  private Integer maxMovement;
+  private int maxMovement;
 
   public Player(RuleBook ruleBook, String nickname, TowerColor color, Students entranceStudents) {
     this.nickname = nickname;
@@ -40,7 +40,7 @@ public class Player implements Serializable {
     return Optional.ofNullable(chosenCard);
   }
 
-  public Integer getMaxMovement() {
+  public int getMaxMovement() {
     return maxMovement;
   }
 
