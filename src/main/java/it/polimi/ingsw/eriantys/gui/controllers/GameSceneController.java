@@ -7,9 +7,11 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
+import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -177,6 +179,10 @@ public class GameSceneController extends FXMLController {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+    if ( Controller.get().getGameState().getGamePhase() == GamePhase.WIN){
+      showWinnerAlert();
+      return;
+    }
     if (evt.getNewValue() != null)
       debugScreenHandler.showMessage((String) evt.getNewValue());
     if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
@@ -227,5 +233,13 @@ public class GameSceneController extends FXMLController {
             gameState.getPlayingField().getPlayedCharacterCard() == null &&
             gameState.getGamePhase() != GamePhase.PLANNING &&
             gameState.getTurnPhase() != TurnPhase.PICKING;
+  }
+
+  private void showWinnerAlert() {
+    TowerColor winner = Controller.get().getGameState().getWinner().get();
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setContentText(winner.toString().toUpperCase() + " TOWERS WON THE GAME");
+    alert.setOnCloseRequest(e -> gui.setScene(SceneEnum.CREATE_OR_JOIN));
+    alert.showAndWait();
   }
 }
