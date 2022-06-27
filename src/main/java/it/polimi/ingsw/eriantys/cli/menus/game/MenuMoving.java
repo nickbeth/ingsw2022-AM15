@@ -8,6 +8,7 @@ import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 import static java.text.MessageFormat.format;
 
 public class MenuMoving extends MenuGame {
@@ -18,10 +19,11 @@ public class MenuMoving extends MenuGame {
 
   @Override
   protected void showOptions() {
-    showViewOptions(out);
+    showViewOptions();
 
     if (isMyTurn()) {
       out.println("T - Move mother nature");
+      out.println(baseSeparator, YELLOW);
     }
     out.print("Make a choice: ");
   }
@@ -32,7 +34,6 @@ public class MenuMoving extends MenuGame {
 
     while (true) {
       if (!turnPhase().equals(TurnPhase.MOVING) || !gamePhase().equals(GamePhase.ACTION)) {
-        // out.println(colored("You're in the wrong phase.", RED));
         return null;
       }
 
@@ -52,7 +53,7 @@ public class MenuMoving extends MenuGame {
           case "T", "t" -> {
             // Check of the Turn phase
             if (!turnPhase().equals(TurnPhase.MOVING)) {
-              out.println(colored("You're in the wrong phase.", RED));
+              out.println("You're in the wrong phase.", RED);
               break;
             }
 
@@ -78,7 +79,7 @@ public class MenuMoving extends MenuGame {
               islandsView().draw(out);
               return MenuEnum.PICKING_CLOUD;
             }
-            out.println(colored("Invalid input parameters. Valid movement:" + me().getMaxMovement() + ".", RED));
+            out.println("Invalid input parameters. Valid movement:" + me().getMaxMovement() + ".", RED);
             showOptions();
           }
 

@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public class MenuPickingCloud extends MenuGame {
   public MenuPickingCloud() {
@@ -18,12 +19,13 @@ public class MenuPickingCloud extends MenuGame {
 
   @Override
   protected void showOptions() {
-    showViewOptions(out);
+    showViewOptions();
 
     if (isMyTurn()) {
       if (game().isLastPlayer(me()))
         out.println("You're the last player");
       out.println("Q - Pick cloud");
+      out.println(baseSeparator, YELLOW);
     }
     out.print("Make a choice: ");
   }
@@ -33,7 +35,7 @@ public class MenuPickingCloud extends MenuGame {
 
     while (true) {
       if (!turnPhase().equals(TurnPhase.PICKING) || !gamePhase().equals(GamePhase.ACTION)) {
-        // out.println(colored("You're in the wrong phase.", RED));
+        // out.println("You're in the wrong phase.", RED);
         return null;
       }
 
@@ -51,7 +53,7 @@ public class MenuPickingCloud extends MenuGame {
 
           case "Q", "q" -> {
             if (!turnPhase().equals(TurnPhase.PICKING)) {
-              out.println(colored("You're in the wrong phase.", RED));
+              out.println("You're in the wrong phase.", RED);
               break;
             }
 
@@ -69,7 +71,7 @@ public class MenuPickingCloud extends MenuGame {
               waitForGreenLight();
               return MenuEnum.PICK_ASSISTANT;
             }
-            out.println(colored("Invalid input parameters", RED));
+            out.println("You're in the wrong phase.", RED);
             showOptions();
           }
           default -> {

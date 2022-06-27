@@ -2,7 +2,6 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.DashboardView;
-import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
@@ -12,6 +11,7 @@ import java.text.MessageFormat;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public class MenuPlacing extends MenuGame {
 
@@ -32,7 +32,7 @@ public class MenuPlacing extends MenuGame {
 
   @Override
   protected void showOptions() {
-    showViewOptions(out);
+    showViewOptions();
 
     if (isMyTurn()) {
       if (studentsLeftToMove() != 0) {
@@ -43,6 +43,7 @@ public class MenuPlacing extends MenuGame {
       }
       if (rules().gameMode.equals(GameMode.EXPERT) && isCharacterCardUnplayed())
         out.println("E - Play a character card");
+      out.println(baseSeparator, YELLOW);
     }
     out.print("Make option: ");
   }
@@ -73,7 +74,7 @@ public class MenuPlacing extends MenuGame {
 
             // Check of the Turn phase
             if (!turnPhase().equals(TurnPhase.PLACING) || !gamePhase().equals(GamePhase.ACTION)) {
-              out.println(colored("You're in the wrong phase.", RED));
+              out.println("You're in the wrong phase.", RED);
               break;
             }
 
@@ -88,7 +89,7 @@ public class MenuPlacing extends MenuGame {
 
             // Send actions
             if (!controller.sender().sendMoveStudentsToIsland(paramBuilder.getStudentsToMove(), islandIndex)) {
-              out.println(colored("Invalid input parameters", RED));
+              out.println("You're in the wrong phase.", RED);
               showOptions();
               break;
             }
@@ -108,7 +109,7 @@ public class MenuPlacing extends MenuGame {
 
             // Send actions
             if (!controller.sender().sendMoveStudentsToDiningHall(paramBuilder.getStudentsToMove())) {
-              out.println(colored("Invalid input parameters", RED));
+              out.println("You're in the wrong phase.", RED);
               showOptions();
               break;
             }
@@ -125,7 +126,7 @@ public class MenuPlacing extends MenuGame {
               new MenuEffect().show();
               return MenuEnum.EFFECT;
             }
-            out.println(colored("\nA card was already played", RED));
+            out.println("\nA card was already played", RED);
           }
 
           default -> {
@@ -175,7 +176,7 @@ public class MenuPlacing extends MenuGame {
         paramBuilder.addStudentColor(paramBuilder.getChosenColor(), amount);
         break;
       }
-      out.println(colored("Cannot move that amount. Student left to move: " + studentsLeftToMove() + ".", RED));
+      out.println("Cannot move that amount. Student left to move: " + studentsLeftToMove() + ".", RED);
       out.print("Insert again: ");
     }
   }

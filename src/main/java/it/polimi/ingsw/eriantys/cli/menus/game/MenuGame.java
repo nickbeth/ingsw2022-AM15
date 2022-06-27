@@ -15,15 +15,17 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
 import java.beans.PropertyChangeEvent;
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
-import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
+import static java.text.MessageFormat.format;
 
 public abstract class MenuGame extends Menu {
+  String baseSeparator = "-------------------------------------------------------------------------------------------------------";
+
   protected View dashboardsView() {
     return new DashboardsView(players(), rules(), professorHolder());
   }
@@ -101,28 +103,44 @@ public abstract class MenuGame extends Menu {
     eventsToBeListening.add(DELIBERATE_DISCONNECTION);
   }
 
-  final protected void showViewOptions(PrintStream out) {
+  final protected void showViewOptions() {
     out.println();
-    String openingRow = " - GameCode: %s - Player: %s - GamePhase: %s TurnPhase: %s --------------------------------\n";
-    out.printf(openingRow, controller.getGameCode(), me().getNickname(), game().getGamePhase().toString(), game().getTurnPhase().toString());
-    if (isMyTurn()) {
-      out.println("It's now your turn " + currentPlayer());
-    } else {
-      out.println("It's now turn of: " + currentPlayer());
-    }
-    out.println("0000 - Quit the game and disconnect");
-    out.println("1 - View all");
-    out.println("2 - View islands");
-    out.println("3 - View dashboards");
-    out.println("4 - View clouds");
-    out.println("5 - View my assistant cards");
-    out.println("6 - View my dashboard");
-    out.println("7 - Show turn orders");
-    out.println("8 - Show players");
+    StringBuilder openingRow = new StringBuilder(baseSeparator);
+    String label = format(
+        "GameCode: {0} - Player: {1} - GamePhase: {2} TurnPhase: {3} ",
+        controller.getGameCode(),
+        me().getNickname(),
+        game().getGamePhase().toString(),
+        game().getTurnPhase().toString()
+    );
+    openingRow.replace(1, 1 + label.length(), label);
+
+    // Opening row
+    out.println(openingRow.toString(), YELLOW);
+
+    // Turn label
+    String turnLabel = isMyTurn() ? "It's now your turn " : "It's now turn of: ";
+    out.println(turnLabel + currentPlayer(), YELLOW);
+
+    // Option
+    StringBuilder options = new StringBuilder();
+    out.println("0000 - Quit the game and disconnect", RED);
+    options
+        .append("1 - View all").append(System.lineSeparator())
+        .append("2 - View islands").append(System.lineSeparator())
+        .append("3 - View dashboards").append(System.lineSeparator())
+        .append("4 - View clouds").append(System.lineSeparator())
+        .append("5 - View my assistant cards").append(System.lineSeparator())
+        .append("6 - View my dashboard").append(System.lineSeparator())
+        .append("7 - Show turn orders").append(System.lineSeparator())
+        .append("8 - Show players");
     if (rules().gameMode.equals(GameMode.EXPERT))
-      out.println("10 - CharacterCards");
+      options.append("10 - CharacterCards");
+    out.println(options.toString(), YELLOW);
+
+    // Optional closing row
     if (!isMyTurn())
-      out.println("-------------------------------------------------------------------------------------------------------");
+      out.println(baseSeparator, YELLOW);
   }
 
   /**
@@ -208,8 +226,8 @@ public abstract class MenuGame extends Menu {
 
     // Force the return of the menus
     if (Arrays.asList(GAMEDATA_EVENT.tag,
-        PLAYER_CONNECTION_CHANGED.tag,
-        END_GAME.tag)
+            PLAYER_CONNECTION_CHANGED.tag,
+            END_GAME.tag)
         .contains(evt.getPropertyName())) {
       InputHandler.get().setLine("forced_advancement_to_next_menu");
       inputGreenLight = true;
@@ -218,14 +236,12 @@ public abstract class MenuGame extends Menu {
     // Refresh view and print what's happened
     if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag)) {
       String actionDescription = (String) evt.getNewValue();
-      out.println(colored(actionDescription, GREEN));
-//      showOptions();
+      out.println(actionDescription, GREEN);
     }
 
     if (evt.getPropertyName().equals(PLAYER_CONNECTION_CHANGED.tag)) {
       out.println();
       out.println((String) evt.getNewValue());
-//      showOptions();
     }
   }
 

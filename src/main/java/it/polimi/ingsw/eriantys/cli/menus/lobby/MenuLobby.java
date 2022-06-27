@@ -58,7 +58,7 @@ public class MenuLobby extends Menu {
         case "4" -> {
           if (!controller.getGameInfo().isStarted()) {
             if (!controller.sender().sendStartGame()) {
-              out.println(colored("There are not enough players with a chosen tower color to start", RED));
+              out.println("There are not enough players with a chosen tower color to start", RED);
               showOptions();
               break;
             }

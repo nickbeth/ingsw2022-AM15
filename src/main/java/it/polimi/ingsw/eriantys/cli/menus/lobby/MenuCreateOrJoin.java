@@ -83,7 +83,7 @@ public class MenuCreateOrJoin extends Menu {
               controller.sender().sendJoinGame(code);
               break;
             } catch (GameCode.GameCodeException e) {
-              out.println(colored("Not a valid gameCode. Error message: " + e.getMessage(), RED));
+              out.println("Not a valid gameCode. Error message: " + e.getMessage(), RED);
             }
           }
           waitForGreenLight();
@@ -100,7 +100,7 @@ public class MenuCreateOrJoin extends Menu {
 
         // Back button
         case "0" -> {
-          out.println(colored("Disconnecting", YELLOW));
+          out.println("Disconnecting", YELLOW);
           out.println();
           controller.sender().sendQuitGame();
           controller.disconnect();
@@ -144,7 +144,7 @@ public class MenuCreateOrJoin extends Menu {
     super.propertyChange(evt);
 
     if (evt.getPropertyName().equals(START_GAME.tag)) {
-      out.print(colored("\nConnected to the game " + controller.getGameCode() + ".", GREEN));
+      out.print("\nConnected to the game " + controller.getGameCode() + ".", GREEN);
       isGameAlreadyStarted = true;
       inputGreenLight = true;
     }

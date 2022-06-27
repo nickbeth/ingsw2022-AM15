@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public class MenuPickAssistantCard extends MenuGame {
   public MenuPickAssistantCard() {
@@ -19,11 +20,11 @@ public class MenuPickAssistantCard extends MenuGame {
   @Override
   protected void showOptions() {
     new PlayersView(players(), rules()).draw(out);
-    showViewOptions(out);
+    showViewOptions();
 
     if (isMyTurn()) {
       out.println("Q - Choose assistant card");
-      out.println("-------------------------------------------------------------------------------------------------------");
+      out.println(baseSeparator, YELLOW);
     }
     out.print("Make option: ");
   }
@@ -33,7 +34,7 @@ public class MenuPickAssistantCard extends MenuGame {
 
     while (true) {
       if (!gamePhase().equals(GamePhase.PLANNING)) {
-        // out.println(colored("You're in the wrong phase.", RED));
+        // out.println("You're in the wrong phase.", RED);
         return null;
       }
 
@@ -54,7 +55,7 @@ public class MenuPickAssistantCard extends MenuGame {
           // Choose assistant card
           case "Q", "q" -> {
             if (!gamePhase().equals(GamePhase.PLANNING)) {
-              out.println(colored("You're in the wrong phase.", RED));
+              out.println("You're in the wrong phase.", RED);
               break;
             }
             new AssistantCardsView(me()).draw(out);
@@ -73,7 +74,7 @@ public class MenuPickAssistantCard extends MenuGame {
               waitForGreenLight();
               return MenuEnum.PLACING;
             }
-            out.println(colored("Someone else already played this card.", RED));
+            out.println("Someone else already played this card.", RED);
             showOptions();
           }
           default -> {

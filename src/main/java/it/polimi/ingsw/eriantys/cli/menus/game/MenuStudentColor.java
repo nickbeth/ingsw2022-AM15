@@ -29,11 +29,11 @@ public class MenuStudentColor extends MenuGame {
   @Override
   public void showOptions() {
     out.println("Colors:");
-    out.println(colored("1 - Green", GREEN));
-    out.println(colored("2 - Red", RED));
-    out.println(colored("3 - Yellow", YELLOW));
-    out.println(colored("4 - Pink", PINK));
-    out.println(colored("5 - Blue", BLUE));
+    out.println("1 - Green", GREEN);
+    out.println("2 - Red", RED);
+    out.println("3 - Yellow", YELLOW);
+    out.println("4 - Pink", PINK);
+    out.println("5 - Blue", BLUE);
     out.print("Choose the color of the students you want to move: ");
   }
 

@@ -49,8 +49,8 @@ public class MenuChooseNickname extends Menu {
           waitForGreenLight();
 
           if (gameAlreadyStarted) {
-            out.println(colored("Auto reconnection.", GREEN));
-            out.println(colored("Loading the game...", GREEN));
+            out.println("Auto reconnection.", GREEN);
+            out.println("Loading the game...", GREEN);
             return MenuEnum.PICK_ASSISTANT;
           }
 
@@ -70,8 +70,8 @@ public class MenuChooseNickname extends Menu {
           waitForGreenLight();
 
           if (gameAlreadyStarted) {
-            out.println(colored("Auto reconnection.", GREEN));
-            out.println(colored("Loading the game...", GREEN));
+            out.println("Auto reconnection.", GREEN);
+            out.println("Loading the game...", GREEN);
             return MenuEnum.PICK_ASSISTANT;
           }
 

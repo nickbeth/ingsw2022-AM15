@@ -8,7 +8,6 @@ import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
-import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 
 /**
  * End game display
@@ -25,7 +24,7 @@ public class MenuEndGame extends MenuGame {
   @Override
   public MenuEnum show() {
     out.println();
-    out.println(colored(centred("GAME ENDED"),GREEN));
+    out.println(centred("GAME ENDED"),GREEN);
     View endScreen = new ViewGroup()
         .addView(islandsView())
         .addView(dashboardsView())
@@ -44,8 +43,8 @@ public class MenuEndGame extends MenuGame {
     );
 
     out.println("Game ended, see the game above.");
-    out.println(colored(result.toString(), GREEN));
-    out.println(colored(centred("GAME ENDED"),GREEN));
+    out.println(result.toString(), GREEN);
+    out.println(centred("GAME ENDED"),GREEN);
     out.println();
 
     out.println("PRESS ANY KEY CONTINUE.");
@@ -55,10 +54,10 @@ public class MenuEndGame extends MenuGame {
   }
 
   private String centred(String word) {
-    StringBuilder baseRow = new StringBuilder("----------------------------------------------------------------------------------------------------");
-    int baseRowLenght = baseRow.length();
+    StringBuilder baseRow = new StringBuilder(baseSeparator);
+    int baseRowLength = baseRow.length();
 
-    int startIndex = (baseRowLenght / 2) - (word.length() / 2);
+    int startIndex = (baseRowLength / 2) - (word.length() / 2);
 
     return baseRow.replace(startIndex, startIndex + word.length(), word).toString();
   }

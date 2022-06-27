@@ -1,6 +1,7 @@
 
 package it.polimi.ingsw.eriantys.cli.menus;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.cli.InputHandler;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.controller.EventType;
@@ -22,7 +23,7 @@ import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
  * Every menu shows a list of options and performs an operation based on the choice that has been made.
  */
 public abstract class Menu implements PropertyChangeListener {
-  protected static PrintStream out = System.out;
+  protected static CustomPrintStream out = new CustomPrintStream(System.out);
   protected static Scanner in = new Scanner(System.in);
 
   // Events that single menus want to listen to. Every menu listens to 'INTERNAL_SOCKET_ERROR' and 'INPUT_ENTERED'

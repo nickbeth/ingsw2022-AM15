@@ -1,21 +1,15 @@
 package it.polimi.ingsw.eriantys.controller;
 
 import it.polimi.ingsw.eriantys.cli.InputHandler;
-import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.menus.MenuIterator;
-import it.polimi.ingsw.eriantys.cli.menus.game.MenuEndGame;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.network.Client;
 import org.fusesource.jansi.Ansi;
 
-import java.io.PrintStream;
-
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.cli.CustomPrintStream.out;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public class CliController extends Controller {
-  PrintStream out = System.out;
 
   public CliController(Client networkClient) {
     super(networkClient);
@@ -46,13 +40,13 @@ public class CliController extends Controller {
 
     while (true) {
       if (preGame(iterator)) {
-        out.println(colored("Closing application...", YELLOW));
+        out.println("Closing application...", YELLOW);
         break;
       }
       inGame(iterator);
     }
 
-    out.println(colored("Application has terminated normally", GREEN));
+    out.println("Application has terminated normally", GREEN);
   }
 
   private void inGame(MenuIterator iterator) {
@@ -63,10 +57,6 @@ public class CliController extends Controller {
         escape = true;
       }
     }
-//    if (gameState.getGamePhase().equals(GamePhase.WIN)) {
-//      new MenuEndGame().show();
-//      iterator.setCurrentMenu(MenuEnum.CREATE_OR_JOIN);
-//    }
   }
 
   /**

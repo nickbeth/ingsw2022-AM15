@@ -28,7 +28,8 @@ public class GameLobbyView extends View {
   public void draw(PrintStream o) {
     int computedLength = horizontalLength();
     o.println();
-    o.append(colored("Lobby",GREEN));
+    o.append(colored("Lobby", GREEN))
+        .append(System.lineSeparator());
     o.append(DOWN_AND_RIGHT.glyph)
         .append(HORIZONTAL.toString().repeat(computedLength))
         .append(DOWN_AND_LEFT.glyph)

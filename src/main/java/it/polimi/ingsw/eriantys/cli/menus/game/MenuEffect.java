@@ -57,7 +57,7 @@ public class MenuEffect extends MenuGame {
       // Send the action<
       if (controller.sender().sendActivateEffect(cc)) {
         waitForGreenLight();
-        out.println(colored("Card activated. ", GREEN));
+        out.println("Card activated. ", GREEN);
         new CharacterCardsView(List.of(cc)).draw(out);
         if (studentsLeftToMove() == 0)
           return MenuEnum.MOVING;
@@ -67,9 +67,9 @@ public class MenuEffect extends MenuGame {
 
       // Print reasons why action is invalid
       if (me().getCoins() < cc.getCost())
-        out.println(colored("Not enough coins", YELLOW));
+        out.println("Not enough coins", YELLOW);
       else
-        out.println(colored("Invalid input parameters", RED));
+        out.println("You're in the wrong phase.", RED);
     }
 
   }
@@ -109,10 +109,10 @@ public class MenuEffect extends MenuGame {
       // Send the action
       if (controller.sender().sendChooseCharacterCard(ccIndex)) {
         waitForGreenLight();
-        out.println(colored("Card chosen.", GREEN));
+        out.println("Card chosen.", GREEN);
         return true;
       }
-      out.println(colored("Choose a valid card", RED));
+      out.println("Choose a valid card", RED);
     }
   }
 

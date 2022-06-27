@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.cli.menus.game.*;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuChooseNickname;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuConnect;
@@ -7,23 +8,21 @@ import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuCreateOrJoin;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuLobby;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.GameState;
-import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
+import static it.polimi.ingsw.eriantys.cli.CustomPrintStream.out;
 import static it.polimi.ingsw.eriantys.cli.menus.MenuEnum.*;
 import static it.polimi.ingsw.eriantys.cli.menus.MenuIterator.MenuFactory.makeMenu;
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
-import static it.polimi.ingsw.eriantys.controller.EventType.*;
+import static it.polimi.ingsw.eriantys.controller.EventType.DELIBERATE_DISCONNECTION;
+import static it.polimi.ingsw.eriantys.controller.EventType.START_GAME;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
-import static java.lang.System.out;
 
 public class MenuIterator implements PropertyChangeListener {
   private final Controller controller = Controller.get();
-  //  private boolean isGameEnded = false;
   private MenuEnum nextMenu;
   private Menu currentMenu;
 
@@ -189,7 +188,7 @@ public class MenuIterator implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
-      out.print(colored("\nDisconnected.", YELLOW));
+      out.print("\nDisconnected.", YELLOW);
     }
   }
 

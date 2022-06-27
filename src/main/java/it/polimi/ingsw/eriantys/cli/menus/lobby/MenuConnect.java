@@ -11,9 +11,6 @@ import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
  * Asks the user for server's address and port
  */
 public class MenuConnect extends Menu {
-  public MenuConnect() {
-    showOptions();
-  }
 
   @Override
   protected void showOptions() {
@@ -57,13 +54,13 @@ public class MenuConnect extends Menu {
         }
       }
 
-      out.println(colored("Reaching server...", HouseColor.YELLOW));
+      out.println("Reaching server...", HouseColor.YELLOW);
       // If it succeeds to connect goes on
       if (controller.connect(address, port)) {
-        out.println(colored("Connected", HouseColor.GREEN));
+        out.println("Connected", HouseColor.GREEN);
         return MenuEnum.NICKNAME;
       } else {
-        out.println(colored("Failed to connect to the server", HouseColor.YELLOW));
+        out.println("Failed to connect to the server", HouseColor.YELLOW);
       }
     }
   }
