@@ -24,6 +24,7 @@ import jfxtras.scene.layout.CircularPane;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
@@ -235,11 +236,16 @@ public class GameSceneController extends FXMLController {
             gameState.getTurnPhase() != TurnPhase.PICKING;
   }
 
+  /**
+   * shows an alert showing winner that returns to Create Or Join scene.
+   */
   private void showWinnerAlert() {
-    TowerColor winner = Controller.get().getGameState().getWinner().get();
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setContentText(winner.toString().toUpperCase() + " TOWERS WON THE GAME");
-    alert.setOnCloseRequest(e -> gui.setScene(SceneEnum.CREATE_OR_JOIN));
-    alert.showAndWait();
+    Optional<TowerColor> winner = Controller.get().getGameState().getWinner();
+    if (winner.isPresent()) {
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setContentText(winner.get().toString().toUpperCase() + " TOWERS WON THE GAME");
+      alert.setOnCloseRequest(e -> gui.setScene(SceneEnum.CREATE_OR_JOIN));
+      alert.showAndWait();
+    }
   }
 }
