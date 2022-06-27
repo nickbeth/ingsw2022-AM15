@@ -296,33 +296,9 @@ public class GameServer implements Runnable {
       return;
     }
 
-    ClientAttachment attachment = (ClientAttachment) client.attachment();
-    GameEntry gameEntry = activeGames.get(gameCode);
-    if (!gameEntry.isStarted()) {
-      // The player was in a lobby: remove it from the lobby or delete the lobby if last
-      // Following this, the client is to be considered connected to the server with heartbeat running and nickname still registered
-      if (gameEntry.getClients().size() == 1) {
-        activeGames.remove(gameCode);
-        serverLogger.info("Player '{}' left game '{}' while being alone, the game was deleted", nickname, gameCode);
-      } else {
-        gameEntry.removePlayer(nickname);
-        serverLogger.info("Player '{}' left game '{}'", nickname, gameCode);
-        broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
-      }
-    } else {
-      // The player was playing a game: disconnect it from the game or delete the game if last
-      // Following this, the client is to be considered connected to the server with heartbeat running and nickname still registered
-      if (gameEntry.getClients().size() == 1) {
-        deleteGame(gameCode, gameEntry);
-        serverLogger.info("Player '{}' left ongoing game '{}' while being alone, the game was deleted", nickname, gameCode);
-      } else {
-        disconnectPlayer(gameEntry, nickname);
-        disconnectedPlayers.put(nickname, gameCode);
-        serverLogger.info("Player '{}' left ongoing game '{}', marked as disconnected", nickname, gameCode);
-      }
-    }
+    handleClientRemoval(nickname, gameCode, false);
     // Always clear this player's game code as it's not actively in a game anymore
-    attachment.setGameCode(null);
+    ((ClientAttachment) client.attachment()).setGameCode(null);
   }
 
   /**
@@ -486,6 +462,47 @@ public class GameServer implements Runnable {
   }
 
   /**
+   * Handles removal of a player from a game.
+   *
+   * @param nickname        The nickname of the player to remove
+   * @param gameCode        The game code of the game to remove the player from
+   * @param heartbeatFailed Whether the player was removed because of a heartbeat failure or not
+   */
+  private void handleClientRemoval(String nickname, GameCode gameCode, boolean heartbeatFailed) {
+    // Save the action to print to logs
+    String logAction = heartbeatFailed ? "lost connection to" : "left";
+
+    GameEntry gameEntry = activeGames.get(gameCode);
+    // The game doesn't exist, warn and ignore
+    if (gameEntry == null) {
+      serverLogger.warn("Player '{}' {} game '{}' that doesn't exist anymore", nickname, logAction, gameCode);
+      return;
+    }
+
+    if (!gameEntry.isStarted()) {
+      // The player was in a lobby: remove it from the lobby or delete the lobby if last
+      if (gameEntry.getClients().size() == 1) {
+        activeGames.remove(gameCode);
+        serverLogger.info("Player '{}' {} game '{}' while being alone, the game was deleted", nickname, logAction, gameCode);
+      } else {
+        gameEntry.removePlayer(nickname);
+        serverLogger.info("Player '{}' {} game '{}'", nickname, logAction, gameCode);
+        broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
+      }
+    } else {
+      // The player was playing a game: disconnect it from the game or delete the game if last
+      if (gameEntry.getClients().size() == 1) {
+        deleteGame(gameCode, gameEntry);
+        serverLogger.info("Player '{}' {} ongoing game '{}' while being alone, the game was deleted", nickname, logAction, gameCode);
+      } else {
+        disconnectPlayer(gameEntry, nickname);
+        disconnectedPlayers.put(nickname, gameCode);
+        serverLogger.info("Player '{}' {} ongoing game '{}', marked as disconnected", nickname, logAction, gameCode);
+      }
+    }
+  }
+
+  /**
    * Deletes a game from the active games list and cleans up its related disconnected players
    *
    * @param gameCode  The game code to delete
@@ -590,40 +607,8 @@ public class GameServer implements Runnable {
 
       String nickname = attachment.nickname();
       GameCode gameCode = attachment.gameCode();
-      GameEntry gameEntry = gameCode != null ? activeGames.get(gameCode) : null;
-
-      // If game entry is null, the player disconnected before joining a lobby or game
-      if (gameEntry != null) {
-        if (!gameEntry.isStarted()) {
-          // If the game has not started, remove the client from the lobby
-          // If there was only one client in the lobby, delete the game
-          if (gameEntry.getClients().size() == 1) {
-            activeGames.remove(gameCode);
-            serverLogger.info("Player '{}' lost connection to game '{}' while being alone, the game was deleted", nickname, gameCode);
-          } else {
-            gameEntry.removePlayer(nickname);
-            serverLogger.info("Player '{}' lost connection to game '{}'", nickname, gameCode);
-            broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
-          }
-        } else {
-          if (!disconnectedPlayers.containsKey(nickname)) {
-            // If the game has started, set the client as disconnected
-            // If there was only one client in the lobby, delete the game
-            if (gameEntry.getClients().size() == 1) {
-              deleteGame(gameCode, gameEntry);
-              serverLogger.info("Player '{}' lost connection to ongoing game '{}' while being alone, the game was deleted", nickname, gameCode);
-            } else {
-              disconnectPlayer(gameEntry, nickname);
-              disconnectedPlayers.put(nickname, gameCode);
-              serverLogger.info("Player '{}' lost connection to ongoing game '{}', marked as disconnected", nickname, gameCode);
-            }
-          } else {
-            // The player had already disconnected with a QUIT_GAME message, skip marking as disconnected
-            serverLogger.info("Player '{}' lost connection while already disconnected from ongoing game '{}'", nickname, gameCode);
-          }
-        }
-      }
-
+      handleClientRemoval(nickname, gameCode, true);
+      // Always remove this player's nickname from the active nicknames list
       activeNicknames.remove(nickname);
       client.attach(null);
       client.close();
