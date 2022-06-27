@@ -1,13 +1,18 @@
 package it.polimi.ingsw.eriantys.controller;
 
 import it.polimi.ingsw.eriantys.cli.InputHandler;
+import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.menus.MenuIterator;
+import it.polimi.ingsw.eriantys.cli.menus.game.MenuEndGame;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.network.Client;
 import org.fusesource.jansi.Ansi;
 
 import java.io.PrintStream;
-import java.util.Scanner;
+
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public class CliController extends Controller {
   PrintStream out = System.out;
@@ -24,7 +29,6 @@ public class CliController extends Controller {
   @Override
   public void showNetworkError(String error) {
     out.println(Ansi.ansi().fgRed().a(error).reset());
-    out.println(Ansi.ansi().fgRed().a("Please restart the application.").reset());
   }
 
   @Override
@@ -41,15 +45,14 @@ public class CliController extends Controller {
     inputHandler.start();
 
     while (true) {
-      preGame(iterator);
-      inGame(iterator);
-      if (gameState.getGamePhase().equals(GamePhase.WIN)) {
-        out.println("Game ended");
+      if (preGame(iterator)) {
+        out.println(colored("Closing application...", YELLOW));
         break;
       }
+      inGame(iterator);
     }
 
-    out.println("Closing application...");
+    out.println(colored("Application has terminated normally", GREEN));
   }
 
   private void inGame(MenuIterator iterator) {
@@ -60,12 +63,23 @@ public class CliController extends Controller {
         escape = true;
       }
     }
+//    if (gameState.getGamePhase().equals(GamePhase.WIN)) {
+//      new MenuEndGame().show();
+//      iterator.setCurrentMenu(MenuEnum.CREATE_OR_JOIN);
+//    }
   }
 
-  private void preGame(MenuIterator iterator) {
+  /**
+   * Iterates pre game menu based on user's choices
+   *
+   * @return True if a game is started. False if the user wants to end the application
+   */
+  private boolean preGame(MenuIterator iterator) {
     while (!iterator.menuPreGame()) {
-      iterator.goNext();
+      if (iterator.getNextMenu() != null)
+        iterator.goNext();
     }
+    return iterator.getNextMenu() == null;
   }
 }
 

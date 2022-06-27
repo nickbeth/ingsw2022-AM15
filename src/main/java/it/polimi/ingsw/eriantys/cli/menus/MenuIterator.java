@@ -23,7 +23,7 @@ import static java.lang.System.out;
 
 public class MenuIterator implements PropertyChangeListener {
   private final Controller controller = Controller.get();
-//  private boolean isGameEnded = false;
+  //  private boolean isGameEnded = false;
   private MenuEnum nextMenu;
   private Menu currentMenu;
 
@@ -78,7 +78,6 @@ public class MenuIterator implements PropertyChangeListener {
     // Setting events MenuIterator has to listen to
     controller.addListener(this, START_GAME.tag);
     controller.addListener(this, DELIBERATE_DISCONNECTION.tag);
-//    controller.addListener(this, END_GAME.tag);
 
     // Setting starting menu
     currentMenu = new MenuConnect();
@@ -97,6 +96,11 @@ public class MenuIterator implements PropertyChangeListener {
       throw new RuntimeException(e);
     }
     removeEventsToBeListened(currentMenu);
+
+    // Case Exit game
+    if (nextMenu == null) {
+      return true;
+    }
 
     return Arrays.asList(
         PICK_ASSISTANT,
@@ -127,7 +131,7 @@ public class MenuIterator implements PropertyChangeListener {
     }
     removeEventsToBeListened(currentMenu);
 
-    return controller.getGameState().getGamePhase().equals(GamePhase.WIN);
+    return false;
   }
 
   private Menu currentGameMenu() {
@@ -168,13 +172,14 @@ public class MenuIterator implements PropertyChangeListener {
   }
 
   // Set the current menu as listener of its list of events
+
   private void addEventsToBeListened(Menu menu) {
     menu.getEventsToBeListening().forEach(eventType ->
         controller.addListener(menu, eventType.tag)
     );
   }
-
   // Removes the current menu as listener of its list of events
+
   private void removeEventsToBeListened(Menu menu) {
     menu.getEventsToBeListening().forEach(eventType ->
         controller.removeListener(menu, eventType.tag)
@@ -183,14 +188,16 @@ public class MenuIterator implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-
-//    if (evt.getPropertyName().equals(END_GAME.tag)) {
-//      out.println("GAME_ENDED");
-//      isGameEnded = true;
-//    }
-
     if (evt.getPropertyName().equals(DELIBERATE_DISCONNECTION.tag)) {
       out.print(colored("\nDisconnected.", YELLOW));
     }
+  }
+
+  public void setCurrentMenu(MenuEnum menu) {
+    this.currentMenu = makeMenu(menu);
+  }
+
+  public MenuEnum getNextMenu() {
+    return nextMenu;
   }
 }
