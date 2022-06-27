@@ -399,7 +399,7 @@ public class GameServer implements Runnable {
     serverLogger.info("Player '{}' played action: {}", nickname, action.getClass().getSimpleName());
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEDATA).gameCode(gameCode).action(action).build());
 
-    // Check win condition
+    // Check win condition and delete the game if it has been reached
     if (gameEntry.checkWinCondition()) {
       Optional<TowerColor> winner = gameEntry.getGameState().getWinner();
 
@@ -409,6 +409,7 @@ public class GameServer implements Runnable {
 
       serverLogger.info(logMessage);
       broadcastMessage(gameEntry, new Message.Builder().type(MessageType.END_GAME).gameCode(gameCode).build());
+      deleteGame(gameCode, gameEntry);
     }
   }
 
