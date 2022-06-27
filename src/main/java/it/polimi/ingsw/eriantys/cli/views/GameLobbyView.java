@@ -9,6 +9,8 @@ import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.*;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 
 public class GameLobbyView extends View {
   private final GameInfo gameInfo;
@@ -26,6 +28,7 @@ public class GameLobbyView extends View {
   public void draw(PrintStream o) {
     int computedLength = horizontalLength();
     o.println();
+    o.append(colored("Lobby",GREEN));
     o.append(DOWN_AND_RIGHT.glyph)
         .append(HORIZONTAL.toString().repeat(computedLength))
         .append(DOWN_AND_LEFT.glyph)

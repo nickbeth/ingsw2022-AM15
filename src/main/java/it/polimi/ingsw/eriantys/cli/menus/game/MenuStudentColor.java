@@ -7,6 +7,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
 public class MenuStudentColor extends MenuGame {
@@ -28,11 +29,11 @@ public class MenuStudentColor extends MenuGame {
   @Override
   public void showOptions() {
     out.println("Colors:");
-    out.println("1 - Pink");
-    out.println("2 - Red");
-    out.println("3 - Blue");
-    out.println("4 - Yellow");
-    out.println("5 - Green");
+    out.println(colored("1 - Green", GREEN));
+    out.println(colored("2 - Red", RED));
+    out.println(colored("3 - Yellow", YELLOW));
+    out.println(colored("4 - Pink", PINK));
+    out.println(colored("5 - Blue", BLUE));
     out.print("Choose the color of the students you want to move: ");
   }
 
@@ -61,11 +62,11 @@ public class MenuStudentColor extends MenuGame {
   private HouseColor getHouseColor(String choice) {
     Map<String, HouseColor> houseColorMap = new HashMap<>();
 
-    houseColorMap.put("1", PINK);
+    houseColorMap.put("1", GREEN);
     houseColorMap.put("2", RED);
-    houseColorMap.put("3", BLUE);
-    houseColorMap.put("4", YELLOW);
-    houseColorMap.put("5", GREEN);
+    houseColorMap.put("3", YELLOW);
+    houseColorMap.put("4", PINK);
+    houseColorMap.put("5", BLUE);
 
     return houseColorMap.get(choice);
   }

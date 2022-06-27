@@ -11,9 +11,14 @@ import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
  * Asks the user for server's address and port
  */
 public class MenuConnect extends Menu {
+  public MenuConnect() {
+    showOptions();
+  }
+
   @Override
   protected void showOptions() {
     out.println("\nConnect to a server:");
+    out.println("0 - Quit Game");
     out.println("1 - Manually configure socket");
     out.println("ANY_KEY - Use default socket options (localhost:1234)");
   }
@@ -35,13 +40,23 @@ public class MenuConnect extends Menu {
 
       out.print("Make a choice: ");
       choice = getKeyboardInput();
-      if (choice.equals("1")) {
-        out.print("Enter the IP address of the server: ");
-        address = getNonBlankString();
 
-        out.print("Enter the port the server is running on: ");
-        port = getNumber();
+      switch (choice) {
+        case "0" -> {
+          return null;
+        }
+
+        case "1" -> {
+          out.print("Enter the IP address of the server: ");
+          address = getNonBlankString();
+
+          out.print("Enter the port the server is running on: ");
+          port = getNumber();
+        }
+        default -> {
+        }
       }
+
       out.println(colored("Reaching server...", HouseColor.YELLOW));
       // If it succeeds to connect goes on
       if (controller.connect(address, port)) {
