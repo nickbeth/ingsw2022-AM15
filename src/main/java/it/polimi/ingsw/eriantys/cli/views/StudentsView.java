@@ -1,9 +1,9 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
-import java.io.PrintStream;
 import java.text.MessageFormat;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
@@ -16,7 +16,7 @@ public class StudentsView extends View {
   }
 
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     StringBuilder s = new StringBuilder();
 
     for (var color : HouseColor.values()) {

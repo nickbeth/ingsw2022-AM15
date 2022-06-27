@@ -1,8 +1,8 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.entities.Island;
 
-import java.io.PrintStream;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
@@ -22,7 +22,7 @@ public class IslandsView extends View {
    * @param o The output stream which the view will write to.
    */
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     StringBuilder stringBuilder = new StringBuilder();
 
     // Populate the matrix
@@ -62,13 +62,13 @@ public class IslandsView extends View {
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.append(centredTitle("ISLANDS")).append(System.lineSeparator());
+    o.println(centredTitle("ISLANDS"));
 
     // Write the content
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.append(centredTitle("-")).append(System.lineSeparator());
+    o.println(centredTitle("-"));
   }
 
   private String centredIsland(String row) {

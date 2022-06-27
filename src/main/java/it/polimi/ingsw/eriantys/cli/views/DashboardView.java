@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.cli.utils.BoxSymbols;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Dashboard;
@@ -9,7 +10,6 @@ import it.polimi.ingsw.eriantys.model.entities.Students;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import org.fusesource.jansi.Ansi;
 
-import java.io.PrintStream;
 import java.util.LinkedList;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
@@ -34,7 +34,7 @@ public class DashboardView extends View {
   }
 
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     // Separator
     o.println();
 

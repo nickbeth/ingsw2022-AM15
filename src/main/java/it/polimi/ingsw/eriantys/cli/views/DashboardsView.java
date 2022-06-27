@@ -1,15 +1,14 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.ProfessorHolder;
 
-import java.io.PrintStream;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING_DOUBLE;
-import static it.polimi.ingsw.eriantys.cli.views.IslandView.drawIsland;
 
 public class DashboardsView extends View {
   private final List<Player> players;
@@ -25,7 +24,7 @@ public class DashboardsView extends View {
   }
 
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     DashboardView view = new DashboardView(players.get(0), rules, professors);
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -69,13 +68,13 @@ public class DashboardsView extends View {
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.append(centredTitle("DASHBOARDS")).append(System.lineSeparator());
+    o.println(centredTitle("DASHBOARDS"));
 
     // Write the content
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.append(centredTitle("")).append(System.lineSeparator());
+    o.println(centredTitle(""));
   }
 
 

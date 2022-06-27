@@ -1,9 +1,9 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.entities.Cloud;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
-import java.io.PrintStream;
 import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class CloudsView extends View {
   }
 
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     int rows = drawCloud(clouds.get(0), 0).split(System.lineSeparator()).length;
     String[][] matrix = new String[clouds.size()][rows];
 
@@ -42,13 +42,13 @@ public class CloudsView extends View {
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.append(centredTitle("CLOUDS")).append(System.lineSeparator());
+    o.println(centredTitle("CLOUDS"));
 
     // Write the content
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.append(centredTitle("")).append(System.lineSeparator());
+    o.println(centredTitle(""));
   }
 
   private String drawCloud(Cloud cloud, int index) {

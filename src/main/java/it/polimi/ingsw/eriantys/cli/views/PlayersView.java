@@ -1,11 +1,11 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class PlayersView extends View {
   }
 
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     String PADDING = PADDING_TRIPLE;
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -63,13 +63,13 @@ public class PlayersView extends View {
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.append(centredTitle("Players")).append(System.lineSeparator());
+    o.println(centredTitle("Players"), HouseColor.YELLOW);
 
     // Write the content
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.append(centredTitle("-")).append(System.lineSeparator());
+    o.println(centredTitle("-"), HouseColor.YELLOW);
   }
 
   private String centredTitle(String title) {

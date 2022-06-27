@@ -1,10 +1,10 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.cli.utils.PrintUtils;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
-import java.io.PrintStream;
 import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.VERTICAL;
@@ -22,7 +22,7 @@ public class CharacterCardsView extends View {
   }
 
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     String start = "0 │3 coins │ ";
 
     // Gets the longest name among character cards

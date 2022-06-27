@@ -192,10 +192,6 @@ public class MenuIterator implements PropertyChangeListener {
     }
   }
 
-  public void setCurrentMenu(MenuEnum menu) {
-    this.currentMenu = makeMenu(menu);
-  }
-
   public MenuEnum getNextMenu() {
     return nextMenu;
   }

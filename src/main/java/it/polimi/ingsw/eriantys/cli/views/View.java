@@ -1,6 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
-import java.io.PrintStream;
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 
 /**
  * Base class for all views.
@@ -12,5 +12,5 @@ public abstract class View {
    *
    * @param o The output stream which the view will write to.
    */
-  abstract public void draw(PrintStream o);
+  abstract public void draw(CustomPrintStream o);
 }

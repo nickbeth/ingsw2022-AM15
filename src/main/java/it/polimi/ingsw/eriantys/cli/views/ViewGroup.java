@@ -1,6 +1,7 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
-import java.io.PrintStream;
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ViewGroup extends View {
   /**
    * Draws all views in this group.
    */
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     for (View view : viewList) {
       view.draw(o);
     }

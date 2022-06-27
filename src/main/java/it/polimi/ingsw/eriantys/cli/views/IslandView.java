@@ -1,5 +1,6 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -7,7 +8,6 @@ import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.VERTICAL;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
 
-import java.io.PrintStream;
 import java.text.MessageFormat;
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public class IslandView extends View {
   }
 
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     o.append(drawIsland(island, 1, 0));
   }
 

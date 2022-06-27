@@ -1,9 +1,9 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 
-import java.io.PrintStream;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class AssistantCardsView extends View {
   }
 
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     StringBuilder stringBuilder = new StringBuilder();
 
     // Gets the height of one single stamp
@@ -68,13 +68,13 @@ public class AssistantCardsView extends View {
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.append(centredTitle("ASSISTANT CARDS")).append(System.lineSeparator());
+    o.println(centredTitle("ASSISTANT CARDS"));
 
     // Write the content
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.append(centredTitle("-")).append(System.lineSeparator());
+    o.println(centredTitle("-"));
   }
 
   private String drawAssistantCard(AssistantCard card, int index) {

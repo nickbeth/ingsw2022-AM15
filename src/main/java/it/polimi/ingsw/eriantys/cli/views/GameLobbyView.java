@@ -1,9 +1,9 @@
 package it.polimi.ingsw.eriantys.cli.views;
 
+import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
 
-import java.io.PrintStream;
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -25,7 +25,7 @@ public class GameLobbyView extends View {
    * @param o The output stream which the view will write to.
    */
   @Override
-  public void draw(PrintStream o) {
+  public void draw(CustomPrintStream o) {
     int computedLength = horizontalLength();
     o.println();
     o.append(colored("Lobby", GREEN))
