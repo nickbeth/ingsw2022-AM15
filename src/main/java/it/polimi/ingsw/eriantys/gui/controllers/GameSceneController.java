@@ -43,8 +43,6 @@ public class GameSceneController extends FXMLController {
   @FXML
   private StackPane characterCardsPanel;
   @FXML
-  private AnchorPane dashboardClient;
-  @FXML
   private AnchorPane dashboardClient2;
   @FXML
   private AnchorPane dashboardClient3;
@@ -89,8 +87,6 @@ public class GameSceneController extends FXMLController {
   @FXML
   private CircularPane islandsPane;
   @FXML
-  private AnchorPane rootPane;
-  @FXML
   private GridPane otherPlayersGrid;
   @FXML
   private StackPane assistCardPanel;
@@ -113,7 +109,9 @@ public class GameSceneController extends FXMLController {
   public void start() {
     super.start();
     Controller.get().addListener(this, GAMEDATA_EVENT.tag);
+    Controller.get().addListener(this, END_GAME.tag);
     Controller.get().addListener(this, PLAYER_CONNECTION_CHANGED.tag);
+
     debugScreenHandler = new DebugScreenHandler(debugScreen);
     mainDashboardHandler = new DashboardHandler(Controller.get().getNickname(), studentHallGrid, entranceGrid, profTableGrid, dashboardTowers, debugScreenHandler);
     buildDashboardHandlers();
@@ -135,7 +133,7 @@ public class GameSceneController extends FXMLController {
       enemyDashboardHandlers.add(new EnemyDashboardHandler(dashboardClient3, nicknames.get(1), studentHallGrid3, entranceGrid3, profTableGrid3, dashboardTowers3, debugScreenHandler));
       enemyDashboardHandlers.add(new EnemyDashboardHandler(dashboardClient4, nicknames.get(2), studentHallGrid4, entranceGrid4, profTableGrid4, dashboardTowers4, debugScreenHandler));
     } catch (IndexOutOfBoundsException e) {
-      clientLogger.debug("added less than 3 enemy dashboard handlers");
+      clientLogger.debug("Added less than 3 enemy dashboard handlers");
     }
   }
 
@@ -175,6 +173,7 @@ public class GameSceneController extends FXMLController {
   public void finish() {
     super.finish();
     Controller.get().removeListener(this, GAMEDATA_EVENT.tag);
+    Controller.get().removeListener(this, END_GAME.tag);
     Controller.get().removeListener(this, PLAYER_CONNECTION_CHANGED.tag);
   }
 
