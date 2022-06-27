@@ -1,47 +1,153 @@
 package it.polimi.ingsw.eriantys.network;
 
 /**
- * This class enumerates all the possible message types.
- *
- * The commands are grouped by game phase (lobby, playing),
- * and are further divided into client commands followed by the type of the server response.
+ * Enumeration of all possible {@link Message} types.
  */
 public enum MessageType {
-  // Sent by server to clients
+  /**
+   * Heartbeat message, sent by the server to clients
+   * <p>
+   * No populated fields.
+   */
   PING,
-  // Reply to ping from clients
+  /**
+   * Heartbeat message, sent by clients as a reply to {@link MessageType#PING}
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}
+   */
   PONG,
 
-  // Nickname selection
+  /**
+   * Sent by clients to choose a nickname.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}
+   */
   NICKNAME_REQUEST,
-  // Server response
+  /**
+   * Sent by the server as a successful reply to {@link MessageType#NICKNAME_REQUEST}.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}
+   */
   NICKNAME_OK,
 
-  // Lobby actions
+  /**
+   * Sent by clients to create a new game.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}, {@link Message#gameInfo()}
+   */
   CREATE_GAME,
+
+  /**
+   * Sent by clients to join a game.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}, {@link Message#gameCode()}
+   */
   JOIN_GAME,
+
+  /**
+   * Sent by clients to leave a game.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}, {@link Message#gameCode()}, {@link Message#gameInfo()}
+   */
   SELECT_TOWER,
-  // Sent by clients to quit from a game
+
+  /**
+   * Sent by clients to leave a game.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}, {@link Message#gameCode()}
+   */
   QUIT_GAME,
-  // Lobby data
+
+  /**
+   * Sent by the server as a reply to
+   * {@link MessageType#CREATE_GAME CREATE_GAME},
+   * {@link MessageType#JOIN_GAME JOIN_GAME},
+   * {@link MessageType#SELECT_TOWER SELECT_TOWER} and
+   * {@link MessageType#JOIN_GAME JOIN_GAME}.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#gameCode()}, {@link Message#gameInfo()}
+   */
   GAMEINFO,
 
-  // Game actions
+  /**
+   * Sent by clients to start the game. The server then broadcasts this message back to all clients in the lobby.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}, {@link Message#gameCode()}, {@link Message#gameInfo()}, {@link Message#gameAction()}
+   */
   START_GAME,
-  // START_GAME in the case of player reconnection
+
+  /**
+   * Sent by the server when a client joins a game they had disconnected from.
+   * <p>
+   * Populated fields: same as {@link MessageType#START_GAME}
+   *
+   * @see MessageType#START_GAME
+   */
   START_GAME_RECONNECTED,
+
+  /**
+   * Sent by clients to perform a game action.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}, {@link Message#gameCode()}, {@link Message#gameAction()}
+   */
   PLAY_ACTION,
-  // Game data
+
+  /**
+   * Sent by the server as a successful reply to {@link MessageType#PLAY_ACTION PLAY_ACTION}.
+   * Broadcasts the performed action to all clients in a lobby.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#gameCode()}, {@link Message#gameAction()}
+   */
   GAMEDATA,
-  // Game has ended, win condition was verified
+
+  /**
+   * Sent by the server when a game reaches a win condition and ends.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#gameCode()}
+   */
   END_GAME,
 
-  // Player disconnection management
+  /**
+   * Sent by the server when a player has disconnected from the game.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}
+   */
   PLAYER_DISCONNECTED,
+
+  /**
+   * Sent by the server when a player has reconnected to the game.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}
+   */
   PLAYER_RECONNECTED,
 
+  /**
+   * Sent by the server as an unsuccessful reply to any message.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#error()}
+   */
   ERROR,
 
-  // Used internally for local network-related events, these must never be sent over the network
+  /**
+   * Internal queue-handler communication for local network-related events, these must never be sent over the network
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}, {@link Message#error()}
+   */
   INTERNAL_SOCKET_ERROR,
 }

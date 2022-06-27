@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * This class contains all data that will be sent over the network for communication.
+ * A data packet sent over the network for client-server communication.
  *
  * @implNote The constructor of this class has been made private to avoid further alterations
  * of the message contents after its creation. The associated Builder class must be used to create new messages.

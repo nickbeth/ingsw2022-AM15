@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 
 /**
- * A wrapper around java.io.Socket for sending and receiving Message objects.
+ * A wrapper around {@link Socket java.net.Socket} for sending and receiving Message objects.
  *
  * <p> This class supports the <i>attachment</i> of a single arbitrary object.
  * An object can be attached via the {@link #attach attach} method and then later retrieved via
@@ -115,7 +115,9 @@ public class Client implements Runnable {
   }
 
   /**
-   * Runs the client listening loop. Receive messages and adds them to the message queue.
+   * Runs the client listening loop.
+   * Receives messages from the socket and adds them to the message queue.
+   * <p>
    * This method is supposed to be run on its own thread.
    */
   @Override

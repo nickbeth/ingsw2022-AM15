@@ -7,6 +7,9 @@ import java.util.concurrent.BlockingQueue;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
+/**
+ * A wrapper around {@link ServerSocket java.net.ServerSocket} for accepting incoming clients.
+ */
 public class Server implements Runnable {
   public static final int DEFAULT_PORT = 1234;
 
@@ -58,6 +61,8 @@ public class Server implements Runnable {
 
   /**
    * Runs the server accept loop.
+   * Accepts a new client and creates a new listener thread for it.
+   * <p>
    * This method is supposed to be run on its own thread.
    */
   @Override
