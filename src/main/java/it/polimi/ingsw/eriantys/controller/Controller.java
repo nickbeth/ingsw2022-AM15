@@ -75,6 +75,7 @@ abstract public class Controller implements Runnable {
       socketThread.setDaemon(true);
       socketThread.start();
     } catch (IOException e) {
+      clientLogger.error("An error occurred while connecting to the server: ", e);
       return false;
     }
     return true;

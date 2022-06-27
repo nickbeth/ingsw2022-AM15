@@ -50,8 +50,8 @@ public class ConnectionController extends FXMLController {
       if (!Controller.get().connect(ipStr, port)) {
         errorMessage.setText("Failed to connect to the server");
         errorMessage.setOpacity(1);
+        return;
       }
-
     } catch (NumberFormatException e) {
       errorMessage.setText("Invalid port, try again.");
       errorMessage.setOpacity(1);
