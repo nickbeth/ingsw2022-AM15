@@ -225,7 +225,7 @@ public abstract class MenuGame extends Menu {
     if (evt.getPropertyName().equals(PLAYER_CONNECTION_CHANGED.tag)) {
       out.println();
       out.println((String) evt.getNewValue());
-      showOptions();
+//      showOptions();
     }
   }
 
