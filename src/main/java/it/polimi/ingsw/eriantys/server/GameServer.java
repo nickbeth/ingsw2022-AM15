@@ -520,6 +520,7 @@ public class GameServer implements Runnable {
 
       // If the player is the last one in the game, delete the game
       if (connectedClients == 1) {
+        gameEntry.cancelDeletion();
         deleteGame(gameCode, gameEntry);
         serverLogger.info("Player '{}' {} ongoing game '{}' while being alone, the game was deleted", nickname, logAction, gameCode);
         return;
