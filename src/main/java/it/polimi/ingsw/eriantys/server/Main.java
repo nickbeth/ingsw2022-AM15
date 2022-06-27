@@ -20,6 +20,14 @@ public class Main {
           }
         }
         case "--no-heartbeat" -> serverArgs.heartbeat = false;
+        case "-d", "--delete-timeout" -> {
+          try {
+            serverArgs.deleteTimeout = Integer.parseInt(args[i + 1]);
+            i++;
+          } catch (RuntimeException ignored) {
+            serverLogger.warn("Delete timeout argument was specified without a valid value, default {} will be used instead", serverArgs.deleteTimeout);
+          }
+        }
         case "-h", "--help" -> {
           System.out.println("Usage: java -jar eriantys-server.jar [-p <port>] [--no-heartbeat]");
           System.exit(0);
@@ -28,7 +36,11 @@ public class Main {
       }
     }
     // Print configuration parameters
-    serverLogger.info("Configuration:\n* port: {}\n* heartbeat: {}", serverArgs.port, serverArgs.heartbeat);
+    serverLogger.info("Configuration:\n* Port: {}\n* Heartbeat: {}\n* Idle game deletion timeout: {} s",
+        serverArgs.port,
+        serverArgs.heartbeat,
+        ((float) serverArgs.deleteTimeout) / 1000
+    );
 
     ServerApp serverApp = new ServerApp(serverArgs);
     serverApp.run();

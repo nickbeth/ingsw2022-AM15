@@ -21,7 +21,7 @@ public class ServerApp {
     // The game server will poll the queue for messages to process
     BlockingQueue<MessageQueueEntry> messageQueue = new LinkedBlockingQueue<>();
     this.networkServer = new Server(args.port, messageQueue);
-    this.gameServer = new GameServer(args.heartbeat, messageQueue);
+    this.gameServer = new GameServer(args.heartbeat, args.deleteTimeout, messageQueue);
   }
 
   public void run() {

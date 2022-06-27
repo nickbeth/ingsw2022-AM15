@@ -25,6 +25,7 @@ public class GameServer implements Runnable {
    * Whether heartbeat messages should be used to keep track of clients disconnections or not.
    */
   private final boolean heartbeat;
+  private final int deleteTimeout;
   private final BlockingQueue<MessageQueueEntry> messageQueue;
   private final ScheduledExecutorService heartbeatService;
 
@@ -34,8 +35,9 @@ public class GameServer implements Runnable {
 
   private final AtomicBoolean exit = new AtomicBoolean(false);
 
-  public GameServer(boolean heartbeat, BlockingQueue<MessageQueueEntry> messageQueue) {
+  public GameServer(boolean heartbeat, int deleteTimeout, BlockingQueue<MessageQueueEntry> messageQueue) {
     this.heartbeat = heartbeat;
+    this.deleteTimeout = deleteTimeout;
     this.messageQueue = messageQueue;
     this.heartbeatService = Executors.newScheduledThreadPool(1);
     this.activeGames = new ConcurrentHashMap<>();
