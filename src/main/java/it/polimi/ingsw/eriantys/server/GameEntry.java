@@ -9,6 +9,7 @@ import it.polimi.ingsw.eriantys.network.Client;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
@@ -70,6 +71,10 @@ public class GameEntry {
 
   public Collection<Client> getClients() {
     return clients.values();
+  }
+
+  public Set<String> getClientNames() {
+    return clients.keySet();
   }
 
   public boolean hasPlayer(String nickname) {

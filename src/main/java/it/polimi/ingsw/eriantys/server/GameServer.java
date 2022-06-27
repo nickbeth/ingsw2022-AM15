@@ -527,10 +527,14 @@ public class GameServer implements Runnable {
 
       // If the player is the second-last, schedule the game to be deleted after the deletion interval
       if (connectedClients == 2) {
+        // Get the winner so that the scheduled lambda can read it later
+        // Since the player is the second-last, the winner will be the other player in the game
+        String winner = gameEntry.getClientNames().stream().filter(name -> !name.equals(nickname)).findFirst().orElse("");
+
         ScheduledFuture<?> deletionSchedule = scheduledExecutorService.schedule(() -> {
           deleteGame(gameCode, gameEntry);
           broadcastMessage(gameEntry, new Message.Builder().type(MessageType.END_GAME).gameCode(gameCode).build());
-          serverLogger.info("Player '{}' won game '{}' as the last one standing, the game was deleted", nickname, gameCode);
+          serverLogger.info("Player '{}' won game '{}' as the last one standing, the game was deleted", winner, gameCode);
         }, deleteTimeout, TimeUnit.SECONDS);
         gameEntry.setDeletionSchedule(deletionSchedule);
       }
