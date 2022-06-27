@@ -182,7 +182,7 @@ public class GameSceneController extends FXMLController {
     if (evt.getNewValue() != null)
       debugScreenHandler.showMessage((String) evt.getNewValue());
 
-    if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag)){
+    if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag)) {
       updateAll();
       return;
     }
@@ -244,12 +244,22 @@ public class GameSceneController extends FXMLController {
    * shows an alert showing winner that returns to Create Or Join scene.
    */
   private void showWinnerAlert() {
-    Optional<TowerColor> winner = Controller.get().getGameState().getWinner();
-    if (winner.isPresent()) {
-      Alert alert = new Alert(Alert.AlertType.INFORMATION);
-      alert.setContentText(winner.get().toString().toUpperCase() + " TOWERS WON THE GAME");
-      alert.setOnCloseRequest(e -> gui.setScene(SceneEnum.CREATE_OR_JOIN));
-      alert.showAndWait();
-    }
+    GameState gameState = Controller.get().getGameState();
+    Optional<TowerColor> winnerTeam = gameState.getWinner();
+    Optional<String> lastPlayer = gameState.getPlayers().stream()
+            .filter(Player::isConnected).map(Player::getNickname).findFirst();
+    StringBuilder winners = new StringBuilder();
+
+    if (winnerTeam.isPresent()) {
+      for (Player player:gameState.getPlayers()) {
+        if (player.getColorTeam() == winnerTeam.get())
+          winners.append(player.getNickname()).append(" ");
+      }
+    } else lastPlayer.ifPresent(s -> winners.append(s).append(" "));
+
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setContentText(winners + " WON THE GAME");
+    alert.setOnCloseRequest(e -> gui.setScene(SceneEnum.CREATE_OR_JOIN));
+    alert.showAndWait();
   }
 }
