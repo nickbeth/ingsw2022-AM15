@@ -9,6 +9,7 @@ import it.polimi.ingsw.eriantys.network.Client;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
@@ -30,6 +31,11 @@ public class GameEntry {
    * The {@link GameState} of this game
    */
   private final GameState gameState;
+
+  /**
+   * The scheduled future of the deletion of this game, used to cancel the deletion if players joins back
+   */
+  private ScheduledFuture<?> deletionSchedule;
 
   public GameEntry(GameInfo gameInfo) {
     this.clients = new HashMap<>();
@@ -100,6 +106,13 @@ public class GameEntry {
     gameState.getPlayer(nickname).setConnected(true);
   }
 
+  public void cancelDeletion() {
+    if (deletionSchedule != null) {
+      deletionSchedule.cancel(false);
+      deletionSchedule = null;
+    }
+  }
+
   public String getCurrentPlayer() {
     return gameState.getCurrentPlayer().getNickname();
   }
@@ -118,5 +131,9 @@ public class GameEntry {
 
   public GameState getGameState() {
     return gameState;
+  }
+
+  public void setDeletionSchedule(ScheduledFuture<?> deletionSchedule) {
+    this.deletionSchedule = deletionSchedule;
   }
 }

@@ -39,7 +39,7 @@ public class Main {
     serverLogger.info("Configuration:\n* Port: {}\n* Heartbeat: {}\n* Idle game deletion timeout: {} s",
         serverArgs.port,
         serverArgs.heartbeat,
-        ((float) serverArgs.deleteTimeout) / 1000
+        serverArgs.deleteTimeout
     );
 
     ServerApp serverApp = new ServerApp(serverArgs);

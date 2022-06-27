@@ -3,7 +3,7 @@ package it.polimi.ingsw.eriantys.server;
 import it.polimi.ingsw.eriantys.network.Server;
 
 public class ServerArgs {
-  public static final int DEFAULT_DELETE_TIMEOUT = 30000; //!< 30 seconds
+  public static final int DEFAULT_DELETE_TIMEOUT = 30; //!< 30 seconds
 
   /**
    * Port to listen on

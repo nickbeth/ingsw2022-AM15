@@ -184,6 +184,8 @@ public class GameServer implements Runnable {
     GameCode gameCode = disconnectedPlayers.get(nickname);
     if (gameCode != null) {
       GameEntry gameEntry = activeGames.get(gameCode);
+      if (gameEntry.getClients().size() == 1)
+        gameEntry.cancelDeletion();
 
       gameEntry.reconnectPlayer(nickname, client);
       ((ClientAttachment) client.attachment()).setGameCode(gameCode);
@@ -378,6 +380,15 @@ public class GameServer implements Runnable {
       return;
     }
 
+    // Check that the player is not alone in the game
+    if (gameEntry.getClients().size() == 1) {
+      String errorMessage = "Player '" + nickname + "' in game '" + gameCode + "' tried to play an action while only one player is left";
+      serverLogger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    // Try to apply the received action
     if (!gameEntry.executeAction(action)) {
       String errorMessage = "Game with code '" + gameCode + "' tried to apply an invalid action: " + action.getClass().getSimpleName();
       serverLogger.info(errorMessage);
@@ -491,14 +502,28 @@ public class GameServer implements Runnable {
       }
     } else {
       // The player was playing a game: disconnect it from the game or delete the game if last
-      if (gameEntry.getClients().size() == 1) {
+      int connectedClients = gameEntry.getClients().size();
+
+      // If the player is the last one in the game, delete the game
+      if (connectedClients == 1) {
         deleteGame(gameCode, gameEntry);
         serverLogger.info("Player '{}' {} ongoing game '{}' while being alone, the game was deleted", nickname, logAction, gameCode);
-      } else {
-        disconnectPlayer(gameEntry, nickname);
-        disconnectedPlayers.put(nickname, gameCode);
-        serverLogger.info("Player '{}' {} ongoing game '{}', marked as disconnected", nickname, logAction, gameCode);
+        return;
       }
+
+      // If the player is the second-last, schedule the game to be deleted after the deletion interval
+      if (connectedClients == 2) {
+        ScheduledFuture<?> deletionSchedule = scheduledExecutorService.schedule(() -> {
+          deleteGame(gameCode, gameEntry);
+          broadcastMessage(gameEntry, new Message.Builder().type(MessageType.END_GAME).gameCode(gameCode).build());
+          serverLogger.info("Player '{}' won game '{}' as the last one standing, the game was deleted", nickname, gameCode);
+        }, deleteTimeout, TimeUnit.SECONDS);
+        gameEntry.setDeletionSchedule(deletionSchedule);
+      }
+
+      disconnectPlayer(gameEntry, nickname);
+      disconnectedPlayers.put(nickname, gameCode);
+      serverLogger.info("Player '{}' {} ongoing game '{}', marked as disconnected", nickname, logAction, gameCode);
     }
   }
 
