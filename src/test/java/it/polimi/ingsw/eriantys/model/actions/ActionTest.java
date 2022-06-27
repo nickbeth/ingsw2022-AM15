@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.cli.CustomPrintStream.out;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -327,7 +328,7 @@ public class ActionTest {
     //(new IslandView(gameState.getPlayingField().getIsland(0))).draw(System.out);
 
 
-    (new IslandsView(gameState.getPlayingField().getIslands(), 0)).draw(System.out);
+    (new IslandsView(gameState.getPlayingField().getIslands(), 0)).draw(out);
     assertTrue(actionDue.isValid(gameState));
     actionDue.apply(gameState);
     modelLogger.debug(String.valueOf(field.getPlayedCharacterCard().getCardEnum()));

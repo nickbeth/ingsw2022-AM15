@@ -21,8 +21,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
-import static java.lang.System.out;
+import static it.polimi.ingsw.eriantys.cli.CustomPrintStream.out;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ViewsTest {
