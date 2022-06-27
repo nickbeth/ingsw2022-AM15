@@ -45,13 +45,13 @@ class GameInfoTest {
   @Test
   void isReady() {
     GameInfo info = makeValidInfo();
-    assertTrue(info.start());
+    assertTrue(info.isReady());
 
     info = makeInvalidInfo();
-    assertFalse(info.start());
+    assertFalse(info.isReady());
 
     info = makeNullInfo();
-    assertFalse(info.start());
+    assertFalse(info.isReady());
   }
 
   @Test

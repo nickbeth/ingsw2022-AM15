@@ -10,6 +10,7 @@ public enum MessageType {
    * No populated fields.
    */
   PING,
+
   /**
    * Heartbeat message, sent by clients as a reply to {@link MessageType#PING}
    * <p>
@@ -25,6 +26,7 @@ public enum MessageType {
    * {@link Message#nickname()}
    */
   NICKNAME_REQUEST,
+
   /**
    * Sent by the server as a successful reply to {@link MessageType#NICKNAME_REQUEST}.
    * <p>
@@ -113,6 +115,7 @@ public enum MessageType {
 
   /**
    * Sent by the server when a game reaches a win condition and ends.
+   * When this message is received by clients, the game should be considered as deleted on the server.
    * <p>
    * Populated fields: <p>
    * {@link Message#gameCode()}

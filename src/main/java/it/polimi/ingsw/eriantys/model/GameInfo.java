@@ -32,12 +32,11 @@ public class GameInfo implements Serializable {
   }
 
   /**
-   * Checks if the game is ready to start. <br>
-   * Checks if the number of player is reached and the color conditions
+   * Checks whether the game is ready to start, by checking that the number of player has been reached and that selected tower colors are valid.
    *
    * @return {@code true} if the game is ready to start, {@code false} otherwise
    */
-  private boolean isReady() {
+  public boolean isReady() {
     boolean cond = !joinedPlayers.containsValue(null) && joinedPlayers.size() == maxPlayerCount;
     if (maxPlayerCount == 4) {
       for (TowerColor color : joinedPlayers.values())
@@ -63,15 +62,9 @@ public class GameInfo implements Serializable {
 
   /**
    * Sets this game as started.
-   *
-   * @return {@code true} if the game was successfully started, {@code false} otherwise
    */
-  public boolean start() {
-    if (isReady()) {
-      lobbyState = LobbyState.STARTED;
-      return true;
-    }
-    return false;
+  public void start() {
+    lobbyState = LobbyState.STARTED;
   }
 
   public boolean isStarted() {

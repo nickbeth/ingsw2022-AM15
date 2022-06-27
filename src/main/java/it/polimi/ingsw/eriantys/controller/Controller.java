@@ -189,7 +189,7 @@ abstract public class Controller implements Runnable {
      * Sends a START_GAME message to the server, containing the initiateGameEntities action. <br>
      */
     public boolean sendStartGame() {
-      if (!gameInfo.start())
+      if (!gameInfo.isReady())
         return false;
 
       GameAction action = new InitiateGameEntities(gameInfo);

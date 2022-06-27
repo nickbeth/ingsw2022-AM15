@@ -333,26 +333,31 @@ public class GameServer implements Runnable {
     gameEntry.initPlayers();
     GameAction action = message.gameAction();
 
-    if (message.gameAction() == null) {
+    if (action == null) {
       String errorMessage = "Game with code '" + gameCode + "' received a malformed initialization action";
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
-    if (!(action instanceof InitiateGameEntities) || !gameEntry.executeAction(action)) {
-      String errorMessage = "Game with code '" + gameCode + "' tried to start a game with an invalid action: " + action.getClass().getSimpleName();
-      serverLogger.info(errorMessage);
-      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
-      return;
-    }
+
     // Check if the game is ready and set the game as started
-    if (!gameEntry.getGameInfo().start()) {
+    if (!gameEntry.getGameInfo().isReady()) {
       String errorMessage = "Game with code '" + gameCode + "' is not ready to be started";
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
+    // Check that the initialization action is of the correct type and try to execute it
+    if (!(action instanceof InitiateGameEntities) || !gameEntry.executeAction(action)) {
+      String errorMessage = "Game with code '" + gameCode + "' tried to start a game with an invalid action: " + action.getClass().getSimpleName();
+      serverLogger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    // Set the game as started only once the initialization action has been executed successfully
+    gameEntry.getGameInfo().start();
     serverLogger.info("Game '{}' has started", gameCode);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.START_GAME).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).action(action).build());
   }
@@ -366,6 +371,7 @@ public class GameServer implements Runnable {
     GameEntry gameEntry = activeGames.get(gameCode);
     GameAction action = message.gameAction();
 
+    // Check that the player can play the action
     if (!Objects.equals(nickname, gameEntry.getCurrentPlayer())) {
       String errorMessage = "'" + nickname + "' played an action '" + action.getClass().getSimpleName() + "' in game '" + gameCode + "' when it wasn't his turn";
       serverLogger.info(errorMessage);
@@ -373,6 +379,7 @@ public class GameServer implements Runnable {
       return;
     }
 
+    // Check that the action in the message is valid
     if (message.gameAction() == null) {
       String errorMessage = "Game with code '" + gameCode + "' received a malformed action";
       serverLogger.info(errorMessage);
