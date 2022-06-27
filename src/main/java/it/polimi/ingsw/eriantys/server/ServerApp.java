@@ -9,7 +9,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
-
 public class ServerApp {
   private final Server networkServer;
   private final GameServer gameServer;

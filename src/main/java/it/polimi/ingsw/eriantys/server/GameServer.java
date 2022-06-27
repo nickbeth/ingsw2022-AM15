@@ -17,36 +17,67 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
+/**
+ * The game server class contains the logic for handling clients and game messages.
+ */
 public class GameServer implements Runnable {
   private static final int HEARTBEAT_INTERVAL_SECONDS = 2;
   private static final int HEARTBEAT_DISCONNECTION_THRESHOLD = 5;
 
   /**
-   * Whether heartbeat messages should be used to keep track of clients disconnections or not.
+   * See {@link ServerArgs#heartbeat heartbeat}
    */
   private final boolean heartbeat;
-  private final int deleteTimeout;
-  private final BlockingQueue<MessageQueueEntry> messageQueue;
-  private final ScheduledExecutorService heartbeatService;
 
+  /**
+   * See {@link ServerArgs#deleteTimeout deleteTimeout}
+   */
+  private final int deleteTimeout;
+
+  /**
+   * The queue where incoming messages from clients are pushed to
+   */
+  private final BlockingQueue<MessageQueueEntry> messageQueue;
+
+  /**
+   * A thread pool for taking care of scheduled background tasks
+   */
+  private final ScheduledExecutorService scheduledExecutorService;
+
+  /**
+   * A map from a {@link GameCode} to a {@link GameEntry}, representing all the games currently active on the server
+   */
   private final Map<GameCode, GameEntry> activeGames;
+
+  /**
+   * A set of all active nicknames on the server
+   */
   private final Set<String> activeNicknames;
+
+  /**
+   * A map from a player's name to the {@link GameCode} of the game the player has disconnected from
+   */
   private final Map<String, GameCode> disconnectedPlayers;
 
+  /**
+   * The exit flag for the game server thread. Used for instrumentation purposes.
+   */
   private final AtomicBoolean exit = new AtomicBoolean(false);
 
   public GameServer(boolean heartbeat, int deleteTimeout, BlockingQueue<MessageQueueEntry> messageQueue) {
     this.heartbeat = heartbeat;
     this.deleteTimeout = deleteTimeout;
     this.messageQueue = messageQueue;
-    this.heartbeatService = Executors.newScheduledThreadPool(1);
+    this.scheduledExecutorService = Executors.newScheduledThreadPool(1);
     this.activeGames = new ConcurrentHashMap<>();
     this.activeNicknames = ConcurrentHashMap.newKeySet();
     this.disconnectedPlayers = new ConcurrentHashMap<>();
   }
 
   /**
-   * Runs the game server loop.
+   * Runs the game server loop. <p>
+   * Loops over the queue in a blocking way (waiting for messages when empty) and handles them.
+   * <p>
    * This method is supposed to be run on its own thread.
    */
   @Override
@@ -61,6 +92,11 @@ public class GameServer implements Runnable {
     }
   }
 
+  /**
+   * Handles a {@link MessageQueueEntry} by checking its validity and handling it according to its type.
+   *
+   * @param entry The {@link MessageQueueEntry} to handle
+   */
   private void handleMessage(MessageQueueEntry entry) {
     Client client = entry.client();
     Message message = entry.message();
@@ -100,11 +136,17 @@ public class GameServer implements Runnable {
     }
   }
 
+  /**
+   * Handles a {@link MessageType#PONG PONG} message.
+   */
   private void handlePong(Client client, Message message) {
     var attachment = (ClientAttachment) client.attachment();
     attachment.resetMissedHeartbeatCount();
   }
 
+  /**
+   * Handles a {@link MessageType#NICKNAME_REQUEST NICKNAME_REQUEST} message.
+   */
   private void handleNicknameRequest(Client client, Message message) {
     String nickname = message.nickname();
 
@@ -131,6 +173,11 @@ public class GameServer implements Runnable {
     tryRejoinGame(client, message);
   }
 
+  /**
+   * Handles reconnection to a game, either after a
+   * {@link MessageType#NICKNAME_REQUEST NICKNAME_REQUEST} or a
+   * {@link MessageType#JOIN_GAME JOIN_GAME} message.
+   */
   private boolean tryRejoinGame(Client client, Message message) {
     String nickname = message.nickname();
 
@@ -154,6 +201,9 @@ public class GameServer implements Runnable {
     return false;
   }
 
+  /**
+   * Handles a {@link MessageType#CREATE_GAME CREATE_GAME} message.
+   */
   private void handleCreateGame(Client client, Message message) {
     String nickname = message.nickname();
     GameCode gameCode = GameCode.generateUnique(activeGames.keySet());
@@ -182,6 +232,9 @@ public class GameServer implements Runnable {
     send(client, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
 
+  /**
+   * Handles a {@link MessageType#JOIN_GAME JOIN_GAME} message.
+   */
   private void handleJoinGame(Client client, Message message) {
     String nickname = message.nickname();
     GameCode gameCode = message.gameCode();
@@ -226,6 +279,9 @@ public class GameServer implements Runnable {
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
 
+  /**
+   * Handles a {@link MessageType#QUIT_GAME QUIT_GAME} message.
+   */
   private void handleQuitGame(Client client, Message message) {
     String nickname = message.nickname();
     GameCode gameCode = message.gameCode(); // If the player is not yet in a lobby, this will be null
@@ -263,13 +319,15 @@ public class GameServer implements Runnable {
         disconnectPlayer(gameEntry, nickname);
         disconnectedPlayers.put(nickname, gameCode);
         serverLogger.info("Player '{}' left ongoing game '{}', marked as disconnected", nickname, gameCode);
-        broadcastMessage(gameEntry, new Message.Builder().type(MessageType.PLAYER_DISCONNECTED).nickname(nickname).build());
       }
     }
     // Always clear this player's game code as it's not actively in a game anymore
     attachment.setGameCode(null);
   }
 
+  /**
+   * Handles a {@link MessageType#SELECT_TOWER SELECT_TOWER} message.
+   */
   private void handleSelectTower(Client client, Message message) {
     String nickname = message.nickname();
     GameCode gameCode = message.gameCode();
@@ -288,6 +346,9 @@ public class GameServer implements Runnable {
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
   }
 
+  /**
+   * Handles a {@link MessageType#START_GAME START_GAME} message.
+   */
   private void handleStartGame(Client client, Message message) {
     GameCode gameCode = message.gameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
@@ -318,6 +379,9 @@ public class GameServer implements Runnable {
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.START_GAME).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).action(action).build());
   }
 
+  /**
+   * Handles a {@link MessageType#PLAY_ACTION PLAY_ACTION} message.
+   */
   private void handlePlayAction(Client client, Message message) {
     String nickname = message.nickname();
     GameCode gameCode = message.gameCode();
@@ -464,7 +528,7 @@ public class GameServer implements Runnable {
 
     var attachment = (ClientAttachment) client.attachment();
     serverLogger.debug("Initializing heartbeat for player '{}' on client '{}'", attachment.nickname(), client);
-    var heartbeatSchedule = heartbeatService.schedule(new HeartbeatRunnable(client), HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
+    var heartbeatSchedule = scheduledExecutorService.schedule(new HeartbeatRunnable(client), HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
     // Save the heartbeat schedule in the attachment, so we can cancel it later
     attachment.setHeartbeatSchedule(heartbeatSchedule);
   }
@@ -492,7 +556,7 @@ public class GameServer implements Runnable {
   }
 
   /**
-   * The heartbeat function that will be run for every client once it joins a lobby.
+   * The heartbeat runnable that will be scheduled at fixed intervals for every client once it joins a lobby.
    */
   private class HeartbeatRunnable implements Runnable {
     private final Client client;
@@ -514,7 +578,7 @@ public class GameServer implements Runnable {
           // Re-schedule only if the heartbeat was not cancelled
           // We want to avoid rescheduling the heartbeat if the last one was cancelled
           if (!attachment.isHeartbeatCancelled()) {
-            var heartbeatSchedule = heartbeatService.schedule(this, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
+            var heartbeatSchedule = scheduledExecutorService.schedule(this, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
             attachment.setHeartbeatSchedule(heartbeatSchedule);
           }
         } finally {

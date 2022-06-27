@@ -12,10 +12,24 @@ import java.util.Map;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.serverLogger;
 
+/**
+ * An entry in the active games' collection, containing the game state and the clients connected to it.
+ */
 public class GameEntry {
-  private final GameInfo gameInfo; //!< GameInfo of this game
-  private final HashMap<String, Client> clients; //!< A map of clients connected to this game and their respective names
-  private final GameState gameState; //!< GameState of this game
+  /**
+   * GameInfo of this game
+   */
+  private final GameInfo gameInfo;
+
+  /**
+   * A map from a player's name to the {@link Client client} they're using to communicate
+   */
+  private final HashMap<String, Client> clients;
+
+  /**
+   * The {@link GameState} of this game
+   */
+  private final GameState gameState;
 
   public GameEntry(GameInfo gameInfo) {
     this.clients = new HashMap<>();
