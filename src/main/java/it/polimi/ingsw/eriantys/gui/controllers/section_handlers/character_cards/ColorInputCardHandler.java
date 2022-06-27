@@ -43,10 +43,10 @@ public class ColorInputCardHandler extends CharacterCardHandler {
     }
 
     CharacterCard playedCard = gameState.getPlayingField().getPlayedCharacterCard();
-    if (playedCard != null && playedCard.getCardEnum() == card.getCardEnum()) {
-      crossImg.setVisible(false);
+    if (playedCard != null && playedCard.getCardEnum() == card.getCardEnum())
       studentImgs.forEach(img -> img.setVisible(true));
-    }
+    else
+      studentImgs.forEach(img -> img.setVisible(false));
   }
 
   @Override

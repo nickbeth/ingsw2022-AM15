@@ -35,14 +35,15 @@ public class CharacterCardHandler extends SectionHandler {
   }
 
   /**
-   * Refreshes addon coin visibility and card clickability
+   * Refreshes addon coin visibility, card clickability and the red "close window" cross
    */
   @Override
   protected void refresh() {
-    crossImg.setVisible(true);
     addonCoin.setVisible(card.isUsed());
     CharacterCard playedCard = Controller.get().getGameState().getPlayingField().getPlayedCharacterCard();
     GameState gameState = Controller.get().getGameState();
+    //make cross invisible if there is a played card
+    crossImg.setVisible(playedCard == null || playedCard.getCardEnum() != card.getCardEnum());
     // if the player isn't current the card is not clickable
     if (!Controller.get().getNickname().equals(gameState.getCurrentPlayer().getNickname())) {
       makeNotClickable();

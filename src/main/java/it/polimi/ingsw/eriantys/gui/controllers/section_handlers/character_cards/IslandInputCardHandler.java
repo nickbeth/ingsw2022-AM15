@@ -28,7 +28,7 @@ public class IslandInputCardHandler extends CharacterCardHandler {
 
   /**
    * - Calls super.refresh()<br>
-   * - Refreshes visibility of the draggable icon and the red "close window" cross.<br>
+   * - Refreshes visibility of the draggable icon.<br>
    * - If there is an attached text to the icon it refreshes it
    */
   @Override
@@ -39,14 +39,11 @@ public class IslandInputCardHandler extends CharacterCardHandler {
       draggableItem.setVisible(false);
       return;
     }
-
     CharacterCard playedCard = gameState.getPlayingField().getPlayedCharacterCard();
-    if (playedCard != null && playedCard.getCardEnum() == card.getCardEnum()) {
-      crossImg.setVisible(false);
-      draggableItem.setVisible(true);
-    }
+    // make draggable item visible if this is the chosen CC
+    draggableItem.setVisible(playedCard != null && playedCard.getCardEnum() == card.getCardEnum());
     if (card.getCardEnum() == CharacterCardEnum.LOCK_ISLAND) {
-      draggableItem.setText("×" + Controller.get().getGameState().getPlayingField().getLocks());
+      draggableItem.setText("×" + gameState.getPlayingField().getLocks());
     }
   }
 
