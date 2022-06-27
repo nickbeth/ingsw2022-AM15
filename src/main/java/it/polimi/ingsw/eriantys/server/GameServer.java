@@ -550,8 +550,25 @@ public class GameServer implements Runnable {
   private void deleteGame(GameCode gameCode, GameEntry gameEntry) {
     StringBuilder message = new StringBuilder("Game '" + gameCode + "' has been deleted");
 
-    // Clean up disconnected players
     ArrayList<String> cleanedUpPlayers = new ArrayList<>(4);
+    // Clean up the game code in the attachment of connected players
+    for (Client client : gameEntry.getClients()) {
+      ClientAttachment attachment = (ClientAttachment) client.attachment();
+      attachment.setGameCode(null);
+      cleanedUpPlayers.add(attachment.nickname());
+    }
+
+    // Log cleaned up connected players
+    if (!cleanedUpPlayers.isEmpty()) {
+      message.append(", connected players cleaned up: ");
+      cleanedUpPlayers.forEach(player -> message.append(player).append(", "));
+      message.setLength(message.length() - 2);
+    } else {
+      message.append(", no connected players cleaned up");
+    }
+
+    cleanedUpPlayers.clear();
+    // Clean up disconnected players
     GameInfo gameInfo = gameEntry.getGameInfo();
     for (String player : gameInfo.getJoinedPlayers()) {
       GameCode removedPlayer = disconnectedPlayers.remove(player);
@@ -559,13 +576,13 @@ public class GameServer implements Runnable {
         cleanedUpPlayers.add(player);
     }
 
-    // Log cleaned up players
+    // Log cleaned up disconnected players
     if (!cleanedUpPlayers.isEmpty()) {
-      message.append(", disconnected players were cleaned up: ");
+      message.append(", disconnected players cleaned up: ");
       cleanedUpPlayers.forEach(player -> message.append(player).append(", "));
       message.setLength(message.length() - 2);
     } else {
-      message.append(", no disconnected players were cleaned up");
+      message.append(", no disconnected players cleaned up");
     }
 
     activeGames.remove(gameCode);
