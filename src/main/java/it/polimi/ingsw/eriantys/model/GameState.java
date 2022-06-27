@@ -328,8 +328,10 @@ public class GameState implements Serializable {
         List<Player> connectedPlayers = actionPhaseOrder.stream().filter(Player::isConnected).toList();
         return player.equals(connectedPlayers.get(connectedPlayers.size() - 1));
       }
-      default -> throw new AssertionError();
+      default -> {
+      }
     }
+    return false;
   }
 
   /**
