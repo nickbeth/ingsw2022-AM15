@@ -101,12 +101,14 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   }
 
   /**
-   * Sets default values for choice boxes, and gameID text field
+   * Sets default values for choice boxes, and game code text field
    */
-  private void setDefaultValues(){
+  private void setDefaultValues() {
     playerNumberChoice.setValue(2);
     gameModeChoice.setValue(GameMode.NORMAL);
-    gameUidField.setText("AAAA");
+    GameCode gameCode = Controller.get().getGameCode();
+    if (gameCode != null)
+      gameUidField.setText(gameCode.toString());
   }
 
   /**
