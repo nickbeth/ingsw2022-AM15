@@ -103,7 +103,7 @@ public class AssistCardHandler extends SectionHandler {
         chosenCard.setText(player.getNickname());
         URL imgPath = getClass().getResource("/assets/assistcards/Animali_1_" + card.get().value + ".png");
         ImageView cardIcon = new ImageView(new Image(String.valueOf(imgPath)));
-        cardIcon.setFitWidth(50);
+        cardIcon.setFitWidth(60);
         cardIcon.setPreserveRatio(true);
         chosenCard.setGraphic(cardIcon);
         chosenCard.setPickOnBounds(false);

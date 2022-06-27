@@ -180,16 +180,21 @@ public class GameSceneController extends FXMLController {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if ( Controller.get().getGameState().getGamePhase() == GamePhase.WIN){
-      showWinnerAlert();
-      return;
-    }
     if (evt.getNewValue() != null)
       debugScreenHandler.showMessage((String) evt.getNewValue());
-    if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag))
+
+    if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag)){
       updateAll();
-    else if (evt.getPropertyName().equals(PLAYER_CONNECTION_CHANGED.tag)) {
+      return;
+    }
+
+    if (evt.getPropertyName().equals(PLAYER_CONNECTION_CHANGED.tag)) {
       playerGridHandler.update();
+      return;
+    }
+
+    if (evt.getPropertyName().equals(END_GAME.tag)) {
+      showWinnerAlert();
     }
   }
 
