@@ -106,10 +106,13 @@ public class GameServer implements Runnable {
       return;
     }
 
+    // Check that the message is of valid type
     if (message.type() == null) {
-      serverLogger.warn("Received a message with an invalid message type: {}", message);
+      serverLogger.warn("Received a message of invalid type: {}", message);
       return;
     }
+
+    // Check that the message contains a valid nickname for all types of messages
     if (message.nickname() == null) {
       serverLogger.warn("Received a message with an empty nickname: {}", message);
       return;
@@ -165,14 +168,15 @@ public class GameServer implements Runnable {
   private void handleNicknameRequest(Client client, Message message) {
     String nickname = message.nickname();
 
-    if (nickname == null || nickname.isBlank()) {
+    // Check that the provided nickname is valid
+    if (nickname.isBlank()) {
       String errorMessage = "Nickname '" + nickname + " is invalid";
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
     }
 
-    // Check if a player with this nickname already exists, and add it if it doesn't
+    // Try to add the requested nickname and check that it was added successfully
     if (!activeNicknames.add(nickname)) {
       String errorMessage = "Nickname '" + nickname + "' is already in use";
       serverLogger.info(errorMessage);
@@ -192,6 +196,8 @@ public class GameServer implements Runnable {
    * Handles reconnection to a game, either after a
    * {@link MessageType#NICKNAME_REQUEST NICKNAME_REQUEST} or a
    * {@link MessageType#JOIN_GAME JOIN_GAME} message.
+   *
+   * @return {@code true} if the client was successfully reconnected to a game, {@code false} otherwise
    */
   private boolean tryRejoinGame(Client client, Message message) {
     String nickname = message.nickname();
@@ -233,6 +239,7 @@ public class GameServer implements Runnable {
       return;
     }
 
+    // Check that the player is not already in a game
     if (attachment.gameCode() != null || disconnectedPlayers.containsKey(nickname)) {
       String errorMessage = "Nickname '" + nickname + "' is already in a game";
       serverLogger.info(errorMessage);
@@ -257,6 +264,7 @@ public class GameServer implements Runnable {
     GameCode gameCode = message.gameCode();
     GameEntry gameEntry = activeGames.get(gameCode);
 
+    // Check that the game exists
     if (gameEntry == null) {
       String errorMessage = "Game with code '" + gameCode + "' does not exist";
       serverLogger.info(errorMessage);
@@ -264,7 +272,9 @@ public class GameServer implements Runnable {
       return;
     }
 
+    // Check that the game has not started yet
     if (gameEntry.getGameInfo().isStarted()) {
+      // Try to reconnect the player to the game if it has started
       if (tryRejoinGame(client, message))
         return;
 
@@ -274,6 +284,7 @@ public class GameServer implements Runnable {
       return;
     }
 
+    // Check that the game is not full already
     if (gameEntry.isFull()) {
       String errorMessage = "Game with code '" + gameCode + "' is full";
       serverLogger.info(errorMessage);
@@ -281,6 +292,7 @@ public class GameServer implements Runnable {
       return;
     }
 
+    // Check that the client has a valid attachment
     var attachment = (ClientAttachment) client.attachment();
     if (attachment == null) {
       String errorMessage = "Nickname '" + nickname + "' should register first before joining a game";
@@ -324,9 +336,19 @@ public class GameServer implements Runnable {
   private void handleSelectTower(Client client, Message message) {
     String nickname = message.nickname();
     GameCode gameCode = message.gameCode();
+    GameInfo gameInfo = message.gameInfo();
     GameEntry gameEntry = activeGames.get(gameCode);
 
-    TowerColor chosenTowerColor = message.gameInfo().getPlayerColor(nickname);
+    // Check that the game info in the message is valid
+    if (gameInfo == null) {
+      String errorMessage = "Player '" + nickname + "' in game '" + gameCode + "' tried to select a tower color with a malformed gameinfo";
+      serverLogger.info(errorMessage);
+      send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
+      return;
+    }
+
+    // Check that the chosen tower color is valid
+    TowerColor chosenTowerColor = gameInfo.getPlayerColor(nickname);
     if (!gameEntry.getGameInfo().isTowerColorValid(nickname, chosenTowerColor)) {
       String errorMessage = "Tower color '" + chosenTowerColor + "' is not available";
       serverLogger.info(errorMessage);
@@ -348,6 +370,7 @@ public class GameServer implements Runnable {
     gameEntry.initPlayers();
     GameAction action = message.gameAction();
 
+    // Check that the action in the message is valid
     if (action == null) {
       String errorMessage = "Game with code '" + gameCode + "' received a malformed initialization action";
       serverLogger.info(errorMessage);
@@ -388,7 +411,7 @@ public class GameServer implements Runnable {
 
     // Check that the action in the message is valid
     if (action == null) {
-      String errorMessage = "Game with code '" + gameCode + "' received a malformed action";
+      String errorMessage = "Player '" + nickname + "' in game '" + gameCode + "' sent a malformed action";
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
@@ -412,7 +435,7 @@ public class GameServer implements Runnable {
 
     // Try to apply the received action
     if (!gameEntry.executeAction(action)) {
-      String errorMessage = "Game with code '" + gameCode + "' tried to apply an invalid action: " + action.getClass().getSimpleName();
+      String errorMessage = "Player '" + nickname + "' in game '" + gameCode + "' tried to apply an invalid action: " + action.getClass().getSimpleName();
       serverLogger.info(errorMessage);
       send(client, new Message.Builder().type(MessageType.ERROR).error(errorMessage).build());
       return;
