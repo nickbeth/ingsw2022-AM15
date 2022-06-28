@@ -123,14 +123,6 @@ public class PickCloud extends GameAction {
    */
   @Override
   public boolean isValid(GameState gameState) {
-    if (shouldRefill) {
-      //TODO: these checks in isvalid make no sense, because now we set these values in the constructor
-      for (var students : clouds)
-        if (students.getCount() != gameState.getRuleBook().playableStudentCount)
-          return false;
-      if (clouds.size() != gameState.getRuleBook().cloudCount)
-        return false;
-    }
     return cloudIndex >= 0 &&
         cloudIndex < gameState.getRuleBook().cloudCount &&
         (!gameState.getPlayingField().getCloud(cloudIndex).isEmpty()) &&
