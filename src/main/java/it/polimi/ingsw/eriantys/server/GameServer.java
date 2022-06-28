@@ -315,6 +315,8 @@ public class GameServer implements Runnable {
     String nickname = message.nickname();
     GameCode gameCode = message.gameCode(); // If the player is not yet in a lobby, this will be null
 
+    handleClientRemoval(nickname, gameCode, false);
+
     if (gameCode == null) {
       // The player was not in a lobby: remove the player's nickname and close the socket
       // Following this, the client is to be considered disconnected from the server
@@ -322,12 +324,10 @@ public class GameServer implements Runnable {
       activeNicknames.remove(nickname);
       client.attach(null);
       client.close();
-      return;
+    } else {
+      // Clear this player's game code as it's not actively in a game anymore
+      ((ClientAttachment) client.attachment()).setGameCode(null);
     }
-
-    handleClientRemoval(nickname, gameCode, false);
-    // Always clear this player's game code as it's not actively in a game anymore
-    ((ClientAttachment) client.attachment()).setGameCode(null);
   }
 
   /**
