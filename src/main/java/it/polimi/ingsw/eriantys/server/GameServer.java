@@ -123,9 +123,24 @@ public class GameServer implements Runnable {
 
     serverLogger.debug("Handling entry: {}", entry);
     switch (message.type()) {
-      case NICKNAME_REQUEST -> handleNicknameRequest(client, message);
+      case NICKNAME_REQUEST -> {
+        handleNicknameRequest(client, message);
+        return;
+      }
 
-      case CREATE_GAME -> handleCreateGame(client, message);
+      case CREATE_GAME -> {
+        handleCreateGame(client, message);
+        return;
+      }
+    }
+
+    // Check that the message contains a valid game code only for the types of messages that require it
+    if (message.gameCode() == null) {
+      serverLogger.warn("Received a message that requires a valid game code but didn't have one: {}", message);
+      return;
+    }
+
+    switch (message.type()) {
       case JOIN_GAME -> handleJoinGame(client, message);
       case QUIT_GAME -> handleQuitGame(client, message);
       case SELECT_TOWER -> handleSelectTower(client, message);
