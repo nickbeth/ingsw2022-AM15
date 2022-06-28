@@ -1,9 +1,6 @@
 package it.polimi.ingsw.eriantys.model;
 
-import it.polimi.ingsw.eriantys.model.entities.Dashboard;
-import it.polimi.ingsw.eriantys.model.entities.Player;
-import it.polimi.ingsw.eriantys.model.entities.PlayingField;
-import it.polimi.ingsw.eriantys.model.entities.Students;
+import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
@@ -16,8 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
-import static it.polimi.ingsw.eriantys.model.enums.GamePhase.ACTION;
-import static it.polimi.ingsw.eriantys.model.enums.GamePhase.PLANNING;
+import static it.polimi.ingsw.eriantys.model.enums.GamePhase.*;
 
 public class GameState implements Serializable {
   private List<Player> players = new ArrayList<>(); // Players in the game
@@ -249,15 +245,20 @@ public class GameState implements Serializable {
    * - if one of these condition isn't true The Game ends
    */
   public boolean checkWinCondition() {
-    if (getPlayingField().getStudentBag().isEmpty()
-        || getPlayers().stream().anyMatch(p -> p.getDashboard().noMoreTowers()
-        || (p.getCards().size() == 0 && p.getChosenCard().isEmpty()))
-        || getPlayingField().getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
+    if (players.stream().anyMatch(p -> p.getDashboard().noMoreTowers())
+        || playingField.getIslandsAmount() <= RuleBook.MIN_ISLAND_COUNT
+        || (isLastPlayer(currentPlayer) && turnPhase.equals(TurnPhase.PICKING) && isLastRound())
     ) {
-      gamePhase = GamePhase.WIN;
+      gamePhase = WIN;
       return true;
     }
     return false;
+  }
+
+  public boolean isLastRound() {
+    StudentBag bag = playingField.getStudentBag();
+
+    return bag.isEmpty() || getPlayers().stream().anyMatch(p -> p.getCards().size() == 0 && p.getChosenCard().isEmpty());
   }
 
   /**

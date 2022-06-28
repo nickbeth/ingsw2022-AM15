@@ -18,7 +18,6 @@ import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 import static java.text.MessageFormat.format;
@@ -136,7 +135,7 @@ public abstract class MenuGame extends Menu {
         .append("8 - Show players");
     if (rules().gameMode.equals(GameMode.EXPERT))
       options.append("10 - CharacterCards");
-    out.println(options.toString(), YELLOW);
+    out.println(options);
 
     // Optional closing row
     if (!isMyTurn())

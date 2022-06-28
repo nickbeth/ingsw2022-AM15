@@ -20,9 +20,9 @@ public class MoveMotherNature extends GameAction {
    * Advances turnPhase.
    */
   @Override
-  public void apply(GameState gameState) {
-    PlayingField playingField = gameState.getPlayingField();
-    List<Player> players = gameState.getPlayers();
+  public void apply(GameState game) {
+    PlayingField playingField = game.getPlayingField();
+    List<Player> players = game.getPlayers();
 
     // Moves mother nature
     playingField.moveMotherNature(amount);
@@ -34,7 +34,10 @@ public class MoveMotherNature extends GameAction {
     // Unset any possible previous character card played
     playingField.setPlayedCharacterCard(null);
 
-    gameState.advance();
+    game.advance();
+
+    if (game.isLastRound() && !game.isLastPlayer(game.getCurrentPlayer()))
+      game.advance();
   }
 
   /**
