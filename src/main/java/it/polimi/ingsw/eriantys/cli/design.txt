@@ -42,12 +42,32 @@ Cloud)
 ╰─────╯
 
 Character Card)
-╭─╦──COST──╦─EFFECT──────────
-0 │3 coins │ IGNORE_COLOR
-╰─╩────────╩─────────────────
+╭─╦──COST──╦─EFFECT──────────╮
+0 │3 coins │ IGNORE_COLOR    │
+╰─╩────────╩─────────────────╯
 
 Assistant Card)
 ╭─I─────────╮
 │ Value: X  │
 │ Moves: X  │
 ╰───────────╯
+
+GamesList)
+╭─CODE─╦──MODE──╦─PLAYERS──{2 left}─╮
+│ xxxx ║ NORMAL ║                   │
+╰──────╩────────╩───────────────────╯
+╭─CODE─╦──MODE──╦─PLAYERS──{4 left}─╮
+│ xxxx ║ NORMAL ║                   │
+╰──────╩────────╩───────────────────╯
+╭─CODE─╦──MODE──╦─PLAYERS──{1 left}─╮
+│ xxxx ║ NORMAL ║ nico              │
+╰──────╩────────╩───────────────────╯
+╭─CODE─╦──MODE──╦─PLAYERS──{full}───╮
+│ xxxx ║ NORMAL ║ nico - cala       │
+╰──────╩────────╩───────────────────╯
+╭─CODE─╦──MODE──╦─PLAYERS──{2 left}─╮
+│ xxxx ║ NORMAL ║ nico - cala - xu  │
+╰──────╩────────╩───────────────────╯
+╭─CODE─╦──MODE──╦─PLAYERS───{full}─────────────╮
+│ xxxx ║ EXPERT ║ betto - caliandro - brontesi │
+╰──────╩────────╩──────────────────────────────╯

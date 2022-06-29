@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Structure that contains general pieces of information about a specific game
+ * such as if it's started or not, the players' nickname involved or the mode.
+ */
 public class GameInfo implements Serializable {
   /**
    * Enumeration of possible lobby states.
@@ -25,6 +29,13 @@ public class GameInfo implements Serializable {
    * Map of player names to their chosen tower color.
    */
   private final Map<String, TowerColor> joinedPlayers = new HashMap<>();
+
+  public GameInfo(GameInfo info) {
+    this.lobbyState = info.lobbyState;
+    this.mode = info.mode;
+    this.maxPlayerCount = info.maxPlayerCount;
+    joinedPlayers.putAll(info.joinedPlayers);
+  }
 
   public GameInfo(int numberOfPlayers, GameMode mode) {
     this.maxPlayerCount = numberOfPlayers;
@@ -101,6 +112,10 @@ public class GameInfo implements Serializable {
 
   public TowerColor getPlayerColor(String nickname) {
     return joinedPlayers.get(nickname);
+  }
+
+  public boolean isFull() {
+    return joinedPlayers.size() >= maxPlayerCount;
   }
 
   @Override

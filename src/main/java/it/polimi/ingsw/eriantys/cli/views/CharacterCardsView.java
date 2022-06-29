@@ -32,6 +32,7 @@ public class CharacterCardsView extends View {
 //        .min((c1, c2) -> c2.getCardEnum().toString().length() - c1.getCardEnum().toString().length())
 //        .map(c -> c.getCardEnum().toString().length())
 //        .ifPresent(longestName::set);
+
     StringBuilder stringBuilder = new StringBuilder();
 
     for (int i = 0; i < characterCards.size(); i++) {

@@ -119,7 +119,7 @@ public abstract class MenuGame extends Menu {
 
     // Turn label
     String turnLabel = isMyTurn() ? "It's now your turn " : "It's now turn of: ";
-    out.println(turnLabel + currentPlayer(), YELLOW);
+    out.println(turnLabel + currentPlayer());
 
     // Option
     StringBuilder options = new StringBuilder();

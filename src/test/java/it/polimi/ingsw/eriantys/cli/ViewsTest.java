@@ -3,7 +3,6 @@ package it.polimi.ingsw.eriantys.cli;
 import it.polimi.ingsw.eriantys.cli.views.*;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
-import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.*;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
@@ -13,13 +12,11 @@ import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
+import javafx.util.Pair;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
+import java.util.*;
 
 import static it.polimi.ingsw.eriantys.cli.CustomPrintStream.out;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,7 +26,6 @@ public class ViewsTest {
   private static final GameMode mode = GameMode.EXPERT;
   private static final int playerCount = 4;
   private static final RuleBook rules = RuleBook.makeRules(mode, playerCount);
-  private static final GameState gameState = new GameState(playerCount, mode);
 
   @BeforeAll
   static void setUp() {
@@ -183,7 +179,7 @@ public class ViewsTest {
     List<AssistantCard> cards = new ArrayList<>(Arrays.stream(AssistantCard.values()).toList());
     View view = new AssistantCardsView(cards);
 
-    for (var card : AssistantCard.values()) {
+    for (var ignored : AssistantCard.values()) {
       view.draw(out);
       cards.remove(0);
     }
@@ -220,7 +216,7 @@ public class ViewsTest {
   public void printGameLobby() {
     GameInfo lobby = new GameInfo(3, GameMode.EXPERT);
     lobby.addPlayer("gino", TowerColor.BLACK);
-    lobby.addPlayer("minchia un nome lunghissimo", TowerColor.WHITE);
+    lobby.addPlayer("tipo un nome lunghissimo", TowerColor.WHITE);
     lobby.addPlayer("franco");
 
     (new GameLobbyView(lobby, new GameCode("cia3"))).draw(out);
@@ -234,6 +230,29 @@ public class ViewsTest {
       cards.add(CharacterCardCreator.create(card));
     }
 
-    (new CharacterCardsView(cards)).draw(out);
+    new CharacterCardsView(cards).draw(out);
+  }
+
+  @Test
+  public void printGamesList() {
+    List<String> players = new ArrayList<>();
+    players.add("riso");
+    players.add("patate");
+    players.add("cozze");
+    players.add("Marco");
+
+    Set<Pair<GameCode, GameInfo>> games = new HashSet<>();
+
+    for (int i = 2; i <= 4; i++) {
+      GameInfo tmp = new GameInfo(i, GameMode.NORMAL);
+      int playerCount = i;
+      players.forEach(nickname -> {
+        if (!tmp.isFull())
+          tmp.addPlayer(nickname);
+        games.add(new Pair<>(new GameCode("xxx" + playerCount), new GameInfo(tmp)));
+      });
+    }
+
+    new GamesListView(games).draw(out);
   }
 }
