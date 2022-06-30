@@ -11,8 +11,10 @@ import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
+import javafx.util.Pair;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class MoveStudentsToDiningHall extends GameAction {
   private final Students students;
@@ -57,9 +59,12 @@ public class MoveStudentsToDiningHall extends GameAction {
   }
 
   private String studentMessage(Students students) {
-    String baseMessage = Arrays.stream(HouseColor.values()).map(color ->
-        String.format("%s-%s ", students.getCount(color), color)
-    ).reduce(String::concat).toString();
+    String baseMessage = Arrays.stream(HouseColor.values())
+        .map(color -> new Pair(color, students.getCount(color)))
+        .filter(pair -> !pair.getValue().equals(0))
+        .map(pair -> " " + pair.getValue() + "-" + pair.getKey())
+        .reduce(String::concat)
+        .get();
 
     return students.getCount() == 1 ?
         baseMessage + " student" :
