@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.controller;
 
 public enum EventType {
   NICKNAME_OK("nickname_ok"),
+  GAMELIST("game_list"),
 
   START_GAME("start_game"),
 
@@ -20,7 +21,7 @@ public enum EventType {
 
 
   ;
-  public String tag;
+  public final String tag;
 
   EventType(String tag) {
     this.tag = tag;

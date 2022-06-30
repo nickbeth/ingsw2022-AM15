@@ -8,7 +8,7 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class ChooseCharacterCard extends GameAction {
-  private int ccIndex;
+  private final int ccIndex;
 
   public ChooseCharacterCard(int ccIndex) {
     this.ccIndex = ccIndex;
@@ -31,7 +31,7 @@ public class ChooseCharacterCard extends GameAction {
   public boolean isValid(GameState gameState) {
     return ccIndex >= 0 &&
         ccIndex < 3 &&
-        gameState.getTurnPhase() == TurnPhase.PLACING &&
+        gameState.getTurnPhase() != TurnPhase.PICKING &&
         gameState.getGamePhase() == GamePhase.ACTION;
   }
 }

@@ -88,11 +88,15 @@ public class IslandHandler extends SectionHandler {
   protected void create() {
     islandPane.setPrefWidth(200);
     islandPane.setPrefHeight(150);
+    // makes sure island overlaps don't impede mother nature draggability
+    islandPane.setPickOnBounds(false);
 
     ImageView islandImg = new ImageView(new Image("/assets/realm/island-" + (gameState.getPlayingField().getIslands().indexOf(island) % 3 + 1) + ".png"));
     islandImg.setFitWidth(200);
     islandImg.setFitHeight(150);
     islandImg.setPreserveRatio(true);
+    // makes sure island overlaps don't impede mother nature draggability
+    islandImg.setPickOnBounds(false);
     islandPane.getChildren().add(islandImg);
 
     for (HouseColor color : HouseColor.values()) {
@@ -123,6 +127,7 @@ public class IslandHandler extends SectionHandler {
     AnchorPane.setBottomAnchor(colorToStudentLabel.get(HouseColor.BLUE), 60.0);
     AnchorPane.setLeftAnchor(colorToStudentLabel.get(HouseColor.BLUE), 115.0);
 
+    // creation of mother nature imageview and drag detected event handling
     mnView = new ImageView(new Image("/assets/realm/mother-nature.png", 25, 100, true, false));
     mnView.setFitWidth(25);
     mnView.setPreserveRatio(true);

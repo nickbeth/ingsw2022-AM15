@@ -14,6 +14,8 @@ import it.polimi.ingsw.eriantys.network.Message;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
@@ -51,9 +53,11 @@ abstract public class Controller implements Runnable {
   protected Sender sender;
   protected Client networkClient;
   protected GameState gameState;
+  protected Map<GameCode, GameInfo> joinableGameList;
 
   protected String nickname;
   protected GameCode gameCode;
+  protected GameCode previousGameCode;
 
   protected PropertyChangeSupport listenerHolder;
 
@@ -61,6 +65,7 @@ abstract public class Controller implements Runnable {
     this.networkClient = networkClient;
     sender = new Sender();
     listenerHolder = new PropertyChangeSupport(this);
+    joinableGameList = Collections.emptyMap();
   }
 
   public void setNickname(String nickname) {
@@ -178,6 +183,18 @@ abstract public class Controller implements Runnable {
 
   public void setGameCode(GameCode gameCode) {
     this.gameCode = gameCode;
+  }
+
+  public GameCode getPreviousGameCode() {
+    return previousGameCode;
+  }
+
+  public Map<GameCode, GameInfo> getJoinableGameList() {
+    return joinableGameList;
+  }
+
+  public void setJoinableGameList(Map<GameCode, GameInfo> joinableGameList) {
+    this.joinableGameList = joinableGameList;
   }
 
   public Sender sender() {
@@ -393,6 +410,15 @@ abstract public class Controller implements Runnable {
       clientLogger.info("Sent message {} to the server", msg);
     }
 
+    public void sendGamelistRequest() {
+      Message msg = new Message.Builder(GAMELIST_REQUEST)
+          .nickname(nickname)
+          .build();
+      networkClient.send(msg);
+
+      clientLogger.info("Sent message {} to the server", msg);
+    }
+
     public void sendCreateGame(int numberOfPlayers, GameMode gameMode) {
       gameInfo = new GameInfo(numberOfPlayers, gameMode);
       Message msg = new Message.Builder(CREATE_GAME)
@@ -422,6 +448,11 @@ abstract public class Controller implements Runnable {
           .gameCode(gameCode)
           .build();
       networkClient.send(msg);
+
+      previousGameCode = gameCode;
+      gameCode = null;
+      gameInfo = null;
+      gameState = null;
 
       clientLogger.info("Sent message {} to the server", msg);
     }

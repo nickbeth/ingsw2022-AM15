@@ -6,10 +6,8 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.*;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import it.polimi.ingsw.eriantys.network.Client;
-import it.polimi.ingsw.eriantys.network.Message;
-import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
-import it.polimi.ingsw.eriantys.network.MessageType;
+import it.polimi.ingsw.eriantys.network.*;
+import org.javatuples.Pair;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -47,7 +45,7 @@ public class GameServer implements Runnable {
   /**
    * A map from a {@link GameCode} to a {@link GameEntry}, representing all the games currently active on the server
    */
-  private final Map<GameCode, GameEntry> activeGames;
+  private final GameList activeGames;
 
   /**
    * A set of all active nicknames on the server
@@ -69,7 +67,7 @@ public class GameServer implements Runnable {
     this.deleteTimeout = deleteTimeout;
     this.messageQueue = messageQueue;
     this.scheduledExecutorService = Executors.newScheduledThreadPool(1);
-    this.activeGames = new ConcurrentHashMap<>();
+    this.activeGames = new GameList();
     this.activeNicknames = ConcurrentHashMap.newKeySet();
     this.disconnectedPlayers = new ConcurrentHashMap<>();
   }
@@ -135,6 +133,21 @@ public class GameServer implements Runnable {
         handleCreateGame(client, message);
         return;
       }
+
+      case GAMELIST_REQUEST -> {
+        handleGamelistRequest(client, message);
+        return;
+      }
+
+      case QUIT_GAME -> {
+        handleQuitGame(client, message);
+        return;
+      }
+
+      case INTERNAL_SOCKET_ERROR -> {
+        // Ignored
+        return;
+      }
     }
 
     // Check that the message contains a valid game code only for the types of messages that require it
@@ -145,7 +158,6 @@ public class GameServer implements Runnable {
 
     switch (message.type()) {
       case JOIN_GAME -> handleJoinGame(client, message);
-      case QUIT_GAME -> handleQuitGame(client, message);
       case SELECT_TOWER -> handleSelectTower(client, message);
 
       case START_GAME -> handleStartGame(client, message);
@@ -193,6 +205,14 @@ public class GameServer implements Runnable {
   }
 
   /**
+   * Handles a {@link MessageType#GAMELIST_REQUEST GAMELIST_REQUEST} message.
+   */
+  private void handleGamelistRequest(Client client, Message message) {
+    send(client, new GameListMessage.Builder().gameList(activeGames.getJoinableGameList()).build());
+    serverLogger.info("Sent game list to client '{}'", message.nickname());
+  }
+
+  /**
    * Handles reconnection to a game, either after a
    * {@link MessageType#NICKNAME_REQUEST NICKNAME_REQUEST} or a
    * {@link MessageType#JOIN_GAME JOIN_GAME} message.
@@ -229,7 +249,6 @@ public class GameServer implements Runnable {
    */
   private void handleCreateGame(Client client, Message message) {
     String nickname = message.nickname();
-    GameCode gameCode = GameCode.generateUnique(activeGames.keySet());
 
     var attachment = (ClientAttachment) client.attachment();
     if (attachment == null) {
@@ -247,10 +266,12 @@ public class GameServer implements Runnable {
       return;
     }
 
-    attachment.setGameCode(gameCode);
-    GameEntry gameEntry = new GameEntry(message.gameInfo());
+    Pair<GameCode, GameEntry> gameEntryPair = activeGames.create(message.gameInfo());
+    GameCode gameCode = gameEntryPair.getValue0();
+    GameEntry gameEntry = gameEntryPair.getValue1();
+
     gameEntry.addPlayer(nickname, client);
-    activeGames.put(gameCode, gameEntry);
+    attachment.setGameCode(gameCode);
 
     serverLogger.info("Player '{}' created a new game: {}", nickname, gameCode);
     send(client, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
@@ -395,7 +416,7 @@ public class GameServer implements Runnable {
     }
 
     // Set the game as started only once the initialization action has been executed successfully
-    gameEntry.getGameInfo().start();
+    gameEntry.start();
     serverLogger.info("Game '{}' has started", gameCode);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.START_GAME).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).action(action).build());
   }

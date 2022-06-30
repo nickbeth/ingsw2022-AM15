@@ -36,6 +36,22 @@ public enum MessageType {
   NICKNAME_OK,
 
   /**
+   * Sent by client to request a list of games available to join.
+   * <p>
+   * Populated fields: <p>
+   * {@link Message#nickname()}
+   */
+  GAMELIST_REQUEST,
+
+  /**
+   * Sent by the server as a successful reply to {@link MessageType#GAMELIST_REQUEST}, containing a list of available games to join.
+   * <p>
+   * Populated fields: <p>
+   * {@link GameListMessage#gameList()}
+   */
+  GAMELIST,
+
+  /**
    * Sent by clients to create a new game.
    * <p>
    * Populated fields: <p>

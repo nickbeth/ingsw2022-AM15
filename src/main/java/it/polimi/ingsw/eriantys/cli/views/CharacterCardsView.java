@@ -11,6 +11,7 @@ import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.VERTICAL;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 
 public class CharacterCardsView extends View {
@@ -23,15 +24,6 @@ public class CharacterCardsView extends View {
 
   @Override
   public void draw(CustomPrintStream o) {
-    String start = "0 │3 coins │ ";
-
-    // Gets the longest name among character cards
-//    AtomicInteger longestName = new AtomicInteger();
-//    characterCards
-//        .stream()
-//        .min((c1, c2) -> c2.getCardEnum().toString().length() - c1.getCardEnum().toString().length())
-//        .map(c -> c.getCardEnum().toString().length())
-//        .ifPresent(longestName::set);
 
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -57,9 +49,7 @@ public class CharacterCardsView extends View {
       int paddingLeft = "EFFECT──────────────────────────".length() - card.getCardEnum().toString().length();
       if (paddingLeft < 0) clientLogger.warn("CharacterCard cli view needs fixes");
 
-      for (int j = 0; j < paddingLeft; j++) {
-        stringBuilder.append(PADDING);
-      }
+      stringBuilder.append(PADDING.repeat(Math.max(0, paddingLeft)));
       stringBuilder
           .append(VERTICAL.glyph)
           .append(System.lineSeparator())
@@ -69,11 +59,11 @@ public class CharacterCardsView extends View {
 
     o.println();
 
-    o.println("-----------------CHARACTER CARDS------------------------");
+    o.println("-----------------CHARACTER CARDS------------------------", YELLOW);
 
     o.print(stringBuilder);
 
-    o.println("--------------------------------------------------------");
+    o.println("--------------------------------------------------------", YELLOW);
   }
 
 }

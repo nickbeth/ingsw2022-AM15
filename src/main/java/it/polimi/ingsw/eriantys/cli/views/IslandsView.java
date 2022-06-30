@@ -7,6 +7,7 @@ import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
 import static it.polimi.ingsw.eriantys.cli.views.IslandView.drawIsland;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public class IslandsView extends View {
   private final List<Island> islands;
@@ -62,13 +63,13 @@ public class IslandsView extends View {
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.println(centredTitle("ISLANDS"));
+    o.println(centredTitle("ISLANDS"), YELLOW);
 
     // Write the content
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.println(centredTitle("-"));
+    o.println(centredTitle("-"), YELLOW);
   }
 
   private String centredIsland(String row) {

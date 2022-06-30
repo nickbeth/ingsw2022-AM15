@@ -3,29 +3,26 @@ package it.polimi.ingsw.eriantys.cli.views;
 import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.GameInfo;
-import javafx.util.Pair;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Displays the list of games available to join, received from the server
  */
 public class GamesListView extends View {
-  private final Set<Pair<GameCode, GameInfo>> games;
+  protected Map<GameCode, GameInfo> games;
 
-  public GamesListView(Set<Pair<GameCode, GameInfo>> games) {
-    this.games = games;
+  public GamesListView(Map<GameCode, GameInfo> joinableGameList) {
+    this.games = joinableGameList;
   }
-
 
   @Override
   public void draw(CustomPrintStream o) {
     StringBuilder builder = new StringBuilder();
 
-    games.forEach(game -> {
-      String playersLine = playersContent(game.getValue());
-      GameInfo info = game.getValue();
-      GameCode code = game.getKey();
+    games.forEach((code, info) -> {
+      String playersLine = playersContent(info);
 
       // First row
       builder
@@ -49,7 +46,7 @@ public class GamesListView extends View {
           .append(System.lineSeparator());
     });
 
-    o.println(builder);
+    o.print(builder);
   }
 
   private String playersContent(GameInfo info) {
