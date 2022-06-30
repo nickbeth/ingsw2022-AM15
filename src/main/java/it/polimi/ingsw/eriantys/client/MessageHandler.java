@@ -2,10 +2,7 @@ package it.polimi.ingsw.eriantys.client;
 
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.network.Client;
-import it.polimi.ingsw.eriantys.network.Message;
-import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
-import it.polimi.ingsw.eriantys.network.MessageType;
+import it.polimi.ingsw.eriantys.network.*;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -57,6 +54,8 @@ public class MessageHandler implements Runnable {
     clientLogger.info("Handling entry: {}", entry);
     switch (message.type()) {
       case NICKNAME_OK -> handleNicknameOk(client, message);
+      case GAMELIST -> handleGameList(client, message);
+
       case GAMEINFO -> handleGameInfo(client, message);
       case START_GAME -> handleStartGame(client, message);
       case START_GAME_RECONNECTED -> handleStartGameReconnected(client, message);
@@ -82,6 +81,12 @@ public class MessageHandler implements Runnable {
   private void handleNicknameOk(Client client, Message message) {
     controller.setNickname(message.nickname());
     controller.fireChange(NICKNAME_OK, null, message.gameInfo());
+  }
+
+  private void handleGameList(Client client, Message message) {
+    GameListMessage gameListMessage = (GameListMessage) message;
+    controller.setJoinableGameList(gameListMessage.gameList());
+    controller.fireChange(GAMELIST, null, gameListMessage.gameList());
   }
 
   private void handleGameInfo(Client client, Message message) {
