@@ -50,8 +50,8 @@ abstract public class Controller implements Runnable {
   }
 
   protected GameInfo gameInfo;
-  protected Sender sender;
-  protected Client networkClient;
+  protected final Sender sender;
+  protected final Client networkClient;
   protected GameState gameState;
   protected Map<GameCode, GameInfo> joinableGameList;
 
@@ -59,7 +59,7 @@ abstract public class Controller implements Runnable {
   protected GameCode gameCode;
   protected GameCode previousGameCode;
 
-  protected PropertyChangeSupport listenerHolder;
+  protected final PropertyChangeSupport listenerHolder;
 
   public Controller(Client networkClient) {
     this.networkClient = networkClient;
