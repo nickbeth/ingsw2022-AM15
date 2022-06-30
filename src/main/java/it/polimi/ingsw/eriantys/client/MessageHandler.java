@@ -202,7 +202,6 @@ public class MessageHandler implements Runnable {
     if (message.error() != null)
       errorMessage += ": " + message.error();
 
-//    controller.showNetworkError(errorMessage);
     client.close();
     controller.fireChange(INTERNAL_SOCKET_ERROR, null, errorMessage);
   }
