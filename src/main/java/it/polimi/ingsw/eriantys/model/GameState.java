@@ -335,50 +335,6 @@ public class GameState implements Serializable {
     return false;
   }
 
-  /**
-   * Overload of method {@link #isLastPlayer(Player)}. <br>
-   * Returns the last connected player of the given gamePhase
-   *
-   * @param player player who's wanted to know
-   * @param phase  GamePhase
-   */
-  public boolean isLastPlayer(Player player, GamePhase phase) {
-    switch (phase) {
-      case PLANNING -> {
-        List<Player> connectedPlayers = planningPhaseOrder.stream().filter(Player::isConnected).toList();
-        return player.equals(connectedPlayers.get(connectedPlayers.size() - 1));
-      }
-      case ACTION -> {
-        List<Player> connectedPlayers = actionPhaseOrder.stream().filter(Player::isConnected).toList();
-        return player.equals(connectedPlayers.get(connectedPlayers.size() - 1));
-      }
-      default -> throw new AssertionError();
-    }
-  }
-
-  /**
-   * @param player1 First player involved
-   * @param player2 Second player involved
-   * @return True if player1 comes after player2 in turn order.
-   */
-  public Boolean comesAfter(Player player1, Player player2) {
-    switch (gamePhase) {
-      case PLANNING -> {
-        return planningPhaseOrder.indexOf(player1) > planningPhaseOrder.indexOf(player2);
-      }
-      case ACTION -> {
-        return actionPhaseOrder.indexOf(player1) > actionPhaseOrder.indexOf(player2);
-      }
-    }
-    return null;
-  }
-
-  public boolean notEnoughConnectedPlayer() {
-    return players.stream()
-        .filter(Player::isConnected)
-        .count() <= 1;
-  }
-
   public boolean isTurnOf(String nickname) {
     return currentPlayer.getNickname().equals(nickname);
   }
