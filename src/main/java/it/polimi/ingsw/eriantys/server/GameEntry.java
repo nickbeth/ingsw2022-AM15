@@ -118,6 +118,10 @@ public class GameEntry {
     }
   }
 
+  public void start() {
+    gameInfo.start();
+  }
+
   public String getCurrentPlayer() {
     return gameState.getCurrentPlayer().getNickname();
   }

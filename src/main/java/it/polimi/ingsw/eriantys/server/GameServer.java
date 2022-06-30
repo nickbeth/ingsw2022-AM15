@@ -395,7 +395,7 @@ public class GameServer implements Runnable {
     }
 
     // Set the game as started only once the initialization action has been executed successfully
-    gameEntry.getGameInfo().start();
+    gameEntry.start();
     serverLogger.info("Game '{}' has started", gameCode);
     broadcastMessage(gameEntry, new Message.Builder().type(MessageType.START_GAME).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).action(action).build());
   }
