@@ -133,6 +133,11 @@ public class GameServer implements Runnable {
         handleCreateGame(client, message);
         return;
       }
+
+      case GAMELIST_REQUEST -> {
+        handleGamelistRequest(client, message);
+        return;
+      }
     }
 
     // Check that the message contains a valid game code only for the types of messages that require it
@@ -188,6 +193,14 @@ public class GameServer implements Runnable {
     initHeartbeat(client);
 
     tryRejoinGame(client, message);
+  }
+
+  /**
+   * Handles a {@link MessageType#GAMELIST_REQUEST GAMELIST_REQUEST} message.
+   */
+  private void handleGamelistRequest(Client client, Message message) {
+    send(client, new GameListMessage.Builder().gameList(activeGames.getJoinableGameList()).build());
+    serverLogger.info("Sent game list to client '{}'", message.nickname());
   }
 
   /**
