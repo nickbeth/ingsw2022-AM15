@@ -5,7 +5,6 @@ import java.io.Serializable;
 import static it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum.CharacterCardType.*;
 
 public enum CharacterCardEnum implements Serializable {
-  // TODO: give CC descriptions and right cost
   IGNORE_COLOR
       (false, true, 0, COLOR_INPUT,
           "Choose a color of Student: during the influence calculation this turn, that color adds no influence."),

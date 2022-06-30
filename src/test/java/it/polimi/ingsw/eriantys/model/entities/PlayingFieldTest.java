@@ -76,7 +76,6 @@ class PlayingFieldTest {
 
   @Test
   public void doubleMerge() {
-    //TODO: modificare test per controllare il ritorno dei lock
     //merges leftIsland and RightIsland with currentIsland, index = 1
     ArrayList<Island> oldIslands = new ArrayList<>();
     p.getIsland(2).setTowerColor(TowerColor.BLACK);

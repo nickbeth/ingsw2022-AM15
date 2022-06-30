@@ -49,7 +49,6 @@ public class RefillClouds extends GameAction {
     RuleBook rules = gameState.getRuleBook();
     List<Cloud> gameClouds = gameState.getPlayingField().getClouds();
 
-    // TODO: test
     // fill disconnected player entrances
     List<Player> players = gameState.getPlayers();
     players.stream()

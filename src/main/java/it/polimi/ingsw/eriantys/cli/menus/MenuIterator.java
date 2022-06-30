@@ -151,7 +151,6 @@ public class MenuIterator implements PropertyChangeListener {
           }
         }
       }
-      // Todo: test WIN screen update
       case WIN -> {
         return makeMenu(MenuEnum.END);
       }
