@@ -16,11 +16,14 @@ public class ActivateCCEffect extends GameAction {
    * Activate the effect of the played character card
    */
   @Override
-  public void apply(GameState gameState) {
-    PlayingField p = gameState.getPlayingField();
+  public void apply(GameState game) {
+    PlayingField p = game.getPlayingField();
 
     p.setPlayedCharacterCard(cc);
-    p.getPlayedCharacterCard().applyEffect(gameState);
+    p.getPlayedCharacterCard().applyEffect(game);
+
+    description = String.format("'%s' has applied %s effect.",
+        game.getCurrentPlayer(), p.getPlayedCharacterCard().getCardEnum());
   }
 
   /**

@@ -14,11 +14,14 @@ public class ChooseCharacterCard extends GameAction {
     this.ccIndex = ccIndex;
   }
 
-  //
+  /**
+   * Applies the effect of the previously played card by {@link ChooseCharacterCard} action
+   */
   @Override
-  public void apply(GameState gameState) {
-    PlayingField p = gameState.getPlayingField();
+  public void apply(GameState game) {
+    PlayingField p = game.getPlayingField();
     p.setPlayedCharacterCard(ccIndex);
+
     modelLogger.info("Character card {} chosen", ccIndex);
   }
 

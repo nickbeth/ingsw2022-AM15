@@ -10,6 +10,7 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MoveStudentsToIsland extends GameAction {
@@ -22,23 +23,36 @@ public class MoveStudentsToIsland extends GameAction {
   }
 
   /**
-   * moves students from entrance to island,
+   * Moves students from entrance to island,
    * if this is the last allowed movement it advances turn phase
    */
   @Override
-  public void apply(GameState gameState) {
+  public void apply(GameState game) {
     // Moves students
-    Slot currEntrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
-    Slot destination = gameState.getPlayingField().getIsland(islandIndex);
+    Slot currEntrance = game.getCurrentPlayer().getDashboard().getEntrance();
+    Slot destination = game.getPlayingField().getIsland(islandIndex);
     StudentsMovement move = new StudentsMovement(students, currEntrance, destination);
     GameService.placeStudents(move);
 
     // Manage advance phase
-    Students entrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
-    RuleBook rules = gameState.getRuleBook();
+    Students entrance = game.getCurrentPlayer().getDashboard().getEntrance();
+    RuleBook rules = game.getRuleBook();
+
+    description = String.format("'%s' has moved %s to island %s",
+        game.getCurrentPlayer(), studentMessage(students), islandIndex);
 
     if (entrance.getCount() == rules.entranceSize - rules.playableStudentCount)
-      gameState.advance();
+      game.advance();
+  }
+
+  private String studentMessage(Students students) {
+    String baseMessage = Arrays.stream(HouseColor.values()).map(color ->
+        String.format("%s-%s ", students.getCount(color), color)
+    ).reduce(String::concat).toString();
+
+    return students.getCount() == 1 ?
+        baseMessage + " student" :
+        baseMessage + " students";
   }
 
   /**

@@ -28,6 +28,9 @@ public class MoveMotherNature extends GameAction {
     playingField.moveMotherNature(amount);
     Integer motherNaturePos = playingField.getMotherNaturePosition();
 
+    description = String.format("'%s' has moved mother nature %s islands.",
+        game.getCurrentPlayer(), amount);
+
     // Apply her effect
     GameService.applyMotherNatureEffect(motherNaturePos, playingField, players);
 

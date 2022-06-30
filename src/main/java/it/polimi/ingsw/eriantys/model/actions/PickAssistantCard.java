@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.model.actions;
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
+import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 
@@ -22,15 +23,29 @@ public class PickAssistantCard extends GameAction {
   }
 
   @Override
-  public void apply(GameState gameState) {
+  public void apply(GameState game) {
+    Player currentPlayer = game.getCurrentPlayer();
+
     // Pick the cards
-    GameService.pickAssistantCard(gameState.getCurrentPlayer(), cardIndex);
+    GameService.pickAssistantCard(currentPlayer, cardIndex);
+
+    AssistantCard card = currentPlayer.getChosenCard().get();
+
+    description = String.format("'%s' picked assistant card %s which grants %s ",
+        currentPlayer, card.value, card.movement);
+
+    description += card.movement == 1 ? "move" : "moves";
 
     // Manage advance phase
-    gameState.advance();
+    game.advance();
   }
 
-  // todo javadoc
+  /**
+   * @return False if: <br>
+   * - another player has played the chosen card when it could've been played a different one <br>
+   * - the cardIndex is in range <br>
+   * - the phase is PLANNING
+   */
   @Override
   public boolean isValid(GameState gameState) {
     Player currPlayer = gameState.getCurrentPlayer();

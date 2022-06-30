@@ -41,33 +41,30 @@ public class PickCloud extends GameAction {
     }
   }
 
-  public PickCloud(int index) {
-    this.cloudIndex = index;
-  }
-
   /**
    * Gets students from pickedCloud and puts them onto the players entrance. <br>
    * If player is the last connected one refill clouds.<br>
    * Calls advance().
    */
   @Override
-  public void apply(GameState gameState) {
-    Cloud cloud = gameState.getPlayingField().getCloud(cloudIndex);
-    Dashboard dashboard = gameState.getCurrentPlayer().getDashboard();
+  public void apply(GameState game) {
+    Cloud cloud = game.getPlayingField().getCloud(cloudIndex);
+    Dashboard dashboard = game.getCurrentPlayer().getDashboard();
 
     // Checks if the player needs to pick a cloud. This is needed in case of in turn disconnection
-    if (cloud.getStudents().getCount() + dashboard.getEntrance().getCount() == gameState.getRuleBook().entranceSize) {
+    if (cloud.getStudents().getCount() + dashboard.getEntrance().getCount() == game.getRuleBook().entranceSize) {
       GameService.pickCloud(cloud, dashboard);
+      description = String.format("'%s' picked %s cloud",
+          game.getCurrentPlayer(), cloudIndex);
     }
 
-
-    shouldRefill = gameState.isLastPlayer(gameState.getCurrentPlayer());
+    shouldRefill = game.isLastPlayer(game.getCurrentPlayer());
     if (shouldRefill) {
-      RuleBook rules = gameState.getRuleBook();
-      List<Cloud> gameClouds = gameState.getPlayingField().getClouds();
+      RuleBook rules = game.getRuleBook();
+      List<Cloud> gameClouds = game.getPlayingField().getClouds();
 
       // Eventually refill disconnected player entrances
-      List<Player> players = gameState.getPlayers();
+      List<Player> players = game.getPlayers();
       players.stream()
           .map(p -> p.getDashboard().getEntrance())
           .forEach(entrance -> {
@@ -79,15 +76,18 @@ public class PickCloud extends GameAction {
             }
           });
 
-      StudentBag studentBag = gameState.getPlayingField().getStudentBag();
+      StudentBag studentBag = game.getPlayingField().getStudentBag();
 
       // Refill clouds
       GameService.refillClouds(studentBag, gameClouds, clouds);
-      gameState.getPlayers().forEach(Player::unsetAssistantChosenCard);
+
+      description += "\nClouds refilled";
+      game.getPlayers().forEach(Player::unsetAssistantChosenCard);
     }
-    gameState.advance();
+    game.advance();
   }
 
+  // Returns the first non-empty cloud between the given
   private Cloud firstNonEmptyCloud(List<Cloud> gameClouds) {
     for (var cloud : gameClouds) {
       if (!cloud.isEmpty()) return cloud;
@@ -112,13 +112,10 @@ public class PickCloud extends GameAction {
   }
 
   /**
-   * If the clouds need to be refilled<br>
-   * Checks: <br/>
-   * - If the list of given students is the right size <br/>
-   * - If the given students are the right amount<br>
-   * Then checks:<br>
-   * - If the cloud index is allowed<br>
-   * - If the picked cloud is empty<br>
+   * @return False if:<br>
+   * - the cloud index is not in range<br>
+   * - the picked cloud is empty<br>
+   * - the phase is ACTION and the turn is PICKING
    */
   @Override
   public boolean isValid(GameState gameState) {

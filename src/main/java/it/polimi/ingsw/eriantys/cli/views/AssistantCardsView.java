@@ -3,6 +3,7 @@ package it.polimi.ingsw.eriantys.cli.views;
 import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
+import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -68,13 +69,13 @@ public class AssistantCardsView extends View {
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.println(centredTitle("ASSISTANT CARDS"));
+    o.println(centredTitle("ASSISTANT CARDS"), HouseColor.YELLOW);
 
     // Write the content
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.println(centredTitle("-"));
+    o.println(centredTitle("-"), HouseColor.YELLOW);
   }
 
   private String drawAssistantCard(AssistantCard card, int index) {
@@ -128,6 +129,6 @@ public class AssistantCardsView extends View {
     int baseRowLength = ("╰───────────╯" + PADDING_FROM_EACH_CARD).repeat(maxColumns).length() - PADDING_FROM_EACH_CARD.length();
     int nPadding = (baseRowLength / 2) - (int) (Math.floor((double) title.length() / 2));
 
-    return "-".repeat(nPadding) + title + "-".repeat(nPadding-1);
+    return "-".repeat(nPadding) + title + "-".repeat(nPadding - 1);
   }
 }

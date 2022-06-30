@@ -12,6 +12,8 @@ import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 
+import java.util.Arrays;
+
 public class MoveStudentsToDiningHall extends GameAction {
   private final Students students;
 
@@ -24,31 +26,44 @@ public class MoveStudentsToDiningHall extends GameAction {
    * If this is the last allowed movement it advances turn phase.
    */
   @Override
-  public void apply(GameState gameState) {
+  public void apply(GameState game) {
     // Moves students
-    Player player = gameState.getCurrentPlayer();
+    Player player = game.getCurrentPlayer();
     Slot currEntrance = player.getDashboard().getEntrance();
     Slot destination = player.getDashboard().getDiningHall();
 
     //In expert mode, if a student was placed on a coin icon give the player a coin
-    if (gameState.getRuleBook().gameMode == GameMode.EXPERT) {
+    if (game.getRuleBook().gameMode == GameMode.EXPERT) {
       GameService.updatePlayerCoins(students, player);
     }
 
     StudentsMovement move = new StudentsMovement(students, currEntrance, destination);
     GameService.placeStudents(move);
 
-    // Updates professor holder
-    ProfessorHolder professorHolder = gameState.getPlayingField().getProfessorHolder();
+    description = String.format("'%s' has moved %s to his dashboard",
+        game.getCurrentPlayer(), studentMessage(students));
 
-    GameService.updateProfessors(professorHolder, gameState.getDashboards());
+    // Updates professor holder
+    ProfessorHolder professorHolder = game.getPlayingField().getProfessorHolder();
+
+    GameService.updateProfessors(professorHolder, game.getDashboards());
 
     // Manage advance phase
-    Students entrance = gameState.getCurrentPlayer().getDashboard().getEntrance();
-    RuleBook rules = gameState.getRuleBook();
+    Students entrance = game.getCurrentPlayer().getDashboard().getEntrance();
+    RuleBook rules = game.getRuleBook();
 
     if (entrance.getCount() == rules.entranceSize - rules.playableStudentCount)
-      gameState.advance();
+      game.advance();
+  }
+
+  private String studentMessage(Students students) {
+    String baseMessage = Arrays.stream(HouseColor.values()).map(color ->
+        String.format("%s-%s ", students.getCount(color), color)
+    ).reduce(String::concat).toString();
+
+    return students.getCount() == 1 ?
+        baseMessage + " student" :
+        baseMessage + " students";
   }
 
   /**
@@ -76,6 +91,6 @@ public class MoveStudentsToDiningHall extends GameAction {
       return false;
 
     return gameState.getTurnPhase() == TurnPhase.PLACING &&
-            gameState.getGamePhase() == GamePhase.ACTION;
+        gameState.getGamePhase() == GamePhase.ACTION;
   }
 }
