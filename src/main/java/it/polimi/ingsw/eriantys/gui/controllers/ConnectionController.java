@@ -18,10 +18,6 @@ public class ConnectionController extends FXMLController {
   @FXML
   private TextField nicknameField;
   @FXML
-  private Button backButton;
-  @FXML
-  private Button confirm;
-  @FXML
   private Label errorMessage;
   @FXML
   private TextField serverIpField;

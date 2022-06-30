@@ -17,9 +17,17 @@ public abstract class FXMLController implements PropertyChangeListener {
   public void updateAll() {
   }
 
+  /**
+   * Method that's called at the beginning of a Scene Controller life cycle
+   * The implementation of this method provided by the FXMLController class does nothing.
+   */
   public void start() {
   }
 
+  /**
+   * Method that's called at the end of a Scene Controller life cycle
+   * The implementation of this method provided by the FXMLController class does nothing.
+   */
   public void finish() {
   }
 }

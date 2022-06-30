@@ -45,7 +45,7 @@ public class Gui extends Application implements PropertyChangeListener {
   }
 
   /**
-   * closes the current stage
+   * Closes the current stage, and removes this as listener for any event
    */
   public void closeApplication() {
     Controller.get().removeListener(this, INTERNAL_SOCKET_ERROR.tag);
@@ -74,7 +74,7 @@ public class Gui extends Application implements PropertyChangeListener {
   }
 
   /**
-   * Calls finish on old scene controller, loads the next scene, calls start and updatAll on the next scene controller
+   * Calls finish on old scene controller, loads the next scene, calls start and updateAll on the next scene controller
    *
    */
   public void setScene(SceneEnum scene) {
@@ -104,6 +104,10 @@ public class Gui extends Application implements PropertyChangeListener {
     stage.show();
   }
 
+  /**
+   * If for any reason an internal socket error happens the gui returns to the Main menu scene
+   * @param evt
+   */
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     setScene(SceneEnum.MENU);

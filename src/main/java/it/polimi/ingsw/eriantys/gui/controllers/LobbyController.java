@@ -31,13 +31,17 @@ public class LobbyController extends FXMLController {
 
   private GameInfo gameInfo;
 
+  /**
+   * Tries to start a game
+   */
   @FXML
   private void startGameAction(ActionEvent actionEvent) {
     if (!Controller.get().sender().sendStartGame()) {
-      errorMessage.setText("not enough players with a chosen color to start");
+      errorMessage.setText("Not enough players with a chosen color to start");
       errorMessage.setVisible(true);
     }
   }
+
 
   @FXML
   public void changeColorAction(ActionEvent actionEvent) {
@@ -83,6 +87,9 @@ public class LobbyController extends FXMLController {
     setDefaultValues();
   }
 
+  /**
+   * Sets the default value in choice box to the first available color
+   */
   private void setDefaultValues() {
     //sets the default value in choice box to the first available color
     gameInfo = Controller.get().getGameInfo();

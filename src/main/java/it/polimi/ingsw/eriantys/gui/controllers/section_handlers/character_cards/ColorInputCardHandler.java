@@ -31,7 +31,7 @@ public class ColorInputCardHandler extends CharacterCardHandler {
 
   /**
    * - Calls super.refresh()<br>
-   * - Refreshes visibility of the student Images and the red "close window" cross.<br>
+   * - Refreshes visibility of the student Images.<br>
    */
   @Override
   protected void refresh() {

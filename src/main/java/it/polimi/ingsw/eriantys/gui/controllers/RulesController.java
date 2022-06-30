@@ -25,10 +25,9 @@ public class RulesController extends FXMLController {
    */
   @FXML
   private void backButtonAction(ActionEvent actionEvent) {
-    currPage = 1;
     gui.setScene(SceneEnum.MENU);
   }
-  
+
   @FXML
   public void goNextPage(ActionEvent actionEvent) {
     nextPage.setVisible(currPage < 6);
