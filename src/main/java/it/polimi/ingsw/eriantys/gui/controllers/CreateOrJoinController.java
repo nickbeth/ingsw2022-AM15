@@ -3,21 +3,35 @@ package it.polimi.ingsw.eriantys.gui.controllers;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.gui.SceneEnum;
 import it.polimi.ingsw.eriantys.model.GameCode;
+import it.polimi.ingsw.eriantys.model.GameInfo;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 
 
 public class CreateOrJoinController extends FXMLController implements PropertyChangeListener {
+  @FXML
+  private Group lobbysGroup;
+  @FXML
+  private VBox gameLobbysBox;
   @FXML
   private Label errorMessage;
   @FXML
@@ -79,7 +93,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   }
 
   /**
-   * Displays joinGame controls, hides createGame controls
+   * Displays joinGame controls and lobbies, hides createGame controls
    */
   @FXML
   private void joinGame(ActionEvent actionEvent) {
@@ -116,11 +130,14 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
    */
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
+
     if (evt.getPropertyName().equals(GAMEINFO_EVENT.tag))
       gui.setScene(SceneEnum.LOBBY);
-    else {
+    else if (evt.getPropertyName().equals(START_GAME.tag))
       gui.setScene(SceneEnum.GAME);
-    }
+    else if (evt.getPropertyName().equals(GAMELIST.tag))
+      refreshLobbies();
+
   }
 
   @Override
@@ -129,6 +146,8 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
     setDefaultValues();
     Controller.get().addListener(this, GAMEINFO_EVENT.tag);
     Controller.get().addListener(this, START_GAME.tag);
+    Controller.get().addListener(this, GAMELIST.tag);
+    onClickRefresh();
   }
 
   @Override
@@ -136,5 +155,43 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
     super.finish();
     Controller.get().removeListener(this, GAMEINFO_EVENT.tag);
     Controller.get().removeListener(this, START_GAME.tag);
+    Controller.get().removeListener(this, GAMELIST.tag);
   }
+
+  @FXML
+  private void onClickRefresh() {
+    Controller.get().sender().sendGamelistRequest();
+  }
+
+  private void refreshLobbies() {
+    Set<Map.Entry<GameCode, GameInfo>> lobbies = Controller.get().getJoinableGameList().entrySet();
+    gameLobbysBox.getChildren().clear();
+    AtomicInteger i = new AtomicInteger();
+    lobbies.forEach(entry -> {
+      i.getAndIncrement();
+      GameCode code = entry.getKey();
+      GameInfo info = entry.getValue();
+      VBox rowBox = new VBox();
+      if (i.get() % 2 == 0)
+        rowBox.setBackground(Background.fill(Color.rgb(245, 235, 198)));
+      Text gameCode = new Text("CODE: " + code);
+      Text numberOfPlayers = new Text(info.getJoinedPlayers().size() + "/" + info.getMaxPlayerCount() + " Players");
+      Text gameMode = new Text("GameMode: " + info.getMode());
+      rowBox.getChildren().add(gameCode);
+      rowBox.getChildren().add(numberOfPlayers);
+      rowBox.getChildren().add(gameMode);
+      rowBox.setPadding(new Insets(4));
+      rowBox.setCursor(Cursor.HAND);
+      rowBox.setOnMouseClicked((event) -> {
+        try {
+          Controller.get().sender().sendJoinGame(code);
+        } catch (GameCode.GameCodeException e) {
+          errorMessage.setText("please select an invalid gameCode to start a game");
+          errorMessage.setVisible(true);
+        }
+      });
+      gameLobbysBox.getChildren().add(rowBox);
+    });
+  }
+
 }

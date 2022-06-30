@@ -21,7 +21,7 @@ public enum EventType {
 
 
   ;
-  public String tag;
+  public final String tag;
 
   EventType(String tag) {
     this.tag = tag;
