@@ -65,7 +65,7 @@
          </font></Label>
         <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#backButton" text="back" />
         <Group fx:id="lobbysGroup" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="151.0">
-      <ScrollPane layoutX="98.0" layoutY="152.0" maxHeight="200.0" maxWidth="267.0" minHeight="85.0" minWidth="145.0" AnchorPane.leftAnchor="98.0">
+      <ScrollPane layoutX="98.0" layoutY="152.0" maxHeight="200.0" maxWidth="140.0" minHeight="55.0" minWidth="140.0" AnchorPane.leftAnchor="98.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -74,7 +74,7 @@
             </AnchorPane>
         </content>
       </ScrollPane>
-            <Button layoutX="248.0" layoutY="152.0" mnemonicParsing="false" onAction="#onClickRefresh" text="refresh" />
+            <Button layoutX="242.0" layoutY="152.0" mnemonicParsing="false" onAction="#onClickRefresh" text="refresh" />
         </Group>
 
     </children>
