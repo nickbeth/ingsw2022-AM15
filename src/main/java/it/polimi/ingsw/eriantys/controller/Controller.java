@@ -57,6 +57,7 @@ abstract public class Controller implements Runnable {
 
   protected String nickname;
   protected GameCode gameCode;
+  protected GameCode previousGameCode;
 
   protected PropertyChangeSupport listenerHolder;
 
@@ -182,6 +183,10 @@ abstract public class Controller implements Runnable {
 
   public void setGameCode(GameCode gameCode) {
     this.gameCode = gameCode;
+  }
+
+  public GameCode getPreviousGameCode() {
+    return previousGameCode;
   }
 
   public Map<GameCode, GameInfo> getJoinableGameList() {
@@ -443,6 +448,11 @@ abstract public class Controller implements Runnable {
           .gameCode(gameCode)
           .build();
       networkClient.send(msg);
+
+      previousGameCode = gameCode;
+      gameCode = null;
+      gameInfo = null;
+      gameState = null;
 
       clientLogger.info("Sent message {} to the server", msg);
     }

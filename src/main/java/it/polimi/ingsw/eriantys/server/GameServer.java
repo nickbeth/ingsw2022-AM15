@@ -138,6 +138,16 @@ public class GameServer implements Runnable {
         handleGamelistRequest(client, message);
         return;
       }
+
+      case QUIT_GAME -> {
+        handleQuitGame(client, message);
+        return;
+      }
+
+      case INTERNAL_SOCKET_ERROR -> {
+        // Ignored
+        return;
+      }
     }
 
     // Check that the message contains a valid game code only for the types of messages that require it
@@ -148,7 +158,6 @@ public class GameServer implements Runnable {
 
     switch (message.type()) {
       case JOIN_GAME -> handleJoinGame(client, message);
-      case QUIT_GAME -> handleQuitGame(client, message);
       case SELECT_TOWER -> handleSelectTower(client, message);
 
       case START_GAME -> handleStartGame(client, message);
