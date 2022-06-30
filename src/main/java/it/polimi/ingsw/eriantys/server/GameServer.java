@@ -6,10 +6,8 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.actions.*;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
-import it.polimi.ingsw.eriantys.network.Client;
-import it.polimi.ingsw.eriantys.network.Message;
-import it.polimi.ingsw.eriantys.network.MessageQueueEntry;
-import it.polimi.ingsw.eriantys.network.MessageType;
+import it.polimi.ingsw.eriantys.network.*;
+import org.javatuples.Pair;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -47,7 +45,7 @@ public class GameServer implements Runnable {
   /**
    * A map from a {@link GameCode} to a {@link GameEntry}, representing all the games currently active on the server
    */
-  private final Map<GameCode, GameEntry> activeGames;
+  private final GameList activeGames;
 
   /**
    * A set of all active nicknames on the server
@@ -69,7 +67,7 @@ public class GameServer implements Runnable {
     this.deleteTimeout = deleteTimeout;
     this.messageQueue = messageQueue;
     this.scheduledExecutorService = Executors.newScheduledThreadPool(1);
-    this.activeGames = new ConcurrentHashMap<>();
+    this.activeGames = new GameList();
     this.activeNicknames = ConcurrentHashMap.newKeySet();
     this.disconnectedPlayers = new ConcurrentHashMap<>();
   }
@@ -229,7 +227,6 @@ public class GameServer implements Runnable {
    */
   private void handleCreateGame(Client client, Message message) {
     String nickname = message.nickname();
-    GameCode gameCode = GameCode.generateUnique(activeGames.keySet());
 
     var attachment = (ClientAttachment) client.attachment();
     if (attachment == null) {
@@ -247,10 +244,12 @@ public class GameServer implements Runnable {
       return;
     }
 
-    attachment.setGameCode(gameCode);
-    GameEntry gameEntry = new GameEntry(message.gameInfo());
+    Pair<GameCode, GameEntry> gameEntryPair = activeGames.create(message.gameInfo());
+    GameCode gameCode = gameEntryPair.getValue0();
+    GameEntry gameEntry = gameEntryPair.getValue1();
+
     gameEntry.addPlayer(nickname, client);
-    activeGames.put(gameCode, gameEntry);
+    attachment.setGameCode(gameCode);
 
     serverLogger.info("Player '{}' created a new game: {}", nickname, gameCode);
     send(client, new Message.Builder().type(MessageType.GAMEINFO).gameCode(gameCode).gameInfo(gameEntry.getGameInfo()).build());
