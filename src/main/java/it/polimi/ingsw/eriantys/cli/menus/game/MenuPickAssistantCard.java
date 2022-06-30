@@ -33,7 +33,6 @@ public class MenuPickAssistantCard extends MenuGame {
 
     while (true) {
       if (!gamePhase().equals(GamePhase.PLANNING)) {
-        // out.println("You're in the wrong phase.", RED);
         return null;
       }
 

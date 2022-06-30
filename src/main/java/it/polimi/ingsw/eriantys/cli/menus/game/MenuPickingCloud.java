@@ -34,7 +34,6 @@ public class MenuPickingCloud extends MenuGame {
 
     while (true) {
       if (!turnPhase().equals(TurnPhase.PICKING) || !gamePhase().equals(GamePhase.ACTION)) {
-        // out.println("You're in the wrong phase.", RED);
         return null;
       }
 

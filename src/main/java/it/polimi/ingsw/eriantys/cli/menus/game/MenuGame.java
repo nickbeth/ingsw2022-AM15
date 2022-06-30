@@ -146,6 +146,7 @@ public abstract class MenuGame extends Menu {
    * Handle common view options of the GameState
    */
   final protected void handleViewOptions(String choice) {
+    boolean refreshMenu = true;
 
     switch (choice) {
       // View all field
@@ -198,10 +199,10 @@ public abstract class MenuGame extends Menu {
         if (rules().gameMode.equals(GameMode.EXPERT))
           characterCardsView().draw(out);
       }
-      default -> {
-      }
+      default -> refreshMenu = false;
     }
-    showOptions();
+    if (refreshMenu)
+      showOptions();
   }
 
   /**
@@ -224,7 +225,8 @@ public abstract class MenuGame extends Menu {
     super.propertyChange(evt);
 
     // Force the return of the menus
-    if (Arrays.asList(GAMEDATA_EVENT.tag,
+    if (Arrays.asList(
+            GAMEDATA_EVENT.tag,
             PLAYER_CONNECTION_CHANGED.tag,
             END_GAME.tag)
         .contains(evt.getPropertyName())) {
@@ -235,7 +237,7 @@ public abstract class MenuGame extends Menu {
     // Refresh view and print what's happened
     if (evt.getPropertyName().equals(GAMEDATA_EVENT.tag)) {
       String actionDescription = (String) evt.getNewValue();
-      out.println(actionDescription, GREEN);
+      out.print("\n\n" + actionDescription, GREEN);
     }
 
     if (evt.getPropertyName().equals(PLAYER_CONNECTION_CHANGED.tag)) {
