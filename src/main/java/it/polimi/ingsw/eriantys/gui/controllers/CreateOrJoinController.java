@@ -120,7 +120,7 @@ public class CreateOrJoinController extends FXMLController implements PropertyCh
   private void setDefaultValues() {
     playerNumberChoice.setValue(2);
     gameModeChoice.setValue(GameMode.NORMAL);
-    GameCode gameCode = Controller.get().getGameCode();
+    GameCode gameCode = Controller.get().getPreviousGameCode();
     if (gameCode != null)
       gameUidField.setText(gameCode.toString());
   }
