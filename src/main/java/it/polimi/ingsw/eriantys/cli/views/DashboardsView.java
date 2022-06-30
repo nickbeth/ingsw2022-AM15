@@ -69,13 +69,13 @@ public class DashboardsView extends View {
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.println(centredTitle("DASHBOARDS"),YELLOW);
+    o.println(centredTitle("DASHBOARDS"), YELLOW);
 
     // Write the content
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.println(centredTitle(""),YELLOW);
+    o.println(centredTitle(""), YELLOW);
   }
 
 

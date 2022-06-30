@@ -47,8 +47,8 @@ public class CharacterCardCreator {
       }
       case FORCE_MOTHER_NATURE_EFFECTS -> {
         return new IslandInputCards(((gameState, islandIndex) ->
-                CardService.forceMotherNatureEffects(islandIndex,
-                        gameState.getPlayingField(), gameState.getPlayers())
+            CardService.forceMotherNatureEffects(islandIndex,
+                gameState.getPlayingField(), gameState.getPlayers())
         ), playedCard);
       }
       case ADD_TO_MOTHER_NATURE_MOVES -> {

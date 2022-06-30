@@ -1,4 +1,3 @@
-
 package it.polimi.ingsw.eriantys.cli.menus;
 
 import it.polimi.ingsw.eriantys.cli.CustomPrintStream;

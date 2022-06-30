@@ -6,7 +6,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 
 public class GuiController extends Controller {
-
   public GuiController(Client networkClient) {
     super(networkClient);
   }
@@ -15,6 +14,7 @@ public class GuiController extends Controller {
   public void showError(String error) {
     Platform.runLater(() -> Gui.showError(error));
   }
+
   @Override
   public void fireChange(EventType event, Object oldValue, Object newValue) {
     Platform.runLater(() -> listenerHolder.firePropertyChange(event.tag, null, null));
@@ -24,5 +24,4 @@ public class GuiController extends Controller {
   public void run() {
     Application.launch(Gui.class);
   }
-
 }

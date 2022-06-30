@@ -3,7 +3,6 @@ package it.polimi.ingsw.eriantys.model.actions;
 import it.polimi.ingsw.eriantys.model.GameService;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
-import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 

@@ -17,7 +17,6 @@ import java.net.URL;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
 
-
 public class Gui extends Application implements PropertyChangeListener {
   private Stage stage;
   private SceneEnum currScene;
@@ -72,7 +71,6 @@ public class Gui extends Application implements PropertyChangeListener {
 
   /**
    * Calls finish on old scene controller, loads the next scene, calls start and updateAll on the next scene controller
-   *
    */
   public void setScene(SceneEnum scene) {
     if (controller != null)

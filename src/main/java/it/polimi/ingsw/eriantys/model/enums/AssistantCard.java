@@ -40,8 +40,8 @@ public enum AssistantCard {
   @Override
   public String toString() {
     return "AssistantCard{" +
-            "value=" + value +
-            ", movement=" + movement +
-            '}';
+        "value=" + value +
+        ", movement=" + movement +
+        '}';
   }
 }

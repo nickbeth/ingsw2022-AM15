@@ -9,7 +9,8 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import java.util.Arrays;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING_TRIPLE;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 
 public class PlayersView extends View {
   private final List<Player> players;

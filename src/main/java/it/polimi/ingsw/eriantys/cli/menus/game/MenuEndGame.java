@@ -23,7 +23,7 @@ public class MenuEndGame extends MenuGame {
   @Override
   public MenuEnum show() {
     out.println();
-    out.println(centred("GAME ENDED"),GREEN);
+    out.println(centered("GAME ENDED"), GREEN);
     View endScreen = new ViewGroup()
         .addView(islandsView())
         .addView(dashboardsView())
@@ -43,7 +43,7 @@ public class MenuEndGame extends MenuGame {
 
     out.println("Game ended, see the game above.");
     out.println(result.toString(), GREEN);
-    out.println(centred("GAME ENDED"),GREEN);
+    out.println(centered("GAME ENDED"), GREEN);
     out.println();
 
     out.println("PRESS ANY KEY CONTINUE.");
@@ -52,7 +52,7 @@ public class MenuEndGame extends MenuGame {
     return MenuEnum.CREATE_OR_JOIN;
   }
 
-  private String centred(String word) {
+  private String centered(String word) {
     StringBuilder baseRow = new StringBuilder(baseSeparator);
     int baseRowLength = baseRow.length();
 

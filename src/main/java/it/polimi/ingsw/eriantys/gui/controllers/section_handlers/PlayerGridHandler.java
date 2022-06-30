@@ -46,7 +46,7 @@ public class PlayerGridHandler extends SectionHandler {
     cardAmounts.forEach((label, player) -> label.setText("×" + player.getCards().size()));
 
     towerAmounts.forEach((label, player) ->
-      label.setText("×" + player.getDashboard().getTowers().count)
+        label.setText("×" + player.getDashboard().getTowers().count)
     );
 
     if (gameState.getRuleBook().gameMode == GameMode.EXPERT)

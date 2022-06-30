@@ -171,14 +171,14 @@ public class IslandHandler extends SectionHandler {
 
   private void dragOverIsland(DragEvent e) {
     if (!gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname()) ||
-            gameState.getGamePhase() != GamePhase.ACTION) {
+        gameState.getGamePhase() != GamePhase.ACTION) {
       // if its not the right gamePhase or player doesn't accept any transfer mode
       e.acceptTransferModes(TransferMode.NONE);
       return;
     }
 
     if (gameState.getTurnPhase() == TurnPhase.PLACING &&
-            e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format)) {
+        e.getDragboard().getContentTypes().contains(DataFormats.HOUSE_COLOR.format)) {
       if (!island.isLocked()) {
         e.acceptTransferModes(TransferMode.ANY);
         return;
@@ -186,13 +186,13 @@ public class IslandHandler extends SectionHandler {
     }
 
     if (gameState.getTurnPhase() == TurnPhase.MOVING &&
-            e.getDragboard().getContentTypes().contains(DataFormats.MOTHER_NATURE.format)) {
+        e.getDragboard().getContentTypes().contains(DataFormats.MOTHER_NATURE.format)) {
       e.acceptTransferModes(TransferMode.ANY);
       return;
     }
 
     if (gameState.getTurnPhase() != TurnPhase.PICKING &&
-            e.getDragboard().getContentTypes().contains(DataFormats.CARD_TO_ISLAND.format)) {
+        e.getDragboard().getContentTypes().contains(DataFormats.CARD_TO_ISLAND.format)) {
       e.acceptTransferModes(TransferMode.MOVE);
       return;
     }

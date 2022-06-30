@@ -70,17 +70,17 @@ public class AssistCardHandler extends SectionHandler {
       img.setId(card.toString());
       img.setPreserveRatio(true);
       //gray out a card if it has already been played by others
-      if (!isCardPlayable(card)){
+      if (!isCardPlayable(card)) {
         ColorAdjust filter = new ColorAdjust();
         filter.setSaturation(-1);
         Blend blush = new Blend(BlendMode.MULTIPLY, filter,
-                new ColorInput(
-                        0,
-                        0,
-                        img.getImage().getRequestedWidth(),
-                        img.getImage().getRequestedHeight(),
-                        Color.GRAY
-                )
+            new ColorInput(
+                0,
+                0,
+                img.getImage().getRequestedWidth(),
+                img.getImage().getRequestedHeight(),
+                Color.GRAY
+            )
         );
         img.setEffect(blush);
       }
@@ -119,7 +119,7 @@ public class AssistCardHandler extends SectionHandler {
 
   private void playAssistCardAction(AssistantCard card) {
     int index = gameState
-            .getPlayer(Controller.get().getNickname()).getCards().indexOf(card);
+        .getPlayer(Controller.get().getNickname()).getCards().indexOf(card);
     if (!Controller.get().sender().sendPickAssistantCard(index))
       debugScreenHandler.showMessage("error assist card action invalid");
     else

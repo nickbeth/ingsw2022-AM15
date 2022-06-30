@@ -35,8 +35,8 @@ public interface CardService {
   /**
    * Modified the influences based on the ignored color. Influence must be updated first
    *
-   * @param islands Islands Set
-   * @param ignoredColor color to ignore
+   * @param islands                    Islands Set
+   * @param ignoredColor               color to ignore
    * @param teamOwningIgnoredProfessor
    */
   static void ignoreColor(List<Island> islands, HouseColor ignoredColor, TowerColor teamOwningIgnoredProfessor) {
@@ -92,8 +92,8 @@ public interface CardService {
    * Force Mother Nature effects
    *
    * @param islandIndex island of index where effect needs to be forced
-   * @param field game's playing field
-   * @param players players of the game
+   * @param field       game's playing field
+   * @param players     players of the game
    */
   static void forceMotherNatureEffects(int islandIndex, PlayingField field, List<Player> players) {
     if (field.getIsland(islandIndex).isLocked()) {
@@ -155,6 +155,7 @@ public interface CardService {
 
   /**
    * Lock the given island and remove locks from playing field
+   *
    * @param island
    * @param playingField
    */

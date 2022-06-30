@@ -17,7 +17,7 @@ public class Cloud implements Serializable {
     students.setStudents(s);
   }
 
-  public boolean isEmpty(){
+  public boolean isEmpty() {
     return students.isEmpty();
   }
 }

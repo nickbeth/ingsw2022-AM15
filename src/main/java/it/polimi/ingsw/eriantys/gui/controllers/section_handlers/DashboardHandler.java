@@ -144,7 +144,7 @@ public class DashboardHandler extends SectionHandler {
    * Creates a student ImageView containing de icon of given color
    */
   private ImageView createStudent(HouseColor color) {
-    ImageView student = new ImageView(new Image(studentColorToPath.get(color), 20, 100,true, false));
+    ImageView student = new ImageView(new Image(studentColorToPath.get(color), 20, 100, true, false));
     student.setFitWidth(20);
     student.setPreserveRatio(true);
     GridPane.setHalignment(student, HPos.CENTER);
@@ -164,7 +164,7 @@ public class DashboardHandler extends SectionHandler {
         ImageView prof = createProfessor(color);
         professors[color.ordinal()] = prof;
         professorGrid.add(prof, color.ordinal(), 0);
-      } else if (!profHold.hasProfessor(team, color) && professors[color.ordinal()] != null){
+      } else if (!profHold.hasProfessor(team, color) && professors[color.ordinal()] != null) {
         professorGrid.getChildren().remove(professors[color.ordinal()]);
         professors[color.ordinal()] = null;
       }

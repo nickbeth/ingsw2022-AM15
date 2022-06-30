@@ -5,11 +5,11 @@ import it.polimi.ingsw.eriantys.model.entities.Island;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
-import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.VERTICAL;
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
-
 import java.text.MessageFormat;
 import java.util.Optional;
+
+import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.VERTICAL;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
 
 public class IslandView extends View {
   private final Island island;

@@ -15,6 +15,7 @@ public class GameListMessage extends Message {
 
     public Builder() {
     }
+
     /**
      * Sets the game list of this message.
      *

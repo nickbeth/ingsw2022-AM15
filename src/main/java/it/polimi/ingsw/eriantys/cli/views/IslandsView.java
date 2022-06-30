@@ -5,7 +5,7 @@ import it.polimi.ingsw.eriantys.model.entities.Island;
 
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
+import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.PADDING;
 import static it.polimi.ingsw.eriantys.cli.views.IslandView.drawIsland;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 

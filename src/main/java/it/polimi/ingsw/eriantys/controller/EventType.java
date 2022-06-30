@@ -17,10 +17,8 @@ public enum EventType {
 
   END_GAME("end_game"),
 
-  INPUT_ENTERED("input_entered")
+  INPUT_ENTERED("input_entered");
 
-
-  ;
   public final String tag;
 
   EventType(String tag) {

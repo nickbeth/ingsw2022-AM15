@@ -33,13 +33,13 @@ public class CloudsHandler extends SectionHandler {
   protected void create() {
     debugScreenHandler.showMessage("creating cloud handlers and populating cloud box");
     Controller.get().getGameState().getPlayingField().getClouds().forEach(
-            cloud -> {
-              AnchorPane cloudPane = new AnchorPane();
-              CloudHandler cloudHandler = new CloudHandler(cloudPane, cloud, debugScreenHandler);
-              cloudHandler.update();
-              cloudHandlers.add(cloudHandler);
-              cloudBox.getChildren().add(cloudPane);
-            });
+        cloud -> {
+          AnchorPane cloudPane = new AnchorPane();
+          CloudHandler cloudHandler = new CloudHandler(cloudPane, cloud, debugScreenHandler);
+          cloudHandler.update();
+          cloudHandlers.add(cloudHandler);
+          cloudBox.getChildren().add(cloudPane);
+        });
   }
 
 }

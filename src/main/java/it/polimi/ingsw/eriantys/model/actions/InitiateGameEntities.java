@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
-import static it.polimi.ingsw.eriantys.model.RuleBook.*;
+import static it.polimi.ingsw.eriantys.model.RuleBook.PLAYABLE_CC_AMOUNT;
 
 public class InitiateGameEntities extends GameAction {
   private final List<Students> entrancesStudents;
@@ -127,19 +127,6 @@ public class InitiateGameEntities extends GameAction {
    */
   @Override
   public boolean isValid(GameState gameState) {
-//    RuleBook ruleBook = gameState.getRuleBook();
-//    boolean isValid = true;
-//
-//    if (gameState.getRuleBook().gameMode == GameMode.EXPERT)
-//      isValid = cardsEnum.size() == PLAYABLE_CC_AMOUNT;
-//
-//    isValid = isValid &&
-//        entrancesStudents.size() == ruleBook.cloudCount &&
-//        entrancesStudents.stream().allMatch((students) -> students.getCount() == ruleBook.entranceSize) &&
-//        islandsStudents.size() == ISLAND_COUNT &&
-//        islandsStudents.stream().allMatch((students) -> (((islandsStudents.indexOf(students) == 0 || islandsStudents.indexOf(students) == 6) && students.getCount() == 0) || students.getCount() == INITIAL_ISLAND_STUDENTS)) &&
-//        cloudsStudents.size() == ruleBook.cloudCount &&
-//        cloudsStudents.stream().allMatch((students) -> students.getCount() == ruleBook.playableStudentCount);
     return true;
   }
 }

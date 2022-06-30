@@ -14,7 +14,6 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.util.Pair;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class MoveStudentsToDiningHall extends GameAction {
   private final Students students;
@@ -60,7 +59,7 @@ public class MoveStudentsToDiningHall extends GameAction {
 
   private String studentMessage(Students students) {
     String baseMessage = Arrays.stream(HouseColor.values())
-        .map(color -> new Pair(color, students.getCount(color)))
+        .map(color -> new Pair<>(color, students.getCount(color)))
         .filter(pair -> !pair.getValue().equals(0))
         .map(pair -> " " + pair.getValue() + "-" + pair.getKey())
         .reduce(String::concat)

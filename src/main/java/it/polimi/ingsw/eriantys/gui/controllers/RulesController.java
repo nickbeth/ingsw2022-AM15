@@ -19,7 +19,7 @@ public class RulesController extends FXMLController {
   @FXML
   private Button previousPage;
   private int currPage = 1;
-  
+
   /**
    * Sets scene to Menu
    */
@@ -35,7 +35,7 @@ public class RulesController extends FXMLController {
     previousPage.setVisible(true);
     view.setImage(getImage());
   }
-  
+
   @FXML
   private void goPreviousPage(ActionEvent actionEvent) {
     previousPage.setVisible(currPage > 2);
@@ -43,12 +43,12 @@ public class RulesController extends FXMLController {
     nextPage.setVisible(true);
     view.setImage(getImage());
   }
-  
+
   private Image getImage() {
     InputStream stream = getClass().getResourceAsStream("/assets/rules/Eriantys_rules-" + currPage + ".png");
     return new Image(Objects.requireNonNull(stream));
   }
-  
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
   }

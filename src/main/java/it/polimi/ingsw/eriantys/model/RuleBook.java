@@ -40,12 +40,13 @@ public class RuleBook implements Serializable {
 
   /**
    * RuleBook factory method
-   * @param gameMode the type of game
+   *
+   * @param gameMode     the type of game
    * @param playersCount number of players in the game
    * @return A RuleBook instance populated with the appropriate values for the given game mode and number of players
    * @throws IllegalArgumentException if the game mode or the number of players is invalid
    */
-  public static RuleBook makeRules(GameMode gameMode, int playersCount) {
+  public static RuleBook makeRules(GameMode gameMode, int playersCount) throws IllegalArgumentException {
     return switch (playersCount) {
       case 2, 4 -> new RuleBook(gameMode, playersCount,
           PLAYABLE_STUDENTS_2_4, DASHBOARD_TOWERS_2_4, ENTRANCE_SIZE_2_4);
