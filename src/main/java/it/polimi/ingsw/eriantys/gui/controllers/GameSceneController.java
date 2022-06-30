@@ -127,7 +127,7 @@ public class GameSceneController extends FXMLController {
 
   private void buildDashboardHandlers() {
     List<String> nicknames = Controller.get().getGameState().getPlayers().stream().map(Player::getNickname)
-            .filter(nickname -> !nickname.equals(Controller.get().getNickname())).toList();
+        .filter(nickname -> !nickname.equals(Controller.get().getNickname())).toList();
     try {
       enemyDashboardHandlers.add(new EnemyDashboardHandler(dashboardClient2, nicknames.get(0), studentHallGrid2, entranceGrid2, profTableGrid2, dashboardTowers2, debugScreenHandler));
       enemyDashboardHandlers.add(new EnemyDashboardHandler(dashboardClient3, nicknames.get(1), studentHallGrid3, entranceGrid3, profTableGrid3, dashboardTowers3, debugScreenHandler));
@@ -235,9 +235,9 @@ public class GameSceneController extends FXMLController {
     GameState gameState = Controller.get().getGameState();
 
     return gameState.getCurrentPlayer().getNickname().equals(Controller.get().getNickname()) &&
-            gameState.getPlayingField().getPlayedCharacterCard() == null &&
-            gameState.getGamePhase() != GamePhase.PLANNING &&
-            gameState.getTurnPhase() != TurnPhase.PICKING;
+        gameState.getPlayingField().getPlayedCharacterCard() == null &&
+        gameState.getGamePhase() != GamePhase.PLANNING &&
+        gameState.getTurnPhase() != TurnPhase.PICKING;
   }
 
   /**
@@ -246,19 +246,22 @@ public class GameSceneController extends FXMLController {
   private void showWinnerAlert() {
     GameState gameState = Controller.get().getGameState();
     Optional<TowerColor> winnerTeam = gameState.getWinner();
-    Optional<String> lastPlayer = gameState.getPlayers().stream()
-            .filter(Player::isConnected).map(Player::getNickname).findFirst();
+    List<Player> lastPlayers = gameState.getPlayers().stream()
+        .filter(Player::isConnected).toList();
     StringBuilder winners = new StringBuilder();
-
-    if (winnerTeam.isPresent()) {
-      for (Player player:gameState.getPlayers()) {
+    if (lastPlayers.size() == 1) {
+      winners.append(lastPlayers.get(0).getNickname()).append(" ");
+    } else if (winnerTeam.isPresent()) {
+      for (Player player : gameState.getPlayers()) {
         if (player.getColorTeam() == winnerTeam.get())
           winners.append(player.getNickname()).append(" ");
       }
-    } else lastPlayer.ifPresent(s -> winners.append(s).append(" "));
+    } else {
+      winners.append("NOBODY ");
+    }
 
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setContentText(winners + " WON THE GAME");
+    alert.setContentText(winners + "WON THE GAME");
     alert.setOnCloseRequest(e -> gui.setScene(SceneEnum.CREATE_OR_JOIN));
     alert.showAndWait();
   }
