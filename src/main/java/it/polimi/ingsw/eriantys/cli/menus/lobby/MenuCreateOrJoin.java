@@ -2,6 +2,7 @@ package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
+import it.polimi.ingsw.eriantys.cli.views.GamesListView;
 import it.polimi.ingsw.eriantys.model.GameCode;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 
@@ -25,6 +26,7 @@ public class MenuCreateOrJoin extends Menu {
   public MenuCreateOrJoin() {
     eventsToBeListening.add(GAMEINFO_EVENT);
     eventsToBeListening.add(START_GAME);
+    eventsToBeListening.add(GAMELIST);
     eventsToBeListening.add(ERROR);
   }
 
@@ -32,6 +34,7 @@ public class MenuCreateOrJoin extends Menu {
   protected void showOptions() {
     out.println("\n1 - Create a new game");
     out.println("2 - Join an existing game");
+    out.println("3 - View games list");
     out.println("ENTER - Default: NORMAL game with 2 players");
     out.println("0 - Back");
   }
@@ -96,6 +99,13 @@ public class MenuCreateOrJoin extends Menu {
             return MenuEnum.LOBBY;
           }
 //          out.println("Game code does not exist");
+        }
+
+        case "3" -> {
+          controller.sender().sendGamelistRequest();
+          waitForGreenLight();
+          out.println();
+          new GamesListView(controller.getJoinableGameList()).draw(out);
         }
 
         // Back button

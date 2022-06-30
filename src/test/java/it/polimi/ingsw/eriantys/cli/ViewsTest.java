@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static it.polimi.ingsw.eriantys.cli.CustomPrintStream.out;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -241,7 +242,7 @@ public class ViewsTest {
     players.add("cozze");
     players.add("Marco");
 
-    Set<Pair<GameCode, GameInfo>> games = new HashSet<>();
+    Map<GameCode, GameInfo> games = new HashMap<>();
 
     for (int i = 2; i <= 4; i++) {
       GameInfo tmp = new GameInfo(i, GameMode.NORMAL);
@@ -249,7 +250,7 @@ public class ViewsTest {
       players.forEach(nickname -> {
         if (!tmp.isFull())
           tmp.addPlayer(nickname);
-        games.add(new Pair<>(new GameCode("xxx" + playerCount), new GameInfo(tmp)));
+        games.put(new GameCode("xxx" + playerCount), new GameInfo(tmp));
       });
     }
 
