@@ -13,6 +13,9 @@ import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 import static java.text.MessageFormat.format;
 
+/**
+ * Handles messages received from the server by updating controller data and firing the appropriate events.
+ */
 public class MessageHandler implements Runnable {
   Controller controller;
   BlockingQueue<MessageQueueEntry> messageQueue;
@@ -22,6 +25,12 @@ public class MessageHandler implements Runnable {
     this.messageQueue = messageQueue;
   }
 
+  /**
+   * Runs the message handler loop. <p>
+   * Loops over the queue in a blocking way (waiting for messages when empty) and handles them.
+   * <p>
+   * This method is supposed to be run on its own thread.
+   */
   @Override
   public void run() {
     while (true) {
@@ -36,6 +45,11 @@ public class MessageHandler implements Runnable {
     }
   }
 
+  /**
+   * Handles a {@link MessageQueueEntry} by checking its validity and handling it according to its type.
+   *
+   * @param entry The {@link MessageQueueEntry} to handle
+   */
   private void handleMessage(MessageQueueEntry entry) {
     Client client = entry.client();
     Message message = entry.message();
@@ -72,29 +86,44 @@ public class MessageHandler implements Runnable {
     }
   }
 
+  /**
+   * Handles a {@link MessageType#PING PING} message.
+   */
   private void handlePing(Client client, Message message) {
     client.send(new Message.Builder(MessageType.PONG)
         .nickname(controller.getNickname())
         .build());
   }
 
+  /**
+   * Handles a {@link MessageType#NICKNAME_OK NICKNAME_OK} message.
+   */
   private void handleNicknameOk(Client client, Message message) {
     controller.setNickname(message.nickname());
     controller.fireChange(NICKNAME_OK, null, message.gameInfo());
   }
 
+  /**
+   * Handles a {@link MessageType#GAMELIST GAMELIST} message.
+   */
   private void handleGameList(Client client, Message message) {
     GameListMessage gameListMessage = (GameListMessage) message;
     controller.setJoinableGameList(gameListMessage.gameList());
     controller.fireChange(GAMELIST, null, gameListMessage.gameList());
   }
 
+  /**
+   * Handles a {@link MessageType#GAMEINFO GAMEINFO} message.
+   */
   private void handleGameInfo(Client client, Message message) {
     controller.setGameInfo(message.gameInfo());
     controller.setGameCode(message.gameCode());
     controller.fireChange(GAMEINFO_EVENT, null, message.gameInfo());
   }
 
+  /**
+   * Handles a {@link MessageType#START_GAME START_GAME} message.
+   */
   private void handleStartGame(Client client, Message message) {
     controller.setGameInfo(message.gameInfo());
     controller.initGame();
@@ -102,6 +131,9 @@ public class MessageHandler implements Runnable {
     controller.fireChange(START_GAME, null, message.gameAction());
   }
 
+  /**
+   * Handles a {@link MessageType#START_GAME_RECONNECTED START_GAME_RECONNECTED} message.
+   */
   private void handleStartGameReconnected(Client client, Message message) {
     controller.setGameCode(message.gameCode());
     controller.setGameInfo(message.gameInfo());
@@ -110,6 +142,9 @@ public class MessageHandler implements Runnable {
     controller.fireChange(START_GAME, null, message.gameAction());
   }
 
+  /**
+   * Handles a {@link MessageType#GAMEDATA GAMEDATA} message.
+   */
   private void handleGameData(Client client, Message message) {
     controller.executeAction(message.gameAction());
 
@@ -117,12 +152,18 @@ public class MessageHandler implements Runnable {
     controller.fireChange(GAMEDATA_EVENT, null, message.gameAction().getDescription());
   }
 
+  /**
+   * Handles a {@link MessageType#PLAYER_DISCONNECTED PLAYER_DISCONNECTED} message.
+   */
   private void handlePlayerDisconnected(Client client, Message message) {
     controller.setPlayerConnection(false, message.nickname());
     String evtMsg = colored(format("Player \"{0}\" disconnected", message.nickname()), RED);
     controller.fireChange(PLAYER_CONNECTION_CHANGED, null, evtMsg);
   }
 
+  /**
+   * Handles a {@link MessageType#PLAYER_RECONNECTED PLAYER_RECONNECTED} message.
+   */
   private void handlePlayerReconnected(Client client, Message message) {
     try {
       controller.setPlayerConnection(true, message.nickname());
@@ -133,16 +174,25 @@ public class MessageHandler implements Runnable {
     }
   }
 
+  /**
+   * Handles a {@link MessageType#END_GAME END_GAME} message.
+   */
   private void handleEndGame(Client client, Message message) {
     controller.getGameState().setGamePhase(GamePhase.WIN);
     controller.fireChange(END_GAME, null, null);
   }
 
+  /**
+   * Handles a {@link MessageType#ERROR ERROR} message.
+   */
   private void handleError(Client client, Message message) {
     controller.showError(message.error());
     controller.fireChange(ERROR, null, null);
   }
 
+  /**
+   * Handles a {@link MessageType#INTERNAL_SOCKET_ERROR INTERNAL_SOCKET_ERROR} message.
+   */
   private void handleSocketError(Client client, Message message) {
     // Check that this message was created internally and is not coming from the network
     if (!message.nickname().equals(Client.SOCKET_ERROR_HASH))
