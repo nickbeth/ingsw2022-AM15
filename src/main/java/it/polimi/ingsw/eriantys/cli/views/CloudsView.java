@@ -10,6 +10,7 @@ import java.util.List;
 
 import static it.polimi.ingsw.eriantys.cli.utils.BoxSymbols.VERTICAL;
 import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.*;
+import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 
 public class CloudsView extends View {
   private final List<Cloud> clouds;
@@ -42,13 +43,13 @@ public class CloudsView extends View {
     o.append(System.lineSeparator());
 
     // Title of the section
-    o.println(centredTitle("CLOUDS"));
+    o.println(centredTitle("CLOUDS"), YELLOW);
 
     // Write the content
     o.append(stringBuilder);
 
     // Writes a "-" separator
-    o.println(centredTitle(""));
+    o.println(centredTitle(""), YELLOW);
   }
 
   private String drawCloud(Cloud cloud, int index) {
