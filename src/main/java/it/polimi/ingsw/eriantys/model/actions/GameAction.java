@@ -5,8 +5,6 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import java.io.Serializable;
 
 
-// TODO: Fix RefillCloud
-
 public abstract class GameAction implements Serializable {
   protected String nickname = "";
   protected String description = "";

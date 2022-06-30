@@ -8,8 +8,8 @@ import java.util.Random;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class StudentBag implements Serializable {
-  private Students students;
-  Random rand = new Random();
+  private final Students students;
+  private final Random rand = new Random();
 
   public StudentBag() {
     students = new Students();
@@ -21,8 +21,6 @@ public class StudentBag implements Serializable {
 
   /**
    * Initializes the amount of students in the bag to a certain amount for every color
-   *
-   * @param amount
    */
   public void initStudents(int amount) {
     students.setStudents(new Students());

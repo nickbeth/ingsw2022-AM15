@@ -13,8 +13,8 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import java.util.List;
 
 public class MoveStudentsToIsland extends GameAction {
-  private Students students;
-  private int islandIndex;
+  private final Students students;
+  private final int islandIndex;
 
   public MoveStudentsToIsland(Students students, int islandIndex) {
     this.students = students;

@@ -3,7 +3,7 @@ package it.polimi.ingsw.eriantys.model.entities;
 import java.io.Serializable;
 
 public class Cloud implements Serializable {
-  private Students students;
+  private final Students students;
 
   public Cloud(Students students) {
     this.students = new Students(students);

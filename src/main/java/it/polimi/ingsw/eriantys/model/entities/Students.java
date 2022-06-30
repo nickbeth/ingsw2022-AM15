@@ -42,8 +42,6 @@ public class Students extends Slot implements Serializable {
 
   /**
    * Adds a single student with the given color
-   *
-   * @param color
    */
   public void addStudent(HouseColor color) {
     students.put(color, students.get(color) + 1);

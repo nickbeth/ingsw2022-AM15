@@ -49,8 +49,6 @@ public class PickCloud extends GameAction {
    * Gets students from pickedCloud and puts them onto the players entrance. <br>
    * If player is the last connected one refill clouds.<br>
    * Calls advance().
-   *
-   * @param gameState
    */
   @Override
   public void apply(GameState gameState) {

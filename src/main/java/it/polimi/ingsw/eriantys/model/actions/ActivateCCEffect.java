@@ -5,8 +5,6 @@ import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
 
-import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
-
 public class ActivateCCEffect extends GameAction {
   private final CharacterCard cc;
 
