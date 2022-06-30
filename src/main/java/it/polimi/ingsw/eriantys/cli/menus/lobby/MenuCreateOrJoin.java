@@ -9,7 +9,6 @@ import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import java.beans.PropertyChangeEvent;
 
 import static it.polimi.ingsw.eriantys.cli.menus.MenuEnum.PICK_ASSISTANT;
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.GameMode.EXPERT;

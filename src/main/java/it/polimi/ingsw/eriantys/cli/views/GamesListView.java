@@ -53,9 +53,7 @@ public class GamesListView extends View {
     Set<String> players = info.getJoinedPlayers();
     StringBuilder content = new StringBuilder();
 
-    players.forEach(nickname -> {
-      content.append(nickname).append(" - ");
-    });
+    players.forEach(nickname -> content.append(nickname).append(" - "));
     // Remove unnecessary separator
     content.replace(content.length() - 3, content.length(), " ");
 

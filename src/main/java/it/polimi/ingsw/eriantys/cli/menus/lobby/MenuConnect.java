@@ -5,8 +5,6 @@ import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.network.Client;
 
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
-
 /**
  * Asks the user for server's address and port
  */

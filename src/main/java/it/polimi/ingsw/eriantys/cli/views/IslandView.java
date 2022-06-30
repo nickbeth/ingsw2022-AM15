@@ -12,7 +12,7 @@ import java.text.MessageFormat;
 import java.util.Optional;
 
 public class IslandView extends View {
-  private Island island;
+  private final Island island;
 
   public IslandView(Island island) {
     this.island = island;

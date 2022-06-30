@@ -2,11 +2,9 @@ package it.polimi.ingsw.eriantys.cli.menus.lobby;
 
 import it.polimi.ingsw.eriantys.cli.menus.Menu;
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
-import it.polimi.ingsw.eriantys.model.GameInfo;
 
 import java.beans.PropertyChangeEvent;
 
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.controller.EventType.*;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.clientLogger;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
@@ -14,7 +12,7 @@ import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 
 public class MenuChooseNickname extends Menu {
   private boolean isNicknameOk = false;
-  private boolean gameAlreadyStarted = false;
+  private final boolean gameAlreadyStarted = false;
 
   public MenuChooseNickname() {
     eventsToBeListening.add(NICKNAME_OK);

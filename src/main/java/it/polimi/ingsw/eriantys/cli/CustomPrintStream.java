@@ -1,7 +1,6 @@
 package it.polimi.ingsw.eriantys.cli;
 
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
-import jfxtras.scene.layout.HBox;
 
 import java.io.OutputStream;
 import java.io.PrintStream;

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.cli.menus;
 
-import it.polimi.ingsw.eriantys.cli.CustomPrintStream;
 import it.polimi.ingsw.eriantys.cli.menus.game.*;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuChooseNickname;
 import it.polimi.ingsw.eriantys.cli.menus.lobby.MenuConnect;

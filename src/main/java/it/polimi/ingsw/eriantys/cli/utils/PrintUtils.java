@@ -4,10 +4,6 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 import org.fusesource.jansi.Ansi;
 
-import java.awt.*;
-
-import static java.awt.Color.*;
-
 public class PrintUtils {
   public static final char TOWER_CHAR = 'T';
   public static final char STUDENT_CHAR = '*';

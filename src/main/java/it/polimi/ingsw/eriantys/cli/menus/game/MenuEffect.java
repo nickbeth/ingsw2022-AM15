@@ -9,7 +9,6 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
 public class MenuEffect extends MenuGame {

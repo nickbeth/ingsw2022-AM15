@@ -9,7 +9,6 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
 
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.RED;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.YELLOW;
 

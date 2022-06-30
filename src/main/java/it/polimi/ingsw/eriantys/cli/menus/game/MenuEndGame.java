@@ -6,7 +6,6 @@ import it.polimi.ingsw.eriantys.cli.views.ViewGroup;
 
 import java.beans.PropertyChangeEvent;
 
-import static it.polimi.ingsw.eriantys.cli.utils.PrintUtils.colored;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.GREEN;
 
 /**
