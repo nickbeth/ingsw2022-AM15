@@ -120,13 +120,20 @@ public class Message implements Serializable {
   private final GameAction gameAction;
   private final GameInfo gameInfo;
 
-  private Message(MessageType type, String nickname, GameCode gameCode, String error, GameAction gameAction, GameInfo gameInfo) {
+  protected Message(MessageType type, String nickname, GameCode gameCode, String error, GameAction gameAction, GameInfo gameInfo) {
     this.type = type;
     this.nickname = nickname;
     this.gameCode = gameCode;
     this.error = error;
     this.gameAction = gameAction;
     this.gameInfo = gameInfo;
+  }
+
+  /**
+   * Initialises an empty message of the given type. Useful for subclasses that don't share any data with a base message.
+   */
+  protected Message(MessageType type) {
+    this(type, null, null, null, null, null);
   }
 
   public MessageType type() {
