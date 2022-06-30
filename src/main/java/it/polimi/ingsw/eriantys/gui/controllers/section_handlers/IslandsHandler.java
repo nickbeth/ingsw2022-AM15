@@ -51,7 +51,6 @@ public class IslandsHandler extends SectionHandler {
     debugScreenHandler.showMessage("creating island handlers and populating circle");
     islands.forEach(island -> {
       AnchorPane islandPane = new AnchorPane();
-      int mnPosition = gameState.getPlayingField().getMotherNaturePosition();
       IslandHandler islandHandler = new IslandHandler(islandPane, island, debugScreenHandler);
       islandHandler.update();
       islandsHandlers.add(islandHandler);

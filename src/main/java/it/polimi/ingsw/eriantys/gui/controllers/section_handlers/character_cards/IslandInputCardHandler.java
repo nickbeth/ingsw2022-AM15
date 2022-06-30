@@ -6,7 +6,6 @@ import it.polimi.ingsw.eriantys.gui.controllers.utils.DataFormats;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
-import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;

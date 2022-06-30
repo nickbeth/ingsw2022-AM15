@@ -29,8 +29,6 @@ import static it.polimi.ingsw.eriantys.controller.EventType.*;
 
 public class CreateOrJoinController extends FXMLController implements PropertyChangeListener {
   @FXML
-  private Group lobbysGroup;
-  @FXML
   private VBox gameLobbysBox;
   @FXML
   private Label errorMessage;

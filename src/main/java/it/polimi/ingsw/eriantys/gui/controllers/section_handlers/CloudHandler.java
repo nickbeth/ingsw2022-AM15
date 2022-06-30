@@ -11,9 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 
 import static it.polimi.ingsw.eriantys.gui.controllers.utils.ImagePaths.studentColorToPath;
 

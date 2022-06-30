@@ -27,10 +27,12 @@ public class PlayerGridHandler extends SectionHandler {
   private final HashMap<Label, Player> towerAmounts = new HashMap<>();
   private final HashMap<Label, Player> coinAmounts = new HashMap<>();
   private final List<EnemyDashboardHandler> dashboardHandlers;
+  private final DebugScreenHandler debug;
 
   public PlayerGridHandler(GridPane playerGrid, DebugScreenHandler debugScreenHandler, List<EnemyDashboardHandler> dashboardHandlers) {
     this.playerGrid = playerGrid;
     this.dashboardHandlers = dashboardHandlers;
+    this.debug = debugScreenHandler;
   }
 
   /**
@@ -38,26 +40,22 @@ public class PlayerGridHandler extends SectionHandler {
    * If the game is in EXPERT mode it refreshes coin counter
    */
   protected void refresh() {
-    discIcons.forEach((img, player) -> {
-      img.setVisible(!player.isConnected());
-    });
+    debug.showMessage("refreshing player grid");
+    discIcons.forEach((img, player) -> img.setVisible(!player.isConnected()));
 
-    cardAmounts.forEach((label, player) -> {
-      label.setText("×" + player.getCards().size());
-    });
+    cardAmounts.forEach((label, player) -> label.setText("×" + player.getCards().size()));
 
-    towerAmounts.forEach((label, player) -> {
-      label.setText("×" + player.getDashboard().getTowers().count);
-    });
+    towerAmounts.forEach((label, player) ->
+      label.setText("×" + player.getDashboard().getTowers().count)
+    );
 
     if (gameState.getRuleBook().gameMode == GameMode.EXPERT)
-      coinAmounts.forEach((label, player) -> {
-        label.setText("×" + player.getCoins());
-      });
+      coinAmounts.forEach((label, player) -> label.setText("×" + player.getCoins()));
   }
 
   @Override
   protected void create() {
+    debug.showMessage("creating player grid");
     playerGrid.getStyleClass().add("grid-players");
     List<Player> players = gameState.getPlayers();
     int i = 0;
@@ -111,7 +109,6 @@ public class PlayerGridHandler extends SectionHandler {
           coinIcon.setFitWidth(20);
           coinIcon.setPreserveRatio(true);
           Label coinAmount = new Label("×" + player.getCoins(), coinIcon);
-//          VBox.setMargin(coinAmount, new Insets(0, 0, 0, 0));
           coinAmounts.put(coinAmount, player);
           counters.getChildren().add(coinAmount);
         }

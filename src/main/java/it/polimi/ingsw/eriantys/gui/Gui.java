@@ -14,7 +14,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
-import java.util.EnumMap;
 
 import static it.polimi.ingsw.eriantys.controller.EventType.INTERNAL_SOCKET_ERROR;
 
@@ -23,8 +22,6 @@ public class Gui extends Application implements PropertyChangeListener {
   private Stage stage;
   private SceneEnum currScene;
   private FXMLController controller;
-  private EnumMap<SceneEnum, Scene> sceneMap = new EnumMap<>(SceneEnum.class);
-  private EnumMap<SceneEnum, FXMLController> controllerMap = new EnumMap<>(SceneEnum.class);
 
   /**
    * the start method is called at the beggining of the application life cycle,
@@ -55,7 +52,7 @@ public class Gui extends Application implements PropertyChangeListener {
   /**
    * Displays an alert with the text of the received error.
    *
-   * @param error
+   * @param error displayed error text
    */
   public static void showError(String error) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -89,7 +86,6 @@ public class Gui extends Application implements PropertyChangeListener {
       root = loader.load();
       controller = loader.getController();
       controller.setGui(this);
-      controllerMap.put(scene, controller);
     } catch (IOException e) {
       e.printStackTrace();
       return;
@@ -106,7 +102,6 @@ public class Gui extends Application implements PropertyChangeListener {
 
   /**
    * If for any reason an internal socket error happens the gui returns to the Main menu scene
-   * @param evt
    */
   @Override
   public void propertyChange(PropertyChangeEvent evt) {

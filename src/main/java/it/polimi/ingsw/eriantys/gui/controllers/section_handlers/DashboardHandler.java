@@ -13,7 +13,6 @@ import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -182,10 +181,6 @@ public class DashboardHandler extends SectionHandler {
     GridPane.setHalignment(professor, HPos.CENTER);
     GridPane.setValignment(professor, VPos.CENTER);
     return professor;
-  }
-
-  private void refereshEntrance() {
-    //TODO: method to refresh entrances without recreating
   }
 
   private void createEntrance() {

@@ -5,10 +5,12 @@ import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.enums.AssistantCard;
 import it.polimi.ingsw.eriantys.model.enums.GamePhase;
-import it.polimi.ingsw.eriantys.model.enums.TurnPhase;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
-import javafx.scene.effect.*;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.ColorInput;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
@@ -24,7 +26,7 @@ import java.util.Optional;
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
 public class AssistCardHandler extends SectionHandler {
-  private DebugScreenHandler debugScreenHandler;
+  private final DebugScreenHandler debugScreenHandler;
   private final TilePane assistCards;
   private final VBox playedCards;
 
@@ -40,7 +42,6 @@ public class AssistCardHandler extends SectionHandler {
   @Override
   protected void refresh() {
     GamePhase gamePhase = gameState.getGamePhase();
-    TurnPhase turnPhase = gameState.getTurnPhase();
     if (gamePhase == GamePhase.PLANNING) {
       isFirstActionTurn = false;
       createAssistCards();
@@ -114,7 +115,6 @@ public class AssistCardHandler extends SectionHandler {
   }
 
   private void refreshPlayedCards() {
-
   }
 
   private void playAssistCardAction(AssistantCard card) {
