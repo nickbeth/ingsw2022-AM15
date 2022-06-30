@@ -57,12 +57,10 @@ public class DashboardHandler extends SectionHandler {
   @Override
   protected void refresh() {
     GamePhase gamePhase = gameState.getGamePhase();
-    if (gamePhase == GamePhase.ACTION) {
-      refreshDiningHall();
-      refreshTowers();
-      refreshProfTable();
-      createEntrance();
-    }
+    refreshDiningHall();
+    refreshTowers();
+    refreshProfTable();
+    createEntrance();
   }
 
   @Override
