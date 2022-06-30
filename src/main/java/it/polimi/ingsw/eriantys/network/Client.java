@@ -132,7 +132,7 @@ public class Client implements Runnable {
         }
       }
     } catch (IOException e) {
-//      clientLogger.error("An error occurred on socket '{}': {}", this, e.getMessage());
+      clientLogger.error("An error occurred on socket '{}': {}", this, e.getMessage());
       // We need a way to notify message handlers of socket errors
       // We submit a special message to the queue so that it can be handled
       messageQueue.add(new MessageQueueEntry(this, new Message.Builder()
