@@ -62,7 +62,6 @@ public class ActionTest {
     Students entrance = new Students(s);
     entrance.addStudents(HouseColor.BLUE, normalGame.getRuleBook().entranceSize - 4);
 
-
     s.tryRemoveStudent(HouseColor.RED);
 
     normalGame.getCurrentPlayer().getDashboard().getEntrance().addStudents(entrance);
@@ -239,7 +238,6 @@ public class ActionTest {
 
 
     game.setCurrentPlayer(p2);
-//    oldCloudStudents = game.getPlayingField().getCloud(1).getStudents();
     new PickCloud(game, 1).apply(game);
 
     assertEquals(game.getRuleBook().entranceSize, Tmp.entrance(p2).getCount());
@@ -291,7 +289,6 @@ public class ActionTest {
     }
     islands.get(0).addStudents(HouseColor.RED, 5);
 
-
     //setup clouds students
     s.setStudents(new Students());
     s.addStudents(HouseColor.GREEN, 4);
@@ -303,10 +300,9 @@ public class ActionTest {
     cards.add(CharacterCardEnum.ADD_TO_INFLUENCE);
     cards.add(CharacterCardEnum.LOCK_ISLAND);
 
+    //initiated game entities
     GameAction action = new InitiateGameEntities(entrances, islands, clouds, cards);
-
     action.apply(gameState);
-    modelLogger.debug(String.valueOf(field.getCharacterCards().get(0)));
 
     gameState.getPlayingField().setPlayedCharacterCard(0);
     gameState.setTurnPhase(TurnPhase.EFFECT);
@@ -318,32 +314,33 @@ public class ActionTest {
     field.getIslands().forEach(is -> is.updateInfluences(field.getProfessorHolder()));
     field.getIsland(0).setTowerColor(TowerColor.WHITE);
     field.getIsland(0).setTowerCount(1);
-    //gameState.getPlayingField().getIslands().forEach(island -> modelLogger.debug(island.getTeamsInfluenceTracer()));
 
     CharacterCard newCC = CharacterCardCreator.create(CharacterCardEnum.IGNORE_COLOR);
-    int oldCardCost = field.getPlayedCharacterCard().getCost();
     ((ColorInputCards) newCC).setColor(HouseColor.RED);
 
-    GameAction actionDue = new ActivateCCEffect(newCC);
-    //(new IslandView(gameState.getPlayingField().getIsland(0))).draw(System.out);
-
+    GameAction actionTwo = new ActivateCCEffect(newCC);
 
     (new IslandsView(gameState.getPlayingField().getIslands(), 0)).draw(out);
-    assertTrue(actionDue.isValid(gameState));
-    actionDue.apply(gameState);
-    modelLogger.debug(String.valueOf(field.getPlayedCharacterCard().getCardEnum()));
-    assertEquals(RuleBook.INITIAL_COINS + 2, gameState.getCurrentPlayer().getCoins());
-    assertEquals(RuleBook.INITIAL_COINS, field.getPlayedCharacterCard().getCost());
-    // Add 4 coins to current player (p1): should result in 7 coins
+    assertTrue(actionTwo.isValid(gameState));
+    actionTwo.apply(gameState);
+
+    // checks if the cost has been applied
+    assertEquals(0, gameState.getCurrentPlayer().getCoins());
+
+    // check if the cost has been incremented
+    assertEquals(CharacterCardEnum.IGNORE_COLOR.getCost() + 1, field.getPlayedCharacterCard().getCost());
+    // Add 4 coins to current player (p1)
     gameState.getCurrentPlayer().addCoins();
     gameState.getCurrentPlayer().addCoins();
     gameState.getCurrentPlayer().addCoins();
     gameState.getCurrentPlayer().addCoins();
 
     newCC = field.getCharacterCards().get(0);
-    actionDue = new ActivateCCEffect(newCC);
-    actionDue.apply(gameState);
-    assertEquals(6, gameState.getCurrentPlayer().getCoins());
-    assertEquals(oldCardCost + 1, field.getPlayedCharacterCard().getCost());
+    actionTwo = new ActivateCCEffect(newCC);
+    actionTwo.apply(gameState);
+    // checks if incremented cost is applied
+    assertEquals(0, gameState.getCurrentPlayer().getCoins());
+    // checks if the cost doesn't increment any further
+    assertEquals(CharacterCardEnum.IGNORE_COLOR.getCost() + 1, field.getPlayedCharacterCard().getCost());
   }
 }
