@@ -1,6 +1,5 @@
 package it.polimi.ingsw.eriantys.model;
 
-import it.polimi.ingsw.eriantys.model.entities.Dashboard;
 import it.polimi.ingsw.eriantys.model.entities.Player;
 import it.polimi.ingsw.eriantys.model.entities.PlayingField;
 import it.polimi.ingsw.eriantys.model.enums.*;
@@ -229,26 +228,22 @@ class GameStateTest {
     GameState spyedGame = spy(game);
     Player p1 = spy(spyedGame.getPlayers().get(0));
     Player p2 = spy(spyedGame.getPlayers().get(1));
-    Dashboard d1 = mock(Dashboard.class);
-    Dashboard d2 = mock(Dashboard.class);
 
-    // necessary stubbing
-    doReturn(d1).when(p1).getDashboard();
-    doReturn(d2).when(p2).getDashboard();
-    when(d1.noMoreTowers()).thenReturn(true);
-    when(d2.noMoreTowers()).thenReturn(true);
+    p1.getDashboard().getTowers().count = 0;
+    p2.getDashboard().getTowers().count = 0;
     players.add(p1);
     players.add(p2);
     doReturn(players).when(spyedGame).getPlayers();
 
+    // no player has towers
     assertTrue(spyedGame.checkWinCondition());
 
-    when(d2.noMoreTowers()).thenReturn(false);
-
+    // one player has no towers
+    p2.getDashboard().getTowers().count = 1;
     assertTrue(spyedGame.checkWinCondition());
 
-    when(d1.noMoreTowers()).thenReturn(false);
-
+    // all players have towers
+    p1.getDashboard().getTowers().count = 1;
     assertFalse(spyedGame.checkWinCondition());
   }
 
@@ -262,12 +257,15 @@ class GameStateTest {
 
     ArrayList<AssistantCard> cards = new ArrayList<>();
     // necessary stubbing
-
     players.add(p1);
     players.add(p2);
     doReturn(players).when(spyedGame).getPlayers();
+    spyedGame.setActionPhaseOrder(players);
     assertFalse(spyedGame.checkWinCondition());
 
+    spyedGame.setCurrentPlayer(spyedGame.getActionPhaseOrder().get(1));
+    spyedGame.setGamePhase(GamePhase.ACTION);
+    spyedGame.setTurnPhase(TurnPhase.PICKING);
     doReturn(cards).when(p1).getCards();
     doReturn(Optional.empty()).when(p1).getChosenCard();
     assertTrue(spyedGame.checkWinCondition());
@@ -278,20 +276,15 @@ class GameStateTest {
   }
 
   @Test
-  void checkNoIslandsWin() {
+  void checkThreeIslandsWin() {
     game.addPlayer("GINO", TowerColor.BLACK);
-
     GameState spyedGame = spy(game);
-    PlayingField spyedField = spy(spyedGame.getPlayingField());
 
-    when(spyedField.getIslandsAmount()).thenReturn(3);
-    doReturn(spyedField).when(spyedGame).getPlayingField();
-
-    assertTrue(spyedGame.checkWinCondition());
-
-    when(spyedField.getIslandsAmount()).thenReturn(8);
     assertFalse(spyedGame.checkWinCondition());
-
+    for (int i = 0; i < RuleBook.ISLAND_COUNT - RuleBook.MIN_ISLAND_COUNT; i++) {
+      spyedGame.getPlayingField().getIslands().remove(0);
+    }
+    assertTrue(spyedGame.checkWinCondition());
   }
 
 
