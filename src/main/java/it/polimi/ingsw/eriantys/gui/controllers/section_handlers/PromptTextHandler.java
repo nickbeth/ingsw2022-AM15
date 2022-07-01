@@ -55,7 +55,7 @@ public class PromptTextHandler extends SectionHandler {
         return "IT'S " + currentPlayer.toUpperCase() + " TURN TO PICK A CLOUD";
     }
 
-    return "YOUR PROMPT GOES HERE";
+    return "WINNER DINNER CHICKEN";
   }
 
   private int studentsLeftToMove() {
