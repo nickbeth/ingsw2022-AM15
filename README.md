@@ -14,7 +14,7 @@ Java implementation of the table game [Eriantys: The Magical World of Floating I
 | 4 players            | 🟢    |
 | Multiple games       | 🟢    |
 | Game persistance     | 🔴    |
-| Player reconnections | 🟡    |
+| Player reconnections | 🟢    |
 
 ### Legend:
 ```
