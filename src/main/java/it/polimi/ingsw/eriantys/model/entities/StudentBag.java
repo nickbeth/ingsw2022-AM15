@@ -15,8 +15,13 @@ public class StudentBag implements Serializable {
     students = new Students();
   }
 
+  /**
+   * Copy constructor which performs a deep copy of the student bag.
+   *
+   * @param bag The student bag to make a copy of.
+   */
   public StudentBag(StudentBag bag) {
-    students = bag.getStudents();
+    students = bag.getStudents().getCopy();
   }
 
   /**
@@ -30,7 +35,6 @@ public class StudentBag implements Serializable {
     }
   }
 
-  //qui solo per il testing?
   public Students getStudents() {
     return students;
   }

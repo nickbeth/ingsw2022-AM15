@@ -36,4 +36,33 @@ class StudentsTest {
     assertEquals(0,students.getCount(HouseColor.PINK));
   }
 
+  @Test
+  public void getCopy() {
+    Students students = new Students();
+    students.addStudents(HouseColor.GREEN, 9);
+    students.addStudents(HouseColor.RED, 12);
+    students.addStudents(HouseColor.YELLOW, 7);
+    students.addStudents(HouseColor.PINK, 6);
+    students.addStudents(HouseColor.BLUE, 4);
+
+    Students copy = students.getCopy();
+    assertTrue(students.containsExactly(copy));
+    assertEquals(students.getCount(HouseColor.GREEN), copy.getCount(HouseColor.GREEN));
+    assertEquals(students.getCount(HouseColor.RED), copy.getCount(HouseColor.RED));
+    assertEquals(students.getCount(HouseColor.YELLOW), copy.getCount(HouseColor.YELLOW));
+    assertEquals(students.getCount(HouseColor.PINK), copy.getCount(HouseColor.PINK));
+    assertEquals(students.getCount(HouseColor.BLUE), copy.getCount(HouseColor.BLUE));
+
+    students.addStudents(HouseColor.GREEN, 10);
+    students.tryRemoveStudent(HouseColor.BLUE);
+    students.tryRemoveStudent(HouseColor.YELLOW);
+    students.tryRemoveStudent(HouseColor.YELLOW);
+
+    assertEquals(students.getCount(HouseColor.GREEN), copy.getCount(HouseColor.GREEN) + 10);
+    assertEquals(students.getCount(HouseColor.RED), copy.getCount(HouseColor.RED));
+    assertEquals(students.getCount(HouseColor.YELLOW), copy.getCount(HouseColor.YELLOW) - 2);
+    assertEquals(students.getCount(HouseColor.PINK), copy.getCount(HouseColor.PINK));
+    assertEquals(students.getCount(HouseColor.BLUE), copy.getCount(HouseColor.BLUE) - 1);
+
+  }
 }

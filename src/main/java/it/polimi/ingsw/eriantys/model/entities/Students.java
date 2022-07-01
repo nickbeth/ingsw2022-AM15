@@ -16,8 +16,7 @@ public class Students extends Slot implements Serializable {
    * Initialize to zero all kind of students
    */
   public Students() {
-    Arrays.stream((HouseColor.values()))
-        .forEach(color -> students.put(color, 0));
+    Arrays.stream((HouseColor.values())).forEach(color -> students.put(color, 0));
   }
 
   /**
@@ -26,8 +25,7 @@ public class Students extends Slot implements Serializable {
    * @param s Initial students
    */
   public Students(Students s) {
-    Arrays.stream((HouseColor.values()))
-        .forEach(color -> students.put(color, s.getCount(color)));
+    Arrays.stream(HouseColor.values()).forEach(color -> students.put(color, s.getCount(color)));
   }
 
   /**
@@ -36,8 +34,7 @@ public class Students extends Slot implements Serializable {
    * @param s Amount of students to add
    */
   public void addStudents(Students s) {
-    students.forEach(((color, value)
-        -> students.put(color, value + s.getCount(color))));
+    students.forEach((color, value) -> students.put(color, value + s.getCount(color)));
   }
 
   /**
@@ -49,6 +46,13 @@ public class Students extends Slot implements Serializable {
 
   public void addStudents(HouseColor color, int amount) {
     students.put(color, students.get(color) + amount);
+  }
+
+  /**
+   * Sets the amount of all students of this instance to the amount of the given instance
+   */
+  public void setStudents(Students s) {
+    students.forEach((color, amount) -> students.put(color, s.getCount(color)));
   }
 
   /**
@@ -104,11 +108,6 @@ public class Students extends Slot implements Serializable {
     return true;
   }
 
-  public void setStudents(Students s) {
-    students.forEach(((color, amount) ->
-        students.put(color, s.getCount(color))));
-  }
-
   /**
    * Checks if there's no students left
    *
@@ -116,7 +115,8 @@ public class Students extends Slot implements Serializable {
    */
   public boolean isEmpty() {
     for (HouseColor c : HouseColor.values()) {
-      if (students.get(c) != 0) return false;
+      if (students.get(c) != 0)
+        return false;
     }
     return true;
   }
@@ -149,6 +149,16 @@ public class Students extends Slot implements Serializable {
       }
     }
     return list;
+  }
+
+  /**
+   * Returns a deep copy of this Students object
+   * @return a Students object with the same amount of students as the one this method is called on
+   */
+  public Students getCopy() {
+    Students copy = new Students();
+    copy.setStudents(this);
+    return copy;
   }
 
   @Override

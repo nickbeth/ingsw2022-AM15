@@ -21,7 +21,7 @@ public class RefillClouds extends GameAction {
   public RefillClouds(GameState gameState) {
     List<Students> cloudsStudents = new ArrayList<>();
     Students temp = new Students();
-    StudentBag currentBag = gameState.getPlayingField().getStudentBag();
+    StudentBag currentBag = new StudentBag(gameState.getPlayingField().getStudentBag());
 
     // Populate clouds with random students from bag
     for (int cloudIter = 0; cloudIter < gameState.getRuleBook().cloudCount; cloudIter++) {
