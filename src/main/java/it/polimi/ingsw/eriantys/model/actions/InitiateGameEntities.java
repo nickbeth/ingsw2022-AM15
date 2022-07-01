@@ -44,8 +44,10 @@ public class InitiateGameEntities extends GameAction {
     List<Students> studentsOnIslands = new ArrayList<>();
     for (int i = 0; i < RuleBook.ISLAND_COUNT; i++) {
       studentsOnIslands.add(new Students());
-      if (i != 0 && i != 6)
-        studentsOnIslands.get(i).addStudent(bag.takeRandomStudent());
+      if (i != 0 && i != 6) {
+        for (int j = 0; j < RuleBook.INITIAL_ISLAND_STUDENTS; j++)
+          studentsOnIslands.get(i).addStudent(bag.takeRandomStudent());
+      }
     }
 
     // Initiate entrances.
