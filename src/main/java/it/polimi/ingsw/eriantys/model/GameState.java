@@ -257,8 +257,8 @@ public class GameState implements Serializable {
 
   public boolean isLastRound() {
     StudentBag bag = playingField.getStudentBag();
-    boolean anyEmptyCloud = playingField.getClouds().stream().anyMatch(Cloud::isEmpty);
-    return (bag.isEmpty() && anyEmptyCloud) || getPlayers().stream().anyMatch(p -> p.getCards().size() == 0);
+    boolean anyNonFullCloud = playingField.getClouds().stream().anyMatch(cloud -> cloud.getStudents().getCount() < ruleBook.playableStudentCount);
+    return (bag.isEmpty() && anyNonFullCloud) || getPlayers().stream().anyMatch(p -> p.getCards().size() == 0);
   }
 
   /**
