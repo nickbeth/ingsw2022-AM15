@@ -39,9 +39,10 @@ public class CharacterCardHandler extends SectionHandler {
    */
   @Override
   protected void refresh() {
-    addonCoin.setVisible(card.isUsed());
     CharacterCard playedCard = Controller.get().getGameState().getPlayingField().getPlayedCharacterCard();
     GameState gameState = Controller.get().getGameState();
+    boolean isUsed = gameState.getPlayingField().isCharacterCardUsed(card.getCardEnum());
+    addonCoin.setVisible(isUsed);
     //make cross invisible if there is a played card
     crossImg.setVisible(playedCard == null || playedCard.getCardEnum() != card.getCardEnum());
     // if the player isn't current the card is not clickable
@@ -53,8 +54,7 @@ public class CharacterCardHandler extends SectionHandler {
       makeNotClickable();
       return;
     }
-
-    if (!card.isPurchasable(gameState.getCurrentPlayer().getCoins())) {
+    if (!card.isPurchasable(gameState.getCurrentPlayer().getCoins(), isUsed)) {
       makeNotClickable();
       return;
     }

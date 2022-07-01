@@ -2,15 +2,13 @@ package it.polimi.ingsw.eriantys.model.entities;
 
 import it.polimi.ingsw.eriantys.model.RuleBook;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.enums.GameMode;
 import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 import it.polimi.ingsw.eriantys.model.enums.TowerColor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static it.polimi.ingsw.eriantys.loggers.Loggers.modelLogger;
 
@@ -25,6 +23,7 @@ public class PlayingField implements Serializable {
   private int bank;
 
   private List<CharacterCard> characterCards = new ArrayList<>();
+  private EnumMap<CharacterCardEnum, Boolean> usedCards = new EnumMap<>(CharacterCardEnum.class);
   private CharacterCard playedCharacterCard;
 
   /**
@@ -53,6 +52,7 @@ public class PlayingField implements Serializable {
     if (ruleBook.gameMode == GameMode.EXPERT) {
       bank = RuleBook.TOTAL_COINS - ruleBook.cloudCount;
       locks = RuleBook.LOCK_AMOUNT;
+      Arrays.stream(CharacterCardEnum.values()).forEach(card -> usedCards.put(card, false));
     } else {
       bank = 0;
       locks = 0;
@@ -218,6 +218,13 @@ public class PlayingField implements Serializable {
     }
   }
 
+  public boolean isCharacterCardUsed(CharacterCardEnum card) {
+    return usedCards.get(card);
+  }
+
+  public void setCharacterCardAsUsed(CharacterCardEnum card) {
+    usedCards.put(card, true);
+  }
 
   public CharacterCard getPlayedCharacterCard() {
     return playedCharacterCard;

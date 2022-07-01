@@ -16,15 +16,17 @@ public class NoInputCards extends CharacterCard {
 
   @Override
   public void applyEffect(GameState gameState) {
+    boolean isUsed = gameState.getPlayingField().isCharacterCardUsed(getCardEnum());
     noInputEffect.applyEffect(gameState);
-    gameState.getCurrentPlayer().removeCoins(getCost());
-    gameState.getPlayingField().addCoinsToBank(getCost());
-    used = true;
+    gameState.getCurrentPlayer().removeCoins(getCost(isUsed));
+    gameState.getPlayingField().addCoinsToBank(getCost(isUsed));
+    gameState.getPlayingField().setCharacterCardAsUsed(getCardEnum());
   }
 
   @Override
   public boolean isValid(GameState gameState) {
-    return isPurchasable(gameState.getCurrentPlayer().getCoins());
+    boolean isUsed = gameState.getPlayingField().isCharacterCardUsed(getCardEnum());
+    return isPurchasable(gameState.getCurrentPlayer().getCoins(), isUsed);
   }
 
 }

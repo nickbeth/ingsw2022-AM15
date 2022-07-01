@@ -21,10 +21,11 @@ public class IslandInputCards extends CharacterCard {
 
   @Override
   public void applyEffect(GameState gameState) {
+    boolean isUsed = gameState.getPlayingField().isCharacterCardUsed(getCardEnum());
     onIslandEffect.applyEffect(gameState, islandIndex);
-    gameState.getCurrentPlayer().removeCoins(getCost());
-    gameState.getPlayingField().addCoinsToBank(getCost());
-    used = true;
+    gameState.getCurrentPlayer().removeCoins(getCost(isUsed));
+    gameState.getPlayingField().addCoinsToBank(getCost(isUsed));
+    gameState.getPlayingField().setCharacterCardAsUsed(getCardEnum());
   }
 
   @Override
@@ -32,7 +33,8 @@ public class IslandInputCards extends CharacterCard {
     if (card == CharacterCardEnum.LOCK_ISLAND && gameState.getPlayingField().getLocks() <= 0) {
       return false;
     }
-    return isPurchasable(gameState.getCurrentPlayer().getCoins())
+    boolean isUsed = gameState.getPlayingField().isCharacterCardUsed(getCardEnum());
+    return isPurchasable(gameState.getCurrentPlayer().getCoins(), isUsed)
         && islandIndex >= 0
         && islandIndex < gameState.getPlayingField().getIslandsAmount();
   }

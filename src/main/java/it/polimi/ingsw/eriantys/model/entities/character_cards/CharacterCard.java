@@ -6,8 +6,6 @@ import java.io.Serializable;
 
 public abstract class CharacterCard implements Serializable {
   protected final CharacterCardEnum card;
-  protected boolean used = false;
-
   protected CharacterCard(CharacterCardEnum card) {
     this.card = card;
   }
@@ -23,12 +21,8 @@ public abstract class CharacterCard implements Serializable {
   /**
    * Returns the cost of the card incremented by one if the card is used
    */
-  public int getCost() {
-    return !used ? card.getCost() : card.getCost() + 1;
-  }
-
-  public boolean isUsed() {
-    return used;
+  public int getCost(boolean isUsed) {
+    return !isUsed ? card.getCost() : card.getCost() + 1;
   }
 
   public CharacterCardEnum getCardEnum() {
@@ -38,7 +32,7 @@ public abstract class CharacterCard implements Serializable {
   /**
    * Returns true if the given amount of coins is enough to use the card
    */
-  public boolean isPurchasable(int coins) {
-    return coins >= getCost();
+  public boolean isPurchasable(int coins, boolean isUsed) {
+    return coins >= getCost(isUsed);
   }
 }

@@ -2,6 +2,8 @@ package it.polimi.ingsw.eriantys.cli.menus.game;
 
 import it.polimi.ingsw.eriantys.cli.menus.MenuEnum;
 import it.polimi.ingsw.eriantys.cli.views.CharacterCardsView;
+import it.polimi.ingsw.eriantys.controller.Controller;
+import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
@@ -65,7 +67,8 @@ public class MenuEffect extends MenuGame {
       }
 
       // Print reasons why action is invalid
-      if (me().getCoins() < cc.getCost())
+      boolean isUsed = game().getPlayingField().isCharacterCardUsed(cc.getCardEnum());
+      if (me().getCoins() < cc.getCost(isUsed))
         out.println("Not enough coins", YELLOW);
       else
         out.println("You're in the wrong phase.", RED);

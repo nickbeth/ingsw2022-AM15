@@ -308,6 +308,7 @@ public class ActionTest {
     gameState.setTurnPhase(TurnPhase.EFFECT);
     for (int i = 0; i < 4; i++)
       gameState.advance();
+
     // Add coins to current player (p1)
     gameState.getCurrentPlayer().addCoins();
     gameState.getCurrentPlayer().addCoins();
@@ -328,7 +329,7 @@ public class ActionTest {
     assertEquals(0, gameState.getCurrentPlayer().getCoins());
 
     // check if the cost has been incremented
-    assertEquals(CharacterCardEnum.IGNORE_COLOR.getCost() + 1, field.getPlayedCharacterCard().getCost());
+    assertEquals(CharacterCardEnum.IGNORE_COLOR.getCost() + 1, field.getPlayedCharacterCard().getCost(true));
     // Add 4 coins to current player (p1)
     gameState.getCurrentPlayer().addCoins();
     gameState.getCurrentPlayer().addCoins();
@@ -341,6 +342,6 @@ public class ActionTest {
     // checks if incremented cost is applied
     assertEquals(0, gameState.getCurrentPlayer().getCoins());
     // checks if the cost doesn't increment any further
-    assertEquals(CharacterCardEnum.IGNORE_COLOR.getCost() + 1, field.getPlayedCharacterCard().getCost());
+    assertEquals(CharacterCardEnum.IGNORE_COLOR.getCost() + 1, field.getPlayedCharacterCard().getCost(true));
   }
 }

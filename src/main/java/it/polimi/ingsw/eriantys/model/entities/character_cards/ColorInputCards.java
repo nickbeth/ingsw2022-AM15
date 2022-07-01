@@ -22,14 +22,16 @@ public class ColorInputCards extends CharacterCard {
 
   @Override
   public void applyEffect(GameState gameState) {
+    boolean isUsed = gameState.getPlayingField().isCharacterCardUsed(getCardEnum());
     colorInputCC.applyEffect(gameState, color);
-    gameState.getCurrentPlayer().removeCoins(getCost());
-    gameState.getPlayingField().addCoinsToBank(getCost());
-    used = true;
+    gameState.getCurrentPlayer().removeCoins(getCost(isUsed));
+    gameState.getPlayingField().addCoinsToBank(getCost(isUsed));
+    gameState.getPlayingField().setCharacterCardAsUsed(getCardEnum());
   }
 
   @Override
   public boolean isValid(GameState gameState) {
-    return isPurchasable(gameState.getCurrentPlayer().getCoins());
+    boolean isUsed = gameState.getPlayingField().isCharacterCardUsed(getCardEnum());
+    return isPurchasable(gameState.getCurrentPlayer().getCoins(), isUsed);
   }
 }
