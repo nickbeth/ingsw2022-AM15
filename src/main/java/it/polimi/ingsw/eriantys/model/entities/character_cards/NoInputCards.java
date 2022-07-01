@@ -6,45 +6,25 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects
 /**
  * Class dedicated to the Character Cards which needs no further inputs
  */
-public class NoInputCards implements CharacterCard {
+public class NoInputCards extends CharacterCard {
   private final NoInputCC noInputEffect;
-  private final CharacterCardEnum card;
 
   public NoInputCards(NoInputCC noInputEffect, CharacterCardEnum card) {
+    super(card);
     this.noInputEffect = noInputEffect;
-    this.card = card;
   }
 
   @Override
   public void applyEffect(GameState gameState) {
     noInputEffect.applyEffect(gameState);
-    gameState.getCurrentPlayer().removeCoins(card.getCost());
-    gameState.getPlayingField().addCoinsToBank(card.getCost());
-    card.used = true;
-  }
-
-  @Override
-  public int getCost() {
-    return card.getCost();
-  }
-
-  @Override
-  public boolean requiresInput() {
-    return card.isRequiredInput();
+    gameState.getCurrentPlayer().removeCoins(getCost());
+    gameState.getPlayingField().addCoinsToBank(getCost());
+    used = true;
   }
 
   @Override
   public boolean isValid(GameState gameState) {
-    return card.isPurchasable(gameState.getCurrentPlayer().getCoins());
+    return isPurchasable(gameState.getCurrentPlayer().getCoins());
   }
 
-  @Override
-  public boolean isUsed() {
-    return card.used;
-  }
-
-  @Override
-  public CharacterCardEnum getCardEnum() {
-    return card;
-  }
 }

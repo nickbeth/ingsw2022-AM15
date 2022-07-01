@@ -6,14 +6,13 @@ import it.polimi.ingsw.eriantys.model.entities.character_cards.funcional_effects
 /**
  * Class dedicated to the Character Cards which needs islandIndex input
  */
-public class IslandInputCards implements CharacterCard {
+public class IslandInputCards extends CharacterCard {
   private final IslandInputCC onIslandEffect;
-  private final CharacterCardEnum card;
   private int islandIndex = -1;
 
   public IslandInputCards(IslandInputCC onIslandEffect, CharacterCardEnum card) {
+    super(card);
     this.onIslandEffect = onIslandEffect;
-    this.card = card;
   }
 
   public void setIslandIndex(int islandIndex) {
@@ -23,19 +22,9 @@ public class IslandInputCards implements CharacterCard {
   @Override
   public void applyEffect(GameState gameState) {
     onIslandEffect.applyEffect(gameState, islandIndex);
-    gameState.getCurrentPlayer().removeCoins(card.getCost());
-    gameState.getPlayingField().addCoinsToBank(card.getCost());
-    card.used = true;
-  }
-
-  @Override
-  public int getCost() {
-    return card.getCost();
-  }
-
-  @Override
-  public boolean requiresInput() {
-    return card.isRequiredInput();
+    gameState.getCurrentPlayer().removeCoins(getCost());
+    gameState.getPlayingField().addCoinsToBank(getCost());
+    used = true;
   }
 
   @Override
@@ -43,18 +32,8 @@ public class IslandInputCards implements CharacterCard {
     if (card == CharacterCardEnum.LOCK_ISLAND && gameState.getPlayingField().getLocks() <= 0) {
       return false;
     }
-    return card.isPurchasable(gameState.getCurrentPlayer().getCoins())
+    return isPurchasable(gameState.getCurrentPlayer().getCoins())
         && islandIndex >= 0
         && islandIndex < gameState.getPlayingField().getIslandsAmount();
-  }
-
-  @Override
-  public boolean isUsed() {
-    return card.used;
-  }
-
-  @Override
-  public CharacterCardEnum getCardEnum() {
-    return card;
   }
 }

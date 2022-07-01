@@ -7,14 +7,13 @@ import it.polimi.ingsw.eriantys.model.enums.HouseColor;
 /**
  * Class dedicated to the Character Cards which needs color input
  */
-public class ColorInputCards implements CharacterCard {
+public class ColorInputCards extends CharacterCard {
   private final ColorInputCC colorInputCC;
-  private final CharacterCardEnum card;
   private HouseColor color = null;
 
   public ColorInputCards(ColorInputCC colorInputCC, CharacterCardEnum card) {
+    super(card);
     this.colorInputCC = colorInputCC;
-    this.card = card;
   }
 
   public void setColor(HouseColor color) {
@@ -24,33 +23,13 @@ public class ColorInputCards implements CharacterCard {
   @Override
   public void applyEffect(GameState gameState) {
     colorInputCC.applyEffect(gameState, color);
-    gameState.getCurrentPlayer().removeCoins(card.getCost());
-    gameState.getPlayingField().addCoinsToBank(card.getCost());
-    card.used = true;
-  }
-
-  @Override
-  public int getCost() {
-    return card.getCost();
-  }
-
-  @Override
-  public boolean isUsed() {
-    return card.used;
-  }
-
-  @Override
-  public boolean requiresInput() {
-    return card.requiresInput;
+    gameState.getCurrentPlayer().removeCoins(getCost());
+    gameState.getPlayingField().addCoinsToBank(getCost());
+    used = true;
   }
 
   @Override
   public boolean isValid(GameState gameState) {
-    return card.isPurchasable(gameState.getCurrentPlayer().getCoins());
-  }
-
-  @Override
-  public CharacterCardEnum getCardEnum() {
-    return card;
+    return isPurchasable(gameState.getCurrentPlayer().getCoins());
   }
 }
