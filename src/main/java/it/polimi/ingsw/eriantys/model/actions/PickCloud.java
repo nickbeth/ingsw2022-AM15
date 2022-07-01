@@ -32,7 +32,10 @@ public class PickCloud extends GameAction {
       // Populate clouds with random students from bag
       for (int cloudIter = 0; cloudIter < gameState.getRuleBook().cloudCount; cloudIter++) {
         for (int cloudSizeIter = 0; cloudSizeIter < gameState.getRuleBook().playableStudentCount; cloudSizeIter++) {
-          temp.addStudent(currentBag.takeRandomStudent());
+          HouseColor student = currentBag.takeRandomStudent();
+          if (student == null)
+            break;
+          temp.addStudent(student);
         }
         cloudsStudents.add(new Students(temp));
         temp = new Students(); // clear temp
