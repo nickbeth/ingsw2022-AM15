@@ -72,8 +72,7 @@ public class MenuPickingCloud extends MenuGame {
             out.println("You're in the wrong phase.", RED);
             showOptions();
           }
-          default -> {
-          }
+          default -> showOptions();
         }
       }
     }

@@ -134,7 +134,7 @@ public abstract class MenuGame extends Menu {
         .append("7 - Show turn orders").append(System.lineSeparator())
         .append("8 - Show players");
     if (rules().gameMode.equals(GameMode.EXPERT))
-      options.append("10 - CharacterCards");
+      options.append("\n10 - CharacterCards");
     out.println(options);
 
     // Optional closing row
@@ -159,22 +159,37 @@ public abstract class MenuGame extends Menu {
         if (rules().gameMode.equals(GameMode.EXPERT))
           viewAll.addView(characterCardsView());
         viewAll.draw(out);
+        return;
       }
 
       // View all islands
-      case "2" -> islandsView().draw(out);
+      case "2" -> {
+        islandsView().draw(out);
+        return;
+      }
 
       // View all dashboards
-      case "3" -> dashboardsView().draw(out);
+      case "3" -> {
+        dashboardsView().draw(out);
+        return;
+      }
 
       // View all character cards
-      case "4" -> cloudsView().draw(out);
-
+      case "4" -> {
+        cloudsView().draw(out);
+        return;
+      }
       // View my assistant cards
-      case "5" -> new AssistantCardsView(me()).draw(out);
+      case "5" -> {
+        new AssistantCardsView(me()).draw(out);
+        return;
+      }
 
       // View my dashboard
-      case "6" -> new DashboardView(me(), rules(), professorHolder()).draw(out);
+      case "6" -> {
+        new DashboardView(me(), rules(), professorHolder()).draw(out);
+        return;
+      }
 
       // Show turn orders
       case "7" -> {
@@ -190,15 +205,20 @@ public abstract class MenuGame extends Menu {
               .forEach(player -> out.print(player + " -> "));
         }
         out.println();
+        return;
       }
 
-      case "8" -> playersView().draw(out);
+      case "8" -> {
+        playersView().draw(out);
+        return;
+      }
 
       // View all character cards
       case "10" -> {
         if (rules().gameMode.equals(GameMode.EXPERT))
           characterCardsView().draw(out);
       }
+
       default -> refreshMenu = false;
     }
     if (refreshMenu)

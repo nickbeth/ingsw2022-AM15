@@ -82,8 +82,7 @@ public class MenuMoving extends MenuGame {
             showOptions();
           }
 
-          default -> {
-          }
+          default -> showOptions();
         }
       }
     }

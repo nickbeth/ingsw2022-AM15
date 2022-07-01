@@ -83,7 +83,7 @@ public class MenuPlacing extends MenuGame {
             islandsView().draw(out);
 
             // Take island index input
-            out.println("Choose an island: ");
+            out.print("Choose an island: ");
             int islandIndex = getNumber() - 1; // Index correction
 
             // Send actions
@@ -95,7 +95,9 @@ public class MenuPlacing extends MenuGame {
             waitForGreenLight();
 
             // Advance game condition
-            return escapeCondition();
+            if(escapeCondition().equals(MenuEnum.EFFECT))
+              new MenuEffect().show();
+            return MenuEnum.MOVING;
           }
 
           // Move Students from entrance to dining
@@ -116,7 +118,10 @@ public class MenuPlacing extends MenuGame {
             waitForGreenLight();
 
             // Advance game condition
-            return escapeCondition();
+            // Advance game condition
+            if(escapeCondition().equals(MenuEnum.EFFECT))
+              new MenuEffect().show();
+            return MenuEnum.MOVING;
           }
 
           // Choose a character card from those in playing field
@@ -127,9 +132,7 @@ public class MenuPlacing extends MenuGame {
             }
             out.println("\nA card was already played", RED);
           }
-
-          default -> {
-          }
+          default -> showOptions();
         }
       }
     }
@@ -139,7 +142,7 @@ public class MenuPlacing extends MenuGame {
     // Condition to continue the game
     if (studentsLeftToMove() == 0) {
       // Ask the player if he wants to play and effect before going on with the game
-      if (rules().gameMode.equals(GameMode.EXPERT) && !isCharacterCardUnplayed()) {
+      if (rules().gameMode.equals(GameMode.EXPERT) && isCharacterCardUnplayed()) {
         out.println("\nDo you want to play a character card?");
         out.println("1 - YES");
         out.println("ANY_KEY - NO");

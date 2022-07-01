@@ -94,7 +94,8 @@ public abstract class Menu implements PropertyChangeListener {
     while (true) {
       try {
         line = getKeyboardInput();
-        return Integer.parseInt(line);
+        int number = Integer.parseInt(line);
+        return number;
       } catch (NumberFormatException e) {
         out.print("Must insert a number, insert again: ");
       }

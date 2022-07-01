@@ -5,17 +5,28 @@ import it.polimi.ingsw.eriantys.cli.views.CharacterCardsView;
 import it.polimi.ingsw.eriantys.controller.Controller;
 import it.polimi.ingsw.eriantys.model.GameState;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCard;
+import it.polimi.ingsw.eriantys.model.entities.character_cards.CharacterCardEnum;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.ColorInputCards;
 import it.polimi.ingsw.eriantys.model.entities.character_cards.IslandInputCards;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 
+import static it.polimi.ingsw.eriantys.controller.EventType.INPUT_ENTERED;
 import static it.polimi.ingsw.eriantys.model.enums.HouseColor.*;
 
 public class MenuEffect extends MenuGame {
   public MenuEffect() {
     super();
+    addListeningEvents();
+  }
+
+  private void addListeningEvents() {
+    eventsToBeListening.forEach(eventType -> controller.addListener(this, eventType.tag));
+  }
+
+  private void removeListeningEvents() {
+    eventsToBeListening.forEach(eventType -> controller.removeListener(this, eventType.tag));
   }
 
   @Override
@@ -60,10 +71,10 @@ public class MenuEffect extends MenuGame {
         waitForGreenLight();
         out.println("Card activated. ", GREEN);
         new CharacterCardsView(List.of(cc)).draw(out);
-        if (studentsLeftToMove() == 0)
+        if (studentsLeftToMove() == 0) {
+          removeListeningEvents();
           return MenuEnum.MOVING;
-        else
-          return MenuEnum.PLACING;
+        }
       }
 
       // Print reasons why action is invalid
@@ -108,19 +119,29 @@ public class MenuEffect extends MenuGame {
       if (choice.equalsIgnoreCase("n"))
         return false;
 
+      // Purchasable check
+      CharacterCardEnum chosenCard = ccs().get(ccIndex).getCardEnum();
+      boolean isUsed = game().getPlayingField().isCharacterCardUsed(chosenCard);
+      if (me().getCoins() < ccs().get(ccIndex).getCost(isUsed)) {
+        out.println("Not enough coins", RED);
+        return false;
+      }
+
       // Send the action
       if (controller.sender().sendChooseCharacterCard(ccIndex)) {
         waitForGreenLight();
         out.println("Card chosen.", GREEN);
         return true;
       }
-      out.println("Choose a valid card", RED);
+      out.println("Choose a valid card or not enough coins", RED);
     }
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     super.propertyChange(evt);
+    if (evt.getPropertyName().equals(INPUT_ENTERED.tag))
+      inputGreenLight = true;
     greenLight = true;
   }
 }

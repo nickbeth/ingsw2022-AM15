@@ -75,8 +75,7 @@ public class MenuPickAssistantCard extends MenuGame {
             out.println("Someone else already played this card.", RED);
             showOptions();
           }
-          default -> {
-          }
+          default -> showOptions();
         }
       }
     }

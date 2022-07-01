@@ -123,7 +123,7 @@ connected clients and multiple games.
 * `4 players`: a 4 players' game can be played
 * `Multiple games`: every game has an associated game code (e.g. `ABCD`). The player must supply one when trying to join
   a game, and it is returned one after the creation of a new game. A list of available games to join is provided in UIs.
-* `Player reconnections`: the server keep a heartbeat running with all clients (`PING` and `PONG` messages are used).
+* `Player reconnections`: the server keeps a heartbeat running with all clients (`PING` and `PONG` messages are used).
   Once the heartbeat fails, the client is marked as disconnected in the game lobby, and the game continues skipping
   disconnected players. A player may also disconnect voluntarily from a game. Once it is reconnected, a copy of the game
   state gets sent to that player.
