@@ -184,6 +184,7 @@ public class ViewsTest {
       view.draw(out);
       cards.remove(0);
     }
+    view.draw(out);
   }
 
   @Test

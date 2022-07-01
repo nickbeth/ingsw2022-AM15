@@ -30,40 +30,45 @@ public class AssistantCardsView extends View {
   public void draw(CustomPrintStream o) {
     StringBuilder stringBuilder = new StringBuilder();
 
-    // Gets the height of one single stamp
-    int rows = drawAssistantCard(cards.get(0), 0).split(System.lineSeparator()).length;
+    try {
+      // Gets the height of one single stamp
+      int rows = drawAssistantCard(cards.get(0), 0).split(System.lineSeparator()).length;
 
-    // Populate the matrix
-    String[][] matrix = new String[cards.size()][rows];
-    for (int i = 0; i < cards.size(); i++) {
-      matrix[i] = drawAssistantCard(cards.get(i), (i + 1)).split(System.lineSeparator());
-    }
-
-    int progression = 0;
-    while (cards.size() - progression >= maxColumns) {
-
-      // Build the stripes
-      for (int row = 0; row < rows; row++) {
-        for (int cardIndex = progression; cardIndex < progression + maxColumns; cardIndex++) {
-          stringBuilder
-              .append(matrix[cardIndex][row])
-              .append(PADDING_FROM_EACH_CARD);
-        }
-        stringBuilder.append(System.lineSeparator());
+      // Populate the matrix
+      String[][] matrix = new String[cards.size()][rows];
+      for (int i = 0; i < cards.size(); i++) {
+        matrix[i] = drawAssistantCard(cards.get(i), (i + 1)).split(System.lineSeparator());
       }
-      progression += maxColumns;
-    }
 
-    // Build last stripes
-    if (progression < cards.size()) {
-      for (int row = 0; row < rows; row++) {
-        for (int cardIndex = progression; cardIndex < cards.size(); cardIndex++) {
-          stringBuilder
-              .append(matrix[cardIndex][row])
-              .append(PADDING_FROM_EACH_CARD);
+      int progression = 0;
+      while (cards.size() - progression >= maxColumns) {
+
+        // Build the stripes
+        for (int row = 0; row < rows; row++) {
+          for (int cardIndex = progression; cardIndex < progression + maxColumns; cardIndex++) {
+            stringBuilder
+                .append(matrix[cardIndex][row])
+                .append(PADDING_FROM_EACH_CARD);
+          }
+          stringBuilder.append(System.lineSeparator());
         }
-        stringBuilder.append(System.lineSeparator());
+        progression += maxColumns;
       }
+
+      // Build last stripes
+      if (progression < cards.size()) {
+        for (int row = 0; row < rows; row++) {
+          for (int cardIndex = progression; cardIndex < cards.size(); cardIndex++) {
+            stringBuilder
+                .append(matrix[cardIndex][row])
+                .append(PADDING_FROM_EACH_CARD);
+          }
+          stringBuilder.append(System.lineSeparator());
+        }
+      }
+    } catch (IndexOutOfBoundsException e) {
+      stringBuilder = new StringBuilder(nothingToShow());
+      stringBuilder.append(System.lineSeparator());
     }
 
     o.append(System.lineSeparator());
@@ -130,5 +135,14 @@ public class AssistantCardsView extends View {
     int nPadding = (baseRowLength / 2) - (int) (Math.floor((double) title.length() / 2));
 
     return "-".repeat(nPadding) + title + "-".repeat(nPadding - 1);
+  }
+
+  private String nothingToShow() {
+    String content = " Nothing to show ";
+    int baseRowLength = ("╰───────────╯" + PADDING_FROM_EACH_CARD).repeat(maxColumns).length() - PADDING_FROM_EACH_CARD.length();
+    int spaces = baseRowLength - content.replace(" ", "").length();
+    int nWord = content.split(" ").length;
+
+    return content.replace(" ", " ".repeat(spaces / (nWord)));
   }
 }
