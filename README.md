@@ -26,7 +26,6 @@ game [Eriantys: The Magical World of Floating Islands](https://craniointernation
 🟡: Work in progress
 🟢: Ready
 ```
-
 ## Implementation description
 
 Following is the rationale behind the central parts of our architecture. Only the most relevant implementation details
@@ -148,3 +147,19 @@ All the features described below were discarded for time constraints reasons.
   A branch with a WIP version of `java.nio` networking is still available in our
   repo: [java-nio](https://github.com/lynxnb/ingsw2022-AM15/tree/java-nio), although it is abandoned at this point and
   can only send example messages.
+
+## Running the server
+The command to run the server is : ```java -jar server-1.0.jar```. The server default port is 1234.
+
+Additional command line arguments:
+| description          |Argument |
+|----------------------|-------|
+| To disable server heartbeat verification  | ```--no-heartbeat ```   |
+| To run the server on a specific port    | ```-p``` or ```--port``` followed by the port number|
+| To change the time to wait before deleting an idle game entry | ```-d``` or ``` --delete-timeout``` followed by the amount in seconds  |
+## Running the client
+The client can be run in GUI by opening the ```client-1.0.jar``` or by using the ```java -jar client-1.0.jar``` command.
+
+To run the client in CLI the ```-c``` ```--cli``` argument is needed:  ```java -jar client-1.0.jar -c```.
+
+
