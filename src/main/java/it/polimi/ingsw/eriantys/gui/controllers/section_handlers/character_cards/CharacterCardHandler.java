@@ -53,6 +53,12 @@ public class CharacterCardHandler extends SectionHandler {
       makeNotClickable();
       return;
     }
+
+    if (!card.isPurchasable(gameState.getCurrentPlayer().getCoins())) {
+      makeNotClickable();
+      return;
+    }
+
     if (playedCard == null) {
       cardImg.setOnMouseClicked(e -> playCard());
       cardImg.setCursor(Cursor.HAND);
