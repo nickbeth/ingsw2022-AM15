@@ -3,6 +3,8 @@
 Java implementation of the table
 game [Eriantys: The Magical World of Floating Islands](https://craniointernational.com/products/eriantys/)
 
+Grade: 30/30 Cum Laude
+
 ## Team members
 
 - Niccolò Betto [lynxnb](https://github.com/lynxnb)
